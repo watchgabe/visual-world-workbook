@@ -1,0 +1,1401 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FSCreative™ — Define Your Visual World™</title>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;800;900&display=swap" rel="stylesheet">
+<style>
+/* ─── RESET ─── */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+
+/* ─── TOKENS — DARK (default) ─── */
+:root{
+  --bg:#0a0a0a;
+  --surface:#111111;
+  --card:#161616;
+  --border:#1f1f1f;
+  --border2:#2a2a2a;
+  --text:#ffffff;
+  --dim:#a0a0a0;
+  --dimmer:#555555;
+  --orange:#F0601B;
+  --orange-hover:#ff6d28;
+  --orange-tint:rgba(240,96,27,0.1);
+  --orange-border:rgba(240,96,27,0.28);
+  --orange-dark:#ff8050;
+  --green-bg:rgba(61,184,100,0.1);
+  --green-text:#5DCAA5;
+  --green-border:rgba(93,202,165,0.3);
+  --radius-lg:10px;
+  --radius-md:6px;
+  --font:'Helvetica Neue',Helvetica,Arial,sans-serif;
+  --font-num:'Barlow Condensed',sans-serif;
+}
+
+/* ─── TOKENS — LIGHT ─── */
+body.light{
+  --bg:#f7f6f4;
+  --surface:#edecea;
+  --card:#e2e0dc;
+  --border:#ccc9c2;
+  --border2:#b8b4ac;
+  --text:#0a0a0a;
+  --dim:#404040;
+  --dimmer:#888888;
+  --orange-tint:#FEF0E8;
+  --orange-border:#F4B89A;
+  --orange-dark:#B84410;
+  --green-bg:#E6F5EF;
+  --green-text:#085041;
+  --green-border:#5DCAA5;
+}
+
+/* ─── BASE ─── */
+body{
+  background:var(--bg);
+  color:var(--text);
+  font-family:var(--font);
+  font-size:15px;
+  line-height:1.6;
+  -webkit-font-smoothing:antialiased;
+  overflow-x:hidden;
+  transition:background .25s,color .25s;
+}
+
+body::before{
+  content:'';
+  position:fixed;inset:0;z-index:9999;pointer-events:none;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='grain'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23grain)' opacity='0.025'/%3E%3C/svg%3E");
+  mix-blend-mode:overlay;
+}
+
+/* ─── SHELL ─── */
+#layout{display:flex;min-height:100vh}
+
+/* ─── SIDEBAR ─── */
+#sidebar{
+  width:228px;min-width:228px;
+  background:var(--surface);
+  border-right:1px solid var(--border);
+  display:flex;flex-direction:column;
+  position:fixed;top:0;left:0;bottom:0;
+  z-index:10;
+}
+.sb-top{
+  padding:1.35rem 1.25rem 1.1rem;
+  border-bottom:1px solid var(--border);
+  flex-shrink:0;
+}
+.sb-brand{font-size:11px;font-weight:700;color:var(--orange);letter-spacing:.1em;text-transform:uppercase;margin-bottom:3px;}
+.sb-title{font-size:12px;font-weight:500;color:var(--dim);line-height:1.45}
+#sbnav{flex:1;padding:.5rem 0;overflow-y:auto}
+.sb-item{
+  display:flex;align-items:center;gap:10px;
+  padding:8px 1.25rem;
+  font-size:12.5px;color:var(--dim);cursor:pointer;
+  border:none;border-left:2px solid transparent;
+  background:none;width:100%;text-align:left;
+  font-family:var(--font);transition:all .15s;
+}
+.sb-item:hover{color:var(--text);background:var(--card)}
+.sb-item.on{color:var(--orange);border-left-color:var(--orange);background:var(--orange-tint)}
+.sb-item.ok{color:var(--green-text);border-left-color:var(--green-text);background:var(--green-bg)}
+.sb-icon{opacity:.45;flex-shrink:0;display:flex}
+.sb-item.on .sb-icon,.sb-item:hover .sb-icon,.sb-item.ok .sb-icon{opacity:1}
+.sb-foot{
+  padding:1rem 1.25rem;
+  border-top:1px solid var(--border);
+  display:flex;align-items:center;gap:10px;flex-shrink:0;
+}
+.sb-prog{flex:1;min-width:0}
+
+/* ─── MAIN ─── */
+#main{flex:1;margin-left:228px;display:flex;justify-content:center}
+#wb{width:100%;max-width:700px;padding:2rem 2rem 5rem}
+
+/* ─── TOP BAR ─── */
+.topbar{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:1rem 0 1.25rem;
+  border-bottom:1px solid var(--border);
+  margin-bottom:1.5rem;
+}
+.logo{font-size:11px;font-weight:600;color:var(--dimmer);letter-spacing:.1em;text-transform:uppercase;font-family:var(--font);}
+.pw{display:flex;align-items:center;gap:10px}
+.pb{height:3px;background:var(--border);border-radius:2px}
+.pw .pb{width:120px}
+.sb-prog .pb{width:100%}
+.pf{height:100%;background:var(--orange);border-radius:2px;transition:width .4s}
+.pt{font-size:11px;color:var(--dimmer);font-weight:500}
+
+/* ─── THEME TOGGLE ─── */
+.theme-btn{
+  background:none;border:1px solid var(--border2);border-radius:var(--radius-md);
+  padding:5px 8px;cursor:pointer;color:var(--dimmer);
+  display:flex;align-items:center;justify-content:center;
+  transition:border-color .2s,color .2s;flex-shrink:0;
+}
+.theme-btn:hover{border-color:var(--border2);color:var(--text)}
+.icon-moon{display:block}
+.icon-sun{display:none}
+body.light .icon-moon{display:none}
+body.light .icon-sun{display:block}
+
+/* ─── TABS ─── */
+.tabs{display:flex;gap:4px;flex-wrap:wrap;margin-bottom:2rem}
+.tab{
+  font-size:11px;padding:4px 11px;border-radius:20px;
+  border:1px solid var(--border);background:transparent;
+  color:var(--dimmer);cursor:pointer;
+  font-family:var(--font);font-weight:500;
+  transition:all .15s;
+}
+.tab:hover{border-color:var(--border2);color:var(--dim)}
+.tab.on{background:var(--orange-tint);color:var(--orange-dark);border-color:var(--orange-border)}
+.tab.ok{background:var(--green-bg);color:var(--green-text);border-color:var(--green-border)}
+
+/* ─── SECTIONS ─── */
+.sc{display:none}
+.sc.show{display:block}
+
+/* ─── PART LABEL ─── */
+.pl{
+  font-size:11px;font-weight:600;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--orange);
+  margin-bottom:8px;font-family:var(--font);
+}
+
+/* ─── HEADINGS ─── */
+h1{font-size:26px;font-weight:700;color:var(--text);line-height:1.2;margin-bottom:12px;letter-spacing:-.4px;}
+h2{font-size:16px;font-weight:600;color:var(--text);margin:1.75rem 0 8px;letter-spacing:-.1px;}
+h3{font-size:14px;font-weight:600;color:var(--text);margin:1rem 0 5px}
+
+/* ─── INTRO ─── */
+.intro{font-size:14px;color:var(--dim);line-height:1.8;margin-bottom:1.5rem;}
+
+/* ─── STATS ROW ─── */
+.sr{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:1.5rem}
+.sc2{background:var(--surface);border-radius:var(--radius-md);padding:1rem;text-align:center;border:1px solid var(--border);}
+.sn{font-family:var(--font-num);font-size:40px;font-weight:900;line-height:1;color:var(--text);letter-spacing:-.5px;}
+.sl{font-size:11px;color:var(--dimmer);margin-top:4px;font-weight:500;text-transform:uppercase;letter-spacing:.06em}
+
+/* ─── TEACH BLOCK ─── */
+.teach{background:var(--surface);border-radius:var(--radius-lg);padding:1.1rem 1.4rem;margin-bottom:1.1rem;border:1px solid var(--border);}
+.teach p{font-size:13.5px;color:var(--text);line-height:1.85;margin-bottom:9px}
+.teach p:last-child{margin-bottom:0}
+.teach ul,.teach ol{padding-left:1.2rem;margin-top:5px}
+.teach li{font-size:13.5px;color:var(--text);line-height:1.85;margin-bottom:6px}
+.teach strong{font-weight:600;color:var(--text)}
+
+/* ─── CALLOUT ─── */
+.ins{
+  border-left:3px solid var(--orange);padding:11px 15px;
+  background:var(--orange-tint);margin-bottom:1.1rem;
+  border-radius:0 var(--radius-md) var(--radius-md) 0;
+}
+.ins p{font-size:13.5px;color:var(--orange-dark);line-height:1.7;margin:0;font-weight:500}
+.ins strong{font-weight:700}
+
+/* ─── FORMULA ─── */
+.fml{border:1px solid var(--orange-border);border-radius:var(--radius-lg);padding:.9rem 1.2rem;background:var(--orange-tint);margin-bottom:1.1rem;}
+.fml p{font-size:13px;font-weight:600;color:var(--orange-dark);line-height:1.75;margin:0}
+
+/* ─── EXERCISE CARD ─── */
+.ec{background:var(--bg);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.2rem;margin-bottom:1.1rem;}
+.elbl{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--orange);margin-bottom:12px;}
+
+/* ─── QUESTION ─── */
+.q{font-size:13.5px;color:var(--text);margin-bottom:5px;line-height:1.5;margin-top:10px;font-weight:500}
+.qh{font-size:11.5px;color:var(--dimmer);margin-bottom:7px;line-height:1.5}
+
+/* ─── INPUTS ─── */
+textarea,input[type=text]{
+  width:100%;border:1px solid var(--border);border-radius:var(--radius-md);
+  padding:9px 12px;font-size:13px;font-family:var(--font);
+  color:var(--text);background:var(--surface);
+  margin-bottom:9px;resize:vertical;line-height:1.5;
+  transition:border-color .15s, background .15s;
+}
+textarea:focus,input[type=text]:focus{
+  outline:none;border-color:var(--orange);background:var(--bg);
+  box-shadow:0 0 0 3px rgba(240,96,27,.08);
+}
+textarea::placeholder,input[type=text]::placeholder{color:var(--dimmer)}
+
+/* ─── COLOR INPUT WITH SWATCH ─── */
+.color-row{display:flex;align-items:center;gap:8px;margin-bottom:9px;}
+.color-swatch{width:32px;height:32px;border-radius:var(--radius-md);border:1px solid var(--border);flex-shrink:0;transition:background .2s;}
+.color-row input[type=text]{margin-bottom:0;flex:1;}
+
+/* ─── OPTION GRIDS ─── */
+.og{display:grid;grid-template-columns:1fr 1fr;gap:5px;margin-bottom:9px}
+.og3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:5px;margin-bottom:9px}
+.tc2{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:9px}
+.tc3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:9px;margin-bottom:9px}
+
+.opt{
+  padding:9px 11px;border:1px solid var(--border);border-radius:var(--radius-md);
+  background:var(--surface);color:var(--dim);font-size:12px;cursor:pointer;text-align:left;
+  line-height:1.4;font-family:var(--font);display:block;width:100%;
+  transition:all .15s;
+}
+.opt:hover{border-color:var(--border2);color:var(--text)}
+.opt.sel{background:var(--orange-tint);color:var(--orange-dark);border-color:var(--orange-border);font-weight:500}
+
+/* ─── NAV ROW ─── */
+.nr{
+  display:flex;justify-content:space-between;align-items:center;
+  margin-top:2rem;padding-top:1.25rem;
+  border-top:1px solid var(--border);
+}
+.si{font-size:12px;color:var(--dimmer);font-weight:500}
+
+/* ─── BUTTONS ─── */
+.btn{
+  padding:9px 18px;border-radius:var(--radius-md);
+  font-size:12.5px;cursor:pointer;transition:all .15s;
+  border:1px solid var(--border2);background:transparent;
+  color:var(--text);font-family:var(--font);font-weight:500;
+}
+.btn:hover{background:var(--surface);border-color:var(--border2)}
+.btn.p{background:var(--orange);color:#fff;border-color:var(--orange);font-weight:600;}
+.btn.p:hover{background:var(--orange-hover);border-color:var(--orange-hover)}
+
+/* ─── CREATOR CARD ─── */
+.creator-card{
+  border:1px solid var(--border);border-radius:var(--radius-lg);
+  padding:1.1rem;margin-bottom:.85rem;background:var(--surface);
+}
+.creator-num{font-size:9.5px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--orange);margin-bottom:.85rem;}
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+
+/* ─── CHECKLIST ─── */
+.checklist{display:flex;flex-direction:column;gap:5px;margin-bottom:1.1rem;}
+.check-item{
+  display:flex;align-items:flex-start;gap:10px;
+  padding:9px 12px;border:1px solid var(--border);
+  border-radius:var(--radius-md);background:var(--surface);cursor:pointer;
+  transition:all .15s;
+}
+.check-item.checked{background:var(--green-bg);border-color:var(--green-border);}
+.check-box{
+  width:16px;height:16px;border-radius:3px;border:1.5px solid var(--dimmer);
+  flex-shrink:0;margin-top:1px;display:flex;align-items:center;justify-content:center;
+  transition:all .15s;
+}
+.check-item.checked .check-box{background:var(--green-text);border-color:var(--green-text);}
+.check-text{font-size:13px;color:var(--dim);line-height:1.5;}
+.check-item.checked .check-text{color:var(--green-text);}
+
+/* ─── SETUP CARD ─── */
+.slc{border:1px solid var(--border);border-radius:var(--radius-md);padding:.9rem;margin-bottom:7px;background:var(--surface);}
+.sll{font-size:11px;font-weight:600;color:var(--orange);margin-bottom:6px;}
+
+/* ─── ELEMENT CARD ─── */
+.elem{border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.1rem 1.4rem;margin-bottom:.85rem;background:var(--surface);}
+.elem-num{font-size:9.5px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--orange);margin-bottom:4px;}
+.elem-title{font-size:14px;font-weight:700;color:var(--text);margin-bottom:.5rem;}
+.elem-desc{font-size:12.5px;color:var(--dim);line-height:1.7;margin-bottom:.9rem;}
+
+/* ─── ROADMAP CARDS ─── */
+.roadmap{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:1.5rem;}
+.rm-card{border:1px solid var(--border);border-radius:var(--radius-md);padding:.85rem;background:var(--surface);}
+.rm-num{font-family:var(--font-num);font-size:28px;font-weight:900;color:var(--orange);line-height:1;}
+.rm-title{font-size:12px;font-weight:600;color:var(--text);margin-top:4px;line-height:1.35;}
+.rm-sub{font-size:11px;color:var(--dimmer);margin-top:3px;line-height:1.4;}
+
+/* ─── DIVIDER ─── */
+.div{height:1px;background:var(--border);margin:1.5rem 0}
+
+/* ─── SAVE INDICATOR ─── */
+.save-dot{width:6px;height:6px;border-radius:50%;background:var(--dimmer);flex-shrink:0;transition:background .3s}
+.save-dot.saved{background:var(--green-text)}
+
+/* ─── SUMMARY / PLAYBOOK ─── */
+.sum{margin-bottom:.85rem}
+.slb{font-size:9.5px;text-transform:uppercase;letter-spacing:.09em;color:var(--dimmer);margin-bottom:3px;font-weight:600}
+.svl{font-size:13px;color:var(--text);background:var(--surface);padding:9px 12px;border-radius:var(--radius-md);line-height:1.5;min-height:36px;border:1px solid var(--border);}
+
+/* ─── VISUAL GUIDE (style guide output) ─── */
+.vg-section{margin-bottom:2rem;}
+.vg-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--orange);margin-bottom:.75rem;}
+.vg-palette{display:flex;gap:10px;margin-bottom:.75rem;flex-wrap:wrap;}
+.vg-swatch-wrap{display:flex;flex-direction:column;align-items:center;gap:6px;flex:1;min-width:80px;}
+.vg-swatch{width:100%;height:64px;border-radius:var(--radius-md);border:1px solid var(--border);transition:background .3s;}
+.vg-swatch-name{font-size:10px;color:var(--dimmer);font-weight:500;text-align:center;}
+.vg-swatch-hex{font-size:10px;color:var(--dim);font-family:monospace;text-align:center;}
+.vg-font-preview{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-md);padding:1rem 1.2rem;margin-bottom:.6rem;}
+.vg-font-name{font-size:10px;color:var(--dimmer);font-weight:600;text-transform:uppercase;letter-spacing:.08em;margin-bottom:.4rem;}
+.vg-font-display{font-size:28px;font-weight:700;color:var(--text);line-height:1.1;}
+.vg-font-sub{font-size:13px;color:var(--dim);margin-top:4px;}
+.vg-narrative{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:var(--radius-lg);padding:1.4rem;
+  border-left:3px solid var(--orange);
+}
+.vg-narrative p{font-size:14px;color:var(--text);line-height:1.9;margin:0;font-style:italic;}
+.vg-elements{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:1rem;}
+.vg-elem{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-md);padding:.9rem;}
+.vg-elem-label{font-size:9.5px;font-weight:700;text-transform:uppercase;letter-spacing:.09em;color:var(--orange);margin-bottom:4px;}
+.vg-elem-val{font-size:12.5px;color:var(--text);line-height:1.6;}
+.vg-shot-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:.75rem;}
+.vg-shot{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-md);padding:.85rem;}
+.vg-shot-name{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--orange);margin-bottom:4px;}
+.vg-shot-desc{font-size:12px;color:var(--dim);line-height:1.6;}
+.vg-stat-row{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:1.2rem;}
+.vg-stat{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-md);padding:.85rem;text-align:center;}
+.vg-stat-num{font-family:var(--font-num);font-size:32px;font-weight:900;line-height:1;color:var(--orange);}
+.vg-stat-label{font-size:10px;color:var(--dimmer);margin-top:4px;text-transform:uppercase;letter-spacing:.06em;}
+.vg-complete{
+  background:var(--green-bg);border:1px solid var(--green-border);
+  border-radius:var(--radius-lg);padding:1.2rem 1.4rem;
+  text-align:center;margin-bottom:1.5rem;
+}
+.vg-complete h3{color:var(--green-text);font-size:15px;margin-bottom:4px;}
+.vg-complete p{font-size:12.5px;color:var(--green-text);opacity:.85;line-height:1.6;}
+
+/* ─── RESPONSIVE ─── */
+@media(max-width:899px){
+  #sidebar{display:none}
+  #main{margin-left:0;display:block}
+  #wb{padding:1.25rem 1.25rem 5rem}
+  .roadmap{grid-template-columns:1fr 1fr}
+  .two-col{grid-template-columns:1fr}
+  .vg-elements{grid-template-columns:1fr}
+  .vg-shot-grid{grid-template-columns:1fr}
+}
+@media(min-width:900px){
+  .topbar,.tabs{display:none}
+}
+
+/* ─── PRINT ─── */
+@media print{
+  body::before,#sidebar,.topbar,.tabs,.nr,.theme-btn{display:none!important}
+  #layout{display:block!important}
+  #main{margin-left:0!important;display:block!important}
+  #wb{max-width:100%!important;padding:1rem!important}
+  body.print-guide #s6{display:block!important}
+  body.print-guide #s6 .nr{display:none!important}
+  body.print-full .sc{display:block!important}
+}
+</style>
+</head>
+<body>
+
+<div id="layout">
+
+<aside id="sidebar">
+  <div class="sb-top">
+    <div class="sb-brand">FSCreative™</div>
+    <div class="sb-title">Define Your Visual World™</div>
+  </div>
+  <nav id="sbnav"></nav>
+  <div class="sb-foot">
+    <div class="sb-prog">
+      <div class="pb"><div class="pf" style="width:0%"></div></div>
+      <div class="pt" style="margin-top:5px;font-size:10px">0/6</div>
+    </div>
+    <div class="save-dot" title="Auto-saved"></div>
+    <button class="theme-btn" aria-label="Toggle theme">
+      <svg class="icon-moon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+      <svg class="icon-sun" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+    </button>
+  </div>
+</aside>
+
+<div id="main"><div id="wb">
+<div class="topbar">
+  <div class="logo">FSCreative™ — Define Your Visual World™</div>
+  <div class="pw">
+    <div class="pb"><div class="pf" style="width:0%"></div></div>
+    <div class="pt">0/6</div>
+    <button class="theme-btn" aria-label="Toggle theme">
+      <svg class="icon-moon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+      <svg class="icon-sun" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+    </button>
+  </div>
+</div>
+<div class="tabs" id="tabbar"></div>
+
+<!-- ═══════════════════════════════════════════════════════ S0: WELCOME -->
+<div class="sc show" id="s0">
+  <div class="pl">FSCreative™ — Module 2</div>
+  <h1>Define Your Visual World™</h1>
+  <p class="intro">You've completed your Creator Foundation. Now it's time to build the visual identity that makes you look as premium as you actually are. This workbook has five workshops that build toward one final deliverable — your Visual World Document.</p>
+  <div class="sr">
+    <div class="sc2"><div class="sn">5</div><div class="sl">Workshops</div></div>
+    <div class="sc2"><div class="sn">6</div><div class="sl">Elements</div></div>
+    <div class="sc2"><div class="sn" id="dc">0</div><div class="sl">Completed</div></div>
+  </div>
+  <div class="ins"><p>Your Visual World is the intentional, cohesive environment your brand lives in. It's not just how your content looks — it's how your content <strong>feels</strong>. When all six elements are aligned, your brand stops looking like content and starts feeling like a world people want to step into.</p></div>
+  <div class="teach">
+    <p><strong>The six elements of your Visual World:</strong></p>
+    <ul>
+      <li><strong>Setting</strong> — Where your brand physically lives</li>
+      <li><strong>Mood</strong> — The emotional tone your content creates</li>
+      <li><strong>Color Language</strong> — The palette that reinforces your mood</li>
+      <li><strong>Design Details</strong> — The recurring elements that make you recognizable</li>
+      <li><strong>Shot System</strong> — The repeatable setups that create visual consistency</li>
+      <li><strong>Content Approach</strong> — How you show up within your world</li>
+    </ul>
+  </div>
+  <h2>Module Roadmap</h2>
+  <div class="roadmap">
+    <div class="rm-card"><div class="rm-num">01</div><div class="rm-title">Creator Analysis</div><div class="rm-sub">Study what premium looks like in your space</div></div>
+    <div class="rm-card"><div class="rm-num">02</div><div class="rm-title">Creator Mood Board</div><div class="rm-sub">Gather your visual inspiration</div></div>
+    <div class="rm-card"><div class="rm-num">03</div><div class="rm-title">Color Palette</div><div class="rm-sub">Build your visual language</div></div>
+    <div class="rm-card"><div class="rm-num">04</div><div class="rm-title">Shot System</div><div class="rm-sub">Create your repeatable setups</div></div>
+    <div class="rm-card" style="grid-column:1/-1"><div class="rm-num">05</div><div class="rm-title">Build Your Visual World</div><div class="rm-sub">Synthesize everything into your Visual World Document</div></div>
+  </div>
+  <div class="nr" style="justify-content:flex-end;border-top:none;padding-top:0">
+    <button class="btn p" id="b0n">Begin Workshop 1 →</button>
+  </div>
+  <div style="margin-top:1.5rem;padding-top:1.25rem;border-top:1px solid var(--border);display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--dimmer);flex-shrink:0"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+    <span style="font-size:12.5px;color:var(--dim)">Prefer pen &amp; paper? Print the full workbook and complete it by hand.</span>
+    <button id="printFullBtn" class="btn" style="margin-left:auto;font-size:11.5px">Print Full Workbook</button>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════ S1: CREATOR ANALYSIS -->
+<div class="sc" id="s1">
+  <div class="pl">Workshop 1</div>
+  <h1>Creator Analysis</h1>
+  <p class="intro">Before you build your own visual world, you need to develop your eye. Study 3–5 premium creators in your space and reverse-engineer their visual decisions. You're not copying them — you're training yourself to recognize intentional visual choices.</p>
+  <div class="ins"><p>The goal is to find <strong>your gap</strong>. After studying premium creators, you'll have a clear picture of what's already being done — and where the opportunity is for you to be different.</p></div>
+
+  <h2>Creator Analysis Framework</h2>
+  <div class="ec">
+    <div class="elbl">Creator 1</div>
+    <div class="two-col">
+      <div>
+        <div class="q">Creator name / handle</div>
+        <input type="text" id="c1name" placeholder="@handle or name">
+        <div class="q">Platform</div>
+        <input type="text" id="c1platform" placeholder="Instagram, YouTube, TikTok...">
+      </div>
+      <div>
+        <div class="q">Niche / Industry</div>
+        <input type="text" id="c1niche" placeholder="What space are they in?">
+      </div>
+    </div>
+    <div class="q">Setting — how would you describe their environment?</div>
+    <div class="og" id="g-c1env">
+      <button class="opt" data-g="c1env">Calm and minimal</button>
+      <button class="opt" data-g="c1env">Creative and eclectic</button>
+      <button class="opt" data-g="c1env">Professional and polished</button>
+      <button class="opt" data-g="c1env">Luxurious and elevated</button>
+      <button class="opt" data-g="c1env">Energetic and dynamic</button>
+      <button class="opt" data-g="c1env">Raw and authentic</button>
+    </div>
+    <div class="q">Mood — what do you FEEL when you watch their content?</div>
+    <input type="text" id="c1mood" placeholder="e.g. Calm, inspired, motivated, aspirational...">
+    <div class="q">Lighting style</div>
+    <div class="og" id="g-c1light">
+      <button class="opt" data-g="c1light">Warm, golden natural</button>
+      <button class="opt" data-g="c1light">Bright, even studio</button>
+      <button class="opt" data-g="c1light">High contrast dramatic</button>
+      <button class="opt" data-g="c1light">Soft, diffused</button>
+    </div>
+    <div class="q">Their 3 dominant colors</div>
+    <div class="tc3"><input type="text" id="c1col1" placeholder="Primary" style="margin-bottom:0"><input type="text" id="c1col2" placeholder="Secondary" style="margin-bottom:0"><input type="text" id="c1col3" placeholder="Accent" style="margin-bottom:0"></div>
+    <div class="q" style="margin-top:10px">What makes this creator look premium? (3 specific things)</div>
+    <textarea rows="3" id="c1premium" placeholder="1. &#10;2. &#10;3."></textarea>
+    <div class="q">What would you do differently?</div>
+    <input type="text" id="c1diff" placeholder="Where is their gap or weakness?">
+  </div>
+
+  <div class="ec">
+    <div class="elbl">Creator 2</div>
+    <div class="two-col">
+      <div>
+        <div class="q">Creator name / handle</div>
+        <input type="text" id="c2name" placeholder="@handle or name">
+        <div class="q">Platform</div>
+        <input type="text" id="c2platform" placeholder="Instagram, YouTube, TikTok...">
+      </div>
+      <div>
+        <div class="q">Niche / Industry</div>
+        <input type="text" id="c2niche" placeholder="What space are they in?">
+      </div>
+    </div>
+    <div class="q">Setting</div>
+    <div class="og" id="g-c2env">
+      <button class="opt" data-g="c2env">Calm and minimal</button>
+      <button class="opt" data-g="c2env">Creative and eclectic</button>
+      <button class="opt" data-g="c2env">Professional and polished</button>
+      <button class="opt" data-g="c2env">Luxurious and elevated</button>
+      <button class="opt" data-g="c2env">Energetic and dynamic</button>
+      <button class="opt" data-g="c2env">Raw and authentic</button>
+    </div>
+    <div class="q">What makes this creator look premium?</div>
+    <textarea rows="3" id="c2premium" placeholder="1. &#10;2. &#10;3."></textarea>
+    <div class="q">What would you do differently?</div>
+    <input type="text" id="c2diff" placeholder="Where is their gap or weakness?">
+  </div>
+
+  <div class="ec">
+    <div class="elbl">Creator 3</div>
+    <div class="two-col">
+      <div>
+        <div class="q">Creator name / handle</div>
+        <input type="text" id="c3name" placeholder="@handle or name">
+        <div class="q">Platform</div>
+        <input type="text" id="c3platform" placeholder="Instagram, YouTube, TikTok...">
+      </div>
+      <div>
+        <div class="q">Niche / Industry</div>
+        <input type="text" id="c3niche" placeholder="What space are they in?">
+      </div>
+    </div>
+    <div class="q">Setting</div>
+    <div class="og" id="g-c3env">
+      <button class="opt" data-g="c3env">Calm and minimal</button>
+      <button class="opt" data-g="c3env">Creative and eclectic</button>
+      <button class="opt" data-g="c3env">Professional and polished</button>
+      <button class="opt" data-g="c3env">Luxurious and elevated</button>
+      <button class="opt" data-g="c3env">Energetic and dynamic</button>
+      <button class="opt" data-g="c3env">Raw and authentic</button>
+    </div>
+    <div class="q">What makes this creator look premium?</div>
+    <textarea rows="3" id="c3premium" placeholder="1. &#10;2. &#10;3."></textarea>
+    <div class="q">What would you do differently?</div>
+    <input type="text" id="c3diff" placeholder="Where is their gap or weakness?">
+  </div>
+
+  <div class="ec">
+    <div class="elbl">Creator Analysis — Synthesis</div>
+    <div class="q">What visual patterns appear across multiple premium creators?</div>
+    <textarea rows="2" id="synPatterns" placeholder="What are they all doing that clearly works?"></textarea>
+    <div class="q">What is everyone doing that you want to do differently?</div>
+    <textarea rows="2" id="synDiff" placeholder="Where does the whole space look the same?"></textarea>
+    <div class="q">What is no one doing that you could own?</div>
+    <textarea rows="2" id="synOwn" placeholder="Your visual white space — what's unclaimed?"></textarea>
+    <div class="q">Your gap statement — how you'll be visually different from everyone in your space:</div>
+    <textarea rows="2" id="gapStatement" placeholder="My visual identity will stand apart because..."></textarea>
+  </div>
+
+  <div class="nr"><button class="btn" id="b1b">← Back</button><span class="si">1/5</span><button class="btn p" id="b1n">Save & Continue →</button></div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════ S2: MOOD BOARD -->
+<div class="sc" id="s2">
+  <div class="pl">Workshop 2</div>
+  <h1>Creator Mood Board</h1>
+  <p class="intro">Your mood board is the visual DNA of your brand. Not a Pinterest board of things you think look cool — a curated collection of images that, when placed together, tell one clear story about the world your brand lives in.</p>
+
+  <div class="ins"><p>The mood board comes <strong>before</strong> the color palette, before the typography, before any design decisions. All of those decisions should flow from the mood you're trying to create — and the mood board is how you discover what that mood actually is.</p></div>
+
+  <h2>The 10-10-10 Rule</h2>
+  <div class="teach">
+    <p>Your mood board should have <strong>30 images</strong> gathered from three specific sources:</p>
+    <ul>
+      <li><strong>10 from your platform</strong> — The best visual content you've seen on the platform you're building on. Content that stopped your scroll. Content that made you feel something.</li>
+      <li><strong>10 from your industry</strong> — Competitors, adjacent creators, brands in your space. What does premium look like in your industry?</li>
+      <li><strong>10 from outside your industry</strong> — Fashion, architecture, film, photography, interior design. This is where your visual world gets interesting. Bring in a visual language no one in your space is using.</li>
+    </ul>
+  </div>
+
+  <h2>Recommended Tools</h2>
+  <div class="og3" id="g-mbtool">
+    <button class="opt" data-g="mbtool">Pinterest</button>
+    <button class="opt" data-g="mbtool">Milanote</button>
+    <button class="opt" data-g="mbtool">Are.na</button>
+    <button class="opt" data-g="mbtool">Cosmos</button>
+    <button class="opt" data-g="mbtool">Notion</button>
+    <button class="opt" data-g="mbtool">Other</button>
+  </div>
+  <div class="q">Where is your mood board located?</div>
+  <input type="text" id="mbLink" placeholder="URL or note where you're building it...">
+
+  <h2>Step 3: Identify Patterns</h2>
+  <div class="ec">
+    <div class="elbl">Mood Board Analysis</div>
+    <div class="q">What colors appear most frequently?</div>
+    <input type="text" id="mbColors" placeholder="List the dominant colors you see across your 30 images...">
+    <div class="q">What lighting style appears most frequently?</div>
+    <div class="og" id="g-mblight">
+      <button class="opt" data-g="mblight">Warm, golden natural</button>
+      <button class="opt" data-g="mblight">Bright, even studio</button>
+      <button class="opt" data-g="mblight">High contrast dramatic</button>
+      <button class="opt" data-g="mblight">Soft, diffused</button>
+    </div>
+    <div class="q">What mood do the images collectively create?</div>
+    <input type="text" id="mbMood" placeholder="In one word or phrase...">
+    <div class="q">What textures appear most frequently?</div>
+    <div class="og" id="g-mbtex">
+      <button class="opt" data-g="mbtex">Natural (wood, plants, stone)</button>
+      <button class="opt" data-g="mbtex">Modern (concrete, metal, glass)</button>
+      <button class="opt" data-g="mbtex">Vintage (leather, aged wood)</button>
+      <button class="opt" data-g="mbtex">Mixed / eclectic</button>
+    </div>
+    <div class="q">If your mood board were a movie, what movie would it be?</div>
+    <input type="text" id="mbMovie" placeholder="e.g. Arrival, Amélie, Heat, The Social Network...">
+    <div class="q">If your mood board were a time of day, what time would it be?</div>
+    <input type="text" id="mbTime" placeholder="e.g. Golden hour, overcast morning, 2am city...">
+    <div class="q">If your mood board were a place, where would it be?</div>
+    <input type="text" id="mbPlace" placeholder="e.g. A minimalist Tokyo apartment, a coastal studio...">
+  </div>
+
+  <h2>Step 4: Your Mood Board Statement</h2>
+  <div class="ec">
+    <div class="elbl">Mood Board Statement</div>
+    <div class="qh">In 2–3 sentences, describe the visual world your mood board represents. This statement becomes the foundation for everything that follows.</div>
+    <textarea rows="4" id="mbStatement" placeholder="My mood board represents a world that feels... The dominant energy is... When someone steps into this world they feel..."></textarea>
+  </div>
+
+  <h2>Mood Board Checklist</h2>
+  <div class="checklist" id="mbChecklist">
+    <div class="check-item" data-key="mb1"><div class="check-box"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div><div class="check-text">I have 30 curated images (10-10-10)</div></div>
+    <div class="check-item" data-key="mb2"><div class="check-box"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div><div class="check-text">My images feel cohesive (not random)</div></div>
+    <div class="check-item" data-key="mb3"><div class="check-box"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div><div class="check-text">My images represent a clear mood (not multiple conflicting moods)</div></div>
+    <div class="check-item" data-key="mb4"><div class="check-box"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div><div class="check-text">I've identified the dominant colors, lighting, and textures</div></div>
+    <div class="check-item" data-key="mb5"><div class="check-box"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div><div class="check-text">I've written my mood board statement</div></div>
+  </div>
+
+  <div class="nr"><button class="btn" id="b2b">← Back</button><span class="si">2/5</span><button class="btn p" id="b2n">Save & Continue →</button></div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════ S3: COLOR PALETTE -->
+<div class="sc" id="s3">
+  <div class="pl">Workshop 3</div>
+  <h1>Define Your Color Palette</h1>
+  <p class="intro">Color is emotion. Before someone reads a single word of your content, before they hear your voice — they feel your color palette. Your colors communicate who you are, who you're for, and what you stand for before you say anything.</p>
+
+  <h2>Color Psychology Primer</h2>
+  <div class="teach">
+    <ul>
+      <li><strong>Warm tones</strong> (oranges, yellows, reds, warm browns) — Energy, warmth, approachability, passion. Best for energetic, motivational, or approachable brands.</li>
+      <li><strong>Cool tones</strong> (blues, greens, grays, cool whites) — Calm, clarity, professionalism, authority. Best for authoritative, clear, or sophisticated brands.</li>
+      <li><strong>Neutral tones</strong> (beiges, creams, warm whites, soft grays) — Timelessness, elegance, simplicity, premium. Best for elevated, minimal, or editorial brands.</li>
+      <li><strong>Dark tones</strong> (deep blacks, charcoals, dark navies) — Drama, luxury, depth, mystery. Best for cinematic, premium, or bold brands.</li>
+      <li><strong>Muted/Desaturated</strong> (dusty pinks, sage greens, muted blues) — Authenticity, warmth, nostalgia. Best for real, warm, or lifestyle-oriented brands.</li>
+    </ul>
+  </div>
+
+  <h2>Your Color Palette</h2>
+  <div class="ec">
+    <div class="elbl">The Color Palette Framework</div>
+    <div class="qh">Enter hex codes (e.g. #F0601B) or color names. The swatches will update live.</div>
+
+    <div class="q">Primary Color — your dominant brand color</div>
+    <div class="color-row">
+      <div class="color-swatch" id="sw-primary"></div>
+      <input type="text" id="col-primary" placeholder="#hex or color name — e.g. #F0601B" style="margin-bottom:0">
+    </div>
+    <div class="qh">What emotion do you want this color to create?</div>
+    <input type="text" id="col-primary-emotion" placeholder="e.g. Energy, warmth, confidence...">
+
+    <div class="q">Secondary Color — your supporting color</div>
+    <div class="color-row">
+      <div class="color-swatch" id="sw-secondary"></div>
+      <input type="text" id="col-secondary" placeholder="#hex or color name — e.g. #1A1A1A" style="margin-bottom:0">
+    </div>
+
+    <div class="q">Accent Color — used sparingly, for emphasis</div>
+    <div class="color-row">
+      <div class="color-swatch" id="sw-accent"></div>
+      <input type="text" id="col-accent" placeholder="#hex or color name — e.g. #FFD700" style="margin-bottom:0">
+    </div>
+
+    <div class="q">Neutral Base — your background canvas</div>
+    <div class="color-row">
+      <div class="color-swatch" id="sw-neutral"></div>
+      <input type="text" id="col-neutral" placeholder="#hex or color name — e.g. #F7F6F4" style="margin-bottom:0">
+    </div>
+
+    <div class="q" style="margin-top:12px">Give your palette a name that captures the mood</div>
+    <input type="text" id="paletteName" placeholder='e.g. "Warm Minimal" · "Dark Cinematic" · "Cool Authority" · "Golden Hour"'>
+  </div>
+
+  <h2>Typography Framework</h2>
+  <div class="teach">
+    <p>Your typography is the written voice of your visual world. It should feel like a natural extension of your color palette and mood.</p>
+    <p><strong>Font pairing principle: create contrast.</strong> If your primary font is bold, your secondary should be light. If your primary is serif, your secondary should be sans-serif. Contrast creates visual hierarchy and makes your content easier to read.</p>
+  </div>
+
+  <div class="ec">
+    <div class="elbl">Your Typography</div>
+    <div class="q">Primary Font — headlines, hooks, title cards</div>
+    <div class="og" id="g-font1style">
+      <button class="opt" data-g="font1style">Bold sans-serif (clean, modern)</button>
+      <button class="opt" data-g="font1style">Strong serif (classic, editorial)</button>
+      <button class="opt" data-g="font1style">Display / statement (unique)</button>
+      <button class="opt" data-g="font1style">Script / handwritten (personal)</button>
+    </div>
+    <input type="text" id="font-primary" placeholder="Font name — e.g. Helvetica Neue Bold, Canela, Playfair Display...">
+
+    <div class="q">Secondary Font — body text, captions, supporting copy</div>
+    <div class="og" id="g-font2style">
+      <button class="opt" data-g="font2style">Clean sans-serif (minimal, modern)</button>
+      <button class="opt" data-g="font2style">Light serif (elegant, editorial)</button>
+      <button class="opt" data-g="font2style">Monospace (technical, precise)</button>
+      <button class="opt" data-g="font2style">Light sans-serif (simple, clear)</button>
+    </div>
+    <input type="text" id="font-secondary" placeholder="Font name — e.g. Inter Light, Garamond, DM Sans...">
+
+    <div class="q">Typography rules (how you'll use your fonts consistently)</div>
+    <textarea rows="3" id="typographyRules" placeholder="1. Primary font is always used for: &#10;2. Secondary font is always used for: &#10;3. I never use more than ___ fonts in one piece of content"></textarea>
+  </div>
+
+  <h2>Color & Typography Checklist</h2>
+  <div class="checklist" id="ctChecklist">
+    <div class="check-item" data-key="ct1"><div class="check-box"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div><div class="check-text">I have 4 defined colors with hex codes</div></div>
+    <div class="check-item" data-key="ct2"><div class="check-box"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div><div class="check-text">My colors match the mood of my mood board</div></div>
+    <div class="check-item" data-key="ct3"><div class="check-box"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div><div class="check-text">I have 2 defined fonts with clear rules for each</div></div>
+    <div class="check-item" data-key="ct4"><div class="check-box"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div><div class="check-text">My fonts create contrast and hierarchy</div></div>
+    <div class="check-item" data-key="ct5"><div class="check-box"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div><div class="check-text">I've tested my palette and typography together — it feels cohesive and premium</div></div>
+  </div>
+
+  <div class="nr"><button class="btn" id="b3b">← Back</button><span class="si">3/5</span><button class="btn p" id="b3n">Save & Continue →</button></div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════ S4: SHOT SYSTEM -->
+<div class="sc" id="s4">
+  <div class="pl">Workshop 4</div>
+  <h1>Shot System Blueprint</h1>
+  <p class="intro">The most premium-looking creators aren't necessarily using better cameras — they're using better systems. A shot system is a set of repeatable camera setups you use consistently across all your content. It's what creates visual consistency without requiring you to think about it every time.</p>
+
+  <div class="ins"><p>Without a shot system, every piece of content looks slightly different. With a shot system, every piece of content <strong>feels like it belongs together</strong>. That's what brand recognition looks like.</p></div>
+
+  <h2>The Four Essential Shots</h2>
+  <div class="teach">
+    <ul>
+      <li><strong>Wide Shot (Establishing)</strong> — Shows where everything is happening. Establishes your world. Use for openings, lifestyle content, B-roll transitions.</li>
+      <li><strong>Medium Shot (Connection)</strong> — Frames waist up. Most versatile shot. Use for teaching, storytelling, lifestyle content.</li>
+      <li><strong>Close-Up (Intimacy)</strong> — Shoulders up. Creates intimacy and emotional connection. Use for direct-to-camera teaching, emotional moments, key points.</li>
+      <li><strong>Creative Shot (Signature)</strong> — Any shot that breaks the rules. Unexpected angles, reflections, foreground elements. This is where your visual personality comes through.</li>
+    </ul>
+  </div>
+
+  <h2>Framing Principles</h2>
+  <div class="teach">
+    <p><strong>Rule of Thirds:</strong> Divide your frame into nine sections. Place your subject on one of the four intersection points — not in the center. Center framing feels static. Off-center feels cinematic.</p>
+    <p><strong>Depth:</strong> Always think in three planes. Foreground (slightly out of focus), Middle Ground (your subject — sharp), Background (slightly out of focus). Even a small plant in front of the lens creates depth that makes your content feel expensive.</p>
+    <p><strong>Headroom:</strong> 10–15% of frame above the head. Too much = amateur. Too little = cramped.</p>
+  </div>
+
+  <h2>Build Your Shot System</h2>
+  <div class="ec">
+    <div class="elbl">Shot System Blueprint</div>
+
+    <div class="slc">
+      <div class="sll">Setup 1 — Wide Shot</div>
+      <div class="q" style="margin-top:0">Camera height &amp; distance</div>
+      <input type="text" id="ss1-camera" placeholder="e.g. Eye level, 8ft back from subject">
+      <div class="q">Framing description</div>
+      <input type="text" id="ss1-framing" placeholder="e.g. Full body + environment, subject on rule of thirds left">
+      <div class="q">Lighting setup</div>
+      <input type="text" id="ss1-lighting" placeholder="e.g. Natural window light camera left + reflector right">
+      <div class="q">What's visible in background</div>
+      <input type="text" id="ss1-bg" placeholder="e.g. Bookshelf, plants, desk setup...">
+      <div class="q">I use this setup for</div>
+      <input type="text" id="ss1-use" placeholder="e.g. Video openings, lifestyle B-roll, establishing the world...">
+    </div>
+
+    <div class="slc">
+      <div class="sll">Setup 2 — Medium Shot</div>
+      <div class="q" style="margin-top:0">Camera height &amp; distance</div>
+      <input type="text" id="ss2-camera" placeholder="e.g. Eye level, 5ft back from subject">
+      <div class="q">Framing description</div>
+      <input type="text" id="ss2-framing" placeholder="e.g. Waist up, slight right of center, eye line at upper third">
+      <div class="q">Lighting setup</div>
+      <input type="text" id="ss2-lighting" placeholder="e.g. Key light at 45°, fill card opposite side">
+      <div class="q">What's visible in background</div>
+      <input type="text" id="ss2-bg" placeholder="e.g. Blurred desk, warm lamp glow...">
+      <div class="q">I use this setup for</div>
+      <input type="text" id="ss2-use" placeholder="e.g. Teaching sections, storytelling, most of my talking head...">
+    </div>
+
+    <div class="slc">
+      <div class="sll">Setup 3 — Close-Up</div>
+      <div class="q" style="margin-top:0">Camera height &amp; distance</div>
+      <input type="text" id="ss3-camera" placeholder="e.g. Slightly below eye level, 3ft back">
+      <div class="q">Framing description</div>
+      <input type="text" id="ss3-framing" placeholder="e.g. Shoulders to top of head, eyes on upper third, shallow depth of field">
+      <div class="q">Lighting setup</div>
+      <input type="text" id="ss3-lighting" placeholder="e.g. Same as medium but slightly closer to key light">
+      <div class="q">I use this setup for</div>
+      <input type="text" id="ss3-use" placeholder="e.g. Key points, emotional moments, direct audience address...">
+    </div>
+
+    <div class="slc">
+      <div class="sll">Setup 4 — B-Roll Setup</div>
+      <div class="q" style="margin-top:0">Types of shots I'll capture</div>
+      <textarea rows="2" id="ss4-types" placeholder="e.g. Hands typing, macro objects, overhead desk shots, walking shots..."></textarea>
+      <div class="q">Objects / details I'll film</div>
+      <input type="text" id="ss4-objects" placeholder="e.g. Coffee mug, notebook, keyboard, plants, hands writing...">
+      <div class="q">Frame rate for B-roll</div>
+      <div class="og3" id="g-bfps">
+        <button class="opt" data-g="bfps">24fps (standard)</button>
+        <button class="opt" data-g="bfps">60fps (slow-mo)</button>
+        <button class="opt" data-g="bfps">Both</button>
+      </div>
+    </div>
+
+    <div class="slc">
+      <div class="sll">Setup 5 — Creative / Signature Shot</div>
+      <div class="q" style="margin-top:0">Description of the shot</div>
+      <input type="text" id="ss5-desc" placeholder="e.g. Filming through foreground plant, Dutch angle, overhead, reflection...">
+      <div class="q">How I achieve it</div>
+      <input type="text" id="ss5-how" placeholder="e.g. Place plant 6in in front of lens at f/1.8, slightly out of focus...">
+      <div class="q">What it communicates about my brand</div>
+      <input type="text" id="ss5-brand" placeholder="e.g. Intentionality, creative eye, premium production value...">
+    </div>
+  </div>
+
+  <h2>Camera Movement Style</h2>
+  <div class="ec">
+    <div class="elbl">Movement Approach</div>
+    <div class="q">My primary camera movement style</div>
+    <div class="og" id="g-movement">
+      <button class="opt" data-g="movement">Primarily static (clean, professional)</button>
+      <button class="opt" data-g="movement">Subtle movement (slow push-ins, intentional)</button>
+      <button class="opt" data-g="movement">Dynamic movement (handheld, energetic)</button>
+      <button class="opt" data-g="movement">Mixed by content type</button>
+    </div>
+    <div class="q">My signature shot — the one that makes my content instantly recognizable</div>
+    <input type="text" id="signatureShot" placeholder="The one setup that's uniquely mine...">
+  </div>
+
+  <h2>Shot System Checklist</h2>
+  <div class="checklist" id="ssChecklist">
+    <div class="check-item" data-key="ss1"><div class="check-box"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div><div class="check-text">I have 3–5 documented setups with defined framing, lighting, and background</div></div>
+    <div class="check-item" data-key="ss2"><div class="check-box"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div><div class="check-text">I know which setup to use for which type of content</div></div>
+    <div class="check-item" data-key="ss3"><div class="check-box"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div><div class="check-text">I've practiced each setup and reviewed the footage</div></div>
+    <div class="check-item" data-key="ss4"><div class="check-box"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div><div class="check-text">My setups feel consistent with my visual world and mood board</div></div>
+  </div>
+
+  <div class="nr"><button class="btn" id="b4b">← Back</button><span class="si">4/5</span><button class="btn p" id="b4n">Save & Continue →</button></div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════ S5: BUILD YOUR VISUAL WORLD -->
+<div class="sc" id="s5">
+  <div class="pl">Workshop 5</div>
+  <h1>Build Your Visual World</h1>
+  <p class="intro">You've done the work. Now synthesize everything into one cohesive document — your Visual World. This is not just a style guide. It's the document you reference every time you create content. The document that ensures every piece of content you create feels like it belongs to the same world.</p>
+
+  <div class="ins"><p>When your Visual World is defined, you stop making random visual decisions. You stop second-guessing how something should look. You just create — and it always looks like you.</p></div>
+
+  <h2>The Six Elements</h2>
+
+  <!-- Element 1: Setting -->
+  <div class="elem">
+    <div class="elem-num">Element 1</div>
+    <div class="elem-title">Setting</div>
+    <div class="elem-desc">Where does your brand live? Your setting is the physical and contextual environment of your brand — where your content takes place and what that environment communicates.</div>
+    <div class="q">Where do you primarily film?</div>
+    <input type="text" id="e1-location" placeholder="e.g. Home office, studio, outdoors, café...">
+    <div class="q">Environment vibe</div>
+    <div class="og" id="g-e1vibe">
+      <button class="opt" data-g="e1vibe">Calm and minimal</button>
+      <button class="opt" data-g="e1vibe">Creative and eclectic</button>
+      <button class="opt" data-g="e1vibe">Professional and polished</button>
+      <button class="opt" data-g="e1vibe">Luxurious and elevated</button>
+      <button class="opt" data-g="e1vibe">Energetic and dynamic</button>
+      <button class="opt" data-g="e1vibe">Raw and authentic</button>
+    </div>
+    <div class="q">What does your setting communicate to your audience?</div>
+    <input type="text" id="e1-communicate" placeholder="e.g. That I operate from a place of intention and calm...">
+    <div class="q">Setting Statement — complete this sentence:</div>
+    <input type="text" id="e1-statement" placeholder="My brand lives in...">
+  </div>
+
+  <!-- Element 2: Mood -->
+  <div class="elem">
+    <div class="elem-num">Element 2</div>
+    <div class="elem-title">Mood</div>
+    <div class="elem-desc">How does your content feel? Your mood is the emotional tone your content creates — the feeling someone gets when they encounter your brand before they process any information.</div>
+    <div class="q">Primary Mood</div>
+    <div class="og" id="g-e2mood">
+      <button class="opt" data-g="e2mood">Warm and approachable</button>
+      <button class="opt" data-g="e2mood">Cool and authoritative</button>
+      <button class="opt" data-g="e2mood">Energetic and motivating</button>
+      <button class="opt" data-g="e2mood">Calm and contemplative</button>
+      <button class="opt" data-g="e2mood">Bold and challenging</button>
+      <button class="opt" data-g="e2mood">Authentic and raw</button>
+    </div>
+    <div class="q">Lighting mood — what lighting creates your mood?</div>
+    <div class="og" id="g-e2light">
+      <button class="opt" data-g="e2light">Warm golden natural light</button>
+      <button class="opt" data-g="e2light">Bright even studio light</button>
+      <button class="opt" data-g="e2light">High contrast dramatic</button>
+      <button class="opt" data-g="e2light">Soft diffused light</button>
+    </div>
+    <div class="q">Time of day your content feels like</div>
+    <input type="text" id="e2-time" placeholder="e.g. Early morning, golden hour, late night city...">
+    <div class="q">Mood Statement — complete this sentence:</div>
+    <input type="text" id="e2-statement" placeholder="My content feels like...">
+  </div>
+
+  <!-- Element 3: Color Language (pull from W3) -->
+  <div class="elem">
+    <div class="elem-num">Element 3</div>
+    <div class="elem-title">Color Language</div>
+    <div class="elem-desc">Your color palette and typography, defined in Workshop 3. Confirm they're locked in below.</div>
+    <div class="q">Color grade approach for video</div>
+    <div class="og" id="g-e3grade">
+      <button class="opt" data-g="e3grade">Warm tones</button>
+      <button class="opt" data-g="e3grade">Cool tones</button>
+      <button class="opt" data-g="e3grade">Desaturated / film-like</button>
+      <button class="opt" data-g="e3grade">High contrast</button>
+      <button class="opt" data-g="e3grade">Natural / ungraded</button>
+      <button class="opt" data-g="e3grade">Mixed by content type</button>
+    </div>
+    <div class="q">A visual reference (creator or film whose color world you want to study)</div>
+    <input type="text" id="e3-ref" placeholder="e.g. Creator name or film director whose palette you admire">
+  </div>
+
+  <!-- Element 4: Design Details -->
+  <div class="elem">
+    <div class="elem-num">Element 4</div>
+    <div class="elem-title">Design Details</div>
+    <div class="elem-desc">The small, intentional elements that show up in your content over and over again. The things that make your content feel like yours even before someone sees your face.</div>
+    <div class="q">Signature Objects (what always appears in your content)</div>
+    <textarea rows="3" id="e4-objects" placeholder="1. &#10;2. &#10;3. &#10;4. &#10;5."></textarea>
+    <div class="q">Signature Textures</div>
+    <div class="og" id="g-e4tex">
+      <button class="opt" data-g="e4tex">Natural (wood, plants, fabric, stone)</button>
+      <button class="opt" data-g="e4tex">Modern (concrete, metal, glass)</button>
+      <button class="opt" data-g="e4tex">Vintage (leather, aged wood, film grain)</button>
+      <button class="opt" data-g="e4tex">Mixed / eclectic</button>
+    </div>
+    <div class="q">Wardrobe — my signature style</div>
+    <input type="text" id="e4-wardrobe" placeholder="e.g. Clean neutrals, minimal logos, muted tones...">
+    <div class="q">What I never show (your Never Show List)</div>
+    <textarea rows="2" id="e4-never" placeholder="1. &#10;2. &#10;3. Defining what's off-brand is just as important as what's on-brand."></textarea>
+  </div>
+
+  <!-- Element 5: Shot System (pull from W4) -->
+  <div class="elem">
+    <div class="elem-num">Element 5</div>
+    <div class="elem-title">Shot System</div>
+    <div class="elem-desc">Your repeatable setups from Workshop 4. Confirm your go-to shots below.</div>
+    <div class="q">My primary filming setup (the one I use most)</div>
+    <input type="text" id="e5-primary" placeholder="e.g. Medium shot, eye level, f/1.8, warm window light camera left...">
+    <div class="q">My signature shot that makes my content instantly recognizable</div>
+    <input type="text" id="e5-signature" placeholder="The setup that's uniquely mine...">
+  </div>
+
+  <!-- Element 6: Content Approach -->
+  <div class="elem">
+    <div class="elem-num">Element 6</div>
+    <div class="elem-title">Content Approach</div>
+    <div class="elem-desc">How do you show up within your world? Your content approach defines the ratio, format, and energy of your presence.</div>
+    <div class="q">Content Mix (approximate percentages, should total 100%)</div>
+    <div class="tc2">
+      <input type="text" id="e6-edu" placeholder="Educational / teaching: __%" style="margin-bottom:0">
+      <input type="text" id="e6-value" placeholder="Value / quick tips: __%" style="margin-bottom:0">
+    </div>
+    <div style="height:5px"></div>
+    <div class="tc2">
+      <input type="text" id="e6-life" placeholder="Lifestyle / BTS: __%" style="margin-bottom:9px">
+      <input type="text" id="e6-proof" placeholder="Social proof / results: __%" style="margin-bottom:9px">
+    </div>
+    <div class="q">Primary Format</div>
+    <div class="og" id="g-e6format">
+      <button class="opt" data-g="e6format">Talking head (direct-to-camera)</button>
+      <button class="opt" data-g="e6format">Voiceover + B-roll</button>
+      <button class="opt" data-g="e6format">Text on screen (quick value)</button>
+      <button class="opt" data-g="e6format">Mixed formats</button>
+    </div>
+    <div class="q">Energy Level</div>
+    <div class="og" id="g-e6energy">
+      <button class="opt" data-g="e6energy">Calm and measured</button>
+      <button class="opt" data-g="e6energy">Conversational and warm</button>
+      <button class="opt" data-g="e6energy">High energy and motivating</button>
+      <button class="opt" data-g="e6energy">Thoughtful and deep</button>
+    </div>
+    <div class="q">Content Approach Statement — complete this sentence:</div>
+    <input type="text" id="e6-statement" placeholder="In my content, I show up as...">
+  </div>
+
+  <!-- Visual World Narrative -->
+  <h2>Your Visual World Narrative</h2>
+  <div class="teach">
+    <p>This is the most important part of this entire module. Take everything you've defined and write a 2–3 paragraph narrative that describes your Visual World. This is not a list of specifications — it's a story about the world your brand lives in.</p>
+    <p><strong>Example:</strong> "My brand lives in a calm, minimal home studio bathed in warm natural light. It feels like a quiet morning — contemplative, intentional, unhurried. You'll always see a coffee mug, a notebook, and a small plant. The colors are warm beige, forest green, and cream..."</p>
+  </div>
+  <div class="ec">
+    <div class="elbl">Your Visual World Narrative</div>
+    <div class="qh">Write in present tense. Write as if your Visual World already exists.</div>
+    <textarea rows="8" id="vwNarrative" placeholder="My brand lives in...&#10;&#10;My content is primarily...&#10;&#10;This world reinforces my message that..."></textarea>
+  </div>
+
+  <div class="nr"><button class="btn" id="b5b">← Back</button><span class="si">5/5</span><button class="btn p" id="b5n">Build My Visual World →</button></div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════ S6: VISUAL WORLD GUIDE -->
+<div class="sc" id="s6">
+  <div class="pl">Your Visual World™</div>
+  <h1>Your Visual World Document</h1>
+  <p class="intro">Everything you've built — synthesized into one living document. Refer to this every time you create content. Share it with editors and collaborators. Return to it whenever you need to recalibrate.</p>
+
+  <div id="vwComplete"></div>
+  <div id="vwPalette"></div>
+  <div id="vwFonts"></div>
+  <div id="vwNarrative"></div>
+  <div id="vwElements"></div>
+  <div id="vwShots"></div>
+  <div id="vwAnswers"></div>
+
+  <div class="div"></div>
+  <div class="ins"><p>Your Visual World is not finished when you complete this module — it's a living document. The goal right now is not perfection. The goal is clarity. A clear, defined Visual World that's 80% right is infinitely more powerful than a perfect Visual World that exists only in your head. Define it. Document it. Use it. Refine it as you go.</p></div>
+
+  <div class="nr">
+    <button class="btn" id="b6b">← Back</button>
+    <div style="display:flex;gap:8px;">
+      <button class="btn" id="printFullBtn2" style="font-size:11.5px">Print Workbook</button>
+      <button class="btn p" id="printGuideBtn">Download Visual Guide →</button>
+    </div>
+  </div>
+</div>
+
+</div></div></div>
+
+<script>
+var TABS=['Welcome','Creator Analysis','Mood Board','Color & Type','Shot System','Visual World','Your Guide'];
+var ICONS=[
+  '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>',
+  '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>',
+  '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>',
+  '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="13.5" cy="6.5" r="2.5"/><path d="M21 16.5a4.5 4.5 0 0 1-8 0M3 12h18"/><circle cx="6.5" cy="17.5" r="2.5"/></svg>',
+  '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 7l-7 5 7 5V7z"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg>',
+  '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>',
+  '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>'
+];
+var done=new Set();
+var cur=0;
+var checks={};
+
+function go(n){
+  document.querySelectorAll('.sc').forEach(function(s){s.classList.remove('show');});
+  var t=document.getElementById('s'+n);
+  if(t)t.classList.add('show');
+  cur=n;
+  render();
+  if(n===6)buildGuide();
+  window.scrollTo(0,0);
+}
+
+function finish(from,to){done.add(from);saveData();go(to);}
+
+function render(){
+  var total=6;
+  var pct=Math.round((done.size/total)*100);
+  document.querySelectorAll('.pf').forEach(function(el){el.style.width=pct+'%';});
+  document.querySelectorAll('.pt').forEach(function(el){el.textContent=done.size+'/'+total;});
+  document.getElementById('dc').textContent=done.size;
+  var tb=document.getElementById('tabbar');
+  tb.innerHTML='';
+  TABS.forEach(function(t,i){
+    var b=document.createElement('button');
+    b.className='tab'+(i===cur?' on':done.has(i)?' ok':'');
+    b.textContent=t;
+    (function(x){b.addEventListener('click',function(){go(x);});})(i);
+    tb.appendChild(b);
+  });
+  var sn=document.getElementById('sbnav');
+  if(sn){
+    sn.innerHTML='';
+    TABS.forEach(function(t,i){
+      var b=document.createElement('button');
+      b.className='sb-item'+(i===cur?' on':done.has(i)?' ok':'');
+      b.innerHTML='<span class="sb-icon">'+ICONS[i]+'</span>'+t;
+      (function(x){b.addEventListener('click',function(){go(x);});})(i);
+      sn.appendChild(b);
+    });
+  }
+}
+
+function initOpts(){
+  document.querySelectorAll('.opt[data-g]').forEach(function(btn){
+    btn.addEventListener('click',function(){
+      var g=btn.getAttribute('data-g');
+      document.querySelectorAll('.opt[data-g="'+g+'"]').forEach(function(o){o.classList.remove('sel');});
+      btn.classList.add('sel');
+    });
+  });
+}
+
+function initChecklists(){
+  document.querySelectorAll('.check-item[data-key]').forEach(function(item){
+    var key=item.getAttribute('data-key');
+    if(checks[key])item.classList.add('checked');
+    item.addEventListener('click',function(){
+      item.classList.toggle('checked');
+      checks[key]=item.classList.contains('checked');
+      saveData();
+    });
+  });
+}
+
+// ─── COLOR SWATCHES ───
+function initColorSwatches(){
+  var pairs=[
+    ['col-primary','sw-primary'],
+    ['col-secondary','sw-secondary'],
+    ['col-accent','sw-accent'],
+    ['col-neutral','sw-neutral']
+  ];
+  pairs.forEach(function(p){
+    var inp=document.getElementById(p[0]);
+    var sw=document.getElementById(p[1]);
+    if(!inp||!sw)return;
+    function update(){
+      var val=inp.value.trim();
+      if(val){sw.style.background=val;sw.style.borderColor='transparent';}
+      else{sw.style.background='';sw.style.borderColor='';}
+    }
+    inp.addEventListener('input',update);
+    update();
+  });
+}
+
+function printFull(){
+  document.body.classList.add('print-full');
+  window.print();
+  setTimeout(function(){document.body.classList.remove('print-full');},500);
+}
+
+function printGuide(){
+  document.body.classList.add('print-guide');
+  window.print();
+  setTimeout(function(){document.body.classList.remove('print-guide');},500);
+}
+
+function wire(){
+  var map=[
+    ['b0n',null,0,1],
+    ['b1b',null,null,0],['b1n',null,1,2],
+    ['b2b',null,null,1],['b2n',null,2,3],
+    ['b3b',null,null,2],['b3n',null,3,4],
+    ['b4b',null,null,3],['b4n',null,4,5],
+    ['b5b',null,null,4],['b5n',null,5,6],
+    ['b6b',null,null,5]
+  ];
+  map.forEach(function(m){
+    var el=document.getElementById(m[0]);
+    if(!el)return;
+    var from=m[2],to=m[3];
+    el.addEventListener('click',function(){
+      if(from!==null)finish(from,to);
+      else go(to);
+    });
+  });
+  var pr=document.getElementById('printGuideBtn');
+  if(pr)pr.addEventListener('click',printGuide);
+  var pf=document.getElementById('printFullBtn');
+  if(pf)pf.addEventListener('click',printFull);
+  var pf2=document.getElementById('printFullBtn2');
+  if(pf2)pf2.addEventListener('click',printFull);
+}
+
+function gv(id){var e=document.getElementById(id);return e?e.value.trim():'';}
+function gs(g){var e=document.querySelector('.opt.sel[data-g="'+g+'"]');return e?e.textContent.trim():'';}
+
+// ─── AUTO-SAVE ───
+var SAVE_KEY='vww-v1';
+var saveTimer;
+
+function saveData(){
+  var data={inputs:{},opts:{},done:Array.from(done),cur:cur,checks:checks};
+  document.querySelectorAll('textarea,input[type=text]').forEach(function(el){
+    if(el.id)data.inputs[el.id]=el.value;
+  });
+  document.querySelectorAll('.opt.sel[data-g]').forEach(function(el){
+    data.opts[el.getAttribute('data-g')]=el.textContent.trim();
+  });
+  try{
+    localStorage.setItem(SAVE_KEY,JSON.stringify(data));
+    var dot=document.querySelector('.save-dot');
+    if(dot){dot.classList.add('saved');clearTimeout(saveTimer);saveTimer=setTimeout(function(){dot.classList.remove('saved');},2000);}
+  }catch(e){}
+}
+
+function loadData(){
+  var raw=localStorage.getItem(SAVE_KEY);
+  if(!raw)return;
+  try{
+    var data=JSON.parse(raw);
+    if(data.inputs){Object.keys(data.inputs).forEach(function(id){var el=document.getElementById(id);if(el&&data.inputs[id])el.value=data.inputs[id];});}
+    if(data.opts){Object.keys(data.opts).forEach(function(g){var val=data.opts[g];document.querySelectorAll('.opt[data-g="'+g+'"]').forEach(function(el){if(el.textContent.trim()===val)el.classList.add('sel');});});}
+    if(data.done&&Array.isArray(data.done)){data.done.forEach(function(i){done.add(Number(i));});}
+    if(typeof data.cur==='number')cur=data.cur;
+    if(data.checks){checks=data.checks;document.querySelectorAll('.check-item[data-key]').forEach(function(item){var key=item.getAttribute('data-key');if(checks[key])item.classList.add('checked');});}
+  }catch(e){}
+}
+
+function wireSave(){
+  document.querySelectorAll('textarea,input[type=text]').forEach(function(el){
+    el.addEventListener('input',function(){saveData();updateSwatches();});
+  });
+  document.querySelectorAll('.opt[data-g]').forEach(function(btn){btn.addEventListener('click',saveData);});
+}
+
+function updateSwatches(){
+  var pairs=[['col-primary','sw-primary'],['col-secondary','sw-secondary'],['col-accent','sw-accent'],['col-neutral','sw-neutral']];
+  pairs.forEach(function(p){
+    var inp=document.getElementById(p[0]);var sw=document.getElementById(p[1]);
+    if(!inp||!sw)return;
+    var val=inp.value.trim();
+    if(val){sw.style.background=val;sw.style.borderColor='transparent';}
+    else{sw.style.background='';sw.style.borderColor='';}
+  });
+}
+
+// ─── BUILD GUIDE ───
+function buildGuide(){
+  // Completion check
+  var completedCount=done.size;
+  var completionHtml='';
+  if(completedCount>=5){
+    completionHtml='<div class="vg-complete"><h3>Visual World Complete</h3><p>You\'ve completed all five workshops. This is your reference document — print it, bookmark it, and use it every time you create.</p></div>';
+  }else{
+    var remaining=5-completedCount;
+    completionHtml='<div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1rem 1.2rem;margin-bottom:1.5rem;"><p style="font-size:13px;color:var(--dimmer);">'+remaining+' workshop'+(remaining===1?'':'s')+' remaining. Complete all five to finalize your Visual World.</p></div>';
+  }
+  document.getElementById('vwComplete').innerHTML=completionHtml;
+
+  // Color Palette
+  var primary=gv('col-primary');
+  var secondary=gv('col-secondary');
+  var accent=gv('col-accent');
+  var neutral=gv('col-neutral');
+  var palName=gv('paletteName');
+  var paletteHtml='';
+  if(primary||secondary||accent||neutral){
+    var swatches=[
+      {name:'Primary',val:primary,hex:primary},
+      {name:'Secondary',val:secondary,hex:secondary},
+      {name:'Accent',val:accent,hex:accent},
+      {name:'Neutral Base',val:neutral,hex:neutral}
+    ].filter(function(s){return s.val;});
+    var swatchItems=swatches.map(function(s){
+      return '<div class="vg-swatch-wrap"><div class="vg-swatch" style="background:'+s.val+'"></div><div class="vg-swatch-name">'+s.name+'</div><div class="vg-swatch-hex">'+s.hex+'</div></div>';
+    }).join('');
+    paletteHtml='<div class="vg-section"><div class="vg-label">Color Palette'+(palName?' — '+palName:'')+'</div><div class="vg-palette">'+swatchItems+'</div></div>';
+  }
+  document.getElementById('vwPalette').innerHTML=paletteHtml;
+
+  // Typography
+  var fontP=gv('font-primary');
+  var fontS=gv('font-secondary');
+  var fontRules=gv('typographyRules');
+  var fontsHtml='';
+  if(fontP||fontS){
+    var fItems='';
+    if(fontP)fItems+='<div class="vg-font-preview"><div class="vg-font-name">Primary Font — Headlines &amp; Hooks</div><div class="vg-font-display">'+esc(fontP)+'</div><div class="vg-font-sub">'+esc(gs('font1style'))+'</div></div>';
+    if(fontS)fItems+='<div class="vg-font-preview"><div class="vg-font-name">Secondary Font — Body &amp; Supporting Text</div><div class="vg-font-display" style="font-size:18px;font-weight:400;">'+esc(fontS)+'</div><div class="vg-font-sub">'+esc(gs('font2style'))+'</div></div>';
+    if(fontRules)fItems+='<div style="margin-top:.5rem;font-size:12.5px;color:var(--dim);line-height:1.8;white-space:pre-line;">'+esc(fontRules)+'</div>';
+    fontsHtml='<div class="vg-section"><div class="vg-label">Typography</div>'+fItems+'</div>';
+  }
+  document.getElementById('vwFonts').innerHTML=fontsHtml;
+
+  // Narrative
+  var narrative=gv('vwNarrative');
+  var narrativeHtml='';
+  if(narrative){
+    narrativeHtml='<div class="vg-section"><div class="vg-label">Visual World Narrative</div><div class="vg-narrative"><p>'+esc(narrative).replace(/\n/g,'<br>')+'</p></div></div>';
+  }
+  document.getElementById('vwNarrative').innerHTML=narrativeHtml;
+
+  // Six Elements
+  var elements=[
+    {num:'01',label:'Setting',val:gv('e1-statement')||gv('e1-location'),sub:gs('e1vibe')},
+    {num:'02',label:'Mood',val:gv('e2-statement')||gs('e2mood'),sub:gv('e2-time')},
+    {num:'03',label:'Color Language',val:gv('paletteName'),sub:[primary,secondary,accent].filter(Boolean).join(' · ')},
+    {num:'04',label:'Design Details',val:gv('e4-wardrobe'),sub:gs('e4tex')},
+    {num:'05',label:'Shot System',val:gv('e5-primary')||gv('signatureShot'),sub:gs('movement')},
+    {num:'06',label:'Content Approach',val:gv('e6-statement'),sub:gs('e6format')+' · '+gs('e6energy')}
+  ].filter(function(e){return e.val||e.sub;});
+
+  var elemHtml='';
+  if(elements.length){
+    var items=elements.map(function(e){
+      return '<div class="vg-elem"><div class="vg-elem-label">'+e.num+' — '+e.label+'</div><div class="vg-elem-val">'+esc(e.val)+(e.sub&&e.val?'<br><span style="font-size:11px;color:var(--dimmer)">'+esc(e.sub)+'</span>':e.sub?'<span style="font-size:11px;color:var(--dimmer)">'+esc(e.sub)+'</span>':'')+'</div></div>';
+    }).join('');
+    elemHtml='<div class="vg-section"><div class="vg-label">The Six Elements</div><div class="vg-elements">'+items+'</div></div>';
+  }
+  document.getElementById('vwElements').innerHTML=elemHtml;
+
+  // Shot System
+  var shots=[
+    {name:'Wide Shot',desc:gv('ss1-framing')||gv('ss1-use')},
+    {name:'Medium Shot',desc:gv('ss2-framing')||gv('ss2-use')},
+    {name:'Close-Up',desc:gv('ss3-framing')||gv('ss3-use')},
+    {name:'B-Roll',desc:gv('ss4-types')||gv('ss4-objects')},
+    {name:'Creative / Signature',desc:gv('ss5-desc')||gv('signatureShot')}
+  ].filter(function(s){return s.desc;});
+
+  var shotsHtml='';
+  if(shots.length){
+    var sItems=shots.map(function(s){
+      return '<div class="vg-shot"><div class="vg-shot-name">'+esc(s.name)+'</div><div class="vg-shot-desc">'+esc(s.desc)+'</div></div>';
+    }).join('');
+    shotsHtml='<div class="vg-section"><div class="vg-label">Shot System</div><div class="vg-shot-grid">'+sItems+'</div></div>';
+  }
+  document.getElementById('vwShots').innerHTML=shotsHtml;
+
+  // All answers summary
+  var fields=[
+    {l:'Gap Statement',v:gv('gapStatement')},
+    {l:'Creator Analysis Synthesis',v:gv('synPatterns')},
+    {l:'Visual Opportunity',v:gv('synOwn')},
+    {l:'Mood Board Tool',v:gs('mbtool')},
+    {l:'Mood Board Statement',v:gv('mbStatement')},
+    {l:'Dominant Colors (Mood Board)',v:gv('mbColors')},
+    {l:'Mood Board Mood',v:gv('mbMood')},
+    {l:'Mood Board Movie',v:gv('mbMovie')},
+    {l:'Palette Name',v:gv('paletteName')},
+    {l:'Primary Font',v:gv('font-primary')},
+    {l:'Secondary Font',v:gv('font-secondary')},
+    {l:'Typography Rules',v:gv('typographyRules')},
+    {l:'Setting Location',v:gv('e1-location')},
+    {l:'Setting Statement',v:gv('e1-statement')},
+    {l:'Mood Statement',v:gv('e2-statement')},
+    {l:'Time of Day',v:gv('e2-time')},
+    {l:'Color Grade',v:gs('e3grade')},
+    {l:'Signature Objects',v:gv('e4-objects')},
+    {l:'Never Show List',v:gv('e4-never')},
+    {l:'Wardrobe Style',v:gv('e4-wardrobe')},
+    {l:'Camera Movement',v:gs('movement')},
+    {l:'Signature Shot',v:gv('signatureShot')},
+    {l:'Content Mix',v:[gv('e6-edu'),gv('e6-value'),gv('e6-life'),gv('e6-proof')].filter(Boolean).join(' / ')},
+    {l:'Content Format',v:gs('e6format')},
+    {l:'Energy Level',v:gs('e6energy')},
+    {l:'Content Approach',v:gv('e6-statement')}
+  ];
+  var answersHtml='';
+  var filled=fields.filter(function(f){return f.v;});
+  if(filled.length){
+    var aItems=filled.map(function(f){return '<div class="sum"><div class="slb">'+f.l+'</div><div class="svl">'+esc(f.v).replace(/\n/g,'<br>')+'</div></div>';}).join('');
+    answersHtml='<div class="div"></div><h2 style="margin-top:0">All Your Answers</h2>'+aItems;
+  }
+  document.getElementById('vwAnswers').innerHTML=answersHtml;
+}
+
+function esc(s){
+  if(!s)return'';
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+// ─── THEME ───
+(function(){
+  document.querySelectorAll('.theme-btn').forEach(function(btn){
+    btn.addEventListener('click',function(){document.body.classList.toggle('light');});
+  });
+})();
+
+initOpts();
+wire();
+loadData();
+initColorSwatches();
+initChecklists();
+go(cur);
+wireSave();
+</script>
+</body>
+</html>
