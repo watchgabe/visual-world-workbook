@@ -1,0 +1,1243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FSCreative™ — Cinematic Creator Blueprint™</title>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;800;900&display=swap" rel="stylesheet">
+<style>
+/* ─── RESET ─── */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+
+/* ─── TOKENS — DARK (default) ─── */
+:root{
+  --bg:#0a0a0a;
+  --surface:#111111;
+  --card:#161616;
+  --border:#1f1f1f;
+  --border2:#2a2a2a;
+  --text:#ffffff;
+  --dim:#a0a0a0;
+  --dimmer:#555555;
+  --orange:#F0601B;
+  --orange-hover:#ff6d28;
+  --orange-tint:rgba(240,96,27,0.1);
+  --orange-border:rgba(240,96,27,0.28);
+  --orange-dark:#ff8050;
+  --green-bg:rgba(61,184,100,0.1);
+  --green-text:#5DCAA5;
+  --green-border:rgba(93,202,165,0.3);
+  --radius-lg:10px;
+  --radius-md:6px;
+  --font:'Helvetica Neue',Helvetica,Arial,sans-serif;
+  --font-num:'Barlow Condensed',sans-serif;
+}
+
+/* ─── TOKENS — LIGHT ─── */
+body.light{
+  --bg:#f7f6f4;
+  --surface:#edecea;
+  --card:#e2e0dc;
+  --border:#ccc9c2;
+  --border2:#b8b4ac;
+  --text:#0a0a0a;
+  --dim:#404040;
+  --dimmer:#888888;
+  --orange-tint:#FEF0E8;
+  --orange-border:#F4B89A;
+  --orange-dark:#B84410;
+  --green-bg:#E6F5EF;
+  --green-text:#085041;
+  --green-border:#5DCAA5;
+}
+
+/* ─── BASE ─── */
+body{
+  background:var(--bg);
+  color:var(--text);
+  font-family:var(--font);
+  font-size:15px;
+  line-height:1.6;
+  -webkit-font-smoothing:antialiased;
+  overflow-x:hidden;
+  transition:background .25s,color .25s;
+}
+
+/* subtle grain texture */
+body::before{
+  content:'';
+  position:fixed;inset:0;z-index:9999;pointer-events:none;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='grain'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23grain)' opacity='0.025'/%3E%3C/svg%3E");
+  mix-blend-mode:overlay;
+}
+
+/* ─── SHELL ─── */
+#layout{display:flex;min-height:100vh}
+
+/* ─── SIDEBAR ─── */
+#sidebar{
+  width:228px;min-width:228px;
+  background:var(--surface);
+  border-right:1px solid var(--border);
+  display:flex;flex-direction:column;
+  position:fixed;top:0;left:0;bottom:0;
+  z-index:10;
+}
+.sb-top{
+  padding:1.35rem 1.25rem 1.1rem;
+  border-bottom:1px solid var(--border);
+  flex-shrink:0;
+}
+.sb-brand{
+  font-size:11px;font-weight:700;color:var(--orange);
+  letter-spacing:.1em;text-transform:uppercase;margin-bottom:3px;
+}
+.sb-title{font-size:12px;font-weight:500;color:var(--dim);line-height:1.45}
+#sbnav{flex:1;padding:.5rem 0;overflow-y:auto}
+.sb-item{
+  display:flex;align-items:center;gap:10px;
+  padding:8px 1.25rem;
+  font-size:12.5px;color:var(--dim);cursor:pointer;
+  border:none;border-left:2px solid transparent;
+  background:none;width:100%;text-align:left;
+  font-family:var(--font);transition:all .15s;
+}
+.sb-item:hover{color:var(--text);background:var(--card)}
+.sb-item.on{color:var(--orange);border-left-color:var(--orange);background:var(--orange-tint)}
+.sb-item.ok{color:var(--green-text);border-left-color:var(--green-text);background:var(--green-bg)}
+.sb-icon{opacity:.45;flex-shrink:0;display:flex}
+.sb-item.on .sb-icon,.sb-item:hover .sb-icon,.sb-item.ok .sb-icon{opacity:1}
+.sb-foot{
+  padding:1rem 1.25rem;
+  border-top:1px solid var(--border);
+  display:flex;align-items:center;gap:10px;flex-shrink:0;
+}
+.sb-prog{flex:1;min-width:0}
+
+/* ─── MAIN ─── */
+#main{flex:1;margin-left:228px;display:flex;justify-content:center}
+#wb{width:100%;max-width:700px;padding:2rem 2rem 5rem}
+
+/* ─── TOP BAR ─── */
+.topbar{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:1rem 0 1.25rem;
+  border-bottom:1px solid var(--border);
+  margin-bottom:1.5rem;
+}
+.logo{
+  font-size:11px;font-weight:600;color:var(--dimmer);
+  letter-spacing:.1em;text-transform:uppercase;
+  font-family:var(--font);
+}
+.pw{display:flex;align-items:center;gap:10px}
+.pb{height:3px;background:var(--border);border-radius:2px}
+.pw .pb{width:120px}
+.sb-prog .pb{width:100%}
+.pf{height:100%;background:var(--orange);border-radius:2px;transition:width .4s}
+.pt{font-size:11px;color:var(--dimmer);font-weight:500}
+
+/* ─── THEME TOGGLE ─── */
+.theme-btn{
+  background:none;border:1px solid var(--border2);border-radius:var(--radius-md);
+  padding:5px 8px;cursor:pointer;color:var(--dimmer);
+  display:flex;align-items:center;justify-content:center;
+  transition:border-color .2s,color .2s;flex-shrink:0;
+}
+.theme-btn:hover{border-color:var(--border2);color:var(--text)}
+.icon-moon{display:block}
+.icon-sun{display:none}
+body.light .icon-moon{display:none}
+body.light .icon-sun{display:block}
+
+/* ─── TABS ─── */
+.tabs{display:flex;gap:4px;flex-wrap:wrap;margin-bottom:2rem}
+.tab{
+  font-size:11px;padding:4px 11px;border-radius:20px;
+  border:1px solid var(--border);background:transparent;
+  color:var(--dimmer);cursor:pointer;
+  font-family:var(--font);font-weight:500;
+  transition:all .15s;
+}
+.tab:hover{border-color:var(--border2);color:var(--dim)}
+.tab.on{background:var(--orange-tint);color:var(--orange-dark);border-color:var(--orange-border)}
+.tab.ok{background:var(--green-bg);color:var(--green-text);border-color:var(--green-border)}
+
+/* ─── SECTIONS ─── */
+.sc{display:none}
+.sc.show{display:block}
+
+/* ─── PART LABEL ─── */
+.pl{
+  font-size:11px;font-weight:600;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--orange);
+  margin-bottom:8px;font-family:var(--font);
+}
+
+/* ─── HEADINGS ─── */
+h1{
+  font-size:26px;font-weight:700;color:var(--text);
+  line-height:1.2;margin-bottom:12px;
+  letter-spacing:-.4px;
+}
+h2{
+  font-size:16px;font-weight:600;color:var(--text);
+  margin:1.75rem 0 8px;letter-spacing:-.1px;
+}
+h3{font-size:14px;font-weight:600;color:var(--text);margin:1rem 0 5px}
+
+/* ─── INTRO ─── */
+.intro{
+  font-size:14px;color:var(--dim);line-height:1.8;
+  margin-bottom:1.5rem;
+}
+
+/* ─── STATS ROW ─── */
+.sr{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:1.5rem}
+.sc2{
+  background:var(--surface);border-radius:var(--radius-md);
+  padding:1rem;text-align:center;
+  border:1px solid var(--border);
+}
+.sn{
+  font-family:var(--font-num);
+  font-size:40px;font-weight:900;line-height:1;
+  color:var(--text);letter-spacing:-.5px;
+}
+.sl{font-size:11px;color:var(--dimmer);margin-top:4px;font-weight:500;text-transform:uppercase;letter-spacing:.06em}
+
+/* ─── TEACH BLOCK ─── */
+.teach{
+  background:var(--surface);border-radius:var(--radius-lg);
+  padding:1.1rem 1.4rem;margin-bottom:1.1rem;
+  border:1px solid var(--border);
+}
+.teach p{font-size:13.5px;color:var(--text);line-height:1.85;margin-bottom:9px}
+.teach p:last-child{margin-bottom:0}
+.teach ul,.teach ol{padding-left:1.2rem;margin-top:5px}
+.teach li{font-size:13.5px;color:var(--text);line-height:1.85;margin-bottom:6px}
+.teach strong{font-weight:600;color:var(--text)}
+
+/* ─── CALLOUT (INS) ─── */
+.ins{
+  border-left:3px solid var(--orange);
+  padding:11px 15px;
+  background:var(--orange-tint);
+  margin-bottom:1.1rem;
+  border-radius:0 var(--radius-md) var(--radius-md) 0;
+}
+.ins p{font-size:13.5px;color:var(--orange-dark);line-height:1.7;margin:0;font-weight:500}
+.ins strong{font-weight:700}
+
+/* ─── FORMULA ─── */
+.fml{
+  border:1px solid var(--orange-border);
+  border-radius:var(--radius-lg);
+  padding:.9rem 1.2rem;
+  background:var(--orange-tint);
+  margin-bottom:1.1rem;
+}
+.fml p{font-size:13px;font-weight:600;color:var(--orange-dark);line-height:1.75;margin:0}
+
+/* ─── EXERCISE CARD ─── */
+.ec{
+  background:var(--bg);
+  border:1px solid var(--border);
+  border-radius:var(--radius-lg);
+  padding:1.2rem;margin-bottom:1.1rem;
+}
+.elbl{
+  font-size:10px;font-weight:700;text-transform:uppercase;
+  letter-spacing:.1em;color:var(--orange);margin-bottom:12px;
+}
+
+/* ─── QUESTION ─── */
+.q{font-size:13.5px;color:var(--text);margin-bottom:5px;line-height:1.5;margin-top:10px;font-weight:500}
+.qh{font-size:11.5px;color:var(--dimmer);margin-bottom:7px;line-height:1.5}
+
+/* ─── INPUTS ─── */
+textarea,input[type=text]{
+  width:100%;
+  border:1px solid var(--border);
+  border-radius:var(--radius-md);
+  padding:9px 12px;
+  font-size:13px;font-family:var(--font);
+  color:var(--text);
+  background:var(--surface);
+  margin-bottom:9px;resize:vertical;line-height:1.5;
+  transition:border-color .15s, background .15s;
+}
+textarea:focus,input[type=text]:focus{
+  outline:none;
+  border-color:var(--orange);
+  background:var(--bg);
+  box-shadow:0 0 0 3px rgba(240,96,27,.08);
+}
+textarea::placeholder,input[type=text]::placeholder{color:var(--dimmer)}
+
+/* ─── OPTION GRIDS ─── */
+.og{display:grid;grid-template-columns:1fr 1fr;gap:5px;margin-bottom:9px}
+.og3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:5px;margin-bottom:9px}
+.tc2{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:9px}
+.tc3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:9px;margin-bottom:9px}
+
+.opt{
+  padding:9px 11px;
+  border:1px solid var(--border);
+  border-radius:var(--radius-md);
+  background:var(--surface);
+  color:var(--dim);
+  font-size:12px;cursor:pointer;text-align:left;
+  line-height:1.4;font-family:var(--font);
+  display:block;width:100%;
+  transition:all .15s;
+}
+.opt:hover{border-color:var(--border2);color:var(--text)}
+.opt.sel{background:var(--orange-tint);color:var(--orange-dark);border-color:var(--orange-border);font-weight:500}
+
+/* ─── NAV ROW ─── */
+.nr{
+  display:flex;justify-content:space-between;align-items:center;
+  margin-top:2rem;padding-top:1.25rem;
+  border-top:1px solid var(--border);
+}
+.si{font-size:12px;color:var(--dimmer);font-weight:500}
+
+/* ─── BUTTONS ─── */
+.btn{
+  padding:9px 18px;border-radius:var(--radius-md);
+  font-size:12.5px;cursor:pointer;transition:all .15s;
+  border:1px solid var(--border2);background:transparent;
+  color:var(--text);font-family:var(--font);font-weight:500;
+}
+.btn:hover{background:var(--surface);border-color:var(--border2)}
+.btn.p{
+  background:var(--orange);color:#fff;
+  border-color:var(--orange);font-weight:600;
+}
+.btn.p:hover{background:var(--orange-hover);border-color:var(--orange-hover)}
+
+/* ─── SHOT GRID ─── */
+.sg{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-bottom:1.1rem}
+.sc3{
+  border:1px solid var(--border);border-radius:var(--radius-md);
+  padding:11px;background:var(--surface);
+}
+.sn2{font-size:12px;font-weight:600;color:var(--text);margin-bottom:4px}
+.sd{font-size:11.5px;color:var(--dim);line-height:1.65}
+
+/* ─── KNOWLEDGE GRID ─── */
+.kg{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-bottom:1.1rem}
+.ki{
+  border:1px solid var(--border);border-radius:var(--radius-md);
+  padding:11px;background:var(--surface);
+}
+.kc{font-size:9.5px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--orange);margin-bottom:3px}
+.kn{font-size:12.5px;color:var(--text);font-weight:600;margin-bottom:4px}
+.kd{font-size:11.5px;color:var(--dim);line-height:1.6}
+
+/* ─── HOOK SETUP ─── */
+.hs{
+  border:1px solid var(--border);border-radius:var(--radius-md);
+  padding:.9rem;margin-bottom:9px;background:var(--surface);
+}
+.hn{font-size:10px;font-weight:700;color:var(--orange);text-transform:uppercase;letter-spacing:.07em;margin-bottom:8px}
+
+/* ─── SETUP CARD ─── */
+.slc{
+  border:1px solid var(--border);border-radius:var(--radius-md);
+  padding:.9rem;margin-bottom:7px;background:var(--surface);
+}
+.sll{font-size:11px;font-weight:600;color:var(--orange);margin-bottom:6px}
+
+/* ─── WEEK CARD ─── */
+.wc{border:1px solid var(--border);border-radius:var(--radius-md);padding:.9rem;margin-bottom:7px;background:var(--surface)}
+.wl{font-size:10px;font-weight:700;color:var(--orange);text-transform:uppercase;letter-spacing:.07em;margin-bottom:6px}
+.wc p{font-size:13px;color:var(--text);line-height:1.8}
+
+/* ─── BULLET ROW ─── */
+.brs{display:flex;flex-direction:column;gap:5px;margin-bottom:1.1rem}
+.bri{
+  display:flex;align-items:flex-start;gap:12px;
+  padding:10px 12px;
+  border:1px solid var(--border);border-radius:var(--radius-md);
+  background:var(--surface);
+}
+.brn{font-size:12px;font-weight:700;color:var(--orange);min-width:18px;font-family:var(--font)}
+.brt{font-size:13px;color:var(--text);line-height:1.65}
+.brt strong{font-weight:600}
+
+/* ─── SUMMARY / PLAYBOOK ─── */
+.sum{margin-bottom:.85rem}
+.slb{font-size:9.5px;text-transform:uppercase;letter-spacing:.09em;color:var(--dimmer);margin-bottom:3px;font-weight:600}
+.svl{
+  font-size:13px;color:var(--text);background:var(--surface);
+  padding:9px 12px;border-radius:var(--radius-md);
+  line-height:1.5;min-height:36px;border:1px solid var(--border);
+}
+
+/* ─── UPSELL BLOCK ─── */
+.ups{
+  background:var(--orange-tint);border-radius:var(--radius-lg);
+  padding:1.4rem;margin-top:2rem;
+  border:1px solid var(--orange-border);
+}
+.ups h2{margin-top:0;color:var(--orange-dark);margin-bottom:.6rem;font-size:17px}
+.ups p{font-size:13.5px;color:var(--orange-dark);line-height:1.75;margin-bottom:1rem;opacity:.9}
+
+/* ─── DIVIDER ─── */
+.div{height:1px;background:var(--border);margin:1.5rem 0}
+
+/* ─── SAVE INDICATOR ─── */
+.save-dot{width:6px;height:6px;border-radius:50%;background:var(--dimmer);flex-shrink:0;transition:background .3s}
+.save-dot.saved{background:var(--green-text)}
+
+/* ─── SCORE CARD ─── */
+.sc-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.4rem;margin-bottom:1.5rem}
+.sc-hd{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--dimmer);margin-bottom:1rem}
+.sc-main{display:flex;align-items:flex-end;gap:12px;margin-bottom:1.25rem}
+.sc-num{font-family:var(--font-num);font-size:64px;font-weight:900;line-height:1;color:var(--text);letter-spacing:-2px}
+.sc-denom{font-size:14px;color:var(--dimmer);margin-bottom:10px}
+.sc-tier{font-size:13px;font-weight:600;margin-bottom:2px}
+.sc-tier.t0{color:var(--dimmer)}
+.sc-tier.t1{color:var(--orange-dark)}
+.sc-tier.t2{color:var(--orange)}
+.sc-tier.t3{color:var(--green-text)}
+.sc-cats{display:flex;flex-direction:column;gap:9px}
+.sc-cat{display:flex;align-items:center;gap:10px}
+.sc-cat-lbl{font-size:11px;color:var(--dim);width:88px;flex-shrink:0}
+.sc-bar-bg{flex:1;height:4px;background:var(--border);border-radius:2px}
+.sc-bar-fg{height:100%;border-radius:2px;transition:width .7s;background:var(--orange)}
+.sc-bar-fg.hi{background:var(--green-text)}
+.sc-cat-val{font-size:11px;color:var(--dimmer);width:34px;text-align:right;flex-shrink:0}
+
+/* ─── SUGGESTIONS ─── */
+.sugg-hd{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--dimmer);margin-bottom:.75rem}
+.sugg-item{background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--orange);border-radius:var(--radius-md);padding:1rem;margin-bottom:.6rem}
+.sugg-item.green{border-left-color:var(--green-text)}
+.sugg-item.neutral{border-left-color:var(--border2)}
+.sugg-tag{font-size:9.5px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--orange);margin-bottom:5px}
+.sugg-item.green .sugg-tag{color:var(--green-text)}
+.sugg-item.neutral .sugg-tag{color:var(--dimmer)}
+.sugg-title{font-size:13px;font-weight:600;color:var(--text);margin-bottom:4px}
+.sugg-body{font-size:12.5px;color:var(--dim);line-height:1.7}
+
+/* ─── RESPONSIVE ─── */
+@media(max-width:899px){
+  #sidebar{display:none}
+  #main{margin-left:0;display:block}
+  #wb{padding:1.25rem 1.25rem 5rem}
+}
+@media(min-width:900px){
+  .topbar,.tabs{display:none}
+}
+
+/* ─── PRINT ─── */
+@media print{
+  body::before,#sidebar,.topbar,.tabs,.nr,.ups,.theme-btn{display:none!important}
+  #layout{display:block!important}
+  #main{margin-left:0!important;display:block!important}
+  #wb{max-width:100%!important;padding:1rem!important}
+  /* Full workbook print */
+  body.print-full .sc{display:block!important}
+  /* Blueprint print — answers only */
+  body.print-blueprint #s9{display:block!important}
+  body.print-blueprint #s9>.pl,
+  body.print-blueprint #s9>h1,
+  body.print-blueprint #s9>p,
+  body.print-blueprint #s9>#pbScore,
+  body.print-blueprint #s9>#pbSugg,
+  body.print-blueprint #s9>#pbContent{display:block!important}
+  body.print-blueprint #s9>h2,
+  body.print-blueprint #s9>.div,
+  body.print-blueprint #s9>.wc,
+  body.print-blueprint #s9>.ins{display:none!important}
+}
+</style>
+</head>
+<body>
+
+<div id="layout">
+
+<aside id="sidebar">
+  <div class="sb-top">
+    <div class="sb-brand">FSCreative&#8482; &#8212; Module 03</div>
+    <div class="sb-title">Create Your Content&#8482;</div>
+  </div>
+  <nav id="sbnav"></nav>
+  <div class="sb-foot">
+    <div class="sb-prog">
+      <div class="pb"><div class="pf" style="width:0%"></div></div>
+      <div class="pt" style="margin-top:5px;font-size:10px">0/9</div>
+    </div>
+    <div class="save-dot" title="Auto-saved"></div>
+    <button class="theme-btn" aria-label="Toggle theme">
+      <svg class="icon-moon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+      <svg class="icon-sun" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+    </button>
+  </div>
+</aside>
+
+<div id="main"><div id="wb">
+<div class="topbar">
+  <div class="logo">FSCreative&#8482; &#8212; Create Your Content&#8482;</div>
+  <div class="pw">
+    <div class="pb"><div class="pf" style="width:0%"></div></div>
+    <div class="pt">0/9</div>
+    <button class="theme-btn" aria-label="Toggle theme">
+      <svg class="icon-moon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+      <svg class="icon-sun" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+    </button>
+  </div>
+</div>
+<div class="tabs" id="tabbar"></div>
+
+<div class="sc show" id="s0">
+  <div class="pl">FSCreative™</div>
+  <h1>The Cinematic Creator Blueprint™</h1>
+  <p class="intro">How to create content that looks premium, builds trust, and gets customers. Each section teaches you the framework, then gives you an exercise to apply it. By the end you'll have a complete personalized content playbook.</p>
+  <div class="sr">
+    <div class="sc2"><div class="sn">6</div><div class="sl">Parts</div></div>
+    <div class="sc2"><div class="sn">24</div><div class="sl">Exercises</div></div>
+    <div class="sc2"><div class="sn" id="dc">0</div><div class="sl">Completed</div></div>
+  </div>
+  <div class="ins"><p>The creators who win aren't the most talented. They're the most consistent. They understand three things: how to look premium, how to build trust, and how to get customers. This workbook covers all three.</p></div>
+  <div class="teach"><p>Most content fails before anyone watches it — not because the information is bad, but because it doesn't feel premium enough to stop the scroll, doesn't build enough trust to create belief, and doesn't have a clear enough system to sustain itself. We're living in the most saturated content environment in history. The creators who win aren't the most talented or the most knowledgeable. They're the ones who understand how all three pillars work together to create content that doesn't just get views — it gets customers. This workbook is designed to be worked through, not just read. Each section has a framework, an exercise, and a clear deliverable.</p></div>
+  <div class="nr" style="justify-content:flex-end;border-top:none;padding-top:0"><button class="btn p" id="b0n">Begin Part 1 — Foundation →</button></div>
+  <div style="margin-top:1.5rem;padding-top:1.25rem;border-top:1px solid var(--border);display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--dimmer);flex-shrink:0"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+    <span style="font-size:12.5px;color:var(--dim)">Prefer pen &amp; paper? Print the full workbook and complete it by hand.</span>
+    <button id="printFullBtn" class="btn" style="margin-left:auto;font-size:11.5px">Print Full Workbook</button>
+  </div>
+</div>
+
+<div class="sc" id="s1">
+  <div class="pl">Part 1 — Foundation · Chapter 1</div>
+  <h1>The strategy behind the content</h1>
+  <p class="intro">Content strategy isn't about what to post and when. It's about understanding why you're creating, who it's for, and what you want them to do after they consume it. Without that clarity, you're creating for the sake of creating — and that's how you burn out.</p>
+  <h2>The trust-first framework</h2>
+  <div class="teach"><p>Optimizing for virality is not the same as optimizing for customers. When you optimize for virality, you make wide, broad content designed to appeal to everyone — and it converts no one. When you optimize for trust, you make specific, deep content designed to solve real problems for a specific group. Fewer views. But the people who watch will believe you can help them. And belief is what drives purchases.</p></div>
+  <div class="ins"><p>Trust is how much someone believes you will meet their expectations in the future based on how you've behaved in the past. Every piece of content is either building that trust or eroding it. There is no neutral.</p></div>
+  <h2>The content formula</h2>
+  <div class="fml"><p>Painful Problem + Unique Solution × Contextual Credibility + Proven Wrapper = Content That Gets Customers</p></div>
+  <div class="teach"><ul><li><strong>Painful Problem:</strong> What specific problem does this content solve?</li><li><strong>Unique Solution:</strong> How do you solve it differently than everyone else?</li><li><strong>Contextual Credibility:</strong> Why should they believe you on this specific topic — not general credentials, direct experience with this problem.</li><li><strong>Proven Wrapper:</strong> How are you packaging it to get attention? (Covered in Part 3.)</li></ul></div>
+  <div class="ec">
+    <div class="elbl">Exercise 1 — Define your content goal</div>
+    <div class="q">Primary goal of your content right now:</div>
+    <div class="og" id="g-goal"><button class="opt" data-g="goal">Build brand awareness</button><button class="opt" data-g="goal">Generate leads</button><button class="opt" data-g="goal">Convert leads to customers</button><button class="opt" data-g="goal">Retain existing customers</button></div>
+    <div class="q">My ideal viewer is:</div><div class="qh">Not "entrepreneurs." Describe them specifically in one sentence.</div>
+    <textarea rows="2" id="viewer" placeholder="e.g. Service-based business owners who want to build a premium personal brand on video..."></textarea>
+    <div class="q">After consuming my content, I want them to:</div><div class="qh">Not "follow me." What's the actual next step?</div>
+    <textarea rows="2" id="nextStep" placeholder="e.g. Book a discovery call / Download my lead magnet / Buy my course..."></textarea>
+    <div class="q">The painful problem I solve:</div>
+    <textarea rows="2" id="painProblem" placeholder="Be specific. What keeps them up at night?"></textarea>
+    <div class="q">My unique solution:</div>
+    <textarea rows="2" id="uniqueSol" placeholder="How do you solve it differently than everyone else?"></textarea>
+    <div class="q">My contextual credibility:</div><div class="qh">Not your general credentials — your specific experience with this exact problem.</div>
+    <textarea rows="2" id="credibility" placeholder="e.g. I spent 3 years creating content that got views but zero clients before I figured out what was broken..."></textarea>
+  </div>
+  <div class="nr"><button class="btn" id="b1b">← Back</button><span class="si">1/6</span><button class="btn p" id="b1n">Save & Continue →</button></div>
+</div>
+
+<div class="sc" id="s2">
+  <div class="pl">Part 1 — Foundation · Chapters 2 & 3</div>
+  <h1>Your sustainable foundation</h1>
+  <p class="intro">73% of people who start creating content quit within their first year — not because they ran out of ideas, but because they built a system that wasn't sustainable. Build around your floor, not your ceiling.</p>
+  <h2>Why most creators quit</h2>
+  <div class="teach"><p>The fix is uncomfortable: answer your capacity questions without optimism. Don't include weeks where things slow down. Don't include imaginary future hires. Don't include motivation spikes. Your system needs to work on your worst week, not your best. If you need discipline to hit your cadence, your cadence is too aggressive. Simplify until it feels inevitable — then add from there.</p></div>
+  <h2>The eye of sauron approach</h2>
+  <div class="teach"><p>At any given moment, your brand should have one clear focal point. One platform gets your best thinking, your best energy, and your best content. Everything else is secondary or repurposed. Trying to dominate every platform at once is how you spread thin, create diluted content, and burn out before you ever build momentum.</p><ul><li><strong>Solo creator:</strong> One primary platform (best thinking + full effort). One secondary platform (repurposed content only).</li><li><strong>With a team:</strong> Two to three primary platforms — but only one in full focus at a time.</li></ul></div>
+  <div class="ins"><p>The Eye of Sauron only points one direction at a time. Pick your platform based on what medium feels most natural to you and where your ideal customer actually spends time. Then go all in.</p></div>
+  <div class="ec">
+    <div class="elbl">Exercise 2 — Sustainable foundation</div>
+    <div class="q">Realistic weekly hours for content (next 12–18 months):</div><div class="qh">Answer without optimism — this becomes the entire basis of your system.</div>
+    <input type="text" id="weekHours" placeholder="e.g. 6 hours per week">
+    <div class="q">What gives you energy in content creation?</div>
+    <textarea rows="2" id="energize" placeholder="Filming? Editing? Writing? Teaching? Brainstorming?"></textarea>
+    <div class="q">What drains you?</div><div class="qh">Everything here needs to be minimized, batched, delegated, or removed.</div>
+    <textarea rows="2" id="drain" placeholder="Every item is a bottleneck. Name them so you can solve for them."></textarea>
+    <div class="q">When are you most mentally sharp?</div>
+    <div class="og3" id="g-sharp"><button class="opt" data-g="sharp">Morning</button><button class="opt" data-g="sharp">Afternoon</button><button class="opt" data-g="sharp">Evening</button></div>
+    <div class="q">My non-negotiable content cadence:</div>
+    <textarea rows="2" id="cadence" placeholder="e.g. 1 long-form video/month + 3 short-form posts/week"></textarea>
+  </div>
+  <div class="ec">
+    <div class="elbl">Exercise 3 — Platform strategy</div>
+    <div class="q">What medium feels most natural?</div>
+    <div class="og" id="g-medium"><button class="opt" data-g="medium">Video (highest leverage)</button><button class="opt" data-g="medium">Audio / Podcast</button><button class="opt" data-g="medium">Written (LinkedIn, newsletter)</button><button class="opt" data-g="medium">Visual / Graphic (carousels)</button></div>
+    <div class="q">Primary platform (best thinking + full effort):</div>
+    <input type="text" id="primary" placeholder="e.g. YouTube">
+    <div class="q">Secondary platform (repurposed content only):</div>
+    <input type="text" id="secondary" placeholder="e.g. Instagram Reels from YouTube clips">
+    <div class="q">The Eye of Sauron is currently pointed at:</div>
+    <input type="text" id="sauron" placeholder="The one platform getting your full energy right now.">
+  </div>
+  <div class="nr"><button class="btn" id="b2b">← Back</button><span class="si">1/6</span><button class="btn p" id="b2n">Save & Continue →</button></div>
+</div>
+
+<div class="sc" id="s3">
+  <div class="pl">Part 2 — Visual Identity · Chapters 4–7</div>
+  <h1>How to look as premium as you actually are</h1>
+  <p class="intro">People judge your content before they even watch it — before they read your caption, hear your voice, or process a single word. They make a judgment based on what they see. If it looks cheap, generic, or inconsistent, they'll assume your offer is too.</p>
+  <h2>The visual world concept</h2>
+  <div class="teach"><p>Your visual world is the setting of your brand — the environment, atmosphere, and mood that shows up in every piece of content. Think of it like a movie. You can watch 10 seconds of a Wes Anderson film and know it's Wes Anderson. You can watch a Christopher Nolan film and immediately recognize the tone, the lighting, the atmosphere. Your brand should be the same.</p><p>Three layers: <strong>Setting</strong> (the physical environment where your content lives), <strong>Mood</strong> (the emotional tone and atmosphere), <strong>Design Details</strong> (recurring objects, textures, and elements that make you instantly recognizable).</p></div>
+  <div class="ins"><p>How you do one thing is how you do everything. If you don't put effort into how your content looks, why would anyone believe you'll put effort into helping them? Looking premium doesn't require expensive gear. It requires intention.</p></div>
+  <h2>Composition: the foundation of premium visuals</h2>
+  <div class="teach"><p><strong>Rule of thirds:</strong> Divide your frame into nine sections. Place your subject on one of the four intersection points — not dead center. Leave breathing room in the direction you're facing. This immediately makes a shot feel more cinematic.</p><p><strong>Depth — the biggest difference between basic and cinematic:</strong> Always think in three planes. Foreground (closest to camera, slightly out of focus), middle ground (your subject — sharp), background (the environment, slightly out of focus). Place an object slightly in front of the lens. This creates depth and makes your content feel expensive without expensive gear.</p><p><strong>Leading lines:</strong> Stairs, railings, building edges, pathways — position yourself so these lines lead the eye through the frame toward you.</p></div>
+  <h2>Lighting: setting the emotion</h2>
+  <div class="teach"><p>Lighting sets the emotion before the viewer even understands the story. Always film facing your light source — window in front of you, not behind. For studio setups: key light at 45 degrees from your face, fill light on the opposite side to soften shadows, optional hair/back light to separate you from the background.</p><ul><li><strong>Warm golden natural light</strong> — comfort, trust, approachability</li><li><strong>Bright even studio light</strong> — clarity, professionalism, focus</li><li><strong>High contrast dramatic light</strong> — energy, urgency, power</li><li><strong>Soft diffused light</strong> — thoughtfulness, depth, calm</li></ul></div>
+  <h2>Camera settings that matter</h2>
+  <div class="teach"><ul><li><strong>Frame rate:</strong> 24fps for the cinematic "movie look." 60fps or 120fps only when you plan to slow down footage for B-roll.</li><li><strong>Shutter speed:</strong> Always double your frame rate. 24fps = 1/50. 60fps = 1/120. This keeps motion blur natural and cinematic.</li><li><strong>Aperture:</strong> f1.8–f2.8 for talking head content — gives you background blur and cinematic depth. Lower f-stop = more blur.</li></ul></div>
+  <h2>Color grading: for emotion, not trends</h2>
+  <div class="teach"><p>Color is emotion. Before someone listens to what you're saying, they feel your content. Your grade should reinforce your visual world — not follow what's trending. A consistent grade that's slightly off is better than a perfect grade that changes every video.</p><ul><li><strong>Warm tones</strong> (oranges, yellows, warm whites) — energy, success, approachability</li><li><strong>Cool tones</strong> (blues, grays, cool whites) — authority, clarity, professionalism</li><li><strong>Desaturated / film-like</strong> (muted colors) — raw, honest, authentic</li><li><strong>High contrast</strong> (deep blacks, bright highlights) — cinematic, premium, dramatic</li></ul></div>
+  <div class="ec">
+    <div class="elbl">Exercises 4–7 — Build your complete visual world</div>
+    <div class="q">Content environment:</div>
+    <div class="og" id="g-env"><button class="opt" data-g="env">Calm and minimal</button><button class="opt" data-g="env">Creative and eclectic</button><button class="opt" data-g="env">Professional and polished</button><button class="opt" data-g="env">Luxurious and elevated</button></div>
+    <div class="q">What do you want people to FEEL when they see your content?</div>
+    <div class="og" id="g-feel"><button class="opt" data-g="feel">Inspired</button><button class="opt" data-g="feel">Motivated</button><button class="opt" data-g="feel">Confident</button><button class="opt" data-g="feel">Curious / challenged</button></div>
+    <div class="q">Lighting approach:</div>
+    <div class="og" id="g-light"><button class="opt" data-g="light">Warm golden natural light</button><button class="opt" data-g="light">Bright even studio light</button><button class="opt" data-g="light">High contrast dramatic</button><button class="opt" data-g="light">Soft diffused light</button></div>
+    <div class="q">Brand color palette:</div>
+    <div class="tc3"><input type="text" id="col1" placeholder="Primary" style="margin-bottom:0"><input type="text" id="col2" placeholder="Secondary" style="margin-bottom:0"><input type="text" id="col3" placeholder="Accent/CTA" style="margin-bottom:0"></div>
+    <div class="q" style="margin-top:10px">3–5 objects that will consistently appear in your content:</div>
+    <textarea rows="2" id="objects" placeholder="e.g. coffee mug, notebook, plants, books, candle..."></textarea>
+    <div class="q">Textures that define your visual world:</div>
+    <div class="og" id="g-tex"><button class="opt" data-g="tex">Natural (wood, plants, stone)</button><button class="opt" data-g="tex">Modern (concrete, metal, glass)</button><button class="opt" data-g="tex">Vintage (leather, aged wood)</button><button class="opt" data-g="tex">Mixed / eclectic</button></div>
+    <div class="q">What will you NEVER show in your content?</div>
+    <textarea rows="2" id="never" placeholder="Defining what's off-brand is just as important as what's on-brand."></textarea>
+    <div class="q">Your visual world narrative (1–2 sentences — your visual identity bible):</div>
+    <textarea rows="3" id="vnarr" placeholder="My brand lives in... The mood is... Every piece of content feels..."></textarea>
+    <div class="q">Color grade approach:</div>
+    <div class="og" id="g-grade"><button class="opt" data-g="grade">Warm tones</button><button class="opt" data-g="grade">Cool tones</button><button class="opt" data-g="grade">Desaturated / film-like</button><button class="opt" data-g="grade">High contrast</button></div>
+    <div class="q">Visual reference (creator or film whose world you want to study):</div>
+    <input type="text" id="vref" placeholder="e.g. specific creator or film director">
+  </div>
+  <div class="nr"><button class="btn" id="b3b">← Back</button><span class="si">2/6</span><button class="btn p" id="b3n">Save & Continue →</button></div>
+</div>
+
+<div class="sc" id="s4">
+  <div class="pl">Part 2 — Visual Identity · Chapter 8 — Shots, Angles & B-Roll</div>
+  <h1>Cinematic shots, angles, and B-roll</h1>
+  <p class="intro">Every shot you choose communicates something before you say a word. A close-up creates intimacy. A wide shot creates context. A low angle creates power. Understanding the full vocabulary of shots gives you the ability to say exactly what you mean visually.</p>
+  <h2>Shot types</h2>
+  <div class="sg">
+    <div class="sc3"><div class="sn2">Extreme Wide Shot (EWS)</div><div class="sd">Subject is tiny relative to environment. Use for establishing location, showing scale, opening a scene. Sets context before getting close.</div></div>
+    <div class="sc3"><div class="sn2">Wide Shot (WS)</div><div class="sd">Full body visible, environment prominent. Use for intros, lifestyle, showing your workspace or world. Creates a strong sense of place.</div></div>
+    <div class="sc3"><div class="sn2">Medium Wide (MWS)</div><div class="sd">Thighs to top of head. Bridges wide and medium. Keeps environment while making you more prominent. Great for process and action shots.</div></div>
+    <div class="sc3"><div class="sn2">Medium Shot (MS)</div><div class="sd">Waist to top of head. The standard conversational shot — professional, approachable. Go-to for talking head when you want presence without being too close.</div></div>
+    <div class="sc3"><div class="sn2">Medium Close-Up (MCU)</div><div class="sd">Chest to top of head. More intimate than medium — feels like direct conversation. Strong for trust-building and personal stories.</div></div>
+    <div class="sc3"><div class="sn2">Close-Up (CU)</div><div class="sd">Shoulders to top of head. Creates intensity, intimacy, and focus. Use when you want to drive a point home or create emotional connection.</div></div>
+    <div class="sc3"><div class="sn2">Extreme Close-Up (ECU)</div><div class="sd">Face or specific detail only. Maximum intensity. Use for B-roll details (hands, coffee, keyboard) or high-impact emphasis moments.</div></div>
+    <div class="sc3"><div class="sn2">Over the Shoulder (OTS)</div><div class="sd">Camera behind and to the side, looking toward another subject. Creates perspective and POV — great for tutorials and reaction shots.</div></div>
+  </div>
+  <h2>Camera angles</h2>
+  <div class="ins"><p>Where you place the camera vertically changes the entire feeling of the shot. Height is power. Use these angles deliberately — never accidentally.</p></div>
+  <div class="sg">
+    <div class="sc3"><div class="sn2">Eye level</div><div class="sd">Camera at subject's eye height. Neutral, relatable, conversational. Default for direct-to-camera content — puts you on equal footing with the viewer.</div></div>
+    <div class="sc3"><div class="sn2">High angle</div><div class="sd">Camera above eye level, looking down. Makes subject appear smaller or more approachable. Use carefully — can undermine authority if overused.</div></div>
+    <div class="sc3"><div class="sn2">Low angle (worm's eye)</div><div class="sd">Camera below eye level, looking up. Makes subject appear powerful, dominant, larger than life. Use for authority-driven content and cinematic B-roll.</div></div>
+    <div class="sc3"><div class="sn2">Bird's eye / overhead</div><div class="sd">Camera directly above, looking straight down. Unique and shareable. Great for flat lay B-roll — desk setups, products, process reveals.</div></div>
+    <div class="sc3"><div class="sn2">Dutch angle / tilt</div><div class="sd">Camera tilted on its axis — horizon is diagonal. Creates unease or tension. Use intentionally for dramatic moments or stylized intros. Never accidentally.</div></div>
+    <div class="sc3"><div class="sn2">POV shot</div><div class="sd">Camera represents the subject's point of view. Creates immersion and first-person experience. Powerful for process content and day-in-the-life.</div></div>
+  </div>
+  <h2>Creative framing techniques</h2>
+  <div class="teach"><p>Creative framing turns an ordinary location into a cinematic one. Instead of placing your subject in an open frame, use the environment itself to frame them.</p><ul><li><strong>Shoot through objects:</strong> Place something between the camera and subject — a plant, glass, candle, furniture. Keep it slightly out of focus in the foreground. This creates depth and makes the shot feel expensive immediately.</li><li><strong>Frame within a frame:</strong> Use doorframes, windows, archways, or open books to create a natural frame around your subject. Guides the viewer's eye exactly where you want it.</li><li><strong>Leading lines:</strong> Stairs, hallways, bookshelves, table edges — position yourself so lines in the environment lead toward you and draw the eye through the frame.</li><li><strong>Shoot through foliage:</strong> Plants, leaves, or branches slightly out of focus in the foreground. This single technique makes your content look 10x more cinematic instantly.</li><li><strong>Reflections:</strong> Mirrors, windows, puddles, glass surfaces. Reflections add a second layer to the composition and create unexpected, visually interesting frames.</li><li><strong>Negative space:</strong> Intentionally leave large areas of empty space. Counterintuitive but powerful — creates breathing room, draws attention to your subject, communicates confidence in your composition.</li></ul></div>
+  <h2>Camera movement</h2>
+  <div class="teach"><p>Static shots are safe. Movement creates energy, emotion, and cinematic feel. Every move should have a purpose.</p><ul><li><strong>Push in (dolly in):</strong> Camera moves toward subject. Creates intensity and emphasis. Use on key moments — a big statement, emotional beat, or reveal.</li><li><strong>Pull out (dolly out):</strong> Camera moves away. Creates isolation or scale. Powerful as an ending shot.</li><li><strong>Pan:</strong> Camera rotates left or right on fixed axis. Use to reveal something new in the frame or follow a moving subject.</li><li><strong>Tilt:</strong> Camera rotates up or down. Use for reveals — tilt up to reveal a standing subject, tilt down to reveal a detail.</li><li><strong>Tracking shot:</strong> Camera moves alongside a moving subject. Creates energy and dynamism. Great for walking shots and lifestyle B-roll.</li><li><strong>Handheld:</strong> Camera held without stabilization. Creates a raw, documentary, in-the-moment feel. Use sparingly and intentionally.</li></ul></div>
+  <h2>B-roll: the most underused tool in content</h2>
+  <div class="teach"><p>B-roll is any footage that isn't your main talking head — the visual layer that runs over your voiceover and story moments. Most creators skip B-roll entirely. This is one of the biggest production mistakes you can make, because B-roll is what makes the difference between content that feels like a recording and content that feels like a production.</p><p>B-roll does three things simultaneously: it gives your viewer's eyes something new (holds attention), it visually reinforces the story you're telling with your voice, and it makes editing easier because you can cut between A-roll and B-roll to trim dead air without the viewer noticing.</p></div>
+  <div class="ins"><p>The rule: cut to B-roll every 60–90 seconds during talking head content. Any longer and the viewer's attention starts to drift — their eyes need something new to focus on even while their ears are still engaged.</p></div>
+  <div class="teach"><p><strong>Types of B-roll to capture:</strong></p><ul><li><strong>Process B-roll:</strong> Hands typing, writing, reviewing work on screen. Shows you working — builds credibility through action.</li><li><strong>Detail / macro shots:</strong> Close-ups of objects — coffee cup, book spine, camera lens, keyboard keys. These detail shots give editors visual variety and make content feel textured.</li><li><strong>Environment B-roll:</strong> Wide and medium shots of your workspace or a location you're referencing. Establishes context and visual world.</li><li><strong>Reaction B-roll:</strong> Candid shots of you thinking, reviewing, looking at a screen. Feels authentic and documentary-style.</li><li><strong>Product / gear B-roll:</strong> Slow, deliberate shots of tools you use. At 60fps slowed to 50%, even simple gear shots look cinematic.</li><li><strong>Lifestyle B-roll:</strong> Coffee being made, walking through a space, opening a notebook. These "slice of life" shots humanize you and make content feel personal.</li></ul></div>
+  <div class="brs">
+    <div class="bri"><div class="brn">1</div><div class="brt"><strong>Film A-roll first</strong> — get your talking head done. Then go back and capture B-roll to cover key moments in your script.</div></div>
+    <div class="bri"><div class="brn">2</div><div class="brt"><strong>Shoot B-roll at 60fps</strong> — slowed to 50% in post, even simple shots look cinematic. Easiest production value upgrade.</div></div>
+    <div class="bri"><div class="brn">3</div><div class="brt"><strong>Hold every B-roll shot for 10+ seconds</strong> — you'll use 3–5 seconds in editing but you need options on both ends.</div></div>
+    <div class="bri"><div class="brn">4</div><div class="brt"><strong>Capture every subject from 3 angles</strong> — wide, close, and overhead. Gives you editing options and keeps visual pace moving.</div></div>
+    <div class="bri"><div class="brn">5</div><div class="brt"><strong>Build a B-roll library</strong> — batch capture on filming day and save. Over time you'll have a library to pull from for any piece of content.</div></div>
+  </div>
+  <div class="ec">
+    <div class="elbl">Exercise 8 — Shot system blueprint</div>
+    <div class="slc"><div class="sll">Setup 1 — Talking head (close-up / MCU)</div><textarea rows="2" id="s1set" placeholder="Camera height, distance, framing, lens, lighting, f-stop, background elements..."></textarea></div>
+    <div class="slc"><div class="sll">Setup 2 — Medium shot (waist up)</div><textarea rows="2" id="s2set" placeholder="Camera height, distance, framing, lighting, background..."></textarea></div>
+    <div class="slc"><div class="sll">Setup 3 — Wide shot (full environment)</div><textarea rows="2" id="s3set" placeholder="Camera height, distance, framing — use for intros and showing your world..."></textarea></div>
+    <div class="slc"><div class="sll">Setup 4 — B-roll setup</div><textarea rows="2" id="s4set" placeholder="Types of B-roll you'll capture, frame rate (60fps), angles, subjects..."></textarea></div>
+    <div class="q">My most-used creative framing technique:</div>
+    <div class="og" id="g-frame"><button class="opt" data-g="frame">Shoot through objects (foreground blur)</button><button class="opt" data-g="frame">Frame within a frame (doorways, windows)</button><button class="opt" data-g="frame">Leading lines</button><button class="opt" data-g="frame">Overhead / bird's eye</button></div>
+    <div class="q">My signature angle:</div>
+    <div class="og" id="g-angle"><button class="opt" data-g="angle">Eye level (relatable)</button><button class="opt" data-g="angle">Slightly low (confident)</button><button class="opt" data-g="angle">High angle (approachable)</button><button class="opt" data-g="angle">Mixed by content type</button></div>
+    <div class="q">B-roll categories I'll commit to capturing:</div>
+    <textarea rows="2" id="broll" placeholder="e.g. Process (hands working), detail/macro shots, lifestyle (coffee, walking), gear shots..."></textarea>
+  </div>
+  <div class="nr"><button class="btn" id="b4b">← Back</button><span class="si">2/6</span><button class="btn p" id="b4n">Save & Continue →</button></div>
+</div>
+
+<div class="sc" id="s5">
+  <div class="pl">Part 2 — Visual Identity · Creator Starter Kit</div>
+  <h1>The Creator Starter Kit</h1>
+  <p class="intro">You don't need to spend thousands of dollars to create premium content. This is the minimum viable setup that gives you professional results from day one — chosen for value, versatility, and the quality-to-cost ratio that makes sense when you're building.</p>
+  <div class="ins"><p>Upgrade order when you have budget: <strong>Lighting first. Audio second. Lens third. Camera body last.</strong> Most people do this backwards — they buy a new camera body before they've maxed out what their current one can do with better glass, better light, and better audio. The body matters least.</p></div>
+  <div class="kg">
+    <div class="ki"><div class="kc">Camera</div><div class="kn">Sony ZV-E10 or Sony A6400</div><div class="kd">Interchangeable lens, excellent autofocus, flip screen for solo filming. ZV-E10 is the budget entry, A6400 is the step up with better performance.</div></div>
+    <div class="ki"><div class="kc">Lens</div><div class="kn">Sigma 16mm f/1.4</div><div class="kd">The sharpest lens you can put on a Sony APS-C body at this price. f/1.4 gives beautiful background blur. This single lens will serve you for years.</div></div>
+    <div class="ki"><div class="kc">Audio</div><div class="kn">Rode Wireless GO II</div><div class="kd">Wireless lavalier that clips to your shirt. Clean audio, simple setup, works for studio and run-and-gun. Audio quality matters more than video quality — start here.</div></div>
+    <div class="ki"><div class="kc">Lighting</div><div class="kn">Elgato Key Light or Godox SL60W</div><div class="kd">Key Light for desk setups. Godox SL60W for larger spaces and more flexibility. Lighting is the single biggest upgrade you can make to your image.</div></div>
+    <div class="ki"><div class="kc">Stabilization</div><div class="kn">Joby GorillaPod or DJI OM6</div><div class="kd">GorillaPod for flexible tripod positioning. DJI OM6 if shooting primarily on iPhone and want smooth movement shots.</div></div>
+    <div class="ki"><div class="kc">iPhone option</div><div class="kn">iPhone 14 Pro or newer</div><div class="kd">Shoots Cinematic Mode and ProRes. Pair with Moment Anamorphic lens + Rode Wireless GO II and you have a legitimate production setup.</div></div>
+    <div class="ki"><div class="kc">Editing</div><div class="kn">DaVinci Resolve (free) or CapCut</div><div class="kd">DaVinci Resolve is the industry-standard color grading tool — the free version is more powerful than most paid editors. CapCut for fast short-form on mobile.</div></div>
+    <div class="ki"><div class="kc">Storage</div><div class="kn">Samsung T7 SSD (1TB minimum)</div><div class="kd">Fast external SSD for editing directly from. Don't edit from your internal drive or a slow hard drive — it will kill your workflow.</div></div>
+  </div>
+  <div class="ec">
+    <div class="elbl">Exercise — My starter kit + upgrade plan</div>
+    <div class="q">What gear do I currently have?</div>
+    <textarea rows="2" id="gearNow" placeholder="List your current camera, lens, mic, lighting, editing software..."></textarea>
+    <div class="q">What's my next gear upgrade and why?</div>
+    <textarea rows="2" id="gearNext" placeholder="Based on the upgrade order (lighting → audio → lens → body), what's the highest-leverage next purchase?"></textarea>
+    <div class="q">My editing software:</div>
+    <div class="og" id="g-edit"><button class="opt" data-g="edit">DaVinci Resolve</button><button class="opt" data-g="edit">CapCut</button><button class="opt" data-g="edit">Premiere Pro</button><button class="opt" data-g="edit">Final Cut Pro</button></div>
+  </div>
+  <div class="nr"><button class="btn" id="b5b">← Back</button><span class="si">2/6</span><button class="btn p" id="b5n">Save & Continue →</button></div>
+</div>
+
+<div class="sc" id="s6">
+  <div class="pl">Part 3 — Content Creation · Chapters 9–13</div>
+  <h1>Hooks, storytelling, and the wrapping paper library</h1>
+  <p class="intro">You have 2–3 seconds on short-form, 15–20 on long-form. If you don't capture attention in that window, you've lost them forever — and they'll never see the valuable part.</p>
+  <h2>The 3-step hook formula</h2>
+  <div class="teach"><p><strong>Step 1 — Context Lean:</strong> Establish the topic and get them leaning in. Just enough context to understand why they should care.</p><p><strong>Step 2 — Scroll Stop:</strong> Hit them with a contrasting word. "But." "However." "Yet." "Although." This is the pattern interrupt — a sudden gear shift that makes the brain pay attention.</p><p><strong>Step 3 — Contrarian Snapback:</strong> Go the opposite direction. Challenge their assumption. Create a curiosity gap. Make them need to know what's next.</p></div>
+  <div class="fml"><p>"Most creators spend hours on content that gets zero engagement... BUT it's not because their content is bad. It's because they're solving the wrong problem." — Identifies pain, creates a pattern interrupt, challenges a belief, creates a curiosity gap. All in three sentences.</p></div>
+  <div class="ins"><p>Visual hooks are 100x more powerful than spoken hooks alone. Motion + text on screen + spoken word = three simultaneous pattern interrupts. Rule: 3–5 words max on screen, bold sans-serif, high contrast, first 2 seconds, matches what you're saying verbally.</p></div>
+  <h2>Storytelling: but and therefore — never "and then"</h2>
+  <div class="teach"><p>"And then" is flat — no tension, no conflict, no reason to keep watching. "But" creates conflict. "Therefore" creates consequence. Together they create a story that moves.</p><p><strong>Flat:</strong> "I started posting and then I got followers and then I made money."</p><p><strong>Cinematic:</strong> "I started posting BUT no one was watching. THEREFORE I had to rethink everything. I studied what worked BUT couldn't figure out why. THEREFORE I broke down every piece of content that stopped my scroll until I found the pattern."</p></div>
+  <h2>The five-part story framework</h2>
+  <div class="teach"><ul><li><strong>Hook (2–3 sec):</strong> Bold statement or pattern interrupt.</li><li><strong>Problem (5–10 sec):</strong> Set the stakes. Introduce conflict. Make it specific and relatable.</li><li><strong>Journey (bulk):</strong> The messy middle — low points, mistakes, real struggle. Most creators skip this. Don't.</li><li><strong>Lesson (10–15 sec):</strong> The actionable takeaway tied to your expertise.</li><li><strong>CTA (5–10 sec):</strong> Tell them what to do next. Not always a sell.</li></ul></div>
+  <h2>The 4C's intro (long-form)</h2>
+  <div class="teach"><ul><li><strong>Call Out:</strong> Who is this for? Make it explicit. "If you're a creator who's been posting for months without results, this is for you."</li><li><strong>Credibility:</strong> Why should they listen to you on this specific topic? Contextual credibility — not general credentials.</li><li><strong>Compass:</strong> Give them the roadmap. "In this video I'm going to show you the three things making your content look amateur and exactly how to fix them."</li><li><strong>Core Learning:</strong> Give a valuable insight in the first 60 seconds. If they learn something immediately, they'll assume the rest is just as valuable.</li></ul></div>
+  <h2>The wrapping paper library</h2>
+  <div class="teach"><p>You can have the best content in the world and still get zero views if it's packaged poorly. Your wrapping paper — the title and thumbnail on YouTube, the hook and first frame on Instagram, the opening line on LinkedIn — is what causes someone to click before they know how good your content is.</p><p>How to build your library: scan weekly and save anything that stops your scroll. Look for outliers — if a creator posts something that dramatically outperforms their average, save it. Collect from different creators, different niches, different formats. The best wrapping paper ideas often come from completely unrelated industries. Use the library every time you package new content.</p></div>
+  <div class="ec">
+    <div class="elbl">Exercise 12 — Hook library</div>
+    <div class="hs"><div class="hn">Hook 1</div><input type="text" id="h1a" placeholder="Context lean..."><input type="text" id="h1b" placeholder="Scroll stop (BUT / however / yet)..."><input type="text" id="h1c" placeholder="Contrarian snapback..."></div>
+    <div class="hs"><div class="hn">Hook 2</div><input type="text" id="h2a" placeholder="Context lean..."><input type="text" id="h2b" placeholder="Scroll stop..."><input type="text" id="h2c" placeholder="Contrarian snapback..."></div>
+    <div class="hs"><div class="hn">Hook 3</div><input type="text" id="h3a" placeholder="Context lean..."><input type="text" id="h3b" placeholder="Scroll stop..."><input type="text" id="h3c" placeholder="Contrarian snapback..."></div>
+  </div>
+  <div class="ec">
+    <div class="elbl">Exercise 13 — Story architecture</div>
+    <input type="text" id="storyI" placeholder="Content idea:">
+    <input type="text" id="storyH" placeholder="Hook:">
+    <input type="text" id="storyP" placeholder="Problem (stakes/conflict):">
+    <textarea rows="2" id="storyJ" placeholder="Journey (the messy middle — the part most creators skip):"></textarea>
+    <input type="text" id="storyL" placeholder="Lesson (actionable takeaway):">
+    <input type="text" id="storyC" placeholder="CTA (what do they do next?):">
+  </div>
+  <div class="ec">
+    <div class="elbl">Exercise 18 — Wrapping paper library</div>
+    <div class="q">Where will you store your library?</div>
+    <div class="og" id="g-lib"><button class="opt" data-g="lib">Notion</button><button class="opt" data-g="lib">Pinterest</button><button class="opt" data-g="lib">Instagram Saved</button><button class="opt" data-g="lib">Google Drive</button></div>
+    <div class="q">Save 10 pieces of content that stopped your scroll this week — note why each one worked:</div>
+    <textarea rows="4" id="wplib" placeholder="1. Why it stopped you: &#10;2. Why it stopped you: &#10;3. (continue for 10 total)"></textarea>
+  </div>
+  <div class="nr"><button class="btn" id="b6b">← Back</button><span class="si">3/6</span><button class="btn p" id="b6n">Save & Continue →</button></div>
+</div>
+
+<div class="sc" id="s7">
+  <div class="pl">Part 3 & 4 — Content Formats + System</div>
+  <h1>Short-form, carousels, long-form, and your content system</h1>
+  <p class="intro">Different content types serve different purposes. Understanding which format to use for which goal separates strategic creators from reactive ones. Then the system is what keeps you showing up without burning out.</p>
+  <h2>Short-form content (reels, TikTok, shorts)</h2>
+  <div class="teach"><p>Purpose: awareness, trust-building, top of funnel. Length: 15–90 seconds. Goal: stop the scroll, deliver one clear insight, drive to next step. One idea per video — never try to cover everything.</p><ul><li><strong>Quick Insight:</strong> One valuable idea in 30–60 seconds. No fluff. Pure value.</li><li><strong>Contrarian Take:</strong> Challenge a common belief. Creates engagement and positions you as a thinker.</li><li><strong>Before/After:</strong> Show a transformation. Visual proof of your expertise.</li><li><strong>Process Reveal:</strong> Behind-the-scenes of how you do something. Builds trust through transparency.</li><li><strong>Story Clip:</strong> A self-contained moment from a longer story. Creates curiosity for more.</li></ul></div>
+  <h2>Carousels: the 10-slide structure</h2>
+  <div class="teach"><ul><li><strong>Slide 1 — Hook Slide:</strong> Your thumbnail. Bold headline, clear value proposition, visual that creates curiosity. If slide 1 doesn't stop the scroll, no one sees slide 2.</li><li><strong>Slide 2 — Promise Slide:</strong> Tell them exactly what they'll get. "In this carousel you'll learn X, Y, and Z." Sets expectations and gives them a reason to keep swiping.</li><li><strong>Slides 3–8 — Value Slides:</strong> One idea per slide. Clean, simple, scannable. Bold text for main point, supporting text for context. Don't crowd.</li><li><strong>Slide 9 — Summary Slide:</strong> Recap key points. This is for people who swiped to the end first — and there are a lot of them.</li><li><strong>Slide 10 — CTA Slide:</strong> Tell them what to do next. One CTA only — save, share, follow, or link in bio.</li></ul><p>Carousel rules: consistent color palette across all slides, consistent typography, breathing room on every slide, one idea per slide, strong contrast.</p></div>
+  <h2>Long-form content (YouTube, podcasts)</h2>
+  <div class="teach"><p>Purpose: trust-building, authority, conversion. Long-form is where conversion happens — the more time someone spends with you, the more likely they are to buy. Open with your strongest insight. Use B-roll to break up talking head every 60–90 seconds. Vary shot setups (close-up, medium, wide). Music under voiceover sections only.</p><ul><li><strong>Deep Dive:</strong> One topic explored thoroughly. Your positioning video.</li><li><strong>Framework Video:</strong> Teach a complete system. Positions you as someone with a proven method.</li><li><strong>Case Study:</strong> Before, process, after. Pure credibility.</li><li><strong>Contrarian Argument:</strong> Take a position that goes against industry norms.</li><li><strong>Story Video:</strong> Cinematic, narrative-driven. Builds emotional connection.</li></ul></div>
+  <h2>The waterfall method</h2>
+  <div class="teach"><p>One piece of content should never live on just one platform. Start with your pillar content — your highest-value, most effort-intensive piece. Extract the golden moments: valuable clips, standout quotes, key frameworks, contrarian takes. Then repackage (not just repost) for each platform.</p><ul><li>YouTube Shorts / Reels / TikTok: 30–90 second clips</li><li>LinkedIn: Written post or carousel from the core idea</li><li>Instagram Stories: Quick takeaways with visuals</li><li>Newsletter: Package insights into an email sequence</li><li>Twitter/X: Break down insights into a thread</li></ul><p>One pillar piece becomes 5–10 pieces of platform-native content.</p></div>
+  <h2>The 70/20/10 framework</h2>
+  <div class="fml"><p>70% — Proven content (formats and topics you know work) · 20% — Iterations (same content, different hook/setting/delivery) · 10% — Big swings (new formats, new topics, experiments). The 10% is where most creators fail — they get comfortable and stop experimenting. Then their audience gets bored.</p></div>
+  <h2>The batching system</h2>
+  <div class="teach"><p>Monday: research + ideation. Tuesday: writing + hooks. Wednesday: filming. Thursday: editing + color grade + thumbnails. Friday: publishing + engagement. Film in the same outfit to batch 2–3 weeks at once. Protect maker time (deep work, no meetings) completely from manager time (calls, admin). The moment a calendar notification interrupts a creative session, the session is over.</p></div>
+  <div class="ec">
+    <div class="elbl">Exercises 15–21 — Content plan + system</div>
+    <div class="q">Primary short-form format:</div>
+    <div class="og" id="g-sf"><button class="opt" data-g="sf">Quick Insight (30–60 sec)</button><button class="opt" data-g="sf">Contrarian Take</button><button class="opt" data-g="sf">Process Reveal</button><button class="opt" data-g="sf">Story Clip</button></div>
+    <div class="q">5 short-form content ideas:</div>
+    <textarea rows="5" id="sfideas" placeholder="1. &#10;2. &#10;3. &#10;4. &#10;5."></textarea>
+    <div class="q">First 3 long-form pieces:</div>
+    <input type="text" id="lf1" placeholder="Video 1 — Origin story / introduction:">
+    <input type="text" id="lf2" placeholder="Video 2 — Positioning deep dive / core framework:">
+    <input type="text" id="lf3" placeholder="Video 3 — Experimental format / big swing:">
+    <div class="q">Carousel visual style:</div>
+    <textarea rows="2" id="cstyle" placeholder="e.g. Clean dark backgrounds, bold white headlines, one idea per slide, brand colors throughout..."></textarea>
+    <div class="q">5 carousel content ideas:</div>
+    <textarea rows="5" id="cideas" placeholder="1. &#10;2. &#10;3. &#10;4. &#10;5."></textarea>
+    <div class="q">Pillar content (platform + format):</div>
+    <input type="text" id="pillar" placeholder="e.g. YouTube long-form — 15–20 min deep dives">
+    <div class="q">Waterfall distribution from one pillar piece:</div>
+    <textarea rows="3" id="waterfall" placeholder="e.g. 2–3 YouTube Shorts, Instagram Reels, LinkedIn carousel, newsletter, Twitter/X thread..."></textarea>
+    <div class="q">70/20/10 content split:</div>
+    <textarea rows="3" id="split" placeholder="70% proven: &#10;20% iterations: &#10;10% big swings:"></textarea>
+    <div class="q">Weekly batching schedule:</div>
+    <input type="text" id="fday" placeholder="Filming day: e.g. Wednesday">
+    <input type="text" id="eday" placeholder="Editing day: e.g. Thursday">
+    <input type="text" id="pday" placeholder="Publishing day: e.g. Friday">
+    <div class="q">Protected maker hours:</div>
+    <input type="text" id="maker" placeholder="e.g. 7am–12pm — deep work only, no meetings">
+    <div class="q">Manager hours:</div>
+    <input type="text" id="manager" placeholder="e.g. 12pm–5pm — all calls and admin here">
+  </div>
+  <div class="nr"><button class="btn" id="b7b">← Back</button><span class="si">3–4/6</span><button class="btn p" id="b7n">Save & Continue →</button></div>
+</div>
+
+<div class="sc" id="s8">
+  <div class="pl">Part 5 — Trust & Conversion · Chapters 17–19</div>
+  <h1>How to turn content into customers</h1>
+  <p class="intro">Content doesn't sell. Trust sells. Your content is the mechanism for building trust at scale. Every piece either deposits into or withdraws from your trust account with your audience.</p>
+  <h2>The four trust pillars</h2>
+  <div class="teach"><p><strong>1. Authority:</strong> You know what you're talking about. Build it through frameworks, case studies, and specific results — contextual credibility, not general credentials.</p><p><strong>2. Relatability:</strong> You've been where they are. Share your origin story, failures, and the messy middle. Let them see themselves in you.</p><p><strong>3. Admiration:</strong> They want to be where you are. Share wins, transformations, and results. Show what's possible.</p><p><strong>4. Unconditional Value:</strong> You give without expectation. Your free content is so good that people feel guilty not buying from you.</p></div>
+  <h2>Share the knowledge. Sell the execution.</h2>
+  <div class="teach"><p>Give away everything you know for free. Charge for the implementation. When people go to act on what you've taught them, they realize execution is overwhelming. That's exactly where your offer comes in. The knowledge is free. The execution is what you sell.</p></div>
+  <div class="fml"><p>Free Content → builds awareness + trust → Lead Magnet → captures email, delivers quick win → Low-Ticket ($10–$100) → removes barrier to entry → Mid-Ticket ($500–$5K) → committed buyers → High-Ticket ($10K+) → done-with-you or done-for-you</p></div>
+  <h2>The CTA strategy</h2>
+  <div class="teach"><ul><li><strong>Awareness content:</strong> "Follow for more" or "Save this"</li><li><strong>Trust-building content:</strong> "Download my free [lead magnet]"</li><li><strong>Authority content:</strong> "Join the [community/program]"</li><li><strong>Conversion content:</strong> "Apply to work with me"</li></ul></div>
+  <div class="ec">
+    <div class="elbl">Exercise 22 — Trust audit</div>
+    <input type="text" id="auth" placeholder="Authority: _/10 — What would improve this?">
+    <input type="text" id="rel" placeholder="Relatability: _/10 — What would improve this?">
+    <input type="text" id="adm" placeholder="Admiration: _/10 — What would improve this?">
+    <input type="text" id="val" placeholder="Unconditional Value: _/10 — What would improve this?">
+  </div>
+  <div class="ec">
+    <div class="elbl">Exercises 23–24 — Offer stack + funnel</div>
+    <div class="q">Free content:</div><input type="text" id="ofree" placeholder="e.g. Weekly content tips on Instagram + YouTube">
+    <div class="q">Lead magnet:</div><input type="text" id="olead" placeholder="e.g. Content Elevation Score quiz — free, captures email">
+    <div class="q">Low-ticket ($10–$100):</div><input type="text" id="olow" placeholder="e.g. This workbook at $29">
+    <div class="q">Mid-ticket ($500–$5,000):</div><input type="text" id="omid" placeholder="e.g. Brand Launch Sprint™">
+    <div class="q">High-ticket ($10,000+):</div><input type="text" id="ohigh" placeholder="e.g. Done-for-you premium brand build">
+    <div class="q">Conversion mechanism:</div><input type="text" id="conv" placeholder="e.g. Sales call / checkout page / DM funnel">
+    <div class="q">CTA strategy by funnel stage:</div>
+    <textarea rows="3" id="ctastrat" placeholder="Awareness: &#10;Trust-building: &#10;Conversion:"></textarea>
+  </div>
+  <div class="nr"><button class="btn" id="b8b">← Back</button><span class="si">5/6</span><button class="btn p" id="b8n">Build My Playbook →</button></div>
+</div>
+
+<div class="sc" id="s9">
+  <div class="pl">Part 6 — Your Blueprint</div>
+  <h1>Your personalized playbook</h1>
+  <p class="intro">You've done the work. Here's everything you built — your complete content strategy, visual identity, and monetization plan in one place. Return to this whenever you need to recalibrate.</p>
+  <div id="pbScore"></div>
+  <div id="pbSugg"></div>
+  <div id="pbContent"></div>
+  <div class="div"></div>
+  <h2>Your 30-day content elevation plan</h2>
+  <div class="wc"><div class="wl">Week 1 — Foundation</div><p>Complete all foundation exercises. Define your content goal, ideal viewer, and platform strategy. Write your content formula for every piece you create this week. Commit to your cadence and don't adjust it until week 4.</p></div>
+  <div class="wc"><div class="wl">Week 2 — Visual Identity</div><p>Complete all visual identity exercises. Define your visual world narrative. Build your shot system blueprint. Set up your filming space. Establish your color palette and typography. Film a test video with your new visual standards and review it critically.</p></div>
+  <div class="wc"><div class="wl">Week 3 — Content Creation</div><p>Complete all content creation exercises. Write your hook library (10 hooks minimum). Plan your first 30 pieces of content across all formats. Film your first 5 pieces using your new visual standards and shot system.</p></div>
+  <div class="wc"><div class="wl">Week 4 — System & Launch</div><p>Complete all system exercises. Set up your batching schedule. Map your complete content waterfall. Build your monetization funnel. Launch your elevated content. Review performance at end of week — what worked, what didn't, what to adjust.</p></div>
+  <div class="ins" style="margin-top:1.5rem"><p>Building a premium personal brand is not about being perfect. It's about showing up intentionally. Consistently. With a clear point of view and a genuine desire to help the people you serve. The creators who win are the most consistent. You have everything you need. Now go build it.</p></div>
+  <div class="ups">
+    <h2>Ready to install your brand in 30 days?</h2>
+    <p>The Brand Launch Sprint™ is a focused 30-day execution environment where you install your complete premium personal brand — positioning, aesthetic, visual identity, and content system — with direct creative direction from Gabe. Weekly live sessions. Direct feedback on every step. A community of creators doing the work alongside you.</p>
+    <button class="btn p" id="upsBtn">Join the Brand Launch Sprint™ at fscreative.live →</button>
+  </div>
+  <div class="nr"><button class="btn" id="b9b">← Back</button><button class="btn p" id="printBtn">Download Your Blueprint →</button></div>
+</div>
+
+</div></div></div>
+
+<script>
+var TABS=['Welcome','Strategy','Foundation','Visual World','Shots & B-Roll','Starter Kit','Hooks & Stories','Formats & System','Trust & Money','Your Playbook'];
+var ICONS=[
+  '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>',
+  '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>',
+  '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg>',
+  '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>',
+  '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 7l-7 5 7 5V7z"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></svg>',
+  '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>',
+  '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>',
+  '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>',
+  '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>',
+  '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>'
+];
+var done=new Set();
+var cur=0;
+
+function go(n){
+  document.querySelectorAll('.sc').forEach(function(s){s.classList.remove('show');});
+  var t=document.getElementById('s'+n);
+  if(t)t.classList.add('show');
+  cur=n;
+  render();
+  if(n===9)buildPlaybook();
+  window.scrollTo(0,0);
+  ccNotifyShell();
+}
+
+function finish(from,to){done.add(from);saveData();go(to);}
+
+function render(){
+  var pct=Math.round((done.size/9)*100);
+  document.querySelectorAll('.pf').forEach(function(el){el.style.width=pct+'%';});
+  document.querySelectorAll('.pt').forEach(function(el){el.textContent=done.size+'/9';});
+  document.getElementById('dc').textContent=done.size;
+  var tb=document.getElementById('tabbar');
+  tb.innerHTML='';
+  TABS.forEach(function(t,i){
+    var b=document.createElement('button');
+    b.className='tab'+(i===cur?' on':done.has(i)?' ok':'');
+    b.textContent=t;
+    (function(x){b.addEventListener('click',function(){go(x);});})(i);
+    tb.appendChild(b);
+  });
+  var sn=document.getElementById('sbnav');
+  if(sn){
+    sn.innerHTML='';
+    TABS.forEach(function(t,i){
+      var b=document.createElement('button');
+      b.className='sb-item'+(i===cur?' on':done.has(i)?' ok':'');
+      b.innerHTML='<span class="sb-icon">'+ICONS[i]+'</span>'+t;
+      (function(x){b.addEventListener('click',function(){go(x);});})(i);
+      sn.appendChild(b);
+    });
+  }
+}
+
+function initOpts(){
+  document.querySelectorAll('.opt[data-g]').forEach(function(btn){
+    btn.addEventListener('click',function(){
+      var g=btn.getAttribute('data-g');
+      document.querySelectorAll('.opt[data-g="'+g+'"]').forEach(function(o){o.classList.remove('sel');});
+      btn.classList.add('sel');
+    });
+  });
+}
+
+function printFull(){
+  document.body.classList.add('print-full');
+  window.print();
+  setTimeout(function(){document.body.classList.remove('print-full');},500);
+}
+
+function printBlueprint(){
+  document.body.classList.add('print-blueprint');
+  window.print();
+  setTimeout(function(){document.body.classList.remove('print-blueprint');},500);
+}
+
+function wire(){
+  var map=[
+    ['b0n',null,0,1],
+    ['b1b',null,null,0],['b1n',null,1,2],
+    ['b2b',null,null,1],['b2n',null,2,3],
+    ['b3b',null,null,2],['b3n',null,3,4],
+    ['b4b',null,null,3],['b4n',null,4,5],
+    ['b5b',null,null,4],['b5n',null,5,6],
+    ['b6b',null,null,5],['b6n',null,6,7],
+    ['b7b',null,null,6],['b7n',null,7,8],
+    ['b8b',null,null,7],['b8n',null,8,9],
+    ['b9b',null,null,8]
+  ];
+  map.forEach(function(m){
+    var el=document.getElementById(m[0]);
+    if(!el)return;
+    var from=m[2],to=m[3];
+    el.addEventListener('click',function(){
+      if(from!==null)finish(from,to);
+      else go(to);
+    });
+  });
+  var up=document.getElementById('upsBtn');
+  if(up)up.addEventListener('click',function(){window.open('https://fscreative.live','_blank');});
+  var pr=document.getElementById('printBtn');
+  if(pr)pr.addEventListener('click',printBlueprint);
+  var pf=document.getElementById('printFullBtn');
+  if(pf)pf.addEventListener('click',printFull);
+}
+
+function gv(id){var e=document.getElementById(id);return e?e.value.trim():'';}
+function gs(g){var e=document.querySelector('.opt.sel[data-g="'+g+'"]');return e?e.textContent.trim():'';}
+
+// ─── AUTO-SAVE ───
+var SAVE_KEY='ccb-v1';
+var saveTimer;
+
+function saveData(){
+  var data={inputs:{},opts:{},done:Array.from(done),cur:cur};
+  document.querySelectorAll('textarea,input[type=text]').forEach(function(el){
+    if(el.id)data.inputs[el.id]=el.value;
+  });
+  document.querySelectorAll('.opt.sel[data-g]').forEach(function(el){
+    data.opts[el.getAttribute('data-g')]=el.textContent.trim();
+  });
+  try{
+    localStorage.setItem(SAVE_KEY,JSON.stringify(data));
+    var dot=document.querySelector('.save-dot');
+    if(dot){dot.classList.add('saved');clearTimeout(saveTimer);saveTimer=setTimeout(function(){dot.classList.remove('saved');},2000);}
+  }catch(e){}
+  ccSyncSupabase(data);
+}
+
+function loadData(){
+  var raw=localStorage.getItem(SAVE_KEY);
+  if(!raw)return;
+  try{
+    var data=JSON.parse(raw);
+    if(data.inputs){Object.keys(data.inputs).forEach(function(id){var el=document.getElementById(id);if(el&&data.inputs[id])el.value=data.inputs[id];});}
+    if(data.opts){Object.keys(data.opts).forEach(function(g){var val=data.opts[g];document.querySelectorAll('.opt[data-g="'+g+'"]').forEach(function(el){if(el.textContent.trim()===val)el.classList.add('sel');});});}
+    if(data.done&&Array.isArray(data.done)){data.done.forEach(function(i){done.add(Number(i));});}
+    if(typeof data.cur==='number')cur=data.cur;
+  }catch(e){}
+}
+
+function wireSave(){
+  document.querySelectorAll('textarea,input[type=text]').forEach(function(el){el.addEventListener('input',saveData);});
+  document.querySelectorAll('.opt[data-g]').forEach(function(btn){btn.addEventListener('click',saveData);});
+}
+
+// ─── SCORE ───
+function calcScore(){
+  var s={foundation:0,visual:0,content:0,system:0};
+  // Foundation (max 25)
+  if(gs('goal'))s.foundation+=3;
+  var vl=gv('viewer').length;s.foundation+=vl>20?5:vl>5?2:0;
+  if(gv('nextStep').length>5)s.foundation+=3;
+  if(gs('medium'))s.foundation+=3;
+  if(gv('primary'))s.foundation+=2;
+  if(gv('sauron'))s.foundation+=2;
+  if(gv('cadence').length>5)s.foundation+=4;
+  if(gv('weekHours'))s.foundation+=3;
+  // Visual (max 25)
+  if(gs('env'))s.visual+=3;
+  if(gs('light'))s.visual+=3;
+  if(gs('grade'))s.visual+=3;
+  var vn=gv('vnarr').length;s.visual+=vn>30?6:vn>5?3:0;
+  if(gv('col1')&&gv('col2'))s.visual+=3;
+  if(gv('s1set').length>10)s.visual+=2;
+  if(gv('broll').length>5)s.visual+=3;
+  if(gs('angle'))s.visual+=2;
+  // Content (max 25)
+  if(gv('h1a')&&gv('h1b')&&gv('h1c'))s.content+=4;
+  if(gv('h2a')&&gv('h2b')&&gv('h2c'))s.content+=3;
+  if(gv('h3a')&&gv('h3b')&&gv('h3c'))s.content+=3;
+  var sf=gv('sfideas').split('\n').filter(function(l){return l.trim();}).length;
+  s.content+=sf>=5?5:sf>=3?3:sf>=1?1:0;
+  if(gv('lf1'))s.content+=2;if(gv('lf2'))s.content+=2;if(gv('lf3'))s.content+=2;
+  if(gs('sf'))s.content+=2;if(gs('lib')&&gv('wplib').length>10)s.content+=2;
+  // System (max 25)
+  if(gv('fday')&&gv('eday')&&gv('pday'))s.system+=4;
+  if(gv('maker')&&gv('manager'))s.system+=3;
+  if(gv('olead'))s.system+=3;if(gv('olow'))s.system+=3;
+  if(gv('omid')||gv('ohigh'))s.system+=3;
+  if(gv('ctastrat').length>20)s.system+=4;
+  if(gv('auth')&&gv('rel'))s.system+=3;
+  if(gv('waterfall').length>10)s.system+=2;
+  s.foundation=Math.min(s.foundation,25);s.visual=Math.min(s.visual,25);
+  s.content=Math.min(s.content,25);s.system=Math.min(s.system,25);
+  s.total=s.foundation+s.visual+s.content+s.system;
+  return s;
+}
+
+function tierLabel(n){
+  if(n<30)return['t0','Just Getting Started'];
+  if(n<55)return['t1','Building Momentum'];
+  if(n<75)return['t2','Strong Foundation'];
+  if(n<90)return['t3','Advanced Creator'];
+  return['t3','Blueprint Complete'];
+}
+
+function buildScoreCard(sc){
+  var tier=tierLabel(sc.total);
+  var cats=[{l:'Foundation',v:sc.foundation},{l:'Visual',v:sc.visual},{l:'Content',v:sc.content},{l:'System',v:sc.system}];
+  var catsHtml=cats.map(function(c){
+    var pct=Math.round((c.v/25)*100);
+    return '<div class="sc-cat"><div class="sc-cat-lbl">'+c.l+'</div><div class="sc-bar-bg"><div class="sc-bar-fg'+(c.v>=22?' hi':'')+'" style="width:'+pct+'%"></div></div><div class="sc-cat-val">'+c.v+'/25</div></div>';
+  }).join('');
+  return '<div class="sc-card"><div class="sc-hd">Your Blueprint Score</div><div class="sc-main"><div class="sc-num">'+sc.total+'</div><div class="sc-denom">/100</div><div style="padding-bottom:10px"><div class="sc-tier '+tier[0]+'">'+tier[1]+'</div></div></div><div class="sc-cats">'+catsHtml+'</div></div>';
+}
+
+// ─── SUGGESTIONS ───
+function buildSuggestions(sc){
+  var items=[];
+  var medium=gs('medium');var goal=gs('goal');var platform=gv('primary').toLowerCase();
+
+  // Platform recommendation
+  if(medium.indexOf('Video')>-1||platform.indexOf('youtube')>-1){
+    items.push({type:'orange',tag:'Platform Strategy',title:'YouTube → Instagram Reels → TikTok',body:'Video is your highest-leverage medium. YouTube compounds long-term — a video posted today will still drive traffic in 3 years. Repurpose to Reels for reach and TikTok for discovery. Always drive traffic back to YouTube for the trust-building long-form content.'});
+  }else if(medium.indexOf('Audio')>-1){
+    items.push({type:'orange',tag:'Platform Strategy',title:'Podcast → LinkedIn → YouTube clips',body:'Audio creates the deepest intimacy with an audience. Distribute on Spotify and Apple Podcasts. Clip 60-second moments for LinkedIn and Instagram. Transcribe episodes into written posts. One recording session = 5+ pieces of platform-native content.'});
+  }else if(medium.indexOf('Written')>-1){
+    items.push({type:'orange',tag:'Platform Strategy',title:'LinkedIn → Newsletter → Twitter/X',body:'Written content builds the highest authority per word. LinkedIn still has organic reach most platforms abandoned. Capture every reader into a newsletter — you own that audience. Twitter/X threads for reach and discoverability.'});
+  }else if(medium.indexOf('Visual')>-1||medium.indexOf('carousel')>-1){
+    items.push({type:'orange',tag:'Platform Strategy',title:'Instagram Carousels → Pinterest → LinkedIn',body:'Visual/carousel content has the highest save rate of any format. Saves signal long-term value to the algorithm. Pinterest compounds for months. Cross-post carousels to LinkedIn — they outperform most creators expect.'});
+  }else{
+    items.push({type:'neutral',tag:'Platform Strategy',title:'Define your primary medium first',body:'Your platform strategy starts with medium. The right platform depends on where your ideal viewer spends time AND what format feels most natural to you. Come back and define this — it changes everything downstream.'});
+  }
+
+  // Goal-based
+  if(goal.indexOf('leads')>-1||goal.indexOf('Generate')>-1){
+    items.push({type:'orange',tag:'Lead Generation',title:'Every piece needs one clear next step',body:'Your goal is lead generation — every piece of content needs a CTA that captures an email. A lead magnet solving a specific micro-problem converts 3–5x better than a generic "free guide." If your lead magnet isn\'t defined yet, that\'s your highest priority.'});
+  }else if(goal.indexOf('Convert')>-1||goal.indexOf('customer')>-1){
+    items.push({type:'orange',tag:'Conversion Strategy',title:'Trust content before conversion content',body:'Conversion requires trust first. Pushing conversion content before building enough trust trains your audience to ignore your CTAs. The ratio: 3–4 trust-building pieces for every 1 conversion piece.'});
+  }else if(goal.indexOf('awareness')>-1||goal.indexOf('brand')>-1){
+    items.push({type:'orange',tag:'Brand Awareness',title:'Consistency beats virality every time',body:'Brand awareness is a long game. The creators who appear to "blow up" are usually 2–3 years into consistent posting — you just found them when they popped. A repeatable cadence and recognizable visual world compounds with time.'});
+  }
+
+  // Strengths
+  if(sc.visual>=18){
+    items.push({type:'green',tag:'Strength — Visual Identity',title:'Your visual world is well-defined',body:'This is a significant competitive advantage — most creators never get here. Make sure your visual world narrative and shot system are documented somewhere an editor or collaborator can reference.'});
+  }else if(sc.visual<10&&sc.total>15){
+    items.push({type:'orange',tag:'Gap — Visual Identity',title:'Your visual world needs definition',body:'Visual identity is judged before a single word is heard. If this score is low, defining your visual world narrative and shot system is your highest-priority next step. It changes how your content is perceived immediately.'});
+  }
+
+  if(sc.content>=18){
+    items.push({type:'green',tag:'Strength — Content System',title:'Strong hooks, stories, and content plan',body:'You have enough to start creating immediately. The key now is execution — ship the first 5 pieces using your new standards before optimizing further. Ship, review, adjust.'});
+  }
+
+  if(sc.system<10&&sc.total>15){
+    items.push({type:'orange',tag:'Gap — Monetization',title:'Your offer stack isn\'t defined yet',body:'Content without a monetization path is a hobby, not a business. You don\'t need to sell immediately — but you need to know where you\'re taking people. Define your offer stack before your next piece of content.'});
+  }
+
+  if(!gv('h1a')||!gv('h1b')||!gv('h1c')){
+    items.push({type:'neutral',tag:'Quick Win',title:'Write your hook library before your next video',body:'The hook is the highest-leverage minute of any piece of content. Creators who write 3 hook options per video and test them see 2–4x higher retention. Fill in the hook library and use it on your very next piece.'});
+  }
+
+  return items;
+}
+
+function buildPlaybook(){
+  var sc=calcScore();
+  document.getElementById('pbScore').innerHTML=buildScoreCard(sc);
+
+  var suggs=buildSuggestions(sc);
+  var suggHtml='';
+  if(suggs.length){
+    suggHtml='<div class="sugg-hd" style="margin-top:1.5rem">Personalized Recommendations</div>';
+    suggs.forEach(function(s){
+      suggHtml+='<div class="sugg-item '+s.type+'"><div class="sugg-tag">'+s.tag+'</div><div class="sugg-title">'+s.title+'</div><div class="sugg-body">'+s.body+'</div></div>';
+    });
+  }
+  document.getElementById('pbSugg').innerHTML=suggHtml;
+
+  var items=[
+    {l:'Content goal',v:gs('goal')},{l:'Ideal viewer',v:gv('viewer')},
+    {l:'Desired next step',v:gv('nextStep')},{l:'Painful problem',v:gv('painProblem')},
+    {l:'Unique solution',v:gv('uniqueSol')},{l:'Contextual credibility',v:gv('credibility')},
+    {l:'Weekly hours',v:gv('weekHours')},{l:'What energizes me',v:gv('energize')},
+    {l:'What drains me',v:gv('drain')},{l:'Content cadence',v:gv('cadence')},
+    {l:'Primary platform',v:gv('primary')},{l:'Secondary platform',v:gv('secondary')},
+    {l:'Eye of Sauron at',v:gv('sauron')},{l:'Visual environment',v:gs('env')},
+    {l:'Audience feeling',v:gs('feel')},{l:'Lighting approach',v:gs('light')},
+    {l:'Color palette',v:[gv('col1'),gv('col2'),gv('col3')].filter(Boolean).join(' / ')},
+    {l:'Recurring objects',v:gv('objects')},{l:'Visual textures',v:gs('tex')},
+    {l:'What I never show',v:gv('never')},{l:'Visual world narrative',v:gv('vnarr')},
+    {l:'Color grade',v:gs('grade')},{l:'Visual reference',v:gv('vref')},
+    {l:'Signature framing',v:gs('frame')},{l:'Signature angle',v:gs('angle')},
+    {l:'B-roll categories',v:gv('broll')},{l:'Gear I have now',v:gv('gearNow')},
+    {l:'Next gear upgrade',v:gv('gearNext')},{l:'Editing software',v:gs('edit')},
+    {l:'Hook 1',v:[gv('h1a'),gv('h1b'),gv('h1c')].filter(Boolean).join(' → ')},
+    {l:'Hook 2',v:[gv('h2a'),gv('h2b'),gv('h2c')].filter(Boolean).join(' → ')},
+    {l:'Hook 3',v:[gv('h3a'),gv('h3b'),gv('h3c')].filter(Boolean).join(' → ')},
+    {l:'Story idea',v:gv('storyI')},{l:'Wrapping paper library',v:gs('lib')},
+    {l:'Short-form format',v:gs('sf')},{l:'Short-form ideas',v:gv('sfideas')},
+    {l:'Long-form video 1',v:gv('lf1')},{l:'Long-form video 2',v:gv('lf2')},{l:'Long-form video 3',v:gv('lf3')},
+    {l:'Carousel style',v:gv('cstyle')},{l:'Carousel ideas',v:gv('cideas')},
+    {l:'Pillar content',v:gv('pillar')},{l:'Waterfall distribution',v:gv('waterfall')},
+    {l:'70/20/10 split',v:gv('split')},
+    {l:'Film/Edit/Publish days',v:[gv('fday'),gv('eday'),gv('pday')].filter(Boolean).join(' / ')},
+    {l:'Maker hours',v:gv('maker')},{l:'Manager hours',v:gv('manager')},
+    {l:'Lead magnet',v:gv('olead')},{l:'Low-ticket offer',v:gv('olow')},
+    {l:'Mid-ticket offer',v:gv('omid')},{l:'High-ticket offer',v:gv('ohigh')},
+    {l:'Conversion mechanism',v:gv('conv')},{l:'CTA strategy',v:gv('ctastrat')}
+  ];
+  var html='';
+  items.forEach(function(item){if(item.v)html+='<div class="sum"><div class="slb">'+item.l+'</div><div class="svl">'+item.v+'</div></div>';});
+  if(html)html='<div class="div"></div><h2 style="margin-top:0">Your Answers</h2>'+html;
+  else html='<p style="color:var(--dimmer);font-size:13px;padding:.5rem 0">Complete the exercises in Parts 1–5 to populate your playbook here.</p>';
+  document.getElementById('pbContent').innerHTML=html;
+}
+
+// ─── THEME ───
+(function(){
+  document.querySelectorAll('.theme-btn').forEach(function(btn){
+    btn.addEventListener('click',function(){document.body.classList.toggle('light');});
+  });
+})();
+
+initOpts();
+wire();
+loadData();
+go(cur);
+wireSave();
+
+/* ── IFRAME / COURSE SHELL BRIDGE ── */
+var CC_IN_FRAME = (window.self !== window.top);
+
+if (CC_IN_FRAME) {
+  var _ccHide = function() {
+    var sb=document.getElementById('sidebar');
+    var mn=document.getElementById('main');
+    var tb=document.getElementById('tabbar');
+    var topbar=document.querySelector('.topbar');
+    if(sb){sb.style.display='none';}
+    if(mn){mn.style.marginLeft='0';mn.style.width='100%';}
+    if(tb){tb.style.display='none';}
+    if(topbar){topbar.style.display='none';}
+  };
+  if(document.readyState==='loading'){
+    document.addEventListener('DOMContentLoaded',_ccHide);
+  } else {
+    _ccHide();
+  }
+}
+
+window.addEventListener('message',function(e){
+  if(!e.data||e.data.type!=='navigate') return;
+  if(typeof e.data.to==='number') go(e.data.to);
+});
+
+function ccNotifyShell() {
+  if(!CC_IN_FRAME) return;
+  var doneArr=[];
+  /* handle Set, Array, or object formats for done */
+  if(typeof done!=='undefined'){
+    if(done instanceof Set){done.forEach(function(v){doneArr.push(Number(v));});}
+    else if(Array.isArray(done)){doneArr=done.map(Number);}
+    else if(done&&typeof done==='object'){Object.keys(done).forEach(function(k){if(done[k])doneArr.push(Number(k));});}
+  }
+  window.parent.postMessage({type:'sectionChange',cur:cur,done:doneArr},'*');
+}
+
+/* Send ready after init */
+setTimeout(function(){
+  if(CC_IN_FRAME){
+    var doneArr=[];
+    if(typeof done!=='undefined'){
+      if(done instanceof Set){done.forEach(function(v){doneArr.push(Number(v));});}
+      else if(Array.isArray(done)){doneArr=done.map(Number);}
+      else if(done&&typeof done==='object'){Object.keys(done).forEach(function(k){if(done[k])doneArr.push(Number(k));});}
+    }
+    window.parent.postMessage({type:'ready',cur:cur,done:doneArr},'*');
+  }
+},300);
+
+/* ── SUPABASE SYNC ── */
+var _ccSyncTimer;
+function ccSyncSupabase(data){
+  clearTimeout(_ccSyncTimer);
+  _ccSyncTimer=setTimeout(function(){
+    var email=localStorage.getItem('vww-user-email')||'';
+    if(!email)return;
+    var url='https://ljddfhzrjvxpedvfebli.supabase.co/rest/v1/vww_progress';
+    var payload=JSON.stringify({email:email,data:data,updated_at:new Date().toISOString()});
+    var xhr=new XMLHttpRequest();
+    xhr.open('POST',url,true);
+    xhr.setRequestHeader('Content-Type','application/json');
+    xhr.setRequestHeader('apikey','eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxqZGRmaHpyanZ4cGVkdmZlYmxpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM5NTEzNjMsImV4cCI6MjA4OTUyNzM2M30.GqZMRvBlZyN4rmr9MrfxLcLSB04d7s59ZPfEw-dQwks');
+    xhr.setRequestHeader('Authorization','Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxqZGRmaHpyanZ4cGVkdmZlYmxpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM5NTEzNjMsImV4cCI6MjA4OTUyNzM2M30.GqZMRvBlZyN4rmr9MrfxLcLSB04d7s59ZPfEw-dQwks');
+    xhr.setRequestHeader('Prefer','resolution=merge-duplicates');
+    xhr.send(payload);
+  },2000);
+}
+</script>
+</body>
+</html>

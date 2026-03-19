@@ -1,0 +1,1040 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FSCreative™ — Creator Foundation™</title>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;800;900&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+:root{
+  --bg:#0a0a0a;--surface:#111111;--card:#161616;--border:#1f1f1f;--border2:#2a2a2a;
+  --text:#ffffff;--dim:#a0a0a0;--dimmer:#555555;
+  --orange:#F0601B;--orange-hover:#ff6d28;--orange-tint:rgba(240,96,27,0.1);
+  --orange-border:rgba(240,96,27,0.28);--orange-dark:#ff8050;
+  --green-bg:rgba(61,184,100,0.1);--green-text:#5DCAA5;--green-border:rgba(93,202,165,0.3);
+  --radius-lg:10px;--radius-md:6px;
+  --font:'Helvetica Neue',Helvetica,Arial,sans-serif;
+  --font-num:'Barlow Condensed',sans-serif;
+}
+body.light{
+  --bg:#f7f6f4;--surface:#edecea;--card:#e2e0dc;--border:#ccc9c2;--border2:#b8b4ac;
+  --text:#0a0a0a;--dim:#404040;--dimmer:#888888;
+  --orange-tint:#FEF0E8;--orange-border:#F4B89A;--orange-dark:#B84410;
+  --green-bg:#E6F5EF;--green-text:#085041;--green-border:#5DCAA5;
+}
+body{background:var(--bg);color:var(--text);font-family:var(--font);font-size:15px;line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden;transition:background .25s,color .25s;}
+body::before{content:'';position:fixed;inset:0;z-index:9999;pointer-events:none;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='grain'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23grain)' opacity='0.025'/%3E%3C/svg%3E");mix-blend-mode:overlay;}
+#layout{display:flex;min-height:100vh}
+#sidebar{width:228px;min-width:228px;background:var(--surface);border-right:1px solid var(--border);display:flex;flex-direction:column;position:fixed;top:0;left:0;bottom:0;z-index:10;}
+.sb-top{padding:1.35rem 1.25rem 1.1rem;border-bottom:1px solid var(--border);flex-shrink:0;}
+.sb-brand{font-size:11px;font-weight:700;color:var(--orange);letter-spacing:.1em;text-transform:uppercase;margin-bottom:3px;}
+.sb-title{font-size:12px;font-weight:500;color:var(--dim);line-height:1.45}
+#sbnav{flex:1;padding:.5rem 0;overflow-y:auto}
+.sb-item{display:flex;align-items:center;gap:10px;padding:8px 1.25rem;font-size:12.5px;color:var(--dim);cursor:pointer;border:none;border-left:2px solid transparent;background:none;width:100%;text-align:left;font-family:var(--font);transition:all .15s;}
+.sb-item:hover{color:var(--text);background:var(--card)}
+.sb-item.on{color:var(--orange);border-left-color:var(--orange);background:var(--orange-tint)}
+.sb-item.ok{color:var(--green-text);border-left-color:var(--green-text);background:var(--green-bg)}
+.sb-icon{opacity:.45;flex-shrink:0;display:flex}
+.sb-item.on .sb-icon,.sb-item:hover .sb-icon,.sb-item.ok .sb-icon{opacity:1}
+.sb-foot{padding:1rem 1.25rem;border-top:1px solid var(--border);display:flex;align-items:center;gap:10px;flex-shrink:0;}
+.sb-prog{flex:1;min-width:0}
+#main{flex:1;margin-left:228px;display:flex;justify-content:center}
+#wb{width:100%;max-width:700px;padding:2rem 2rem 5rem}
+.topbar{display:flex;align-items:center;justify-content:space-between;padding:1rem 0 1.25rem;border-bottom:1px solid var(--border);margin-bottom:1.5rem;}
+.logo{font-size:11px;font-weight:600;color:var(--dimmer);letter-spacing:.1em;text-transform:uppercase;}
+.pw{display:flex;align-items:center;gap:10px}
+.pb{height:3px;background:var(--border);border-radius:2px}
+.pw .pb{width:120px}.sb-prog .pb{width:100%}
+.pf{height:100%;background:var(--orange);border-radius:2px;transition:width .4s}
+.pt{font-size:11px;color:var(--dimmer);font-weight:500}
+.theme-btn{background:none;border:1px solid var(--border2);border-radius:var(--radius-md);padding:5px 8px;cursor:pointer;color:var(--dimmer);display:flex;align-items:center;justify-content:center;transition:all .2s;flex-shrink:0;}
+.theme-btn:hover{color:var(--text)}
+.icon-moon{display:block}.icon-sun{display:none}
+body.light .icon-moon{display:none}body.light .icon-sun{display:block}
+.tabs{display:flex;gap:4px;flex-wrap:wrap;margin-bottom:2rem}
+.tab{font-size:11px;padding:4px 11px;border-radius:20px;border:1px solid var(--border);background:transparent;color:var(--dimmer);cursor:pointer;font-family:var(--font);font-weight:500;transition:all .15s;}
+.tab:hover{border-color:var(--border2);color:var(--dim)}
+.tab.on{background:var(--orange-tint);color:var(--orange-dark);border-color:var(--orange-border)}
+.tab.ok{background:var(--green-bg);color:var(--green-text);border-color:var(--green-border)}
+.sc{display:none}.sc.show{display:block}
+.pl{font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--orange);margin-bottom:8px;}
+h1{font-size:26px;font-weight:700;color:var(--text);line-height:1.2;margin-bottom:12px;letter-spacing:-.4px;}
+h2{font-size:16px;font-weight:600;color:var(--text);margin:1.75rem 0 8px;letter-spacing:-.1px;}
+.intro{font-size:14px;color:var(--dim);line-height:1.8;margin-bottom:1.5rem;}
+.sr{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:1.5rem}
+.sc2{background:var(--surface);border-radius:var(--radius-md);padding:1rem;text-align:center;border:1px solid var(--border);}
+.sn{font-family:var(--font-num);font-size:40px;font-weight:900;line-height:1;color:var(--text);letter-spacing:-.5px;}
+.sl{font-size:11px;color:var(--dimmer);margin-top:4px;font-weight:500;text-transform:uppercase;letter-spacing:.06em}
+.teach{background:var(--surface);border-radius:var(--radius-lg);padding:1.1rem 1.4rem;margin-bottom:1.1rem;border:1px solid var(--border);}
+.teach p{font-size:13.5px;color:var(--text);line-height:1.85;margin-bottom:9px}.teach p:last-child{margin-bottom:0}
+.teach ul{padding-left:1.2rem;margin-top:5px}.teach li{font-size:13.5px;color:var(--text);line-height:1.85;margin-bottom:6px}
+.teach strong{font-weight:600}
+.ins{border-left:3px solid var(--orange);padding:11px 15px;background:var(--orange-tint);margin-bottom:1.1rem;border-radius:0 var(--radius-md) var(--radius-md) 0;}
+.ins p{font-size:13.5px;color:var(--orange-dark);line-height:1.7;margin:0;font-weight:500}.ins strong{font-weight:700}
+.ec{background:var(--bg);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.2rem;margin-bottom:1.1rem;}
+.elbl{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--orange);margin-bottom:12px;}
+.q{font-size:13.5px;color:var(--text);margin-bottom:5px;line-height:1.5;margin-top:10px;font-weight:500}
+.qh{font-size:11.5px;color:var(--dimmer);margin-bottom:7px;line-height:1.5}
+textarea,input[type=text]{width:100%;border:1px solid var(--border);border-radius:var(--radius-md);padding:9px 12px;font-size:13px;font-family:var(--font);color:var(--text);background:var(--surface);margin-bottom:9px;resize:vertical;line-height:1.5;transition:border-color .15s,background .15s;}
+textarea:focus,input[type=text]:focus{outline:none;border-color:var(--orange);background:var(--bg);box-shadow:0 0 0 3px rgba(240,96,27,.08);}
+textarea::placeholder,input[type=text]::placeholder{color:var(--dimmer)}
+.og{display:grid;grid-template-columns:1fr 1fr;gap:5px;margin-bottom:9px}
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.opt{padding:9px 11px;border:1px solid var(--border);border-radius:var(--radius-md);background:var(--surface);color:var(--dim);font-size:12px;cursor:pointer;text-align:left;line-height:1.4;font-family:var(--font);display:block;width:100%;transition:all .15s;}
+.opt:hover{border-color:var(--border2);color:var(--text)}
+.opt.sel{background:var(--orange-tint);color:var(--orange-dark);border-color:var(--orange-border);font-weight:500}
+.nr{display:flex;justify-content:space-between;align-items:center;margin-top:2rem;padding-top:1.25rem;border-top:1px solid var(--border);}
+.si{font-size:12px;color:var(--dimmer);font-weight:500}
+.btn{padding:9px 18px;border-radius:var(--radius-md);font-size:12.5px;cursor:pointer;transition:all .15s;border:1px solid var(--border2);background:transparent;color:var(--text);font-family:var(--font);font-weight:500;}
+.btn:hover{background:var(--surface)}
+.btn.p{background:var(--orange);color:#fff;border-color:var(--orange);font-weight:600;}
+.btn.p:hover{background:var(--orange-hover);border-color:var(--orange-hover)}
+.btn-ai{padding:8px 14px;border-radius:var(--radius-md);font-size:12px;cursor:pointer;transition:all .15s;border:1px solid var(--orange-border);background:var(--orange-tint);color:var(--orange-dark);font-family:var(--font);font-weight:600;white-space:nowrap;}
+.btn-ai:hover{background:var(--orange);color:#fff;border-color:var(--orange);}
+.btn-ai:disabled{opacity:.5;cursor:not-allowed;}
+.ai-status{font-size:11.5px;padding:7px 11px;border-radius:var(--radius-md);margin-top:8px;margin-bottom:0;display:none;}
+.ai-status.loading{display:block;background:var(--orange-tint);color:var(--orange-dark);border:1px solid var(--orange-border);}
+.ai-status.success{display:block;background:var(--green-bg);color:var(--green-text);border:1px solid var(--green-border);}
+.ai-status.error{display:block;background:rgba(255,60,60,.08);color:rgba(255,110,110,.9);border:1px solid rgba(255,60,60,.2);}
+.ai-spinner{display:inline-block;width:10px;height:10px;border:1.5px solid currentColor;border-top-color:transparent;border-radius:50%;animation:aispin .6s linear infinite;vertical-align:middle;margin-right:5px;}
+@keyframes aispin{to{transform:rotate(360deg)}}
+.ai-result{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-md);padding:10px 12px;font-size:13px;color:var(--text);line-height:1.75;margin-top:8px;margin-bottom:9px;white-space:pre-wrap;display:none;}
+.ai-result.show{display:block;}
+.checklist{display:flex;flex-direction:column;gap:5px;margin-bottom:1.1rem;}
+.check-item{display:flex;align-items:flex-start;gap:10px;padding:9px 12px;border:1px solid var(--border);border-radius:var(--radius-md);background:var(--surface);cursor:pointer;transition:all .15s;}
+.check-item.checked{background:var(--green-bg);border-color:var(--green-border);}
+.check-box{width:16px;height:16px;border-radius:3px;border:1.5px solid var(--dimmer);flex-shrink:0;margin-top:1px;display:flex;align-items:center;justify-content:center;transition:all .15s;}
+.check-item.checked .check-box{background:var(--green-text);border-color:var(--green-text);}
+.check-text{font-size:13px;color:var(--dim);line-height:1.5;}
+.check-item.checked .check-text{color:var(--green-text);}
+.roadmap{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:1.5rem;}
+.rm-card{border:1px solid var(--border);border-radius:var(--radius-md);padding:.85rem;background:var(--surface);}
+.rm-num{font-family:var(--font-num);font-size:28px;font-weight:900;color:var(--orange);line-height:1;}
+.rm-title{font-size:12px;font-weight:600;color:var(--text);margin-top:4px;line-height:1.35;}
+.rm-sub{font-size:11px;color:var(--dimmer);margin-top:3px;line-height:1.4;}
+.div{height:1px;background:var(--border);margin:1.5rem 0}
+.save-dot{width:6px;height:6px;border-radius:50%;background:var(--dimmer);flex-shrink:0;transition:background .3s}
+.save-dot.saved{background:var(--green-text)}
+.ikigai-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:.85rem;}
+.ikigai-q{background:var(--bg);border:1px solid var(--border);border-radius:var(--radius-md);padding:.9rem 1rem;}
+.ikigai-ql{font-size:9.5px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;margin-bottom:6px;}
+.ikigai-q.love .ikigai-ql{color:#F0601B}.ikigai-q.good .ikigai-ql{color:#4A9EDE}
+.ikigai-q.world .ikigai-ql{color:#5DCAA5}.ikigai-q.paid .ikigai-ql{color:#A97DE8}
+.ikigai-q textarea{margin-bottom:0;font-size:12.5px;min-height:80px;}
+.ikigai-center{border:1px solid var(--orange-border);border-radius:var(--radius-md);padding:.9rem 1rem;background:var(--orange-tint);margin-bottom:.85rem;}
+.ikigai-center-lbl{font-size:9.5px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--orange-dark);margin-bottom:6px;}
+.ikigai-center textarea{margin-bottom:0;font-size:12.5px;min-height:72px;background:var(--bg);}
+.mission-preview{font-size:14px;color:var(--text);font-style:italic;line-height:1.75;padding:.85rem 1rem;background:var(--orange-tint);border:1px solid var(--orange-border);border-radius:var(--radius-md);margin-bottom:.85rem;min-height:52px;}
+.value-row{border:1px solid var(--border);border-radius:var(--radius-md);padding:.9rem 1rem;margin-bottom:7px;background:var(--surface);display:grid;grid-template-columns:auto 1fr;gap:1rem;align-items:start;}
+.value-row-num{font-family:var(--font-num);font-size:32px;font-weight:900;color:var(--orange);opacity:.3;line-height:1;padding-top:2px;}
+.value-row input{margin-bottom:6px;}.value-row textarea{margin-bottom:0;font-size:12.5px;min-height:60px;}
+.pillar-card{border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.1rem;margin-bottom:.75rem;background:var(--surface);}
+.pillar-head{display:flex;align-items:center;gap:10px;margin-bottom:.85rem;}
+.pillar-badge{width:28px;height:28px;border-radius:50%;background:var(--orange-tint);border:1px solid var(--orange-border);display:flex;align-items:center;justify-content:center;font-family:var(--font-num);font-size:14px;font-weight:900;color:var(--orange-dark);flex-shrink:0;}
+.pillar-name{flex:1;border:none;border-bottom:1.5px solid var(--border2);background:transparent;font-family:var(--font);font-size:14px;font-weight:600;color:var(--text);outline:none;padding:3px 0;margin-bottom:0;transition:border-color .15s;}
+.pillar-name:focus{border-color:var(--orange)}.pillar-name::placeholder{color:var(--dimmer);font-weight:400}
+.pillar-opt-lbl{font-size:10px;color:var(--dimmer);margin-left:auto}
+.pillar-sub{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+.psub-lbl{font-size:10px;color:var(--dimmer);margin-bottom:4px;display:block;}
+.pillar-sub textarea{margin-bottom:0;min-height:64px;font-size:12.5px;}
+.story-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:.85rem;}
+.story-part{background:var(--bg);border:1px solid var(--border);border-radius:var(--radius-md);padding:.9rem 1rem;position:relative;overflow:hidden;}
+.story-part::after{content:attr(data-n);position:absolute;top:-.2rem;right:.6rem;font-family:var(--font-num);font-size:72px;font-weight:900;color:var(--border2);line-height:1;pointer-events:none;user-select:none;}
+.spl{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--orange);margin-bottom:2px;}
+.spt{font-size:13px;font-weight:600;color:var(--text);margin-bottom:.65rem;}
+.story-part textarea{margin-bottom:0;font-size:12.5px;min-height:100px;position:relative;z-index:1;}
+.audit-cat{border:1px solid var(--border);border-radius:var(--radius-lg);margin-bottom:.75rem;overflow:hidden;}
+.audit-cat-head{display:flex;align-items:center;justify-content:space-between;padding:10px 14px;background:var(--surface);cursor:pointer;user-select:none;}
+.audit-cat-head:hover{background:var(--card)}
+.audit-cat-title{font-size:13px;font-weight:600;color:var(--text);}
+.audit-cat-score{font-size:11px;font-weight:700;padding:3px 10px;border-radius:20px;background:var(--orange-tint);color:var(--orange-dark);border:1px solid var(--orange-border);}
+.audit-cat-body{display:none;padding:.85rem 1rem;background:var(--bg);}
+.audit-cat.open .audit-cat-body{display:block}
+.audit-qw{margin-bottom:1rem}.audit-qw:last-child{margin-bottom:0}
+.audit-opts{display:flex;flex-direction:column;gap:4px;margin-top:6px;}
+.audit-opt{display:flex;align-items:center;gap:10px;padding:8px 11px;border:1px solid var(--border);border-radius:var(--radius-md);cursor:pointer;font-size:12.5px;color:var(--dim);background:var(--surface);transition:all .15s;font-family:var(--font);}
+.audit-opt:hover{border-color:var(--border2);color:var(--text)}
+.audit-opt.sel{background:var(--orange-tint);color:var(--orange-dark);border-color:var(--orange-border)}
+.audit-pts{font-size:10px;color:var(--dimmer);margin-left:auto}
+.audit-sum{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.2rem;margin-top:1.2rem;}
+.audit-sum-title{font-size:14px;font-weight:600;margin-bottom:1rem}
+.audit-sum-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.audit-sum-item{background:var(--bg);border:1px solid var(--border);border-radius:var(--radius-md);padding:.85rem}
+.audit-sum-lbl{font-size:10px;color:var(--dimmer);margin-bottom:6px;text-transform:uppercase;letter-spacing:.06em}
+.audit-bar-wrap{height:4px;background:var(--border);border-radius:2px;margin-bottom:6px}
+.audit-bar-fill{height:100%;background:var(--orange);border-radius:2px;transition:width .4s}
+.audit-sum-val{font-family:var(--font-num);font-size:24px;font-weight:900;line-height:1;color:var(--text)}
+.audit-sum-val span{font-size:12px;font-family:var(--font);color:var(--dimmer)}
+.audit-total{grid-column:1/-1;background:var(--orange-tint);border:1px solid var(--orange-border);border-radius:var(--radius-md);padding:.85rem;text-align:center}
+.audit-total-num{font-family:var(--font-num);font-size:48px;font-weight:900;line-height:1;color:var(--orange)}
+.audit-total-lbl{font-size:11px;color:var(--orange-dark);margin-top:3px;text-transform:uppercase;letter-spacing:.06em}
+/* Doc styles */
+.vg-cover{padding:2.5rem 0 2rem;border-bottom:1px solid var(--border);margin-bottom:2rem}
+.vg-cover-bar{width:28px;height:3px;background:var(--orange);border-radius:2px;margin-bottom:1rem}
+.vg-cover-name{font-family:var(--font-num);font-size:clamp(44px,8vw,72px);font-weight:900;line-height:.95;letter-spacing:-.02em;text-transform:uppercase;margin-bottom:.5rem}
+.vg-cover-sub{font-size:11px;color:var(--dimmer);letter-spacing:.1em;text-transform:uppercase}
+.vg-sg-section{margin-bottom:2.5rem}
+.vg-sg-label{font-size:9.5px;font-weight:700;text-transform:uppercase;letter-spacing:.14em;color:var(--orange);display:flex;align-items:center;gap:10px;margin-bottom:1rem}
+.vg-sg-label::after{content:'';flex:1;height:1px;background:var(--border)}
+.vg-field-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius-md);padding:.85rem 1rem;margin-bottom:7px}
+.vg-field-lbl{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--orange);margin-bottom:4px}
+.vg-field-val{font-size:13px;color:var(--text);line-height:1.6;white-space:pre-wrap}
+.vg-field-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.vg-mission-card{background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--orange);border-radius:0 var(--radius-md) var(--radius-md) 0;padding:1rem 1.2rem;margin-bottom:.75rem}
+.vg-mission-lbl{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--orange);margin-bottom:5px}
+.vg-mission-text{font-size:14px;color:var(--text);line-height:1.75;font-style:italic}
+.vg-values-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.vg-val-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius-lg);padding:.9rem}
+.vg-val-name{font-size:13px;font-weight:700;color:var(--orange);margin-bottom:4px}
+.vg-val-practice{font-size:11.5px;color:var(--dim);line-height:1.55}
+.vg-pillars-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.vg-pillar-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius-lg);padding:.9rem}
+.vg-pillar-name{font-size:12px;font-weight:700;color:var(--text);margin-bottom:3px}
+.vg-pillar-sub{font-size:11px;color:var(--dim);line-height:1.55}
+.vg-narrative-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.6rem 1.8rem;position:relative;overflow:hidden}
+.vg-narrative-card::before{content:'\201C';position:absolute;top:-.5rem;left:1rem;font-size:100px;line-height:1;color:var(--orange);opacity:.1;font-family:var(--font-num);font-weight:900}
+.vg-narrative-text{font-size:14px;color:var(--text);line-height:2;font-style:italic;position:relative;z-index:1;white-space:pre-line}
+.vg-audit-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.vg-audit-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius-lg);padding:.9rem;text-align:center}
+.vg-audit-big{font-family:var(--font-num);font-size:36px;font-weight:900;line-height:1;color:var(--orange);margin-bottom:3px}
+.vg-audit-lbl{font-size:10px;color:var(--dimmer);text-transform:uppercase;letter-spacing:.06em}
+@media print{
+  body::before,#sidebar,.topbar,.tabs,.nr,.theme-btn{display:none!important}
+  #layout{display:block!important}#main{margin-left:0!important;display:block!important}
+  #wb{max-width:100%!important;padding:1rem!important}
+  body.print-guide #s8{display:block!important}
+  body.print-full .sc{display:block!important}
+}
+</style>
+</head>
+<body>
+<div id="layout">
+<aside id="sidebar">
+  <div class="sb-top">
+    <div class="sb-brand">FSCreative&#8482; &#8212; Module 01</div>
+    <div class="sb-title">Brand Foundation&#8482;</div>
+  </div>
+  <nav id="sbnav"></nav>
+  <div class="sb-foot">
+    <div class="sb-prog">
+      <div class="pb"><div class="pf" id="sbpf" style="width:0%"></div></div>
+      <div class="pt" id="sbpt" style="margin-top:5px;font-size:10px">0/7</div>
+    </div>
+    <div class="save-dot" id="saveDot"></div>
+    <button class="theme-btn" onclick="document.body.classList.toggle('light')">
+      <svg class="icon-moon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+      <svg class="icon-sun" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+    </button>
+  </div>
+</aside>
+
+<div id="main"><div id="wb">
+<div class="topbar">
+  <div class="logo">FSCreative&#8482; &#8212; Brand Foundation&#8482;</div>
+  <div class="pw">
+    <div class="pb"><div class="pf" id="toppf" style="width:0%"></div></div>
+    <div class="pt" id="toppt">0/7</div>
+    <button class="theme-btn" onclick="document.body.classList.toggle('light')">
+      <svg class="icon-moon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+      <svg class="icon-sun" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+    </button>
+  </div>
+</div>
+<div class="tabs" id="tabbar"></div>
+
+<!-- S0 WELCOME -->
+<div class="sc show" id="s0">
+  <div class="pl">FSCreative&#8482; &#8212; Module 01</div>
+  <h1>Creator Foundation&#8482;</h1>
+  <p class="intro">Your Creator Foundation is the strategic bedrock of your entire brand. Everything you build &#8212; your visual identity, your content, your offers &#8212; flows from this. Don&#8217;t rush it. The creators who do this work are the ones who build brands that last.</p>
+  <div class="sr">
+    <div class="sc2"><div class="sn">7</div><div class="sl">Workshops</div></div>
+    <div class="sc2"><div class="sn">8</div><div class="sl">Deliverables</div></div>
+    <div class="sc2"><div class="sn" id="dc">0</div><div class="sl">Completed</div></div>
+  </div>
+  <div class="ins"><p>Most creators fail not because they lack talent &#8212; they fail because they start in the wrong place. They build an aesthetic without knowing what they stand for. They create offers without knowing why anyone should trust them. <strong>This guide fixes that.</strong></p></div>
+  <div class="teach">
+    <p><strong>Your Creator Foundation includes:</strong></p>
+    <ul>
+      <li><strong>Brand Journey Framework</strong> &#8212; Where you&#8217;re going and what you need to do to get there</li>
+      <li><strong>Avatar Profile</strong> &#8212; Know exactly who you&#8217;re building for</li>
+      <li><strong>Core Mission + Ikigai</strong> &#8212; Why you do what you do</li>
+      <li><strong>Core Values</strong> &#8212; The principles that guide everything</li>
+      <li><strong>Content Pillars</strong> &#8212; Always know what to talk about</li>
+      <li><strong>Origin Story + Brand Mission</strong> &#8212; The journey that makes you relatable</li>
+      <li><strong>Brand Audit</strong> &#8212; See where you are before you build</li>
+    </ul>
+  </div>
+  <h2>Module Roadmap</h2>
+  <div class="roadmap">
+    <div class="rm-card"><div class="rm-num">01</div><div class="rm-title">Brand Journey Framework</div><div class="rm-sub">Where you&#8217;re going and how to get there</div></div>
+    <div class="rm-card"><div class="rm-num">02</div><div class="rm-title">Define Your Avatar</div><div class="rm-sub">Know exactly who you&#8217;re building for</div></div>
+    <div class="rm-card"><div class="rm-num">03</div><div class="rm-title">Core Mission + Ikigai</div><div class="rm-sub">Why you do what you do</div></div>
+    <div class="rm-card"><div class="rm-num">04</div><div class="rm-title">Core Values</div><div class="rm-sub">The principles that guide everything</div></div>
+    <div class="rm-card"><div class="rm-num">05</div><div class="rm-title">Content Pillars</div><div class="rm-sub">Always know what to talk about</div></div>
+    <div class="rm-card"><div class="rm-num">06</div><div class="rm-title">Origin Story + Brand Mission</div><div class="rm-sub">Your journey and the movement you&#8217;re building</div></div>
+    <div class="rm-card" style="grid-column:1/-1"><div class="rm-num">07</div><div class="rm-title">Brand Audit</div><div class="rm-sub">See where you are before you build where you&#8217;re going</div></div>
+  </div>
+  <div class="nr" style="justify-content:flex-end;border-top:none;padding-top:0;flex-direction:column;align-items:stretch;gap:10px">
+    <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1rem 1.2rem;">
+      <div class="elbl" style="margin-bottom:8px">Before you begin</div>
+      <div class="q" style="margin-top:0">Your name or brand handle</div>
+      <div class="qh">This will appear on your final Foundation Document.</div>
+      <input type="text" id="brandName" placeholder="e.g. Alex Rivera, @yourhandle, Studio Name...">
+    </div>
+    <div style="display:flex;justify-content:flex-end"><button class="btn p" onclick="go(1)">Begin Workshop 1 &#8594;</button></div>
+  </div>
+  <div style="margin-top:1.5rem;padding-top:1.25rem;border-top:1px solid var(--border);display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--dimmer);flex-shrink:0"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+    <span style="font-size:12.5px;color:var(--dim)">Prefer pen &amp; paper? Print the full workbook and complete it by hand.</span>
+    <button class="btn" onclick="printFull()" style="margin-left:auto;font-size:11.5px">Print Full Workbook</button>
+  </div>
+</div>
+
+<!-- S1 BRAND JOURNEY -->
+<div class="sc" id="s1">
+  <div class="pl">Workshop 1</div>
+  <h1>Brand Journey Framework</h1>
+  <p class="intro">Four questions that work backwards from your desired outcome to give you complete clarity on what you need to do today. This is your North Star &#8212; come back to it whenever you feel lost.</p>
+  <div class="ins"><p><strong>Why this comes first.</strong> Most creators start building without knowing where they&#8217;re going. They post content because they think they should. Six months later they&#8217;re exhausted, scattered, and still stuck in the same place.</p></div>
+  <div class="ec">
+    <div class="elbl">Question 1 &#8212; What is my desired outcome?</div>
+    <div class="qh">What do you actually want to happen? Not &#8220;grow my brand.&#8221; What&#8217;s the real, specific goal in 12 months?</div>
+    <textarea rows="3" id="q1outcome" placeholder="e.g. I want to sign 5 high-ticket clients per month at $5K each and replace my 9-to-5 income within 12 months."></textarea>
+    <div class="q">Why does this outcome matter to you?</div>
+    <textarea rows="2" id="q1why" placeholder="The real reason behind the goal &#8212; go deeper than the surface answer."></textarea>
+  </div>
+  <div class="ec">
+    <div class="elbl">Question 2 &#8212; What do I need to be known for?</div>
+    <div class="qh">In order for that outcome to happen, what must people believe about you? What expertise must you demonstrate?</div>
+    <textarea rows="3" id="q2known" placeholder="e.g. I need to be known for helping creators build premium personal brands that attract high-quality clients."></textarea>
+  </div>
+  <div class="ec">
+    <div class="elbl">Question 3 &#8212; What do I need to do?</div>
+    <div class="qh">You can&#8217;t just say you&#8217;re an expert. You have to demonstrate it. What actions do you need to take consistently?</div>
+    <textarea rows="4" id="q3do" placeholder="Post educational content 3&#8211;5x per week&#10;Share client results regularly&#10;Document my process publicly&#10;Show up consistently for 6+ months without stopping"></textarea>
+  </div>
+  <div class="ec">
+    <div class="elbl">Question 4 &#8212; What do I need to learn?</div>
+    <div class="qh">This is your starting point today. What skills or knowledge do you need to develop right now?</div>
+    <textarea rows="3" id="q4learn" placeholder="How to write hooks that stop the scroll&#10;How to show up on camera confidently&#10;How to build a monetization funnel"></textarea>
+  </div>
+  <h2>Brand Journey Statement</h2>
+  <div class="teach"><p>Synthesize your four answers into a one-sentence North Star statement. Print it. Put it somewhere you&#8217;ll see it every day.</p></div>
+  <div class="ec">
+    <div class="elbl">AI &#8212; Generate My Brand Journey Statement</div>
+    <div class="qh">Fill in all four questions above, then click Generate.</div>
+    <button class="btn-ai" id="bjBtn" onclick="generateBrandJourney()">&#10022; Generate Statement</button>
+    <div class="ai-status" id="bjStatus"></div>
+    <div class="ai-result" id="bjResult"></div>
+    <div class="q" style="margin-top:.5rem">&#8220;I want to [desired outcome] by being known for [known for] through [actions] starting with [learning].&#8221;</div>
+    <textarea rows="3" id="brandJourneyStmt" placeholder="Write or paste your Brand Journey Statement here..."></textarea>
+  </div>
+  <div class="nr"><button class="btn" onclick="go(0)">&#8592; Back</button><span class="si">1/7</span><button class="btn p" onclick="go(2)">Save &amp; Continue &#8594;</button></div>
+</div>
+
+<!-- S2 AVATAR -->
+<div class="sc" id="s2">
+  <div class="pl">Workshop 2</div>
+  <h1>Define Your Avatar</h1>
+  <p class="intro">Your avatar is the most important decision you&#8217;ll make in your entire brand. Your avatar is not &#8220;entrepreneurs&#8221; &#8212; it&#8217;s someone 2&#8211;3 steps behind you in their journey. When you know them better than they know themselves, your content becomes magnetic.</p>
+  <div class="ins"><p>If you don&#8217;t know who you&#8217;re talking to, your content will never land. You&#8217;ll be trying to speak to everyone, which means you&#8217;re speaking to <strong>no one</strong>.</p></div>
+  <h2>Avatar Profile</h2>
+  <div class="ec">
+    <div class="elbl">Basic Demographics</div>
+    <div class="two-col">
+      <div>
+        <div class="q" style="margin-top:0">Age range</div><input type="text" id="avatarAge" placeholder="e.g. 25&#8211;35">
+        <div class="q">Gender (if relevant)</div><input type="text" id="avatarGender" placeholder="e.g. Any / Primarily women">
+      </div>
+      <div>
+        <div class="q" style="margin-top:0">Occupation / Industry</div><input type="text" id="avatarOccupation" placeholder="e.g. Freelance designer, online coach">
+        <div class="q">Income level</div><input type="text" id="avatarIncome" placeholder="e.g. $30K&#8211;$80K/yr, side income stage">
+      </div>
+    </div>
+  </div>
+  <div class="ec">
+    <div class="elbl">Where They Are Now</div>
+    <div class="q" style="margin-top:0">What is their current situation?</div>
+    <textarea rows="3" id="avatarSituation" placeholder="Describe their day-to-day. Working a 9-to-5 they don&#39;t love while trying to build something on the side..."></textarea>
+    <div class="q">What are they struggling with most right now?</div>
+    <textarea rows="2" id="avatarStruggle" placeholder="The specific problem that keeps them up at night..."></textarea>
+    <div class="q">What have they already tried that hasn&#8217;t worked?</div>
+    <textarea rows="2" id="avatarTried" placeholder="Previous courses, strategies, or approaches that failed them..."></textarea>
+  </div>
+  <div class="ec">
+    <div class="elbl">What They Want + What&#8217;s Holding Them Back</div>
+    <div class="q" style="margin-top:0">What is their desired outcome?</div>
+    <textarea rows="2" id="avatarDesired" placeholder="Their dream result in specific, tangible terms..."></textarea>
+    <div class="q">What fears are stopping them from taking action?</div>
+    <textarea rows="2" id="avatarFears" placeholder="Fear of failure, looking stupid, wasting money..."></textarea>
+    <div class="q">What objections do they have to investing in a solution?</div>
+    <textarea rows="2" id="avatarObjections" placeholder="I don't have time / I've tried this before / I can't afford it..."></textarea>
+    <div class="q">What do they believe that isn&#8217;t true?</div>
+    <textarea rows="2" id="avatarBeliefs" placeholder="The limiting belief that keeps them stuck..."></textarea>
+  </div>
+  <div class="ec">
+    <div class="elbl">Where They Hang Out</div>
+    <div class="two-col">
+      <div>
+        <div class="q" style="margin-top:0">Most active platforms</div><input type="text" id="avatarPlatforms" placeholder="Instagram, TikTok, YouTube...">
+        <div class="q">Communities</div><input type="text" id="avatarCommunities" placeholder="Facebook groups, Discord, Skool...">
+      </div>
+      <div>
+        <div class="q" style="margin-top:0">Who do they follow and trust?</div><input type="text" id="avatarFollows" placeholder="Creators, brands, accounts...">
+        <div class="q">How are you 2&#8211;3 steps ahead?</div>
+        <textarea rows="2" id="avatarConnection" placeholder="What did you figure out that they haven&#39;t yet?"></textarea>
+      </div>
+    </div>
+  </div>
+  <div class="ec">
+    <div class="elbl">AI &#8212; Generate My Avatar Statement</div>
+    <div class="qh">Fill in your avatar details above, then click Generate.</div>
+    <button class="btn-ai" id="avatarBtn" onclick="generateAvatarStatement()">&#10022; Generate Avatar Statement</button>
+    <div class="ai-status" id="avatarStatus"></div>
+    <div class="ai-result" id="avatarResult"></div>
+    <div class="q" style="margin-top:.5rem">Avatar Statement</div>
+    <div class="qh">&#8220;My avatar is [description]. They&#8217;re currently struggling with [problem]...&#8221;</div>
+    <textarea rows="5" id="avatarStatement" placeholder="Write or paste your Avatar Statement here..."></textarea>
+  </div>
+  <div class="nr"><button class="btn" onclick="go(1)">&#8592; Back</button><span class="si">2/7</span><button class="btn p" onclick="go(3)">Save &amp; Continue &#8594;</button></div>
+</div>
+
+<!-- S3 IKIGAI + MISSION -->
+<div class="sc" id="s3">
+  <div class="pl">Workshop 3</div>
+  <h1>Core Mission + Ikigai</h1>
+  <p class="intro">Your core mission is your &#8220;why.&#8221; Ikigai is a Japanese concept meaning &#8220;reason for being&#8221; &#8212; the intersection of what you love, what you&#8217;re good at, what the world needs, and what you can be paid for. When your mission aligns with your Ikigai, your brand has purpose people can feel.</p>
+  <h2>The Ikigai Exercise</h2>
+  <div class="teach"><p>Answer each quadrant honestly. The more specific your answers, the clearer your Ikigai becomes. Avoid generic answers &#8212; go deep.</p></div>
+  <div class="ikigai-grid">
+    <div class="ikigai-q love"><div class="ikigai-ql">What do you LOVE doing?</div><textarea id="ikigaiLove" placeholder="What activities make you lose track of time? What would you do even if you weren&#39;t paid?"></textarea></div>
+    <div class="ikigai-q good"><div class="ikigai-ql">What are you GOOD AT?</div><textarea id="ikigaiGood" placeholder="What skills come naturally? What do people always ask you for help with?"></textarea></div>
+    <div class="ikigai-q world"><div class="ikigai-ql">What does the WORLD NEED?</div><textarea id="ikigaiWorld" placeholder="What problems do you see that need solving? What&#39;s missing in your industry?"></textarea></div>
+    <div class="ikigai-q paid"><div class="ikigai-ql">What can you be PAID FOR?</div><textarea id="ikigaiPaid" placeholder="What skills or knowledge do people value enough to pay for?"></textarea></div>
+  </div>
+  <div class="ikigai-center">
+    <div class="ikigai-center-lbl">Your Ikigai &#8212; Where All Four Overlap</div>
+    <textarea id="ikigaiCenter" placeholder="The sweet spot where all four answers converge..."></textarea>
+  </div>
+  <div class="ec">
+    <div class="elbl">AI &#8212; Find My Ikigai</div>
+    <div class="qh">Fill in all four quadrants above, then click Generate. The AI will identify the thread that runs through all four.</div>
+    <button class="btn-ai" id="ikigaiBtn" onclick="generateIkigai()">&#10022; Find My Ikigai</button>
+    <div class="ai-status" id="ikigaiStatus"></div>
+    <div class="ai-result" id="ikigaiResult"></div>
+  </div>
+  <h2>Your Core Mission Statement</h2>
+  <div class="teach">
+    <p><strong>Format:</strong> &#8220;I help [avatar] achieve [desired outcome] through [your unique method] so that [deeper why].&#8221;</p>
+    <p><strong>Example:</strong> &#8220;I help creators who already sell offers but look amateur build premium personal brands with clear positioning and cinematic content systems that attract high-quality clients.&#8221;</p>
+  </div>
+  <div class="ec">
+    <div class="elbl">Mission Builder</div>
+    <div class="q" style="margin-top:0">I help <span style="color:var(--orange)">[avatar]</span></div>
+    <input type="text" id="missionAvatar" placeholder="creators who already sell offers but look amateur" oninput="updateMissionPreview()">
+    <div class="q">achieve <span style="color:var(--orange)">[desired outcome]</span></div>
+    <input type="text" id="missionOutcome" placeholder="build premium personal brands with clear positioning" oninput="updateMissionPreview()">
+    <div class="q">through <span style="color:var(--orange)">[your unique method]</span></div>
+    <input type="text" id="missionMethod" placeholder="cinematic content systems and brand strategy" oninput="updateMissionPreview()">
+    <div class="q">so that <span style="color:var(--orange)">[deeper why]</span></div>
+    <input type="text" id="missionWhy" placeholder="they attract high-quality clients and stop being overlooked" oninput="updateMissionPreview()">
+    <div class="mission-preview" id="missionPreview">Your mission statement will appear here as you type...</div>
+    <div class="q">Core Mission Statement (final)</div>
+    <textarea rows="3" id="coreMission" placeholder="Write or refine your final mission statement here..."></textarea>
+  </div>
+  <div class="nr"><button class="btn" onclick="go(2)">&#8592; Back</button><span class="si">3/7</span><button class="btn p" onclick="go(4)">Save &amp; Continue &#8594;</button></div>
+</div>
+
+<!-- S4 VALUES -->
+<div class="sc" id="s4">
+  <div class="pl">Workshop 4</div>
+  <h1>Core Values</h1>
+  <p class="intro">Your core values are not just nice words on a website. They&#8217;re the beliefs that guide every decision you make &#8212; the things you won&#8217;t compromise on. When your values are clear, you attract people who share them. Those are the people you actually want to work with.</p>
+  <h2>Values Discovery</h2>
+  <div class="ec">
+    <div class="elbl">Discovery Questions</div>
+    <div class="qh">Answer honestly before identifying your values. Your real values live in your honest answers &#8212; not in words that sound good.</div>
+    <div class="q" style="margin-top:4px">What do you believe that most people in your industry don&#8217;t?</div>
+    <textarea rows="2" id="valDiscover1" placeholder="The contrarian belief that shapes how you operate..."></textarea>
+    <div class="q">What would you never do, even if it made you more money?</div>
+    <textarea rows="2" id="valDiscover2" placeholder="The line you won&#39;t cross..."></textarea>
+    <div class="q">What do you stand for that you&#8217;d be willing to lose followers over?</div>
+    <textarea rows="2" id="valDiscover3" placeholder="The hill you&#39;ll die on..."></textarea>
+    <div class="q">What do you want people to say about how you do business?</div>
+    <textarea rows="2" id="valDiscover4" placeholder="The reputation you&#39;re building..."></textarea>
+  </div>
+  <h2>Your Core Values</h2>
+  <div class="ins"><p>Choose <strong>3&#8211;5 core values</strong>. For each one, write what it means in practice &#8212; not the definition, but how it shows up in your content, offers, and relationships.</p></div>
+  <div class="value-row"><div class="value-row-num">01</div><div><div class="q" style="margin-top:0">Value name</div><input type="text" id="val1name" placeholder="e.g. Honesty, Excellence, Craft..."><div class="q">What this means in practice:</div><textarea rows="2" id="val1practice" placeholder="How this shows up in your content, offers, and client relationships..."></textarea></div></div>
+  <div class="value-row"><div class="value-row-num">02</div><div><div class="q" style="margin-top:0">Value name</div><input type="text" id="val2name" placeholder="e.g. Generosity, Boldness, Clarity..."><div class="q">What this means in practice:</div><textarea rows="2" id="val2practice" placeholder="How this shows up..."></textarea></div></div>
+  <div class="value-row"><div class="value-row-num">03</div><div><div class="q" style="margin-top:0">Value name</div><input type="text" id="val3name" placeholder="e.g. Integrity, Premium, Simplicity..."><div class="q">What this means in practice:</div><textarea rows="2" id="val3practice" placeholder="How this shows up..."></textarea></div></div>
+  <div class="value-row"><div class="value-row-num">04</div><div><div class="q" style="margin-top:0">Value name <span style="font-size:10px;color:var(--dimmer)">(optional)</span></div><input type="text" id="val4name" placeholder="4th value..."><div class="q">What this means in practice:</div><textarea rows="2" id="val4practice" placeholder="..."></textarea></div></div>
+  <div class="value-row"><div class="value-row-num">05</div><div><div class="q" style="margin-top:0">Value name <span style="font-size:10px;color:var(--dimmer)">(optional)</span></div><input type="text" id="val5name" placeholder="5th value..."><div class="q">What this means in practice:</div><textarea rows="2" id="val5practice" placeholder="..."></textarea></div></div>
+  <div class="ec" style="margin-top:1.1rem">
+    <div class="elbl">Values in Action</div>
+    <div class="q" style="margin-top:0">How do your values show up in your content?</div>
+    <textarea rows="2" id="valContent" placeholder="The specific ways your values influence what you post..."></textarea>
+    <div class="q">What would someone who shares your values think when they see your brand?</div>
+    <textarea rows="2" id="valReaction" placeholder="Finally, someone who gets it..."></textarea>
+  </div>
+  <div class="nr"><button class="btn" onclick="go(3)">&#8592; Back</button><span class="si">4/7</span><button class="btn p" onclick="go(5)">Save &amp; Continue &#8594;</button></div>
+</div>
+
+<!-- S5 CONTENT PILLARS -->
+<div class="sc" id="s5">
+  <div class="pl">Workshop 5</div>
+  <h1>Content Pillars</h1>
+  <p class="intro">Your content pillars are the 3&#8211;5 core topics you&#8217;ll talk about consistently. They give you structure without limiting creativity. Without pillars, you post whatever you feel like that day. With pillars, your audience knows exactly what to expect &#8212; and that consistency builds trust.</p>
+  <div class="ins"><p>Each pillar should pass 5 tests: <strong>50+ content ideas &middot; serves your avatar &middot; connects to your offer &middot; you&#8217;re passionate about it &middot; builds authority.</strong></p></div>
+  <h2>Pillar Discovery</h2>
+  <div class="ec">
+    <div class="elbl">Discovery Questions</div>
+    <div class="q" style="margin-top:0">What 10 topics could you talk about forever?</div>
+    <div class="qh">Brain dump &#8212; don&#8217;t filter yet.</div>
+    <textarea rows="4" id="pillarDiscover1" placeholder="List every topic that comes to mind..."></textarea>
+    <div class="q">What 5 topics does your avatar most need help with?</div>
+    <textarea rows="2" id="pillarDiscover2" placeholder="The specific problems your avatar is searching for solutions to..."></textarea>
+    <div class="q">What topics align directly with your offer?</div>
+    <textarea rows="2" id="pillarDiscover3" placeholder="Topics that naturally lead to what you sell..."></textarea>
+  </div>
+  <h2>Your Content Pillars</h2>
+  <div class="pillar-card">
+    <div class="pillar-head"><div class="pillar-badge">1</div><input type="text" class="pillar-name" id="pillar1name" placeholder="Pillar name..."></div>
+    <div class="pillar-sub">
+      <div><span class="psub-lbl">Sub-topics (3&#8211;5 angles)</span><textarea id="pillar1sub" placeholder="Specific angles within this pillar..."></textarea></div>
+      <div><span class="psub-lbl">How this serves your avatar</span><textarea id="pillar1avatar" placeholder="The problem this pillar solves..."></textarea></div>
+      <div><span class="psub-lbl">How this connects to your offer</span><textarea id="pillar1offer" placeholder="The natural bridge to what you sell..."></textarea></div>
+      <div><span class="psub-lbl">50+ content ideas here?</span><div class="og" id="g-p1test" style="margin-top:4px"><button class="opt" data-g="p1test">Yes, easily</button><button class="opt" data-g="p1test">Maybe 20&#8211;30</button></div></div>
+    </div>
+  </div>
+  <div class="pillar-card">
+    <div class="pillar-head"><div class="pillar-badge">2</div><input type="text" class="pillar-name" id="pillar2name" placeholder="Pillar name..."></div>
+    <div class="pillar-sub">
+      <div><span class="psub-lbl">Sub-topics (3&#8211;5 angles)</span><textarea id="pillar2sub" placeholder="Specific angles within this pillar..."></textarea></div>
+      <div><span class="psub-lbl">How this serves your avatar</span><textarea id="pillar2avatar" placeholder="The problem this pillar solves..."></textarea></div>
+      <div><span class="psub-lbl">How this connects to your offer</span><textarea id="pillar2offer" placeholder="The natural bridge to what you sell..."></textarea></div>
+      <div><span class="psub-lbl">50+ content ideas here?</span><div class="og" id="g-p2test" style="margin-top:4px"><button class="opt" data-g="p2test">Yes, easily</button><button class="opt" data-g="p2test">Maybe 20&#8211;30</button></div></div>
+    </div>
+  </div>
+  <div class="pillar-card">
+    <div class="pillar-head"><div class="pillar-badge">3</div><input type="text" class="pillar-name" id="pillar3name" placeholder="Pillar name..."></div>
+    <div class="pillar-sub">
+      <div><span class="psub-lbl">Sub-topics (3&#8211;5 angles)</span><textarea id="pillar3sub" placeholder="Specific angles within this pillar..."></textarea></div>
+      <div><span class="psub-lbl">How this serves your avatar</span><textarea id="pillar3avatar" placeholder="The problem this pillar solves..."></textarea></div>
+      <div><span class="psub-lbl">How this connects to your offer</span><textarea id="pillar3offer" placeholder="The natural bridge to what you sell..."></textarea></div>
+      <div><span class="psub-lbl">50+ content ideas here?</span><div class="og" id="g-p3test" style="margin-top:4px"><button class="opt" data-g="p3test">Yes, easily</button><button class="opt" data-g="p3test">Maybe 20&#8211;30</button></div></div>
+    </div>
+  </div>
+  <div class="pillar-card">
+    <div class="pillar-head"><div class="pillar-badge">4</div><input type="text" class="pillar-name" id="pillar4name" placeholder="Pillar name (optional)..."><span class="pillar-opt-lbl">Optional</span></div>
+    <div class="pillar-sub"><div><span class="psub-lbl">Sub-topics</span><textarea id="pillar4sub" placeholder="..."></textarea></div><div><span class="psub-lbl">How this serves your avatar</span><textarea id="pillar4avatar" placeholder="..."></textarea></div></div>
+  </div>
+  <div class="pillar-card">
+    <div class="pillar-head"><div class="pillar-badge">5</div><input type="text" class="pillar-name" id="pillar5name" placeholder="Pillar name (optional)..."><span class="pillar-opt-lbl">Optional</span></div>
+    <div class="pillar-sub"><div><span class="psub-lbl">Sub-topics</span><textarea id="pillar5sub" placeholder="..."></textarea></div><div><span class="psub-lbl">How this serves your avatar</span><textarea id="pillar5avatar" placeholder="..."></textarea></div></div>
+  </div>
+  <div class="nr"><button class="btn" onclick="go(4)">&#8592; Back</button><span class="si">5/7</span><button class="btn p" onclick="go(6)">Save &amp; Continue &#8594;</button></div>
+</div>
+
+<!-- S6 ORIGIN STORY + BRAND MISSION -->
+<div class="sc" id="s6">
+  <div class="pl">Workshop 6</div>
+  <h1>Origin Story + Brand Mission</h1>
+  <p class="intro">Your origin story is what makes you human. People don&#8217;t connect with your success &#8212; they connect with your struggle. When someone sees themselves in your story, they start to believe your success is possible for them too. Don&#8217;t sanitize it.</p>
+  <div class="ins"><p>Your <strong>80% honest</strong> story is more powerful than a 100% polished one. Share the failures. Share the doubts. Share the messy middle.</p></div>
+  <h2>The Four-Part Story Arc</h2>
+  <div class="story-grid">
+    <div class="story-part" data-n="1"><div class="spl">Part 1</div><div class="spt">Where You Started<br><small style="font-weight:400;font-size:11px;color:var(--dimmer)">The Relatable Struggle</small></div><textarea id="story1" placeholder="What was your situation before everything changed? What pain were you experiencing? Why were you stuck?"></textarea></div>
+    <div class="story-part" data-n="2"><div class="spl">Part 2</div><div class="spt">The Turning Point<br><small style="font-weight:400;font-size:11px;color:var(--dimmer)">The Catalyst</small></div><textarea id="story2" placeholder="What made you decide to change? What was the aha moment? What risk did you take?"></textarea></div>
+    <div class="story-part" data-n="3"><div class="spl">Part 3</div><div class="spt">The Journey<br><small style="font-weight:400;font-size:11px;color:var(--dimmer)">The Believable Steps</small></div><textarea id="story3" placeholder="What obstacles did you overcome? What failures? What almost made you quit?"></textarea></div>
+    <div class="story-part" data-n="4"><div class="spl">Part 4</div><div class="spt">Where You Are Now<br><small style="font-weight:400;font-size:11px;color:var(--dimmer)">The Transformation</small></div><textarea id="story4" placeholder="What's different now? What results have you achieved? What's the lesson for your avatar?"></textarea></div>
+  </div>
+  <div class="ec">
+    <div class="elbl">AI &#8212; Write My Origin Story</div>
+    <div class="qh">Fill in all four story parts above, then click Generate. The AI will write a compelling 3&#8211;5 paragraph origin story in your voice.</div>
+    <button class="btn-ai" id="storyBtn" onclick="generateOriginStory()">&#10022; Write My Origin Story</button>
+    <div class="ai-status" id="storyStatus"></div>
+    <div class="ai-result" id="storyResult"></div>
+    <div class="q" style="margin-top:.5rem">Your Complete Origin Story</div>
+    <div class="qh">Use the AI output as a starting point and refine in your own voice.</div>
+    <textarea rows="8" id="originStory" placeholder="Write or paste your complete origin story here..."></textarea>
+  </div>
+  <h2>Brand Mission Statement</h2>
+  <div class="teach">
+    <p><strong>Your brand mission is different from your core mission.</strong> Your core mission is personal &#8212; it&#8217;s why you do what you do. Your brand mission is external &#8212; it&#8217;s what your brand stands for in the world.</p>
+    <p><strong>Format:</strong> &#8220;[Brand name] exists to [change] for [who] by [how].&#8221;</p>
+  </div>
+  <div class="ec">
+    <div class="elbl">Brand Mission</div>
+    <div class="q" style="margin-top:0">What change do you want to create in your industry?</div>
+    <textarea rows="2" id="brandMissionChange" placeholder="The shift you want to cause..."></textarea>
+    <div class="q">What are you fighting against? What are you fighting for?</div>
+    <textarea rows="2" id="brandMissionFight" placeholder="Against: what&#39;s broken. For: what you&#39;re building."></textarea>
+    <div class="q">Brand Mission Statement</div>
+    <textarea rows="3" id="brandMission" placeholder="FSCreative exists to help talented creators stop being overlooked by building premium personal brands that reflect the quality of their work."></textarea>
+  </div>
+  <div class="nr"><button class="btn" onclick="go(5)">&#8592; Back</button><span class="si">6/7</span><button class="btn p" onclick="go(7)">Save &amp; Continue &#8594;</button></div>
+</div>
+
+<!-- S7 BRAND AUDIT -->
+<div class="sc" id="s7">
+  <div class="pl">Workshop 7</div>
+  <h1>Brand Audit</h1>
+  <p class="intro">The brand audit is your &#8220;before&#8221; snapshot. Before you can build something new, you need to see where you are right now. This is not about beating yourself up &#8212; it&#8217;s about creating a baseline you&#8217;ll look back at when you relaunch.</p>
+  <div class="ins"><p><strong>Before you begin:</strong> Screenshot your last 10 posts and save them somewhere. This is your &#8220;before&#8221; &#8212; you&#8217;ll reference it when you complete the Brand Launch Checklist.</p></div>
+  <h2>Audit Framework</h2>
+  <div class="audit-cat open" id="aCat1">
+    <div class="audit-cat-head" onclick="toggleAuditCat('aCat1')"><div class="audit-cat-title">01 &#8212; Visual Consistency</div><div class="audit-cat-score" id="aScore1">0/10</div></div>
+    <div class="audit-cat-body">
+      <div class="audit-qw"><div class="q" style="margin-top:0">Do my last 10 posts use consistent colors?</div><div class="audit-opts"><button class="audit-opt" onclick="selectAudit(this,'vc1',3)">Yes &#8212; my colors are consistent<span class="audit-pts">3 pts</span></button><button class="audit-opt" onclick="selectAudit(this,'vc1',1)">Somewhat &#8212; not intentional<span class="audit-pts">1 pt</span></button><button class="audit-opt" onclick="selectAudit(this,'vc1',0)">No &#8212; completely random<span class="audit-pts">0 pts</span></button></div></div>
+      <div class="audit-qw"><div class="q">Do I have a recognizable aesthetic people could identify without my name?</div><div class="audit-opts"><button class="audit-opt" onclick="selectAudit(this,'vc2',4)">Yes &#8212; people would recognize my content<span class="audit-pts">4 pts</span></button><button class="audit-opt" onclick="selectAudit(this,'vc2',2)">Somewhat &#8212; not strong<span class="audit-pts">2 pts</span></button><button class="audit-opt" onclick="selectAudit(this,'vc2',0)">No &#8212; looks different every time<span class="audit-pts">0 pts</span></button></div></div>
+      <div class="audit-qw"><div class="q">Does my content look premium or amateur?</div><div class="audit-opts"><button class="audit-opt" onclick="selectAudit(this,'vc3',3)">Premium<span class="audit-pts">3 pts</span></button><button class="audit-opt" onclick="selectAudit(this,'vc3',1)">Somewhere in between<span class="audit-pts">1 pt</span></button><button class="audit-opt" onclick="selectAudit(this,'vc3',0)">Amateur<span class="audit-pts">0 pts</span></button></div></div>
+    </div>
+  </div>
+  <div class="audit-cat" id="aCat2">
+    <div class="audit-cat-head" onclick="toggleAuditCat('aCat2')"><div class="audit-cat-title">02 &#8212; Positioning Clarity</div><div class="audit-cat-score" id="aScore2">0/10</div></div>
+    <div class="audit-cat-body">
+      <div class="audit-qw"><div class="q" style="margin-top:0">Can someone tell what I do in 5 seconds?</div><div class="audit-opts"><button class="audit-opt" onclick="selectAudit(this,'pc1',3)">Yes &#8212; crystal clear<span class="audit-pts">3 pts</span></button><button class="audit-opt" onclick="selectAudit(this,'pc1',1)">Maybe &#8212; if they look around<span class="audit-pts">1 pt</span></button><button class="audit-opt" onclick="selectAudit(this,'pc1',0)">No &#8212; it&#39;s unclear<span class="audit-pts">0 pts</span></button></div></div>
+      <div class="audit-qw"><div class="q">Is my bio compelling and specific?</div><div class="audit-opts"><button class="audit-opt" onclick="selectAudit(this,'pc2',4)">Yes &#8212; specific, value-driven, clear<span class="audit-pts">4 pts</span></button><button class="audit-opt" onclick="selectAudit(this,'pc2',2)">Somewhat &#8212; needs work<span class="audit-pts">2 pts</span></button><button class="audit-opt" onclick="selectAudit(this,'pc2',0)">No &#8212; generic or incomplete<span class="audit-pts">0 pts</span></button></div></div>
+      <div class="audit-qw"><div class="q">Does my content reflect a clear point of view?</div><div class="audit-opts"><button class="audit-opt" onclick="selectAudit(this,'pc3',3)">Yes &#8212; I have a strong POV<span class="audit-pts">3 pts</span></button><button class="audit-opt" onclick="selectAudit(this,'pc3',1)">Somewhat &#8212; comes through sometimes<span class="audit-pts">1 pt</span></button><button class="audit-opt" onclick="selectAudit(this,'pc3',0)">No &#8212; I play it safe<span class="audit-pts">0 pts</span></button></div></div>
+    </div>
+  </div>
+  <div class="audit-cat" id="aCat3">
+    <div class="audit-cat-head" onclick="toggleAuditCat('aCat3')"><div class="audit-cat-title">03 &#8212; Content Quality</div><div class="audit-cat-score" id="aScore3">0/10</div></div>
+    <div class="audit-cat-body">
+      <div class="audit-qw"><div class="q" style="margin-top:0">Do my hooks stop the scroll?</div><div class="audit-opts"><button class="audit-opt" onclick="selectAudit(this,'cq1',3)">Yes &#8212; my hooks are strong<span class="audit-pts">3 pts</span></button><button class="audit-opt" onclick="selectAudit(this,'cq1',1)">Sometimes &#8212; hit or miss<span class="audit-pts">1 pt</span></button><button class="audit-opt" onclick="selectAudit(this,'cq1',0)">No &#8212; they&#39;re weak<span class="audit-pts">0 pts</span></button></div></div>
+      <div class="audit-qw"><div class="q">Is my content consistently educational, valuable, or entertaining?</div><div class="audit-opts"><button class="audit-opt" onclick="selectAudit(this,'cq2',4)">Consistently<span class="audit-pts">4 pts</span></button><button class="audit-opt" onclick="selectAudit(this,'cq2',2)">Sometimes<span class="audit-pts">2 pts</span></button><button class="audit-opt" onclick="selectAudit(this,'cq2',0)">Rarely<span class="audit-pts">0 pts</span></button></div></div>
+      <div class="audit-qw"><div class="q">Is my content consistent with clear content pillars?</div><div class="audit-opts"><button class="audit-opt" onclick="selectAudit(this,'cq3',3)">Yes &#8212; focused and strategic<span class="audit-pts">3 pts</span></button><button class="audit-opt" onclick="selectAudit(this,'cq3',1)">Somewhat<span class="audit-pts">1 pt</span></button><button class="audit-opt" onclick="selectAudit(this,'cq3',0)">No &#8212; all over the place<span class="audit-pts">0 pts</span></button></div></div>
+    </div>
+  </div>
+  <div class="audit-cat" id="aCat4">
+    <div class="audit-cat-head" onclick="toggleAuditCat('aCat4')"><div class="audit-cat-title">04 &#8212; Trust Signals</div><div class="audit-cat-score" id="aScore4">0/10</div></div>
+    <div class="audit-cat-body">
+      <div class="audit-qw"><div class="q" style="margin-top:0">Do I share my story and origin authentically?</div><div class="audit-opts"><button class="audit-opt" onclick="selectAudit(this,'ts1',3)">Regularly<span class="audit-pts">3 pts</span></button><button class="audit-opt" onclick="selectAudit(this,'ts1',1)">Occasionally<span class="audit-pts">1 pt</span></button><button class="audit-opt" onclick="selectAudit(this,'ts1',0)">Never<span class="audit-pts">0 pts</span></button></div></div>
+      <div class="audit-qw"><div class="q">Do I show results and social proof?</div><div class="audit-opts"><button class="audit-opt" onclick="selectAudit(this,'ts2',4)">Regularly<span class="audit-pts">4 pts</span></button><button class="audit-opt" onclick="selectAudit(this,'ts2',2)">Occasionally<span class="audit-pts">2 pts</span></button><button class="audit-opt" onclick="selectAudit(this,'ts2',0)">Never<span class="audit-pts">0 pts</span></button></div></div>
+      <div class="audit-qw"><div class="q">Am I consistent with posting?</div><div class="audit-opts"><button class="audit-opt" onclick="selectAudit(this,'ts3',3)">Yes &#8212; I post regularly<span class="audit-pts">3 pts</span></button><button class="audit-opt" onclick="selectAudit(this,'ts3',1)">Somewhat &#8212; when I feel like it<span class="audit-pts">1 pt</span></button><button class="audit-opt" onclick="selectAudit(this,'ts3',0)">No &#8212; very inconsistent<span class="audit-pts">0 pts</span></button></div></div>
+    </div>
+  </div>
+  <div class="audit-sum">
+    <div class="audit-sum-title">Brand Audit Score</div>
+    <div class="audit-sum-grid">
+      <div class="audit-sum-item"><div class="audit-sum-lbl">Visual Consistency</div><div class="audit-bar-wrap"><div class="audit-bar-fill" id="barVC" style="width:0%"></div></div><div class="audit-sum-val" id="valVC">0<span>/10</span></div></div>
+      <div class="audit-sum-item"><div class="audit-sum-lbl">Positioning Clarity</div><div class="audit-bar-wrap"><div class="audit-bar-fill" id="barPC" style="width:0%"></div></div><div class="audit-sum-val" id="valPC">0<span>/10</span></div></div>
+      <div class="audit-sum-item"><div class="audit-sum-lbl">Content Quality</div><div class="audit-bar-wrap"><div class="audit-bar-fill" id="barCQ" style="width:0%"></div></div><div class="audit-sum-val" id="valCQ">0<span>/10</span></div></div>
+      <div class="audit-sum-item"><div class="audit-sum-lbl">Trust Signals</div><div class="audit-bar-wrap"><div class="audit-bar-fill" id="barTS" style="width:0%"></div></div><div class="audit-sum-val" id="valTS">0<span>/10</span></div></div>
+      <div class="audit-total"><div class="audit-total-num" id="auditTotal">0</div><div class="audit-total-lbl">Overall Brand Score /40</div></div>
+    </div>
+  </div>
+  <div class="ec" style="margin-top:1.1rem">
+    <div class="elbl">Audit Reflection</div>
+    <div class="q" style="margin-top:0">Top 3 things to fix</div>
+    <textarea rows="3" id="auditFix" placeholder="The gaps that need the most attention..."></textarea>
+    <div class="q">Top 3 things that are working</div>
+    <textarea rows="3" id="auditWorking" placeholder="The strengths to build on..."></textarea>
+    <div class="q">Brand Audit in one sentence</div>
+    <div class="qh">&#8220;Right now my brand is [current state] but it should be [desired state]. The biggest gap is [primary issue].&#8221;</div>
+    <textarea rows="2" id="auditSummary" placeholder="Right now my brand is..."></textarea>
+  </div>
+  <h2>Creator Foundation Completion Checklist</h2>
+  <div class="ins"><p>Before moving to Visual Identity, confirm you have each deliverable completed.</p></div>
+  <div class="checklist" id="cfChecklist">
+    <div class="check-item" data-key="cf1"><div class="check-box"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div><div class="check-text">Brand Journey Framework &#8212; 4 questions answered and summary written</div></div>
+    <div class="check-item" data-key="cf2"><div class="check-box"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div><div class="check-text">Avatar Profile Document &#8212; detailed, specific, honest</div></div>
+    <div class="check-item" data-key="cf3"><div class="check-box"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div><div class="check-text">Core Mission + Ikigai &#8212; purpose statement written</div></div>
+    <div class="check-item" data-key="cf4"><div class="check-box"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div><div class="check-text">Core Values &#8212; 3&#8211;5 values with practical definitions</div></div>
+    <div class="check-item" data-key="cf5"><div class="check-box"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div><div class="check-text">Content Pillars &#8212; 3&#8211;5 pillars with sub-topics and connection to offer</div></div>
+    <div class="check-item" data-key="cf6"><div class="check-box"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div><div class="check-text">Origin Story &#8212; all 4 parts mapped and final version written</div></div>
+    <div class="check-item" data-key="cf7"><div class="check-box"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div><div class="check-text">Brand Mission Statement &#8212; external-facing, movement-building</div></div>
+    <div class="check-item" data-key="cf8"><div class="check-box"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div><div class="check-text">Brand Audit &#8212; scored, gaps identified, before screenshots saved</div></div>
+  </div>
+  <div class="nr">
+    <button class="btn" onclick="go(6)">&#8592; Back</button>
+    <div style="display:flex;gap:8px">
+      <button class="btn" onclick="printFull()" style="font-size:11.5px">Print Workbook</button>
+      <button class="btn p" onclick="go(8)">Build My Foundation &#8594;</button>
+    </div>
+  </div>
+</div>
+
+<!-- S8 FOUNDATION DOCUMENT -->
+<div class="sc" id="s8">
+  <div class="vg-cover">
+    <div class="vg-cover-bar"></div>
+    <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.14em;color:var(--orange);margin-bottom:8px">Creator Foundation&#8482; &#8212; Document</div>
+    <div class="vg-cover-name" id="vg-cover-name">Your Brand</div>
+    <div class="vg-cover-sub">Creator Foundation Document</div>
+  </div>
+  <div class="vg-sg-section">
+    <div class="vg-sg-label">01 &#8212; Brand Journey</div>
+    <div style="background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--orange);border-radius:0 var(--radius-md) var(--radius-md) 0;padding:1rem 1.2rem;margin-bottom:.75rem"><div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--orange);margin-bottom:5px">Brand Journey Statement</div><div style="font-size:14px;color:var(--text);line-height:1.75;font-style:italic" id="vg-journey"></div></div>
+    <div class="vg-field-grid">
+      <div class="vg-field-card"><div class="vg-field-lbl">Desired Outcome</div><div class="vg-field-val" id="vg-outcome"></div></div>
+      <div class="vg-field-card"><div class="vg-field-lbl">Known For</div><div class="vg-field-val" id="vg-knownfor"></div></div>
+      <div class="vg-field-card"><div class="vg-field-lbl">Actions</div><div class="vg-field-val" id="vg-actions"></div></div>
+      <div class="vg-field-card"><div class="vg-field-lbl">Learning Priority</div><div class="vg-field-val" id="vg-learn"></div></div>
+    </div>
+  </div>
+  <div class="vg-sg-section">
+    <div class="vg-sg-label">02 &#8212; Avatar</div>
+    <div style="background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--orange);border-radius:0 var(--radius-md) var(--radius-md) 0;padding:1rem 1.2rem;margin-bottom:.75rem"><div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--orange);margin-bottom:5px">Avatar Statement</div><div style="font-size:14px;color:var(--text);line-height:1.75;font-style:italic" id="vg-avatar"></div></div>
+    <div class="vg-field-grid">
+      <div class="vg-field-card"><div class="vg-field-lbl">Demographics</div><div class="vg-field-val" id="vg-demo"></div></div>
+      <div class="vg-field-card"><div class="vg-field-lbl">Primary Struggle</div><div class="vg-field-val" id="vg-struggle"></div></div>
+      <div class="vg-field-card"><div class="vg-field-lbl">Desired Outcome</div><div class="vg-field-val" id="vg-avdesired"></div></div>
+      <div class="vg-field-card"><div class="vg-field-lbl">Where They Hang Out</div><div class="vg-field-val" id="vg-platforms"></div></div>
+    </div>
+  </div>
+  <div class="vg-sg-section">
+    <div class="vg-sg-label">03 &#8212; Core Mission + Ikigai</div>
+    <div style="background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--orange);border-radius:0 var(--radius-md) var(--radius-md) 0;padding:1rem 1.2rem;margin-bottom:.75rem"><div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--orange);margin-bottom:5px">Core Mission Statement</div><div style="font-size:14px;color:var(--text);line-height:1.75;font-style:italic" id="vg-mission"></div></div>
+    <div class="vg-field-card"><div class="vg-field-lbl">Ikigai</div><div class="vg-field-val" id="vg-ikigai"></div></div>
+  </div>
+  <div class="vg-sg-section">
+    <div class="vg-sg-label">04 &#8212; Core Values</div>
+    <div class="vg-values-grid" id="vg-values"></div>
+  </div>
+  <div class="vg-sg-section">
+    <div class="vg-sg-label">05 &#8212; Content Pillars</div>
+    <div class="vg-pillars-grid" id="vg-pillars"></div>
+  </div>
+  <div class="vg-sg-section">
+    <div class="vg-sg-label">06 &#8212; Origin Story</div>
+    <div class="vg-narrative-card"><div class="vg-narrative-text" id="vg-story"></div></div>
+    <div style="margin-top:10px;background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--orange);border-radius:0 var(--radius-md) var(--radius-md) 0;padding:1rem 1.2rem"><div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--orange);margin-bottom:5px">Brand Mission Statement</div><div style="font-size:14px;color:var(--text);line-height:1.75;font-style:italic" id="vg-brandmission"></div></div>
+  </div>
+  <div class="vg-sg-section">
+    <div class="vg-sg-label">07 &#8212; Brand Audit</div>
+    <div class="vg-audit-grid" id="vg-audit"></div>
+    <div class="vg-field-card" style="margin-top:8px"><div class="vg-field-lbl">Audit Summary</div><div class="vg-field-val" id="vg-auditsummary"></div></div>
+    <div class="vg-field-grid" style="margin-top:8px">
+      <div class="vg-field-card"><div class="vg-field-lbl">Top 3 to Fix</div><div class="vg-field-val" id="vg-auditfix"></div></div>
+      <div class="vg-field-card"><div class="vg-field-lbl">Top 3 Working</div><div class="vg-field-val" id="vg-auditworking"></div></div>
+    </div>
+  </div>
+  <div class="div"></div>
+  <div class="ins"><p>Your Creator Foundation is not finished when you complete this module &#8212; it&#8217;s a living document. The goal right now is not perfection. The goal is clarity. A clear, defined Creator Foundation that&#8217;s 80% right is infinitely more powerful than a perfect one that exists only in your head. Define it. Document it. Use it. Refine it as you grow.</p></div>
+  <div class="nr">
+    <button class="btn" onclick="go(7)">&#8592; Back</button>
+    <div style="display:flex;gap:8px">
+      <button class="btn" onclick="printFull()" style="font-size:11.5px">Print Workbook</button>
+      <button class="btn p" onclick="printGuide()">Print Foundation Doc &#8594;</button>
+    </div>
+  </div>
+</div>
+
+</div></div></div>
+
+<script>
+var TABS=['Welcome','Brand Journey','Avatar','Mission','Values','Pillars','Origin Story','Brand Audit','Foundation Doc'];
+var ICONS=['<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>','<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>','<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>','<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>','<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>','<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>','<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>','<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>','<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>'];
+var KEY='cfww-v2';
+/* ── SUPABASE SYNC ── */
+var SUPABASE_URL  = 'https://ljddfhzrjvxpedvfebli.supabase.co';
+var SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxqZGRmaHpyanZ4cGVkdmZlYmxpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM5NTEzNjMsImV4cCI6MjA4OTUyNzM2M30.GqZMRvBlZyN4rmr9MrfxLcLSB04d7s59ZPfEw-dQwks';
+var CF_USER_EMAIL = localStorage.getItem('vww-user-email') || '';
+var cfSyncTimer;
+
+function cfSbHeaders() {
+  return {'apikey':SUPABASE_ANON,'Authorization':'Bearer '+SUPABASE_ANON,'Content-Type':'application/json','Prefer':'resolution=merge-duplicates'};
+}
+
+function cfSyncToSupabase(payload) {
+  if (!CF_USER_EMAIL) return;
+  clearTimeout(cfSyncTimer);
+  cfSyncTimer = setTimeout(function() {
+    fetch(SUPABASE_URL + '/rest/v1/vww_progress_cf', {
+      method: 'POST', headers: cfSbHeaders(),
+      body: JSON.stringify({email: CF_USER_EMAIL, data: payload, updated_at: new Date().toISOString()})
+    }).catch(function(){});
+  }, 2000);
+}
+var cur=0;
+var done={};
+var auditVals={vc1:0,vc2:0,vc3:0,pc1:0,pc2:0,pc3:0,cq1:0,cq2:0,cq3:0,ts1:0,ts2:0,ts3:0};
+var auditGroups={vc1:'VC',vc2:'VC',vc3:'VC',pc1:'PC',pc2:'PC',pc3:'PC',cq1:'CQ',cq2:'CQ',cq3:'CQ',ts1:'TS',ts2:'TS',ts3:'TS'};
+
+function buildNav(){
+  var sbn=document.getElementById('sbnav'),tb=document.getElementById('tabbar');
+  sbn.innerHTML='';tb.innerHTML='';
+  TABS.forEach(function(name,i){
+    var b=document.createElement('button');
+    b.className='sb-item'+(i===cur?' on':'')+(done[i]?' ok':'');
+    b.innerHTML='<span class="sb-icon">'+ICONS[i]+'</span>'+name;
+    b.onclick=function(){go(i);};
+    sbn.appendChild(b);
+    var t=document.createElement('button');
+    t.className='tab'+(i===cur?' on':'')+(done[i]?' ok':'');
+    t.textContent=i===0?'Welcome':i===8?'Doc':'W'+i;
+    t.onclick=function(){go(i);};
+    tb.appendChild(t);
+  });
+}
+
+function updateProgress(){
+  var count=Object.keys(done).filter(function(k){return done[k]&&k!=='0'&&k!=='8';}).length;
+  var pct=Math.round(count/7*100);
+  document.getElementById('toppf').style.width=pct+'%';
+  document.getElementById('toppt').textContent=count+'/7';
+  document.getElementById('sbpf').style.width=pct+'%';
+  document.getElementById('sbpt').textContent=count+'/7';
+  var dc=document.getElementById('dc');if(dc)dc.textContent=count;
+}
+
+function go(n){
+  if(cur>0&&cur<8)done[cur]=true;
+  cur=n;
+  if(n===8){buildDoc();done[7]=true;}
+  document.querySelectorAll('.sc').forEach(function(s){s.classList.remove('show');});
+  var sec=document.getElementById('s'+n);if(sec)sec.classList.add('show');
+  buildNav();updateProgress();saveData();window.scrollTo(0,0);
+}
+
+function initOpts(){
+  document.querySelectorAll('.opt[data-g]').forEach(function(btn){
+    btn.addEventListener('click',function(){
+      var g=btn.getAttribute('data-g');
+      document.querySelectorAll('.opt[data-g="'+g+'"]').forEach(function(b){b.classList.remove('sel');});
+      btn.classList.add('sel');saveData();
+    });
+  });
+}
+
+function initChecklists(){
+  document.querySelectorAll('.check-item').forEach(function(item){
+    item.addEventListener('click',function(){item.classList.toggle('checked');saveData();});
+  });
+}
+
+function toggleAuditCat(id){document.getElementById(id).classList.toggle('open');}
+
+function selectAudit(btn,name,pts){
+  btn.closest('.audit-opts').querySelectorAll('.audit-opt').forEach(function(b){b.classList.remove('sel');});
+  btn.classList.add('sel');auditVals[name]=pts;updateAuditScores();saveData();
+}
+
+function updateAuditScores(){
+  var vc=(auditVals.vc1||0)+(auditVals.vc2||0)+(auditVals.vc3||0);
+  var pc=(auditVals.pc1||0)+(auditVals.pc2||0)+(auditVals.pc3||0);
+  var cq=(auditVals.cq1||0)+(auditVals.cq2||0)+(auditVals.cq3||0);
+  var ts=(auditVals.ts1||0)+(auditVals.ts2||0)+(auditVals.ts3||0);
+  var total=vc+pc+cq+ts;
+  document.getElementById('aScore1').textContent=vc+'/10';
+  document.getElementById('aScore2').textContent=pc+'/10';
+  document.getElementById('aScore3').textContent=cq+'/10';
+  document.getElementById('aScore4').textContent=ts+'/10';
+  document.getElementById('barVC').style.width=(vc/10*100)+'%';
+  document.getElementById('barPC').style.width=(pc/10*100)+'%';
+  document.getElementById('barCQ').style.width=(cq/10*100)+'%';
+  document.getElementById('barTS').style.width=(ts/10*100)+'%';
+  document.getElementById('valVC').innerHTML=vc+'<span>/10</span>';
+  document.getElementById('valPC').innerHTML=pc+'<span>/10</span>';
+  document.getElementById('valCQ').innerHTML=cq+'<span>/10</span>';
+  document.getElementById('valTS').innerHTML=ts+'<span>/10</span>';
+  document.getElementById('auditTotal').textContent=total;
+}
+
+function updateMissionPreview(){
+  var a=document.getElementById('missionAvatar').value||'[avatar]';
+  var o=document.getElementById('missionOutcome').value||'[desired outcome]';
+  var m=document.getElementById('missionMethod').value||'[your unique method]';
+  var w=document.getElementById('missionWhy').value||'[deeper why]';
+  document.getElementById('missionPreview').textContent='"I help '+a+' achieve '+o+' through '+m+' so that '+w+'."';
+}
+
+var saveTimer;
+function wireSave(){
+  document.querySelectorAll('textarea,input[type=text]').forEach(function(el){
+    el.addEventListener('input',function(){clearTimeout(saveTimer);saveTimer=setTimeout(saveData,600);});
+  });
+}
+
+function saveData(){
+  try{
+    var d={cur:cur,done:done,auditVals:auditVals};
+    document.querySelectorAll('textarea[id],input[type=text][id]').forEach(function(el){d[el.id]=el.value;});
+    document.querySelectorAll('.opt.sel[data-g]').forEach(function(btn){d['opt_'+btn.getAttribute('data-g')]=btn.textContent.trim();});
+    document.querySelectorAll('.check-item[data-key]').forEach(function(item){d['chk_'+item.getAttribute('data-key')]=item.classList.contains('checked');});
+    localStorage.setItem(KEY,JSON.stringify(d));
+    var dot=document.getElementById('saveDot');
+    if(dot){dot.classList.add('saved');setTimeout(function(){dot.classList.remove('saved');},1500);}
+    cfSyncToSupabase(d);
+  }catch(e){}
+}
+
+function loadData(){
+  try{
+    var raw=localStorage.getItem(KEY);if(!raw)return;
+    var d=JSON.parse(raw);if(!d)return;
+    if(d.done)done=d.done;
+    if(d.auditVals){auditVals=d.auditVals;updateAuditScores();}
+    Object.keys(d).forEach(function(k){
+      if(k==='cur'||k==='done'||k==='auditVals')return;
+      if(k.indexOf('opt_')===0){
+        var g=k.replace('opt_','');
+        document.querySelectorAll('.opt[data-g="'+g+'"]').forEach(function(btn){if(btn.textContent.trim()===d[k])btn.classList.add('sel');});
+        return;
+      }
+      if(k.indexOf('chk_')===0){
+        var item=document.querySelector('.check-item[data-key="'+k.replace('chk_','')+'"]');
+        if(item&&d[k])item.classList.add('checked');return;
+      }
+      var el=document.getElementById(k);
+      if(el&&(el.tagName==='TEXTAREA'||el.type==='text'))el.value=d[k]||'';
+    });
+    updateMissionPreview();
+    cur=d.cur||0;
+  }catch(e){}
+}
+
+function gv(id){var e=document.getElementById(id);return e?e.value.trim():'';}
+
+async function callClaude(prompt){
+  var res=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1000,messages:[{role:'user',content:prompt}]})});
+  var data=await res.json();
+  return data.content.map(function(b){return b.text||'';}).join('');
+}
+
+function setStatus(id,state,msg){var e=document.getElementById(id);if(!e)return;e.className='ai-status '+state;e.innerHTML=msg;}
+function showResult(id,text){var e=document.getElementById(id);if(!e)return;e.textContent=text;e.classList.add('show');}
+
+async function generateBrandJourney(){
+  var btn=document.getElementById('bjBtn');btn.disabled=true;
+  setStatus('bjStatus','loading','<span class="ai-spinner"></span>Synthesizing your Brand Journey...');
+  document.getElementById('bjResult').classList.remove('show');
+  try{
+    var r=await callClaude('You are a personal brand strategist. Synthesize these answers into one powerful Brand Journey Statement in the format: "I want to [desired outcome] by being known for [known for] through [actions] starting with [learning]."\n\nDesired Outcome: '+gv('q1outcome')+'\nWhy: '+gv('q1why')+'\nKnown For: '+gv('q2known')+'\nActions: '+gv('q3do')+'\nLearn: '+gv('q4learn')+'\n\nWrite the one-sentence statement, then 2 sentences explaining why this North Star is powerful. Use their exact language. No fluff, no preamble.');
+    setStatus('bjStatus','success','&#10003; Generated');showResult('bjResult',r);
+    if(!gv('brandJourneyStmt'))document.getElementById('brandJourneyStmt').value=r;
+    saveData();
+  }catch(e){setStatus('bjStatus','error','Error &#8212; check connection and try again');}
+  btn.disabled=false;
+}
+
+async function generateAvatarStatement(){
+  var btn=document.getElementById('avatarBtn');btn.disabled=true;
+  setStatus('avatarStatus','loading','<span class="ai-spinner"></span>Building your avatar profile...');
+  document.getElementById('avatarResult').classList.remove('show');
+  try{
+    var r=await callClaude('You are a personal brand strategist. Write a compelling one-paragraph Avatar Statement. Format: "My avatar is [specific description]. They\'re currently struggling with [problem]. They\'ve tried [previous attempts] but it hasn\'t worked because [real reason]. What they really want is [desired outcome]. The thing holding them back most is [primary obstacle]. I can help them because [unique position]."\n\nAge/Occupation: '+gv('avatarAge')+' / '+gv('avatarOccupation')+'\nSituation: '+gv('avatarSituation')+'\nStruggle: '+gv('avatarStruggle')+'\nTried: '+gv('avatarTried')+'\nDesired: '+gv('avatarDesired')+'\nFears: '+gv('avatarFears')+'\nHow creator is ahead: '+gv('avatarConnection')+'\n\nBe specific and vivid. No preamble, write directly.');
+    setStatus('avatarStatus','success','&#10003; Generated');showResult('avatarResult',r);
+    if(!gv('avatarStatement'))document.getElementById('avatarStatement').value=r;
+    saveData();
+  }catch(e){setStatus('avatarStatus','error','Error &#8212; check connection and try again');}
+  btn.disabled=false;
+}
+
+async function generateIkigai(){
+  var btn=document.getElementById('ikigaiBtn');btn.disabled=true;
+  setStatus('ikigaiStatus','loading','<span class="ai-spinner"></span>Discovering your Ikigai...');
+  document.getElementById('ikigaiResult').classList.remove('show');
+  try{
+    var r=await callClaude('You are a personal brand strategist. Identify this creator\'s Ikigai.\n\nLOVE: '+gv('ikigaiLove')+'\nGOOD AT: '+gv('ikigaiGood')+'\nWORLD NEEDS: '+gv('ikigaiWorld')+'\nPAID FOR: '+gv('ikigaiPaid')+'\n\nIn 3 sentences: (1) State the Ikigai clearly &#8212; the thread that runs through all four. (2) Why this is their unique intersection. (3) A single-line Ikigai statement they can use as a mission foundation. Be specific and show them something they might not have articulated. No preamble.');
+    setStatus('ikigaiStatus','success','&#10003; Ikigai found');showResult('ikigaiResult',r);
+    if(!gv('ikigaiCenter'))document.getElementById('ikigaiCenter').value=r;
+    saveData();
+  }catch(e){setStatus('ikigaiStatus','error','Error &#8212; check connection and try again');}
+  btn.disabled=false;
+}
+
+async function generateOriginStory(){
+  var btn=document.getElementById('storyBtn');btn.disabled=true;
+  setStatus('storyStatus','loading','<span class="ai-spinner"></span>Writing your origin story...');
+  document.getElementById('storyResult').classList.remove('show');
+  try{
+    var r=await callClaude('You are a personal brand storyteller. Write a compelling, authentic 3-5 paragraph origin story in first person. Lead with the struggle. Be honest &#8212; share the failures and doubts. End with a lesson or invitation for the reader who is where the creator once was. No fluff, no hype.\n\nPart 1 &#8212; The Struggle: '+gv('story1')+'\nPart 2 &#8212; The Turning Point: '+gv('story2')+'\nPart 3 &#8212; The Journey: '+gv('story3')+'\nPart 4 &#8212; The Transformation: '+gv('story4')+'\n\nWrite in a warm, direct, relatable voice. No preamble.');
+    setStatus('storyStatus','success','&#10003; Story written');showResult('storyResult',r);
+    if(!gv('originStory'))document.getElementById('originStory').value=r;
+    saveData();
+  }catch(e){setStatus('storyStatus','error','Error &#8212; check connection and try again');}
+  btn.disabled=false;
+}
+
+function esc(s){return(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+
+function buildDoc(){
+  var brand=(gv('brandName')||'Your Brand').toUpperCase();
+  var nm=document.getElementById('vg-cover-name');if(nm)nm.textContent=brand;
+  function sv(fid,eid){var e=document.getElementById(eid);if(e)e.textContent=gv(fid)||'&#8212;';}
+  sv('brandJourneyStmt','vg-journey');sv('q1outcome','vg-outcome');sv('q2known','vg-knownfor');
+  sv('q3do','vg-actions');sv('q4learn','vg-learn');sv('avatarStatement','vg-avatar');
+  var demo=[gv('avatarAge'),gv('avatarOccupation')].filter(Boolean).join(' \u00b7 ');
+  var de=document.getElementById('vg-demo');if(de)de.textContent=demo||'&#8212;';
+  sv('avatarStruggle','vg-struggle');sv('avatarDesired','vg-avdesired');
+  var plat=[gv('avatarPlatforms'),gv('avatarCommunities')].filter(Boolean).join(' \u00b7 ');
+  var pe=document.getElementById('vg-platforms');if(pe)pe.textContent=plat||'&#8212;';
+  sv('coreMission','vg-mission');sv('ikigaiCenter','vg-ikigai');sv('originStory','vg-story');sv('brandMission','vg-brandmission');
+  /* values */
+  var vg=document.getElementById('vg-values');
+  if(vg){var vh='';for(var i=1;i<=5;i++){var nm2=gv('val'+i+'name');if(nm2)vh+='<div class="vg-val-card"><div class="vg-val-name">'+esc(nm2)+'</div><div class="vg-val-practice">'+esc(gv('val'+i+'practice'))+'</div></div>';}vg.innerHTML=vh||'<div class="vg-field-card" style="grid-column:1/-1"><div class="vg-field-val" style="color:var(--dimmer)">Complete Workshop 4.</div></div>';}
+  /* pillars */
+  var pg=document.getElementById('vg-pillars');
+  if(pg){var ph='';for(var j=1;j<=5;j++){var pn=gv('pillar'+j+'name');if(pn)ph+='<div class="vg-pillar-card"><div class="vg-pillar-name">'+esc(pn)+'</div><div class="vg-pillar-sub">'+esc(gv('pillar'+j+'sub'))+'</div></div>';}pg.innerHTML=ph||'<div class="vg-field-card" style="grid-column:1/-1"><div class="vg-field-val" style="color:var(--dimmer)">Complete Workshop 5.</div></div>';}
+  /* audit */
+  var ag=document.getElementById('vg-audit');
+  if(ag){var vc=(auditVals.vc1||0)+(auditVals.vc2||0)+(auditVals.vc3||0),pc=(auditVals.pc1||0)+(auditVals.pc2||0)+(auditVals.pc3||0),cq=(auditVals.cq1||0)+(auditVals.cq2||0)+(auditVals.cq3||0),ts=(auditVals.ts1||0)+(auditVals.ts2||0)+(auditVals.ts3||0);ag.innerHTML=[{l:'Visual Consistency',v:vc+'/10'},{l:'Positioning Clarity',v:pc+'/10'},{l:'Content Quality',v:cq+'/10'},{l:'Trust Signals',v:ts+'/10'}].map(function(x){return '<div class="vg-audit-card"><div class="vg-audit-big">'+esc(x.v)+'</div><div class="vg-audit-lbl">'+esc(x.l)+'</div></div>';}).join('');}
+  sv('auditSummary','vg-auditsummary');sv('auditFix','vg-auditfix');sv('auditWorking','vg-auditworking');
+}
+
+function printFull(){document.body.classList.add('print-full');window.print();document.body.classList.remove('print-full');}
+function printGuide(){document.body.classList.add('print-guide');buildDoc();window.print();document.body.classList.remove('print-guide');}
+
+buildNav();initOpts();wireSave();loadData();initChecklists();go(cur);
+
+/* ── IFRAME / COURSE SHELL BRIDGE ── */
+var CF_IN_FRAME = (window.self !== window.top);
+
+if (CF_IN_FRAME) {
+  var _cfSidebarHide = function() {
+    var sb=document.getElementById('sidebar');
+    var mn=document.getElementById('main');
+    var tb=document.getElementById('tabbar');
+    var topbar=document.querySelector('.topbar');
+    if(sb){sb.style.display='none';}
+    if(mn){mn.style.marginLeft='0';mn.style.width='100%';}
+    if(tb){tb.style.display='none';}
+    if(topbar){topbar.style.display='none';}
+  };
+  if(document.readyState==='loading'){
+    document.addEventListener('DOMContentLoaded',_cfSidebarHide);
+  } else {
+    _cfSidebarHide();
+  }
+}
+
+window.addEventListener('message',function(e){
+  if(!e.data||e.data.type!=='navigate') return;
+  if(typeof e.data.to==='number') go(e.data.to);
+});
+
+function cfNotifyShell() {
+  if(!CF_IN_FRAME) return;
+  var doneArr=[];
+  if(done&&typeof done==='object'&&!Array.isArray(done)){
+    Object.keys(done).forEach(function(k){if(done[k])doneArr.push(Number(k));});
+  }
+  window.parent.postMessage({type:'sectionChange',cur:cur,done:doneArr},'*');
+}
+
+/* Wrap go() to notify shell on navigation */
+var _cfOrigGo = go;
+go = function(n) {
+  _cfOrigGo(n);
+  cfNotifyShell();
+};
+
+/* Send ready message after init */
+setTimeout(function(){
+  if(CF_IN_FRAME){
+    var doneArr=[];
+    if(done&&typeof done==='object'&&!Array.isArray(done)){
+      Object.keys(done).forEach(function(k){if(done[k])doneArr.push(Number(k));});
+    }
+    window.parent.postMessage({type:'ready',cur:cur,done:doneArr},'*');
+  }
+},200);
+</script>
+</body>
+</html>
