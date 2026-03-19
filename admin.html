@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FSCreative™ — Admin Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;900&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+:root{
+  --bg:#0a0a0a;--surface:#111111;--card:#161616;--border:#1f1f1f;--border2:#2a2a2a;
+  --text:#ffffff;--dim:#a0a0a0;--dimmer:#555555;
+  --orange:#F0601B;--orange-hover:#ff6d28;--orange-tint:rgba(240,96,27,0.1);--orange-border:rgba(240,96,27,0.28);--orange-dark:#ff8050;
+  --green-bg:rgba(61,184,100,0.1);--green-text:#5DCAA5;--green-border:rgba(93,202,165,0.3);
+  --radius-lg:10px;--radius-md:6px;
+  --font:'Helvetica Neue',Helvetica,Arial,sans-serif;
+}
+body{background:var(--bg);color:var(--text);font-family:var(--font);font-size:14px;line-height:1.6;-webkit-font-smoothing:antialiased;min-height:100vh;}
+
+/* ── AUTH SCREEN ── */
+#auth-screen{display:flex;align-items:center;justify-content:center;min-height:100vh;padding:1rem;}
+.auth-box{background:var(--surface);border:1px solid var(--border2);border-radius:var(--radius-lg);padding:2rem;width:100%;max-width:360px;}
+.auth-brand{font-size:10px;font-weight:700;color:var(--orange);letter-spacing:.12em;text-transform:uppercase;margin-bottom:1rem;}
+.auth-title{font-size:20px;font-weight:700;margin-bottom:.5rem;letter-spacing:-.3px;}
+.auth-sub{font-size:13px;color:var(--dim);margin-bottom:1.5rem;}
+.auth-input{width:100%;border:1px solid var(--border);border-radius:var(--radius-md);padding:10px 12px;font-size:14px;font-family:var(--font);color:var(--text);background:var(--bg);margin-bottom:1rem;transition:border-color .15s;}
+.auth-input:focus{outline:none;border-color:var(--orange);box-shadow:0 0 0 3px rgba(240,96,27,.08);}
+.auth-btn{width:100%;background:var(--orange);color:#fff;border:none;border-radius:var(--radius-md);padding:11px;font-size:14px;font-weight:600;cursor:pointer;font-family:var(--font);}
+.auth-btn:hover{background:var(--orange-hover);}
+.auth-error{font-size:12px;color:#e05555;margin-bottom:.8rem;display:none;}
+
+/* ── MAIN DASHBOARD ── */
+#dashboard{display:none;min-height:100vh;}
+.dash-header{background:var(--surface);border-bottom:1px solid var(--border);padding:1rem 2rem;display:flex;align-items:center;justify-content:space-between;}
+.dash-brand{font-size:11px;font-weight:700;color:var(--orange);letter-spacing:.1em;text-transform:uppercase;}
+.dash-title{font-size:13px;color:var(--dim);margin-top:2px;}
+.dash-logout{font-size:12px;color:var(--dimmer);cursor:pointer;background:none;border:1px solid var(--border);padding:5px 10px;border-radius:var(--radius-md);font-family:var(--font);}
+.dash-logout:hover{color:var(--text);border-color:var(--border2);}
+
+.dash-body{padding:2rem;max-width:1100px;margin:0 auto;}
+
+/* ── STAT CARDS ── */
+.stat-row{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:2rem;}
+.stat-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-md);padding:1rem 1.2rem;}
+.stat-num{font-family:'Barlow Condensed',sans-serif;font-size:36px;font-weight:900;line-height:1;color:var(--text);}
+.stat-lbl{font-size:11px;color:var(--dimmer);margin-top:4px;text-transform:uppercase;letter-spacing:.06em;font-weight:500;}
+
+/* ── TABLE ── */
+.section-title{font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:var(--dimmer);margin-bottom:.8rem;}
+.user-table{width:100%;border-collapse:collapse;}
+.user-table th{font-size:10.5px;font-weight:600;text-transform:uppercase;letter-spacing:.07em;color:var(--dimmer);text-align:left;padding:8px 12px;border-bottom:1px solid var(--border);}
+.user-table td{padding:10px 12px;border-bottom:1px solid var(--border);vertical-align:middle;font-size:13px;}
+.user-table tr:hover td{background:var(--surface);}
+.user-table tr.expandable{cursor:pointer;}
+
+/* ── AVATAR ── */
+.u-avatar{width:32px;height:32px;border-radius:50%;background:var(--orange-tint);border:1px solid var(--orange-border);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:var(--orange-dark);flex-shrink:0;}
+
+/* ── USER INFO ── */
+.u-name{font-weight:500;color:var(--text);}
+.u-email{font-size:11.5px;color:var(--dimmer);}
+
+/* ── PROGRESS ── */
+.u-prog-bar{height:4px;background:var(--border);border-radius:2px;width:80px;display:inline-block;vertical-align:middle;margin-right:6px;}
+.u-prog-fill{height:100%;border-radius:2px;background:var(--orange);}
+.u-prog-fill.done{background:var(--green-text);}
+
+/* ── SECTION BADGES ── */
+.badge-row{display:flex;gap:3px;flex-wrap:wrap;}
+.badge{display:inline-block;font-size:9.5px;padding:2px 6px;border-radius:10px;font-weight:600;border:1px solid var(--border);color:var(--dimmer);white-space:nowrap;}
+.badge.done{background:var(--green-bg);color:var(--green-text);border-color:var(--green-border);}
+
+/* ── LAST SEEN ── */
+.u-seen{font-size:11.5px;color:var(--dimmer);}
+
+/* ── EXPAND ROW ── */
+.expand-row{display:none;}
+.expand-row.open{display:table-row;}
+.expand-cell{padding:1rem 1.5rem 1.5rem!important;background:var(--card)!important;}
+.answer-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:10px;}
+.answer-item{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-md);padding:.75rem 1rem;}
+.answer-key{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.07em;color:var(--orange);margin-bottom:4px;}
+.answer-val{font-size:12.5px;color:var(--dim);line-height:1.55;word-break:break-word;}
+.no-data{font-size:12.5px;color:var(--dimmer);font-style:italic;}
+
+/* ── LOADING ── */
+#loading{text-align:center;padding:3rem;color:var(--dimmer);font-size:13px;}
+.spinner{display:inline-block;width:20px;height:20px;border:2px solid var(--border2);border-top-color:var(--orange);border-radius:50%;animation:spin .7s linear infinite;margin-bottom:.5rem;}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* ── EMPTY ── */
+.empty{text-align:center;padding:3rem;color:var(--dimmer);font-size:13px;}
+
+/* ── REFRESH ── */
+.refresh-btn{font-size:11px;color:var(--dimmer);cursor:pointer;background:none;border:1px solid var(--border);padding:4px 10px;border-radius:var(--radius-md);font-family:var(--font);margin-left:auto;display:block;margin-bottom:1rem;}
+.refresh-btn:hover{color:var(--text);}
+</style>
+</head>
+<body>
+
+<!-- AUTH -->
+<div id="auth-screen">
+  <div class="auth-box">
+    <div class="auth-brand">FSCreative™</div>
+    <div class="auth-title">Admin Dashboard</div>
+    <div class="auth-sub">Enter the admin password to view user progress.</div>
+    <div id="auth-error" class="auth-error">Incorrect password.</div>
+    <input type="password" id="auth-pass" class="auth-input" placeholder="Password" onkeydown="if(event.key==='Enter')checkAuth()">
+    <button class="auth-btn" onclick="checkAuth()">Sign In</button>
+  </div>
+</div>
+
+<!-- DASHBOARD -->
+<div id="dashboard">
+  <div class="dash-header">
+    <div>
+      <div class="dash-brand">FSCreative™ — Admin</div>
+      <div class="dash-title">Visual World Workbook — User Progress</div>
+    </div>
+    <button class="dash-logout" onclick="logout()">Sign Out</button>
+  </div>
+
+  <div class="dash-body">
+    <div class="stat-row" id="stat-row">
+      <div class="stat-card"><div class="stat-num" id="s-total">—</div><div class="stat-lbl">Total Users</div></div>
+      <div class="stat-card"><div class="stat-num" id="s-active">—</div><div class="stat-lbl">Started</div></div>
+      <div class="stat-card"><div class="stat-num" id="s-complete">—</div><div class="stat-lbl">Completed All 6</div></div>
+      <div class="stat-card"><div class="stat-num" id="s-avg">—</div><div class="stat-lbl">Avg. Sections Done</div></div>
+    </div>
+
+    <div class="section-title">All Users</div>
+    <button class="refresh-btn" onclick="loadDashboard()">↻ Refresh</button>
+
+    <div id="loading"><div class="spinner"></div><br>Loading users...</div>
+    <div id="user-list" style="display:none">
+      <table class="user-table">
+        <thead>
+          <tr>
+            <th></th>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Progress</th>
+            <th>Sections</th>
+            <th>Last Seen</th>
+          </tr>
+        </thead>
+        <tbody id="user-tbody"></tbody>
+      </table>
+    </div>
+    <div id="user-empty" class="empty" style="display:none">No users yet.</div>
+  </div>
+</div>
+
+<script>
+var SUPABASE_URL  = 'https://ljddfhzrjvxpedvfebli.supabase.co';
+var SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxqZGRmaHpyanZ4cGVkdmZlYmxpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM5NTEzNjMsImV4cCI6MjA4OTUyNzM2M30.GqZMRvBlZyN4rmr9MrfxLcLSB04d7s59ZPfEw-dQwks';
+
+/* ── Change this password ── */
+var ADMIN_PASSWORD = 'fscreative2025';
+
+var SECTION_NAMES = ['Welcome','Creator Analysis','Mood Board','Color & Type','Shot System','Visual World'];
+
+var INPUT_LABELS = {
+  'brandName':'Brand Name','niche':'Niche','targetAudience':'Target Audience',
+  'valueStatement':'Value Statement','differentiation':'Differentiation',
+  'e1-location':'Setting Location','e1-statement':'Setting Statement',
+  'e2-statement':'Mood Statement','e2-time':'Time of Day',
+  'col-primary':'Primary Color','col-secondary':'Secondary Color','col-accent':'Accent Color','col-neutral':'Neutral Color',
+  'paletteName':'Palette Name','font-primary':'Primary Font','font-secondary':'Secondary Font','typographyRules':'Type Rules',
+  'e4-wardrobe':'Wardrobe','e5-primary':'Primary Shot','signatureShot':'Signature Shot',
+  'e6-statement':'Approach Statement','vwNarrative':'Visual World Narrative',
+  'mbStatement':'Mood Board Statement','mbTime':'Mood Board Time',
+  'mbLink':'Pinterest Board'
+};
+
+function sbHeaders() {
+  return {
+    'apikey': SUPABASE_ANON,
+    'Authorization': 'Bearer ' + SUPABASE_ANON,
+    'Content-Type': 'application/json'
+  };
+}
+
+function checkAuth() {
+  var pass = document.getElementById('auth-pass').value;
+  var err  = document.getElementById('auth-error');
+  if (pass === ADMIN_PASSWORD) {
+    document.getElementById('auth-screen').style.display = 'none';
+    document.getElementById('dashboard').style.display = 'block';
+    loadDashboard();
+  } else {
+    err.style.display = 'block';
+    document.getElementById('auth-pass').value = '';
+    document.getElementById('auth-pass').focus();
+  }
+}
+
+function logout() {
+  document.getElementById('auth-screen').style.display = 'flex';
+  document.getElementById('dashboard').style.display = 'none';
+  document.getElementById('auth-pass').value = '';
+}
+
+async function loadDashboard() {
+  document.getElementById('loading').style.display = 'block';
+  document.getElementById('user-list').style.display = 'none';
+  document.getElementById('user-empty').style.display = 'none';
+
+  try {
+    var [usersResp, progressResp] = await Promise.all([
+      fetch(SUPABASE_URL + '/rest/v1/vww_users?select=*&order=last_seen.desc', {headers: sbHeaders()}),
+      fetch(SUPABASE_URL + '/rest/v1/vww_progress?select=email,data,updated_at', {headers: sbHeaders()})
+    ]);
+    var users    = await usersResp.json();
+    var progress = await progressResp.json();
+
+    var progMap = {};
+    progress.forEach(function(p){ progMap[p.email] = p; });
+
+    /* stats */
+    var total    = users.length;
+    var started  = users.filter(function(u){ return progMap[u.email]; }).length;
+    var complete = users.filter(function(u){
+      var p = progMap[u.email];
+      return p && p.data && p.data.done && p.data.done.length >= 6;
+    }).length;
+    var avgDone = started ? (users.reduce(function(sum,u){
+      var p = progMap[u.email];
+      return sum + (p&&p.data&&p.data.done ? p.data.done.length : 0);
+    }, 0) / started).toFixed(1) : '0';
+
+    document.getElementById('s-total').textContent    = total;
+    document.getElementById('s-active').textContent   = started;
+    document.getElementById('s-complete').textContent = complete;
+    document.getElementById('s-avg').textContent      = avgDone;
+
+    if (!total) {
+      document.getElementById('loading').style.display = 'none';
+      document.getElementById('user-empty').style.display = 'block';
+      return;
+    }
+
+    var tbody = document.getElementById('user-tbody');
+    tbody.innerHTML = '';
+
+    users.forEach(function(user, idx) {
+      var prog = progMap[user.email];
+      var data = prog && prog.data ? prog.data : null;
+      var doneSections = data && data.done ? data.done.map(Number) : [];
+      var pct = Math.round((doneSections.length / 6) * 100);
+      var initials = (user.name || user.email).charAt(0).toUpperCase();
+      var lastSeen = user.last_seen ? relTime(user.last_seen) : '—';
+
+      /* main row */
+      var tr = document.createElement('tr');
+      tr.className = 'expandable';
+      tr.setAttribute('data-idx', idx);
+      tr.onclick = function(){ toggleExpand(idx); };
+      tr.innerHTML = [
+        '<td><div class="u-avatar">'+esc(initials)+'</div></td>',
+        '<td><div class="u-name">'+esc(user.name||'')+'</div></td>',
+        '<td><div class="u-email">'+esc(user.email)+'</div></td>',
+        '<td><span class="u-prog-bar"><span class="u-prog-fill'+(pct===100?' done':'')+'" style="width:'+pct+'%"></span></span><span style="font-size:11.5px;color:var(--dimmer)">'+doneSections.length+'/6</span></td>',
+        '<td><div class="badge-row">'+SECTION_NAMES.map(function(n,i){ return '<span class="badge'+(doneSections.indexOf(i)>-1?' done':'')+'">'+(i+1)+'</span>'; }).join('')+'</div></td>',
+        '<td class="u-seen">'+lastSeen+'</td>'
+      ].join('');
+      tbody.appendChild(tr);
+
+      /* expand row */
+      var extr = document.createElement('tr');
+      extr.className = 'expand-row';
+      extr.id = 'expand-'+idx;
+      var exTd = document.createElement('td');
+      exTd.className = 'expand-cell';
+      exTd.colSpan = 6;
+
+      if (data && data.inputs && Object.keys(data.inputs).length) {
+        var items = Object.keys(data.inputs)
+          .filter(function(k){ return data.inputs[k] && data.inputs[k].trim(); })
+          .map(function(k){
+            var label = INPUT_LABELS[k] || k;
+            return '<div class="answer-item"><div class="answer-key">'+esc(label)+'</div><div class="answer-val">'+esc(data.inputs[k])+'</div></div>';
+          }).join('');
+        if (data.opts && Object.keys(data.opts).length) {
+          items += Object.keys(data.opts).map(function(g){
+            return '<div class="answer-item"><div class="answer-key">'+esc(g)+'</div><div class="answer-val">'+esc(data.opts[g])+'</div></div>';
+          }).join('');
+        }
+        exTd.innerHTML = '<div class="answer-grid">'+items+'</div>';
+      } else {
+        exTd.innerHTML = '<div class="no-data">No answers saved yet.</div>';
+      }
+      extr.appendChild(exTd);
+      tbody.appendChild(extr);
+    });
+
+    document.getElementById('loading').style.display = 'none';
+    document.getElementById('user-list').style.display = 'block';
+
+  } catch(e) {
+    document.getElementById('loading').innerHTML = '<div style="color:#e05555">Failed to load: '+e.message+'</div>';
+    console.error(e);
+  }
+}
+
+function toggleExpand(idx) {
+  var row = document.getElementById('expand-'+idx);
+  if (!row) return;
+  row.classList.toggle('open');
+}
+
+function relTime(iso) {
+  var diff = Date.now() - new Date(iso).getTime();
+  var m = Math.floor(diff/60000);
+  if (m < 1)  return 'just now';
+  if (m < 60) return m+'m ago';
+  var h = Math.floor(m/60);
+  if (h < 24) return h+'h ago';
+  var d = Math.floor(h/24);
+  if (d < 7)  return d+'d ago';
+  return new Date(iso).toLocaleDateString();
+}
+
+function esc(s){ if(!s) return ''; return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+document.getElementById('auth-pass').addEventListener('keydown', function(e){ if(e.key==='Enter') checkAuth(); });
+</script>
+</body>
+</html>

@@ -681,9 +681,50 @@ textarea::placeholder,input[type=text]::placeholder{color:var(--dimmer)}
   body.print-guide #s6 .nr{display:none!important}
   body.print-full .sc{display:block!important}
 }
+
+/* ─── IDENTITY MODAL ─── */
+#identity-modal{
+  position:fixed;inset:0;z-index:99999;
+  background:rgba(0,0,0,0.88);backdrop-filter:blur(4px);
+  display:none;align-items:center;justify-content:center;padding:1rem;
+}
+.id-box{
+  background:var(--surface);border:1px solid var(--border2);
+  border-radius:var(--radius-lg);padding:2rem;
+  width:100%;max-width:390px;
+}
+.id-brand{font-size:10px;font-weight:700;color:var(--orange);letter-spacing:.12em;text-transform:uppercase;margin-bottom:1.1rem;}
+.id-title{font-size:22px;font-weight:700;color:var(--text);margin-bottom:6px;letter-spacing:-.3px;}
+.id-sub{font-size:13px;color:var(--dim);line-height:1.7;margin-bottom:1.5rem;}
+.id-label{font-size:10.5px;font-weight:600;color:var(--dim);text-transform:uppercase;letter-spacing:.07em;margin-bottom:5px;display:block;}
+.id-input{width:100%;border:1px solid var(--border);border-radius:var(--radius-md);padding:10px 12px;font-size:14px;font-family:var(--font);color:var(--text);background:var(--bg);margin-bottom:1rem;transition:border-color .15s;}
+.id-input:focus{outline:none;border-color:var(--orange);box-shadow:0 0 0 3px rgba(240,96,27,.08);}
+.id-btn{width:100%;background:var(--orange);color:#fff;border:none;border-radius:var(--radius-md);padding:11px;font-size:14px;font-weight:600;cursor:pointer;font-family:var(--font);transition:background .15s;letter-spacing:.01em;}
+.id-btn:hover{background:var(--orange-hover);}
+.id-btn:disabled{opacity:.5;cursor:not-allowed;}
+.id-error{font-size:12px;color:#e05555;margin-bottom:.8rem;padding:8px 10px;background:rgba(220,50,50,.08);border-radius:var(--radius-md);display:none;}
+.id-note{font-size:11px;color:var(--dimmer);margin-top:1rem;text-align:center;line-height:1.5;}
+.save-dot.syncing{background:var(--orange)!important;animation:pulse .8s infinite alternate;}
+@keyframes pulse{to{opacity:.4}}
 </style>
 </head>
 <body>
+
+<!-- ── IDENTITY MODAL ── -->
+<div id="identity-modal">
+  <div class="id-box">
+    <div class="id-brand">FSCreative™ — Visual World Workbook</div>
+    <div class="id-title">Let's save your work.</div>
+    <div class="id-sub">Enter your name and email so your answers are saved to the cloud — no matter what device or browser you use.</div>
+    <div id="id-error" class="id-error"></div>
+    <label class="id-label" for="id-name">First Name</label>
+    <input type="text" id="id-name" class="id-input" placeholder="Your first name" autocomplete="given-name">
+    <label class="id-label" for="id-email">Email</label>
+    <input type="text" id="id-email" class="id-input" placeholder="you@example.com" autocomplete="email" onkeydown="if(event.key==='Enter')submitIdentity()">
+    <button id="id-submit" class="id-btn" onclick="submitIdentity()">Continue →</button>
+    <div class="id-note">Your email is only used to save your progress. We won't send you anything.</div>
+  </div>
+</div>
 
 <div id="layout">
 
@@ -1405,6 +1446,118 @@ var ICONS=[
 var ANTHROPIC_API_KEY = '';
 var RAPIDAPI_KEY = '0f66e4ddddmsh362a996bfb17cfep11a192jsn12e5aec3bdac';
 
+/* ═══════════════════════════════════════════════════════
+   SUPABASE CLOUD SYNC
+══════════════════════════════════════════════════════════ */
+var SUPABASE_URL  = 'https://ljddfhzrjvxpedvfebli.supabase.co';
+var SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxqZGRmaHpyanZ4cGVkdmZlYmxpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM5NTEzNjMsImV4cCI6MjA4OTUyNzM2M30.GqZMRvBlZyN4rmr9MrfxLcLSB04d7s59ZPfEw-dQwks';
+var USER_EMAIL = localStorage.getItem('vww-user-email') || '';
+var USER_NAME  = localStorage.getItem('vww-user-name')  || '';
+var syncTimer;
+
+function sbHeaders() {
+  return {
+    'apikey': SUPABASE_ANON,
+    'Authorization': 'Bearer ' + SUPABASE_ANON,
+    'Content-Type': 'application/json',
+    'Prefer': 'resolution=merge-duplicates'
+  };
+}
+
+function setSyncDot(state) {
+  var dot = document.querySelector('.save-dot');
+  if (!dot) return;
+  dot.classList.remove('syncing','saved');
+  if (state === 'syncing') dot.classList.add('syncing');
+  if (state === 'saved')   { dot.classList.add('saved'); clearTimeout(saveTimer); saveTimer=setTimeout(function(){dot.classList.remove('saved');},2200); }
+}
+
+function syncToSupabase(payload) {
+  if (!USER_EMAIL) return;
+  clearTimeout(syncTimer);
+  setSyncDot('syncing');
+  syncTimer = setTimeout(async function() {
+    try {
+      await fetch(SUPABASE_URL + '/rest/v1/vww_progress', {
+        method: 'POST',
+        headers: sbHeaders(),
+        body: JSON.stringify({email: USER_EMAIL, data: payload, updated_at: new Date().toISOString()})
+      });
+      setSyncDot('saved');
+    } catch(e) { console.warn('Cloud sync failed:', e); setSyncDot(''); }
+  }, 2000);
+}
+
+async function loadFromSupabase() {
+  if (!USER_EMAIL) return;
+  try {
+    /* ping last_seen without waiting */
+    fetch(SUPABASE_URL + '/rest/v1/vww_users', {
+      method: 'POST',
+      headers: sbHeaders(),
+      body: JSON.stringify({email: USER_EMAIL, name: USER_NAME, last_seen: new Date().toISOString()})
+    });
+    /* fetch saved progress */
+    var resp = await fetch(
+      SUPABASE_URL + '/rest/v1/vww_progress?email=eq.' + encodeURIComponent(USER_EMAIL) + '&select=data',
+      {headers: sbHeaders()}
+    );
+    if (!resp.ok) return;
+    var rows = await resp.json();
+    if (!rows.length || !rows[0].data) return;
+    var data = rows[0].data;
+    /* apply inputs */
+    if (data.inputs) Object.keys(data.inputs).forEach(function(id){ var e=document.getElementById(id); if(e&&data.inputs[id])e.value=data.inputs[id]; });
+    /* apply option selections */
+    if (data.opts) Object.keys(data.opts).forEach(function(g){ var v=data.opts[g]; document.querySelectorAll('.opt[data-g="'+g+'"]').forEach(function(e){ e.classList.toggle('sel', e.textContent.trim()===v); }); });
+    /* apply completed sections */
+    if (data.done&&Array.isArray(data.done)) { done.clear(); data.done.forEach(function(i){done.add(Number(i));}); }
+    if (typeof data.cur==='number') cur=data.cur;
+    /* apply checklists */
+    if (data.checks) { checks=data.checks; document.querySelectorAll('.check-item[data-key]').forEach(function(item){ item.classList.toggle('checked', !!checks[item.getAttribute('data-key')]); }); }
+    /* cache locally */
+    localStorage.setItem(SAVE_KEY, JSON.stringify(data));
+    go(cur); render(); updateSwatches();
+  } catch(e) { console.warn('Cloud load failed:', e); }
+}
+
+function initIdentity() {
+  if (USER_EMAIL) { loadFromSupabase(); return; }
+  var modal = document.getElementById('identity-modal');
+  if (modal) modal.style.display = 'flex';
+}
+
+async function submitIdentity() {
+  var nameEl  = document.getElementById('id-name');
+  var emailEl = document.getElementById('id-email');
+  var errEl   = document.getElementById('id-error');
+  var btn     = document.getElementById('id-submit');
+  var name    = nameEl  ? nameEl.value.trim()              : '';
+  var email   = emailEl ? emailEl.value.trim().toLowerCase(): '';
+  if (!name || !email || email.indexOf('@') < 0) {
+    if (errEl) { errEl.textContent='Please enter your name and a valid email.'; errEl.style.display='block'; }
+    return;
+  }
+  if (btn) { btn.disabled=true; btn.textContent='Saving...'; }
+  if (errEl) errEl.style.display='none';
+  try {
+    await fetch(SUPABASE_URL + '/rest/v1/vww_users', {
+      method: 'POST',
+      headers: sbHeaders(),
+      body: JSON.stringify({email: email, name: name, last_seen: new Date().toISOString()})
+    });
+    USER_EMAIL = email; USER_NAME = name;
+    localStorage.setItem('vww-user-email', email);
+    localStorage.setItem('vww-user-name',  name);
+    var modal = document.getElementById('identity-modal');
+    if (modal) modal.style.display = 'none';
+    await loadFromSupabase();
+  } catch(e) {
+    if (errEl) { errEl.textContent='Connection error. Please try again.'; errEl.style.display='block'; }
+    if (btn) { btn.disabled=false; btn.textContent='Continue →'; }
+  }
+}
+
 var done = new Set();
 var cur = 0;
 var checks = {};
@@ -1548,8 +1701,7 @@ function saveData() {
   document.querySelectorAll('.opt.sel[data-g]').forEach(function(e){ data.opts[e.getAttribute('data-g')]=e.textContent.trim(); });
   try {
     localStorage.setItem(SAVE_KEY, JSON.stringify(data));
-    var dot = document.querySelector('.save-dot');
-    if (dot){ dot.classList.add('saved'); clearTimeout(saveTimer); saveTimer=setTimeout(function(){dot.classList.remove('saved');},2000); }
+    syncToSupabase(data);
   } catch(e){}
 }
 
@@ -2340,6 +2492,7 @@ if (creatorList) {
 go(cur);
 wireSave();
 if (cur === 2) initMoodBoard();
+initIdentity();
 
 </script>
 </body>
