@@ -10,109 +10,101 @@
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 html,body{height:100%}
 
-/* ─── TOKENS — DARK (default) ─── */
+/* ─── TOKENS — DARK ─── */
 :root{
-  --bg:#0a0a0a;
-  --surface:#111111;
-  --card:#161616;
-  --border:#1f1f1f;
-  --border2:#2a2a2a;
-  --text:#ffffff;
-  --dim:#a0a0a0;
-  --dimmer:#555555;
-  --orange:#F0601B;
-  --orange-hover:#ff6d28;
-  --orange-tint:rgba(240,96,27,0.1);
-  --orange-border:rgba(240,96,27,0.28);
-  --orange-dark:#ff8050;
-  --green-bg:rgba(61,184,100,0.1);
-  --green-text:#5DCAA5;
-  --green-border:rgba(93,202,165,0.3);
-  --radius-lg:10px;
-  --radius-md:6px;
+  --bg:#0a0a0a;--surface:#111111;--card:#161616;
+  --border:#1f1f1f;--border2:#2a2a2a;
+  --text:#ffffff;--dim:#a0a0a0;--dimmer:#555555;
+  --orange:#F0601B;--orange-hover:#ff6d28;
+  --orange-tint:rgba(240,96,27,0.1);--orange-border:rgba(240,96,27,0.28);--orange-dark:#ff8050;
+  --green-bg:rgba(61,184,100,0.1);--green-text:#5DCAA5;--green-border:rgba(93,202,165,0.3);
+  --radius-lg:10px;--radius-md:6px;
   --font:'Helvetica Neue',Helvetica,Arial,sans-serif;
   --font-num:'Barlow Condensed',sans-serif;
+  --topbar-h:48px;
+  --sidebar-w:280px;
 }
 
 /* ─── TOKENS — LIGHT ─── */
 body.light{
-  --bg:#f7f6f4;
-  --surface:#edecea;
-  --card:#e2e0dc;
-  --border:#ccc9c2;
-  --border2:#b8b4ac;
-  --text:#0a0a0a;
-  --dim:#404040;
-  --dimmer:#888888;
-  --orange-tint:#FEF0E8;
-  --orange-border:#F4B89A;
-  --orange-dark:#B84410;
-  --green-bg:#E6F5EF;
-  --green-text:#085041;
-  --green-border:#5DCAA5;
+  --bg:#f7f6f4;--surface:#edecea;--card:#e2e0dc;
+  --border:#ccc9c2;--border2:#b8b4ac;
+  --text:#0a0a0a;--dim:#404040;--dimmer:#888888;
+  --orange-tint:#FEF0E8;--orange-border:#F4B89A;--orange-dark:#B84410;
+  --green-bg:#E6F5EF;--green-text:#085041;--green-border:#5DCAA5;
 }
 
 /* ─── BASE ─── */
 body{
-  background:var(--bg);
-  color:var(--text);
-  font-family:var(--font);
-  font-size:15px;
-  line-height:1.6;
+  background:var(--bg);color:var(--text);
+  font-family:var(--font);font-size:15px;line-height:1.6;
   -webkit-font-smoothing:antialiased;
   overflow:hidden;
   transition:background .25s,color .25s;
 }
 
-/* ─── GRAIN TEXTURE ─── */
+/* ─── GRAIN ─── */
 body::before{
-  content:'';
-  position:fixed;inset:0;z-index:9999;pointer-events:none;
+  content:'';position:fixed;inset:0;z-index:9999;pointer-events:none;
   background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='grain'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23grain)' opacity='0.025'/%3E%3C/svg%3E");
   mix-blend-mode:overlay;
 }
+
+/* ─── MOBILE TOPBAR ─── */
+#mobile-topbar{
+  display:none;
+  position:fixed;top:0;left:0;right:0;height:var(--topbar-h);
+  background:var(--surface);border-bottom:1px solid var(--border);
+  align-items:center;padding:0 1rem;gap:12px;
+  z-index:200;
+}
+.mob-burger{
+  background:none;border:none;cursor:pointer;
+  color:var(--text);padding:6px;display:flex;align-items:center;
+  border-radius:var(--radius-md);flex-shrink:0;
+}
+.mob-burger:hover{background:var(--card)}
+.mob-title{
+  flex:1;min-width:0;
+  font-size:13px;font-weight:600;color:var(--text);
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+}
+.mob-brand{
+  font-size:9px;font-weight:700;color:var(--orange);
+  letter-spacing:.1em;text-transform:uppercase;display:block;margin-bottom:1px;
+}
+
+/* ─── SIDEBAR OVERLAY ─── */
+#sidebar-overlay{
+  display:none;position:fixed;inset:0;
+  background:rgba(0,0,0,0.65);backdrop-filter:blur(2px);
+  z-index:150;transition:opacity .25s;
+}
+#sidebar-overlay.open{display:block}
 
 /* ─── LAYOUT ─── */
 #layout{display:flex;height:100vh;overflow:hidden}
 
 /* ─── SIDEBAR ─── */
 #sidebar{
-  width:280px;min-width:280px;
-  background:var(--surface);
-  border-right:1px solid var(--border);
+  width:var(--sidebar-w);min-width:var(--sidebar-w);
+  background:var(--surface);border-right:1px solid var(--border);
   display:flex;flex-direction:column;
   position:fixed;top:0;left:0;bottom:0;
-  z-index:100;
-  overflow:hidden;
+  z-index:200;overflow:hidden;
+  transition:transform .25s cubic-bezier(.4,0,.2,1);
 }
 
 /* ─── SIDEBAR HEADER ─── */
-.sb-top{
-  padding:1.25rem 1.25rem 1rem;
-  border-bottom:1px solid var(--border);
-  flex-shrink:0;
-}
-.sb-brand{
-  font-size:10px;font-weight:700;
-  color:var(--orange);letter-spacing:.12em;
-  text-transform:uppercase;margin-bottom:4px;
-}
-.sb-title{
-  font-size:13px;font-weight:700;
-  color:var(--text);line-height:1.35;margin-bottom:0;
-}
-.sb-divider{
-  height:2px;background:var(--orange);
-  border-radius:1px;margin-top:10px;
-  opacity:.7;
-}
+.sb-top{padding:1.25rem 1.25rem 1rem;border-bottom:1px solid var(--border);flex-shrink:0;}
+.sb-brand{font-size:10px;font-weight:700;color:var(--orange);letter-spacing:.12em;text-transform:uppercase;margin-bottom:4px;}
+.sb-title{font-size:13px;font-weight:700;color:var(--text);line-height:1.35;}
+.sb-divider{height:2px;background:var(--orange);border-radius:1px;margin-top:10px;opacity:.7;}
 
 /* ─── SIDEBAR NAV ─── */
 #sbnav{
-  flex:1;overflow-y:auto;
-  padding:.5rem 0;
-  scrollbar-width:thin;
-  scrollbar-color:var(--border2) transparent;
+  flex:1;overflow-y:auto;padding:.5rem 0;
+  scrollbar-width:thin;scrollbar-color:var(--border2) transparent;
 }
 #sbnav::-webkit-scrollbar{width:4px}
 #sbnav::-webkit-scrollbar-track{background:transparent}
@@ -126,87 +118,49 @@ body::before{
 .mod-header{
   display:flex;align-items:center;
   padding:10px 1.1rem 10px 1rem;
-  cursor:pointer;
-  border:none;background:none;
-  width:100%;text-align:left;
-  font-family:var(--font);
+  cursor:pointer;border:none;background:none;
+  width:100%;text-align:left;font-family:var(--font);
   border-left:2px solid transparent;
   transition:background .15s,border-color .15s;
-  gap:0;
 }
 .mod-header:hover{background:var(--card)}
-.mod-header.active{
-  background:var(--orange-tint);
-  border-left-color:var(--orange);
-}
+.mod-header.active{background:var(--orange-tint);border-left-color:var(--orange);}
 .mod-header.locked{cursor:default;opacity:.65}
 .mod-header.locked:hover{background:none}
 
 .mod-num{
-  font-family:var(--font-num);
-  font-size:22px;font-weight:900;
-  color:var(--orange);line-height:1;
-  margin-right:10px;flex-shrink:0;
-  min-width:28px;
+  font-family:var(--font-num);font-size:22px;font-weight:900;
+  color:var(--orange);line-height:1;margin-right:10px;flex-shrink:0;min-width:28px;
 }
 .mod-header.locked .mod-num{color:var(--dimmer)}
-
 .mod-info{flex:1;min-width:0}
-.mod-title{
-  font-size:12.5px;font-weight:700;
-  color:var(--text);line-height:1.3;
-  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
-}
+.mod-title{font-size:12.5px;font-weight:700;color:var(--text);line-height:1.3;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
 .mod-header.locked .mod-title{color:var(--dimmer)}
-.mod-sub{
-  font-size:10.5px;color:var(--dimmer);
-  line-height:1.3;margin-top:1px;
-  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
-  display:none;
-}
+.mod-sub{font-size:10.5px;color:var(--dimmer);line-height:1.3;margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:none;}
 .mod-header.active .mod-sub{display:block}
-
-.mod-right{
-  display:flex;align-items:center;gap:6px;
-  flex-shrink:0;margin-left:8px;
-}
+.mod-right{display:flex;align-items:center;gap:6px;flex-shrink:0;margin-left:8px;}
 .mod-badge{font-size:10px;color:var(--dimmer);font-weight:500;white-space:nowrap}
 .mod-chevron{font-size:10px;color:var(--dimmer);transition:transform .2s;line-height:1}
 .mod-chevron.open{transform:rotate(180deg)}
 .mod-lock{font-size:13px;line-height:1}
 
 /* ─── LOCKED SUBTITLE ─── */
-.mod-locked-sub{
-  font-size:11px;color:var(--dimmer);
-  padding:0 1rem 8px 3.75rem;
-  font-style:italic;
-}
+.mod-locked-sub{font-size:11px;color:var(--dimmer);padding:0 1rem 8px 3.75rem;font-style:italic;}
 
 /* ─── SECTION LIST ─── */
 .sec-list{display:none}
 .sec-list.open{display:block}
-
 .sec-btn{
   display:flex;align-items:center;gap:8px;
   width:100%;padding:6px 1.25rem 6px 2.5rem;
   border:none;border-left:2px solid transparent;
-  background:none;text-align:left;
-  font-family:var(--font);font-size:12px;
-  color:var(--dimmer);cursor:pointer;
+  background:none;text-align:left;font-family:var(--font);
+  font-size:12px;color:var(--dimmer);cursor:pointer;
   transition:all .12s;line-height:1.4;
 }
 .sec-btn:hover{color:var(--dim);background:var(--card)}
-.sec-btn.current{
-  color:var(--orange);
-  border-left-color:var(--orange);
-  background:var(--orange-tint);
-  font-weight:500;
-}
-.sec-btn.done{
-  color:var(--green-text);
-  border-left-color:var(--green-text);
-  background:var(--green-bg);
-}
+.sec-btn.current{color:var(--orange);border-left-color:var(--orange);background:var(--orange-tint);font-weight:500;}
+.sec-btn.done{color:var(--green-text);border-left-color:var(--green-text);background:var(--green-bg);}
 .sec-indicator{width:6px;height:6px;border-radius:50%;flex-shrink:0}
 .sec-btn.done .sec-indicator{background:var(--green-text)}
 .sec-btn.current .sec-indicator{background:var(--orange)}
@@ -214,10 +168,8 @@ body::before{
 
 /* ─── SIDEBAR FOOTER ─── */
 .sb-foot{
-  padding:1rem 1.25rem;
-  border-top:1px solid var(--border);
-  display:flex;align-items:center;gap:10px;
-  flex-shrink:0;
+  padding:1rem 1.25rem;border-top:1px solid var(--border);
+  display:flex;align-items:center;gap:10px;flex-shrink:0;
 }
 .sb-prog{flex:1;min-width:0}
 .prog-bar{height:3px;background:var(--border);border-radius:2px;margin-bottom:5px}
@@ -225,64 +177,39 @@ body::before{
 .prog-label{font-size:10px;color:var(--dimmer);font-weight:500}
 
 /* ─── SAVE DOT ─── */
-.save-dot{
-  width:6px;height:6px;border-radius:50%;
-  background:var(--dimmer);flex-shrink:0;
-  transition:background .3s;
-}
+.save-dot{width:6px;height:6px;border-radius:50%;background:var(--dimmer);flex-shrink:0;transition:background .3s;}
 .save-dot.saved{background:var(--green-text)}
 .save-dot.syncing{background:var(--orange)!important;animation:pulse .8s infinite alternate}
 @keyframes pulse{to{opacity:.4}}
 
 /* ─── THEME TOGGLE ─── */
 .theme-btn{
-  background:none;border:1px solid var(--border2);
-  border-radius:var(--radius-md);
+  background:none;border:1px solid var(--border2);border-radius:var(--radius-md);
   padding:5px 8px;cursor:pointer;color:var(--dimmer);
   display:flex;align-items:center;justify-content:center;
   transition:border-color .2s,color .2s;flex-shrink:0;
 }
-.theme-btn:hover{border-color:var(--border2);color:var(--text)}
-.icon-moon{display:block}
-.icon-sun{display:none}
-body.light .icon-moon{display:none}
-body.light .icon-sun{display:block}
+.theme-btn:hover{color:var(--text)}
+.icon-moon{display:block}.icon-sun{display:none}
+body.light .icon-moon{display:none}body.light .icon-sun{display:block}
 
 /* ─── MAIN AREA ─── */
 #main{
-  margin-left:280px;
-  width:calc(100% - 280px);
+  margin-left:var(--sidebar-w);
+  width:calc(100% - var(--sidebar-w));
   height:100vh;
   display:flex;flex-direction:column;
   position:relative;
 }
 
 /* ─── IFRAME WRAPPER ─── */
-#iframe-wrap{
-  flex:1;position:relative;
-  background:var(--bg);
-  overflow:hidden;
-}
-#module-iframe{
-  width:100%;height:100%;
-  border:none;display:block;
-}
+#iframe-wrap{flex:1;position:relative;background:var(--bg);overflow:hidden;}
+#module-iframe{width:100%;height:100%;border:none;display:block;}
 
-/* ─── LOADING STATE ─── */
-#loading{
-  position:absolute;inset:0;
-  display:none;align-items:center;justify-content:center;
-  flex-direction:column;gap:16px;
-  background:var(--bg);z-index:10;
-}
+/* ─── LOADING ─── */
+#loading{position:absolute;inset:0;display:none;align-items:center;justify-content:center;flex-direction:column;gap:16px;background:var(--bg);z-index:10;}
 #loading.show{display:flex}
-.loading-spinner{
-  width:32px;height:32px;
-  border:2px solid var(--border2);
-  border-top-color:var(--orange);
-  border-radius:50%;
-  animation:spin .7s linear infinite;
-}
+.loading-spinner{width:32px;height:32px;border:2px solid var(--border2);border-top-color:var(--orange);border-radius:50%;animation:spin .7s linear infinite;}
 @keyframes spin{to{transform:rotate(360deg)}}
 .loading-text{font-size:12px;color:var(--dimmer);font-weight:500}
 
@@ -292,45 +219,47 @@ body.light .icon-sun{display:block}
   background:rgba(0,0,0,0.88);backdrop-filter:blur(4px);
   display:none;align-items:center;justify-content:center;padding:1rem;
 }
-.id-box{
-  background:var(--surface);border:1px solid var(--border2);
-  border-radius:var(--radius-lg);padding:2rem;
-  width:100%;max-width:390px;
-}
-.id-brand{
-  font-size:10px;font-weight:700;color:var(--orange);
-  letter-spacing:.12em;text-transform:uppercase;margin-bottom:1.1rem;
-}
+.id-box{background:var(--surface);border:1px solid var(--border2);border-radius:var(--radius-lg);padding:2rem;width:100%;max-width:390px;}
+.id-brand{font-size:10px;font-weight:700;color:var(--orange);letter-spacing:.12em;text-transform:uppercase;margin-bottom:1.1rem;}
 .id-title{font-size:22px;font-weight:700;color:var(--text);margin-bottom:6px;letter-spacing:-.3px}
 .id-sub{font-size:13px;color:var(--dim);line-height:1.7;margin-bottom:1.5rem}
-.id-label{
-  font-size:10.5px;font-weight:600;color:var(--dim);
-  text-transform:uppercase;letter-spacing:.07em;
-  margin-bottom:5px;display:block;
-}
-.id-input{
-  width:100%;border:1px solid var(--border);border-radius:var(--radius-md);
-  padding:10px 12px;font-size:14px;font-family:var(--font);
-  color:var(--text);background:var(--bg);
-  margin-bottom:1rem;transition:border-color .15s;
-}
+.id-label{font-size:10.5px;font-weight:600;color:var(--dim);text-transform:uppercase;letter-spacing:.07em;margin-bottom:5px;display:block;}
+.id-input{width:100%;border:1px solid var(--border);border-radius:var(--radius-md);padding:10px 12px;font-size:14px;font-family:var(--font);color:var(--text);background:var(--bg);margin-bottom:1rem;transition:border-color .15s;}
 .id-input:focus{outline:none;border-color:var(--orange);box-shadow:0 0 0 3px rgba(240,96,27,.08)}
-.id-btn{
-  width:100%;background:var(--orange);color:#fff;
-  border:none;border-radius:var(--radius-md);
-  padding:11px;font-size:14px;font-weight:600;
-  cursor:pointer;font-family:var(--font);
-  transition:background .15s;letter-spacing:.01em;
-}
+.id-btn{width:100%;background:var(--orange);color:#fff;border:none;border-radius:var(--radius-md);padding:11px;font-size:14px;font-weight:600;cursor:pointer;font-family:var(--font);transition:background .15s;letter-spacing:.01em;}
 .id-btn:hover{background:var(--orange-hover)}
 .id-btn:disabled{opacity:.5;cursor:not-allowed}
-.id-error{
-  font-size:12px;color:#e05555;
-  margin-bottom:.8rem;padding:8px 10px;
-  background:rgba(220,50,50,.08);
-  border-radius:var(--radius-md);display:none;
-}
+.id-error{font-size:12px;color:#e05555;margin-bottom:.8rem;padding:8px 10px;background:rgba(220,50,50,.08);border-radius:var(--radius-md);display:none;}
 .id-note{font-size:11px;color:var(--dimmer);margin-top:1rem;text-align:center;line-height:1.5}
+
+/* ─── MOBILE STYLES ─── */
+@media (max-width: 768px) {
+  body { overflow: hidden; }
+
+  #mobile-topbar { display: flex; }
+
+  #sidebar {
+    top: 0;
+    transform: translateX(-100%);
+    box-shadow: 4px 0 24px rgba(0,0,0,0.4);
+  }
+  #sidebar.mob-open {
+    transform: translateX(0);
+  }
+
+  #main {
+    margin-left: 0;
+    width: 100%;
+    height: 100vh;
+    padding-top: var(--topbar-h);
+  }
+
+  #iframe-wrap {
+    height: 100%;
+    overflow: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+}
 </style>
 </head>
 <body>
@@ -351,6 +280,26 @@ body.light .icon-sun{display:block}
   </div>
 </div>
 
+<!-- ── MOBILE TOPBAR ── -->
+<div id="mobile-topbar">
+  <button class="mob-burger" onclick="openSidebar()" aria-label="Open menu">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/>
+    </svg>
+  </button>
+  <div class="mob-title">
+    <span class="mob-brand">FSCreative™</span>
+    <span id="mob-module-name">The Brand Launch Playbook™</span>
+  </div>
+  <button class="theme-btn" onclick="toggleTheme()" aria-label="Toggle theme" style="border:none;padding:6px;">
+    <svg class="icon-moon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+    <svg class="icon-sun" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+  </button>
+</div>
+
+<!-- ── SIDEBAR OVERLAY ── -->
+<div id="sidebar-overlay" onclick="closeSidebar()"></div>
+
 <!-- ── SHELL ── -->
 <div id="layout">
 
@@ -365,7 +314,7 @@ body.light .icon-sun{display:block}
     <div class="sb-foot">
       <div class="sb-prog">
         <div class="prog-bar"><div class="prog-fill" id="prog-fill" style="width:0%"></div></div>
-        <div class="prog-label" id="prog-label">0 of 3 modules</div>
+        <div class="prog-label" id="prog-label">0 of 4 modules</div>
       </div>
       <div class="save-dot" id="save-dot" title="Progress saved"></div>
       <button class="theme-btn" onclick="toggleTheme()" aria-label="Toggle theme">
@@ -387,6 +336,7 @@ body.light .icon-sun{display:block}
         allow="clipboard-read; clipboard-write"
         src=""
         title="Course Module"
+        scrolling="yes"
       ></iframe>
     </div>
   </div>
@@ -405,7 +355,6 @@ var MODULES = [
     subtitle: 'Who You Are & What You Stand For',
     file: 'modules/brand-foundation.html',
     sections: ['Welcome','Brand Journey','Avatar','Core Mission','Core Values','Content Pillars','Origin Story','Brand Audit','Foundation Doc'],
-    active: true,
     locked: false,
     saveKey: 'cfww-v2'
   },
@@ -416,7 +365,6 @@ var MODULES = [
     subtitle: 'Build the Aesthetic That Makes You Premium',
     file: 'modules/visual-world.html',
     sections: ['Welcome','Creator Analysis','Mood Board','Color & Type','Shot System','Visual World','Your Guide'],
-    active: true,
     locked: false,
     saveKey: 'vww-v1'
   },
@@ -427,7 +375,6 @@ var MODULES = [
     subtitle: 'The System That Builds Trust and Gets Customers',
     file: 'modules/content.html',
     sections: ['Welcome','Strategy','Foundation','Visual World','Shots & B-Roll','Starter Kit','Hooks & Stories','Formats & System','Trust & Money','Your Playbook'],
-    active: true,
     locked: false,
     saveKey: 'ccb-v1'
   },
@@ -438,7 +385,6 @@ var MODULES = [
     subtitle: 'Your Go-to-Market Strategy',
     file: 'modules/launch.html',
     sections: ['Welcome','Funnel','ManyChat + NL','Lead Magnet','Bio','Launch Content','Calendar + Goals','Launch Doc'],
-    active: false,
     locked: false,
     saveKey: 'launch-v1'
   }
@@ -457,7 +403,7 @@ var iframeLoading = false;
    SUPABASE
 ══════════════════════════════════════════════════════════ */
 var SUPABASE_URL  = 'https://ljddfhzrjvxpedvfebli.supabase.co';
-var SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxqZGRmaHpyanZ4cGVkdmZlYmxpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM5NTEzNjMsImV4cCI6MjA4OTUyNzM2M30.GqZMRvBlZyN4rmr9MrfxLcLSB04d7s59ZPfEw-dQwks';
+var SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxqZGRmaHpyanZ4cGVkdmZlYmxpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDc2MDc2MzgsImV4cCI6MjA2MzE4MzYzOH0.qJR_LtPu7qH0QNPmv1lnkk6U2p5EJm7RVInH7T5mDsU';
 var USER_EMAIL = localStorage.getItem('vww-user-email') || '';
 var USER_NAME  = localStorage.getItem('vww-user-name')  || '';
 
@@ -474,10 +420,7 @@ function sbHeaders() {
    IDENTITY MODAL
 ══════════════════════════════════════════════════════════ */
 function initIdentity() {
-  if (USER_EMAIL) {
-    pingUser();
-    return;
-  }
+  if (USER_EMAIL) { pingUser(); return; }
   var modal = document.getElementById('identity-modal');
   if (modal) modal.style.display = 'flex';
 }
@@ -501,8 +444,7 @@ async function submitIdentity() {
       headers: sbHeaders(),
       body: JSON.stringify({email: email, name: name, last_seen: new Date().toISOString()})
     });
-    USER_EMAIL = email;
-    USER_NAME  = name;
+    USER_EMAIL = email; USER_NAME = name;
     localStorage.setItem('vww-user-email', email);
     localStorage.setItem('vww-user-name',  name);
     var modal = document.getElementById('identity-modal');
@@ -543,13 +485,35 @@ function getModuleState(mod) {
   } catch(e) { return {cur: 0, done: []}; }
 }
 
-/* ═══════════════════════════════════════════════════════
-   LOAD INITIAL STATES
-══════════════════════════════════════════════════════════ */
 function initModuleStates() {
   MODULES.forEach(function(mod) {
     moduleStates[mod.id] = getModuleState(mod);
   });
+}
+
+/* ═══════════════════════════════════════════════════════
+   MOBILE SIDEBAR
+══════════════════════════════════════════════════════════ */
+function openSidebar() {
+  document.getElementById('sidebar').classList.add('mob-open');
+  document.getElementById('sidebar-overlay').classList.add('open');
+}
+
+function closeSidebar() {
+  document.getElementById('sidebar').classList.remove('mob-open');
+  document.getElementById('sidebar-overlay').classList.remove('open');
+}
+
+function updateMobileTitle(moduleId) {
+  var el = document.getElementById('mob-module-name');
+  if (!el) return;
+  if (!moduleId) { el.textContent = 'The Brand Launch Playbook™'; return; }
+  var mod = MODULES.find(function(m){ return m.id === moduleId; });
+  el.textContent = mod ? mod.num + ' — ' + mod.title : 'The Brand Launch Playbook™';
+}
+
+function isMobile() {
+  return window.innerWidth <= 768;
 }
 
 /* ═══════════════════════════════════════════════════════
@@ -571,9 +535,7 @@ function renderSidebar() {
       html += '<div class="mod-group">';
       html += '<div class="mod-header locked">';
       html += '<div class="mod-num">' + mod.num + '</div>';
-      html += '<div class="mod-info">';
-      html += '<div class="mod-title">' + mod.title + '</div>';
-      html += '</div>';
+      html += '<div class="mod-info"><div class="mod-title">' + mod.title + '</div></div>';
       html += '<div class="mod-right"><span class="mod-lock">🔒</span></div>';
       html += '</div>';
       html += '<div class="mod-locked-sub">Coming Soon</div>';
@@ -646,14 +608,10 @@ function toggleModule(moduleId) {
   var mod = MODULES.find(function(m){ return m.id === moduleId; });
   if (!mod || mod.locked) return;
 
-  var wasExpanded = !!expandedModules[moduleId];
-
-  // If clicking already-active module, just toggle expand
-  // Otherwise load the module and expand it
   if (activeModule !== moduleId) {
     loadModule(moduleId, 0);
   } else {
-    expandedModules[moduleId] = !wasExpanded;
+    expandedModules[moduleId] = !expandedModules[moduleId];
     renderSidebar();
   }
 }
@@ -665,14 +623,12 @@ function loadModule(moduleId, sectionIndex) {
   var mod = MODULES.find(function(m){ return m.id === moduleId; });
   if (!mod || mod.locked || !mod.file) return;
 
-  // Collapse all others, expand this one
   Object.keys(expandedModules).forEach(function(k){ expandedModules[k] = false; });
   expandedModules[moduleId] = true;
-
   activeModule = moduleId;
   pendingNavigation = (sectionIndex > 0) ? sectionIndex : null;
 
-  // Show loading
+  updateMobileTitle(moduleId);
   showLoading(mod.title);
 
   var iframe = document.getElementById('module-iframe');
@@ -686,17 +642,17 @@ function loadModule(moduleId, sectionIndex) {
    NAVIGATE TO SECTION
 ══════════════════════════════════════════════════════════ */
 function navigateSection(moduleId, sectionIndex) {
+  // Close sidebar on mobile after selecting
+  if (isMobile()) closeSidebar();
+
   if (activeModule === moduleId && !iframeLoading) {
-    // Already loaded — postMessage
     var iframe = document.getElementById('module-iframe');
     try {
       iframe.contentWindow.postMessage({type: 'navigate', to: sectionIndex}, '*');
     } catch(e) {}
   } else if (activeModule === moduleId && iframeLoading) {
-    // Loading — queue navigation
     pendingNavigation = sectionIndex;
   } else {
-    // Different module — load it
     loadModule(moduleId, sectionIndex);
     if (sectionIndex > 0) pendingNavigation = sectionIndex;
   }
@@ -708,16 +664,12 @@ function navigateSection(moduleId, sectionIndex) {
 document.getElementById('module-iframe').addEventListener('load', function() {
   iframeLoading = false;
   hideLoading();
-
-  // Send pending navigation after a short delay for iframe to initialize
   if (pendingNavigation !== null) {
     var nav = pendingNavigation;
     pendingNavigation = null;
     var iframe = document.getElementById('module-iframe');
     setTimeout(function() {
-      try {
-        iframe.contentWindow.postMessage({type: 'navigate', to: nav}, '*');
-      } catch(e) {}
+      try { iframe.contentWindow.postMessage({type: 'navigate', to: nav}, '*'); } catch(e) {}
     }, 300);
   }
 });
@@ -727,11 +679,9 @@ document.getElementById('module-iframe').addEventListener('load', function() {
 ══════════════════════════════════════════════════════════ */
 window.addEventListener('message', function(e) {
   if (!e.data || !e.data.type) return;
-
   var type = e.data.type;
 
   if (type === 'ready') {
-    // Iframe is ready and reports its current state
     if (activeModule) {
       moduleStates[activeModule] = {
         cur: typeof e.data.cur === 'number' ? e.data.cur : 0,
@@ -741,15 +691,11 @@ window.addEventListener('message', function(e) {
     }
     hideLoading();
     iframeLoading = false;
-
-    // Send pending navigation if any
     if (pendingNavigation !== null) {
       var nav = pendingNavigation;
       pendingNavigation = null;
       var iframe = document.getElementById('module-iframe');
-      try {
-        iframe.contentWindow.postMessage({type: 'navigate', to: nav}, '*');
-      } catch(ex) {}
+      try { iframe.contentWindow.postMessage({type: 'navigate', to: nav}, '*'); } catch(ex) {}
     }
   }
 
@@ -773,20 +719,18 @@ function showLoading(moduleName) {
   if (txt) txt.textContent = 'Loading ' + (moduleName || 'module') + '…';
   if (el) el.classList.add('show');
 }
-
 function hideLoading() {
   var el = document.getElementById('loading');
   if (el) el.classList.remove('show');
 }
 
 /* ═══════════════════════════════════════════════════════
-   THEME TOGGLE
+   THEME
 ══════════════════════════════════════════════════════════ */
 function toggleTheme() {
   document.body.classList.toggle('light');
   localStorage.setItem('blp-theme', document.body.classList.contains('light') ? 'light' : 'dark');
 }
-
 function initTheme() {
   var saved = localStorage.getItem('blp-theme');
   if (saved === 'light') document.body.classList.add('light');
@@ -798,14 +742,9 @@ function initTheme() {
 function init() {
   initTheme();
   initModuleStates();
-
-  // Default: expand first active module
   expandedModules['brand-foundation'] = true;
-
   renderSidebar();
   initIdentity();
-
-  // Auto-load the first active module
   loadModule('brand-foundation', 0);
 }
 
