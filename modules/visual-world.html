@@ -1048,37 +1048,46 @@ textarea::placeholder,input[type=text]::placeholder{color:var(--dimmer)}
   <p class="intro">Color is emotion. Before someone reads a single word of your content, before they hear your voice — they feel your color palette. Your colors communicate who you are, who you're for, and what you stand for before you say anything.</p>
 
   <h2>Color Psychology Primer</h2>
-  <div class="teach">
-    <ul>
-      <li><strong>Warm tones</strong> (oranges, yellows, reds, warm browns) — Energy, warmth, approachability, passion. Best for energetic, motivational, or approachable brands.</li>
-      <li><strong>Cool tones</strong> (blues, greens, grays, cool whites) — Calm, clarity, professionalism, authority. Best for authoritative, clear, or sophisticated brands.</li>
-      <li><strong>Neutral tones</strong> (beiges, creams, warm whites, soft grays) — Timelessness, elegance, simplicity, premium. Best for elevated, minimal, or editorial brands.</li>
-      <li><strong>Dark tones</strong> (deep blacks, charcoals, dark navies) — Drama, luxury, depth, mystery. Best for cinematic, premium, or bold brands.</li>
-      <li><strong>Muted/Desaturated</strong> (dusty pinks, sage greens, muted blues) — Authenticity, warmth, nostalgia. Best for real, warm, or lifestyle-oriented brands.</li>
-    </ul>
-  </div>
-
-  <!-- COLOR PSYCHOLOGY VISUAL -->
-  <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin-bottom:1.5rem">
-    <div style="background:linear-gradient(135deg,#F0601B,#FCBF49,#D62828);border-radius:var(--radius-md);padding:.85rem .65rem;text-align:center">
-      <div style="font-size:10px;font-weight:700;color:#fff;margin-bottom:3px;letter-spacing:.04em">WARM</div>
-      <div style="font-size:9px;color:rgba(255,255,255,.75);line-height:1.5">Energy · Passion<br>Approachable</div>
+  <div style="display:flex;flex-direction:column;gap:6px;margin-bottom:1.5rem">
+    <div style="display:flex;border:1px solid var(--border);border-radius:var(--radius-md);overflow:hidden">
+      <div style="width:52px;flex-shrink:0;background:linear-gradient(180deg,#F0601B 0%,#D62828 50%,#FCBF49 100%)"></div>
+      <div style="padding:.7rem 1rem">
+        <div style="font-size:12.5px;font-weight:700;color:var(--text);margin-bottom:2px">Warm</div>
+        <div style="font-size:11px;color:var(--dimmer);margin-bottom:4px">Oranges · Yellows · Reds · Warm browns</div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap"><span style="font-size:11.5px;color:var(--dim)">Energy</span><span style="color:var(--border2)">·</span><span style="font-size:11.5px;color:var(--dim)">Warmth</span><span style="color:var(--border2)">·</span><span style="font-size:11.5px;color:var(--dim)">Approachability</span><span style="color:var(--border2)">·</span><span style="font-size:11.5px;color:var(--dim)">Passion</span></div>
+      </div>
     </div>
-    <div style="background:linear-gradient(135deg,#003049,#4A9EDE,#5DCAA5);border-radius:var(--radius-md);padding:.85rem .65rem;text-align:center">
-      <div style="font-size:10px;font-weight:700;color:#fff;margin-bottom:3px;letter-spacing:.04em">COOL</div>
-      <div style="font-size:9px;color:rgba(255,255,255,.75);line-height:1.5">Calm · Authority<br>Professional</div>
+    <div style="display:flex;border:1px solid var(--border);border-radius:var(--radius-md);overflow:hidden">
+      <div style="width:52px;flex-shrink:0;background:linear-gradient(180deg,#003049 0%,#4A9EDE 50%,#5DCAA5 100%)"></div>
+      <div style="padding:.7rem 1rem">
+        <div style="font-size:12.5px;font-weight:700;color:var(--text);margin-bottom:2px">Cool</div>
+        <div style="font-size:11px;color:var(--dimmer);margin-bottom:4px">Blues · Greens · Grays · Cool whites</div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap"><span style="font-size:11.5px;color:var(--dim)">Calm</span><span style="color:var(--border2)">·</span><span style="font-size:11.5px;color:var(--dim)">Clarity</span><span style="color:var(--border2)">·</span><span style="font-size:11.5px;color:var(--dim)">Authority</span><span style="color:var(--border2)">·</span><span style="font-size:11.5px;color:var(--dim)">Professionalism</span></div>
+      </div>
     </div>
-    <div style="background:linear-gradient(135deg,#EAE2B7,#D8CBA6,#c8b89a);border-radius:var(--radius-md);padding:.85rem .65rem;text-align:center">
-      <div style="font-size:10px;font-weight:700;color:#555;margin-bottom:3px;letter-spacing:.04em">NEUTRAL</div>
-      <div style="font-size:9px;color:rgba(0,0,0,.5);line-height:1.5">Timeless · Elegant<br>Premium</div>
+    <div style="display:flex;border:1px solid var(--border);border-radius:var(--radius-md);overflow:hidden">
+      <div style="width:52px;flex-shrink:0;background:linear-gradient(180deg,#EAE2B7 0%,#D8CBA6 50%,#c4b49c 100%)"></div>
+      <div style="padding:.7rem 1rem">
+        <div style="font-size:12.5px;font-weight:700;color:var(--text);margin-bottom:2px">Neutral</div>
+        <div style="font-size:11px;color:var(--dimmer);margin-bottom:4px">Beiges · Creams · Warm whites · Soft grays</div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap"><span style="font-size:11.5px;color:var(--dim)">Timelessness</span><span style="color:var(--border2)">·</span><span style="font-size:11.5px;color:var(--dim)">Elegance</span><span style="color:var(--border2)">·</span><span style="font-size:11.5px;color:var(--dim)">Simplicity</span><span style="color:var(--border2)">·</span><span style="font-size:11.5px;color:var(--dim)">Premium</span></div>
+      </div>
     </div>
-    <div style="background:linear-gradient(135deg,#0a0a0a,#1f1f1f,#2a2a2a);border-radius:var(--radius-md);padding:.85rem .65rem;text-align:center;border:1px solid #333">
-      <div style="font-size:10px;font-weight:700;color:#fff;margin-bottom:3px;letter-spacing:.04em">DARK</div>
-      <div style="font-size:9px;color:rgba(255,255,255,.55);line-height:1.5">Drama · Luxury<br>Cinematic</div>
+    <div style="display:flex;border:1px solid #333;border-radius:var(--radius-md);overflow:hidden">
+      <div style="width:52px;flex-shrink:0;background:linear-gradient(180deg,#0a0a0a 0%,#1f1f1f 50%,#2a2a2a 100%)"></div>
+      <div style="padding:.7rem 1rem;background:var(--surface)">
+        <div style="font-size:12.5px;font-weight:700;color:var(--text);margin-bottom:2px">Dark</div>
+        <div style="font-size:11px;color:var(--dimmer);margin-bottom:4px">Deep blacks · Charcoals · Dark navies</div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap"><span style="font-size:11.5px;color:var(--dim)">Drama</span><span style="color:var(--border2)">·</span><span style="font-size:11.5px;color:var(--dim)">Luxury</span><span style="color:var(--border2)">·</span><span style="font-size:11.5px;color:var(--dim)">Depth</span><span style="color:var(--border2)">·</span><span style="font-size:11.5px;color:var(--dim)">Mystery</span></div>
+      </div>
     </div>
-    <div style="background:linear-gradient(135deg,#c9b8b8,#b5c4b1,#b8c4d0);border-radius:var(--radius-md);padding:.85rem .65rem;text-align:center">
-      <div style="font-size:10px;font-weight:700;color:#555;margin-bottom:3px;letter-spacing:.04em">MUTED</div>
-      <div style="font-size:9px;color:rgba(0,0,0,.5);line-height:1.5">Authentic · Warm<br>Lifestyle</div>
+    <div style="display:flex;border:1px solid var(--border);border-radius:var(--radius-md);overflow:hidden">
+      <div style="width:52px;flex-shrink:0;background:linear-gradient(180deg,#c9b4b4 0%,#b5c4b1 50%,#b0bec5 100%)"></div>
+      <div style="padding:.7rem 1rem">
+        <div style="font-size:12.5px;font-weight:700;color:var(--text);margin-bottom:2px">Muted</div>
+        <div style="font-size:11px;color:var(--dimmer);margin-bottom:4px">Dusty pinks · Sage greens · Muted blues</div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap"><span style="font-size:11.5px;color:var(--dim)">Authenticity</span><span style="color:var(--border2)">·</span><span style="font-size:11.5px;color:var(--dim)">Warmth</span><span style="color:var(--border2)">·</span><span style="font-size:11.5px;color:var(--dim)">Nostalgia</span><span style="color:var(--border2)">·</span><span style="font-size:11.5px;color:var(--dim)">Lifestyle</span></div>
+      </div>
     </div>
   </div>
 
@@ -1767,10 +1776,15 @@ async function palExtractColors() {
     var data = await res.json();
     if (data.error) throw new Error(data.error.message);
     var text = (data.content||[]).map(function(b){return b.text||'';}).join('');
-    var palettes = JSON.parse(text.replace(/```json|```/g,'').trim());
+    // Strip markdown fences and find JSON array
+    var cleaned = text.replace(/```json|```/g,'').trim();
+    var jsonStart = cleaned.indexOf('[');
+    var jsonEnd = cleaned.lastIndexOf(']');
+    if (jsonStart === -1 || jsonEnd === -1) throw new Error('No JSON array found in response');
+    var palettes = JSON.parse(cleaned.slice(jsonStart, jsonEnd+1));
     renderPalExtractResults(palettes);
   } catch(e) {
-    results.innerHTML = '<div style="font-size:12px;color:rgba(255,100,100,.8)">Error: '+e.message+'</div>';
+    results.innerHTML = '<div style="font-size:12px;color:rgba(255,100,100,.8);padding:.5rem 0">Error: '+e.message+'. Make sure your API key is set in admin.html.</div>';
   }
   btn.disabled = false;
   btn.textContent = 'Extract Color Palettes →';
@@ -1779,22 +1793,24 @@ async function palExtractColors() {
 function renderPalExtractResults(palettes) {
   var results = document.getElementById('palExtractResults');
   if (!results || !palettes || !palettes.length) return;
-  results.innerHTML = palettes.map(function(pal, i) {
-    return '<div style="border:1px solid var(--border);border-radius:var(--radius-lg);overflow:hidden;margin-bottom:.75rem">' +
-      '<div style="display:flex;height:52px">' +
-      '<div style="flex:2;background:'+pal.primary+'"></div>' +
-      '<div style="flex:1.5;background:'+pal.secondary+'"></div>' +
-      '<div style="flex:1;background:'+pal.accent+'"></div>' +
-      '<div style="flex:1;background:'+pal.neutral+'"></div>' +
+  results.innerHTML = palettes.map(function(pal) {
+    var p=pal.primary||'#ccc',s=pal.secondary||'#999',a=pal.accent||'#666',n=pal.neutral||'#f0f0f0';
+    var callStr = "palUsePalette('"+p+"','"+s+"','"+a+"','"+n+"','"+pal.name+"')";
+    return '<div style="border:1px solid var(--border);border-radius:var(--radius-lg);overflow:hidden;margin-bottom:.75rem;transition:border-color .15s;cursor:pointer" onclick="'+callStr+'" onmouseover="this.style.borderColor=\'var(--orange)\'" onmouseout="this.style.borderColor=\'var(--border)\'" title="Click to use this palette">' +
+      '<div style="display:flex;height:60px">' +
+      '<div style="flex:2.5;background:'+p+'"></div>' +
+      '<div style="flex:2;background:'+s+'"></div>' +
+      '<div style="flex:1;background:'+a+'"></div>' +
+      '<div style="flex:1.5;background:'+n+'"></div>' +
       '</div>' +
       '<div style="padding:.75rem 1rem;background:var(--surface);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px">' +
       '<div><div style="font-size:13px;font-weight:600;color:var(--text);margin-bottom:2px">'+pal.name+'</div>' +
       '<div style="font-size:11px;color:var(--dimmer)">'+pal.mood+'</div></div>' +
-      '<div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap">' +
-      [pal.primary,pal.secondary,pal.accent,pal.neutral].map(function(h){
+      '<div style="display:flex;gap:5px;align-items:center;flex-wrap:wrap">' +
+      [p,s,a,n].map(function(h){
         return '<span style="font-size:10px;font-family:monospace;color:var(--dim);background:var(--card);border:1px solid var(--border);border-radius:3px;padding:2px 6px">'+h+'</span>';
       }).join('') +
-      '<button onclick="palUsePalette(\''+pal.primary+'\',\''+pal.secondary+'\',\''+pal.accent+'\',\''+pal.neutral+'\',\''+pal.name+'\')" style="padding:5px 12px;border-radius:var(--radius-md);font-size:11.5px;cursor:pointer;background:var(--orange);color:#fff;border:none;font-family:var(--font);font-weight:600">Use This →</button>' +
+      '<span style="padding:5px 12px;border-radius:var(--radius-md);font-size:11.5px;background:var(--orange);color:#fff;font-weight:600;white-space:nowrap">Use This →</span>' +
       '</div></div></div>';
   }).join('');
 }
