@@ -752,6 +752,10 @@ textarea::placeholder,input[type=text]::placeholder{color:var(--dimmer)}
 .fi-btn:hover{border-color:var(--orange);color:var(--orange);}
 .fi-analyzing{text-align:center;padding:1.5rem;color:var(--dim);font-size:13px;}
 .fi-spin{display:inline-block;width:14px;height:14px;border:2px solid var(--border2);border-top-color:var(--orange);border-radius:50%;animation:aispin .6s linear infinite;vertical-align:middle;margin-right:6px;}
+.gf-suggest-list{position:absolute;top:100%;left:0;right:0;background:var(--card);border:1px solid var(--border2);border-radius:0 0 var(--radius-md) var(--radius-md);z-index:100;max-height:160px;overflow-y:auto;}
+.gf-suggest-item{padding:7px 12px;font-size:12.5px;color:var(--dim);cursor:pointer;border-bottom:1px solid var(--border);transition:background .1s;}
+.gf-suggest-item:hover{background:var(--surface);color:var(--text);}
+.gf-suggest-item:last-child{border-bottom:none;}
 </style>
 </head>
 <body>
@@ -896,41 +900,11 @@ textarea::placeholder,input[type=text]::placeholder{color:var(--dimmer)}
 <div class="sc" id="s2">
   <div class="pl">Workshop 2</div>
   <h1>Creator Mood Board</h1>
-  <p class="intro">Your mood board is the visual DNA of your brand. Not a Pinterest board of things you think look cool — a curated collection of images that, when placed together, tell one clear story about the world your brand lives in.</p>
+  <p class="intro">Your mood board is the visual DNA of your brand. Not a Pinterest board of things you think look cool — a curated collection of images that, when placed together, tell one clear story about the world your brand lives in. The mood board comes before the color palette, before the typography, before any design decisions. All of those decisions should flow from the mood you create here.</p>
 
-  <div class="ins"><p>The mood board comes <strong>before</strong> the color palette, before the typography, before any design decisions. All of those decisions should flow from the mood you're trying to create — and the mood board is how you discover what that mood actually is.</p></div>
-
-  <h2>The 10-10-10 Rule</h2>
-  <div class="teach">
-    <p>Your mood board should have <strong>30 images</strong> gathered from three specific sources:</p>
-    <ul>
-      <li><strong>10 from your platform</strong> — The best visual content you've seen on the platform you're building on. Content that stopped your scroll. Content that made you feel something.</li>
-      <li><strong>10 from your industry</strong> — Competitors, adjacent creators, brands in your space. What does premium look like in your industry?</li>
-      <li><strong>10 from outside your industry</strong> — Fashion, architecture, film, photography, interior design. This is where your visual world gets interesting. Bring in a visual language no one in your space is using.</li>
-    </ul>
-  </div>
-
-  <h2>Recommended Tools</h2>
-  <div class="og3" id="g-mbtool">
-    <button class="opt" data-g="mbtool">Pinterest</button>
-    <button class="opt" data-g="mbtool">Milanote</button>
-    <button class="opt" data-g="mbtool">Are.na</button>
-    <button class="opt" data-g="mbtool">Cosmos</button>
-    <button class="opt" data-g="mbtool">Notion</button>
-    <button class="opt" data-g="mbtool">Other</button>
-  </div>
-  <div class="q">Where is your mood board located?</div>
-  <input type="text" id="mbLink" placeholder="URL or note where you're building it..." oninput="updatePinterestEmbed()">
-
-  <div id="pinterest-embed-wrap" style="display:none;margin-top:10px">
-    <div style="font-size:9.5px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--orange);margin-bottom:8px">Pinterest Board Preview</div>
-    <div id="pinterest-embed-container" style="border-radius:var(--radius-lg);overflow:hidden;border:1px solid var(--border);background:var(--surface);min-height:200px;display:flex;align-items:center;justify-content:center">
-      <span style="font-size:12px;color:var(--dimmer)">Loading board...</span>
-    </div>
-  </div>
-
+  <!-- MOOD BOARD GALLERY FIRST -->
   <h2>Your Mood Board Gallery</h2>
-  <div class="ins"><p>Drop your images directly here — <strong>10 from your platform, 10 from your industry, 10 from outside your industry</strong>. They'll carry through to your final style guide.</p></div>
+  <p style="font-size:13.5px;color:var(--dim);line-height:1.7;margin-bottom:1.25rem">Drop images directly into each zone below — <strong style="color:var(--text)">10 from your platform, 10 from your industry, 10 from outside</strong>. They carry through to your final style guide.</p>
 
   <div class="mb-gallery" id="mbGallery">
     <div class="mb-panels">
@@ -966,7 +940,47 @@ textarea::placeholder,input[type=text]::placeholder{color:var(--dimmer)}
     </div>
   </div>
 
-  <h2>Step 3: Identify Patterns</h2>
+  <!-- 10-10-10 RULE -->
+  <h2 style="margin-top:1.75rem">The 10-10-10 Rule</h2>
+  <p style="font-size:13.5px;color:var(--dim);line-height:1.7;margin-bottom:1rem">Your mood board should have <strong style="color:var(--text)">30 images</strong> from three specific sources — each zone unlocks a different layer of your visual identity.</p>
+  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:1.5rem">
+    <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-md);padding:1rem">
+      <div style="font-family:var(--font-num);font-size:32px;font-weight:900;color:var(--orange);line-height:1;margin-bottom:6px">10</div>
+      <div style="font-size:12px;font-weight:600;color:var(--text);margin-bottom:4px">Platform</div>
+      <div style="font-size:11.5px;color:var(--dimmer);line-height:1.5">The best visual content you've seen on your platform. Content that stopped your scroll.</div>
+    </div>
+    <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-md);padding:1rem">
+      <div style="font-family:var(--font-num);font-size:32px;font-weight:900;color:var(--orange);line-height:1;margin-bottom:6px">10</div>
+      <div style="font-size:12px;font-weight:600;color:var(--text);margin-bottom:4px">Industry</div>
+      <div style="font-size:11.5px;color:var(--dimmer);line-height:1.5">Competitors, adjacent creators, brands in your space. What does premium look like here?</div>
+    </div>
+    <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-md);padding:1rem">
+      <div style="font-family:var(--font-num);font-size:32px;font-weight:900;color:var(--orange);line-height:1;margin-bottom:6px">10</div>
+      <div style="font-size:12px;font-weight:600;color:var(--text);margin-bottom:4px">Outside</div>
+      <div style="font-size:11.5px;color:var(--dimmer);line-height:1.5">Fashion, architecture, film, photography. This is where your visual world gets interesting.</div>
+    </div>
+  </div>
+
+  <!-- OR LINK PINTEREST -->
+  <div style="border:1px dashed var(--border2);border-radius:var(--radius-lg);padding:1.25rem;margin-bottom:1.5rem">
+    <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--orange);margin-bottom:8px">Or Link Your Existing Board</div>
+    <p style="font-size:13px;color:var(--dim);line-height:1.6;margin-bottom:.85rem">Already have a mood board on Pinterest? Paste the link below to keep it accessible while you work.</p>
+    <div class="og3" id="g-mbtool" style="margin-bottom:.85rem">
+      <button class="opt" data-g="mbtool">Pinterest</button>
+      <button class="opt" data-g="mbtool">Milanote</button>
+      <button class="opt" data-g="mbtool">Are.na</button>
+      <button class="opt" data-g="mbtool">Cosmos</button>
+      <button class="opt" data-g="mbtool">Notion</button>
+      <button class="opt" data-g="mbtool">Other</button>
+    </div>
+    <input type="text" id="mbLink" placeholder="Paste your board URL here..." oninput="updatePinterestEmbed()" style="margin-bottom:0">
+    <div id="pinterest-embed-wrap" style="display:none;margin-top:10px">
+      <div id="pinterest-embed-container" style="border-radius:var(--radius-md);overflow:hidden;border:1px solid var(--border);background:var(--surface)"></div>
+    </div>
+  </div>
+
+  <!-- STEP 3: IDENTIFY PATTERNS -->
+  <h2>Step 3 — Identify Patterns</h2>
   <div class="ec">
     <div class="elbl">Mood Board Analysis</div>
     <div class="q">What colors appear most frequently?</div>
@@ -995,10 +1009,32 @@ textarea::placeholder,input[type=text]::placeholder{color:var(--dimmer)}
     <input type="text" id="mbPlace" placeholder="e.g. A minimalist Tokyo apartment, a coastal studio...">
   </div>
 
-  <h2>Step 4: Your Mood Board Statement</h2>
+  <!-- STEP 4: AI VISUAL ANALYSIS -->
+  <h2>Step 4 — AI Visual Analysis</h2>
+  <div class="ec">
+    <div class="elbl">AI — Analyze My Mood Board</div>
+    <div class="qh">Answer the questions above (or upload a few of your mood board images below), then click Analyze. The AI will read your visual world and suggest refinements.</div>
+
+    <div style="border:1px dashed var(--border2);border-radius:var(--radius-md);padding:1rem;margin-bottom:.85rem;cursor:pointer;text-align:center;transition:all .2s"
+      id="mbAnalyzeZone"
+      onclick="document.getElementById('mbAnalyzeInput').click()"
+      ondragover="event.preventDefault();this.style.borderColor='var(--orange)'"
+      ondragleave="this.style.borderColor=''"
+      ondrop="mbHandleAnalyzeDrop(event)">
+      <input type="file" id="mbAnalyzeInput" accept="image/*" multiple style="display:none" onchange="mbHandleAnalyzeFiles(this.files)">
+      <div style="font-size:12.5px;color:var(--dimmer)">Drop mood board images here (optional) or click to upload</div>
+      <div id="mbAnalyzeImgRow" style="display:flex;gap:6px;flex-wrap:wrap;justify-content:center;margin-top:8px"></div>
+    </div>
+
+    <button class="btn-ai" id="mbAnalyzeBtn" onclick="analyzeMoodBoard()">✦ Analyze My Visual World</button>
+    <div class="ai-status" id="mbAnalyzeStatus"></div>
+    <div class="ai-result" id="mbAnalyzeResult"></div>
+  </div>
+
+  <h2>Your Mood Board Statement</h2>
   <div class="ec">
     <div class="elbl">Mood Board Statement</div>
-    <div class="qh">In 2–3 sentences, describe the visual world your mood board represents. This statement becomes the foundation for everything that follows.</div>
+    <div class="qh">In 2–3 sentences, describe the visual world your mood board represents.</div>
     <textarea rows="4" id="mbStatement" placeholder="My mood board represents a world that feels... The dominant energy is... When someone steps into this world they feel..."></textarea>
   </div>
 
@@ -1006,8 +1042,8 @@ textarea::placeholder,input[type=text]::placeholder{color:var(--dimmer)}
   <div class="checklist" id="mbChecklist">
     <div class="check-item" data-key="mb1"><div class="check-box"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div><div class="check-text">I have 30 curated images (10-10-10)</div></div>
     <div class="check-item" data-key="mb2"><div class="check-box"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div><div class="check-text">My images feel cohesive (not random)</div></div>
-    <div class="check-item" data-key="mb3"><div class="check-box"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div><div class="check-text">My images represent a clear mood (not multiple conflicting moods)</div></div>
-    <div class="check-item" data-key="mb4"><div class="check-box"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div><div class="check-text">I've identified the dominant colors, lighting, and textures</div></div>
+    <div class="check-item" data-key="mb3"><div class="check-box"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div><div class="check-text">My images represent a clear mood</div></div>
+    <div class="check-item" data-key="mb4"><div class="check-box"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div><div class="check-text">I've identified dominant colors, lighting, and textures</div></div>
     <div class="check-item" data-key="mb5"><div class="check-box"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div><div class="check-text">I've written my mood board statement</div></div>
   </div>
 
@@ -1030,6 +1066,50 @@ textarea::placeholder,input[type=text]::placeholder{color:var(--dimmer)}
       <li><strong>Muted/Desaturated</strong> (dusty pinks, sage greens, muted blues) — Authenticity, warmth, nostalgia. Best for real, warm, or lifestyle-oriented brands.</li>
     </ul>
   </div>
+
+  <!-- COLOR PSYCHOLOGY VISUAL -->
+  <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin-bottom:1.5rem">
+    <div style="background:linear-gradient(135deg,#F0601B,#FCBF49,#D62828);border-radius:var(--radius-md);padding:.85rem .65rem;text-align:center">
+      <div style="font-size:10px;font-weight:700;color:#fff;margin-bottom:3px;letter-spacing:.04em">WARM</div>
+      <div style="font-size:9px;color:rgba(255,255,255,.75);line-height:1.5">Energy · Passion<br>Approachable</div>
+    </div>
+    <div style="background:linear-gradient(135deg,#003049,#4A9EDE,#5DCAA5);border-radius:var(--radius-md);padding:.85rem .65rem;text-align:center">
+      <div style="font-size:10px;font-weight:700;color:#fff;margin-bottom:3px;letter-spacing:.04em">COOL</div>
+      <div style="font-size:9px;color:rgba(255,255,255,.75);line-height:1.5">Calm · Authority<br>Professional</div>
+    </div>
+    <div style="background:linear-gradient(135deg,#EAE2B7,#D8CBA6,#c8b89a);border-radius:var(--radius-md);padding:.85rem .65rem;text-align:center">
+      <div style="font-size:10px;font-weight:700;color:#555;margin-bottom:3px;letter-spacing:.04em">NEUTRAL</div>
+      <div style="font-size:9px;color:rgba(0,0,0,.5);line-height:1.5">Timeless · Elegant<br>Premium</div>
+    </div>
+    <div style="background:linear-gradient(135deg,#0a0a0a,#1f1f1f,#2a2a2a);border-radius:var(--radius-md);padding:.85rem .65rem;text-align:center;border:1px solid #333">
+      <div style="font-size:10px;font-weight:700;color:#fff;margin-bottom:3px;letter-spacing:.04em">DARK</div>
+      <div style="font-size:9px;color:rgba(255,255,255,.55);line-height:1.5">Drama · Luxury<br>Cinematic</div>
+    </div>
+    <div style="background:linear-gradient(135deg,#c9b8b8,#b5c4b1,#b8c4d0);border-radius:var(--radius-md);padding:.85rem .65rem;text-align:center">
+      <div style="font-size:10px;font-weight:700;color:#555;margin-bottom:3px;letter-spacing:.04em">MUTED</div>
+      <div style="font-size:9px;color:rgba(0,0,0,.5);line-height:1.5">Authentic · Warm<br>Lifestyle</div>
+    </div>
+  </div>
+
+  <h2>Extract Colors From a Photo</h2>
+  <p style="font-size:13.5px;color:var(--dim);line-height:1.7;margin-bottom:.85rem">Drop a photo that captures the mood you want — AI will extract multiple palette options. Pick the one that feels right.</p>
+
+  <div class="font-id-zone" id="palPhotoZone"
+    onclick="document.getElementById('palPhotoInput').click()"
+    ondragover="event.preventDefault();this.classList.add('dragover')"
+    ondragleave="this.classList.remove('dragover')"
+    ondrop="palHandleDrop(event)">
+    <input type="file" id="palPhotoInput" accept="image/*" style="display:none" onchange="palHandleFile(this.files[0])">
+    <img id="palPhotoPreview" class="font-id-img-preview">
+    <div id="palPhotoPrompt">
+      <div class="font-id-icon">🎨</div>
+      <div class="font-id-text"><strong>Drop a photo here</strong> or click to upload<br><span style="font-size:11px;color:var(--dimmer)">Mood board images, brand inspo, photography you love</span></div>
+    </div>
+  </div>
+  <button id="palExtractBtn" class="btn p" style="display:none;margin-bottom:1rem;width:100%;padding:11px" onclick="palExtractColors()">
+    Extract Color Palettes →
+  </button>
+  <div id="palExtractResults" style="margin-bottom:1.25rem"></div>
 
   <h2>Your Color Palette</h2>
   <div class="ec">
@@ -1121,6 +1201,7 @@ textarea::placeholder,input[type=text]::placeholder{color:var(--dimmer)}
     <h2 id="pairingResultsTitle" style="margin-bottom:.5rem">Recommended Pairings</h2>
     <p class="intro" style="margin-bottom:1rem">Click <strong>Use This Pairing</strong> to auto-fill your fonts.</p>
     <div class="pairing-cards" id="pairingCards"></div>
+    <button id="seeMorePairingsBtn" style="display:none;width:100%;margin-top:4px;padding:10px;border:1px dashed var(--border2);border-radius:var(--radius-md);background:transparent;color:var(--dim);font-size:12.5px;cursor:pointer;font-family:var(--font);transition:all .15s" onmouseover="this.style.color='var(--text)'" onmouseout="this.style.color='var(--dim)'" onclick="showMorePairings()">See 3 More Options →</button>
   </div>
 
   <!-- AI FONT IDENTIFIER -->
@@ -1144,30 +1225,41 @@ textarea::placeholder,input[type=text]::placeholder{color:var(--dimmer)}
   <div class="fi-results" id="fontIdResults"></div>
 
   <!-- MANUAL ENTRY -->
-  <h2 style="margin-top:1.5rem">Your Typography</h2>
-  <div class="teach">
-    <p><strong>Font pairing principle: create contrast.</strong> Bold header + light body. Serif + sans-serif. Contrast creates hierarchy and makes your content immediately readable.</p>
-  </div>
+  <h2 style="margin-top:1.5rem">Already Know Your Fonts?</h2>
+  <p style="font-size:13.5px;color:var(--dim);line-height:1.7;margin-bottom:1rem">Enter them directly below. You can also search Google Fonts to preview and pick from thousands of options.</p>
   <div class="ec">
-    <div class="elbl">Typography Setup</div>
-    <div class="q">Primary Font — headlines, hooks, title cards</div>
-    <div class="og" id="g-font1style">
-      <button class="opt" data-g="font1style">Bold sans-serif (clean, modern)</button>
-      <button class="opt" data-g="font1style">Strong serif (classic, editorial)</button>
-      <button class="opt" data-g="font1style">Display / statement (unique)</button>
-      <button class="opt" data-g="font1style">Script / handwritten (personal)</button>
+    <div class="elbl">Enter Your Fonts</div>
+
+    <div class="q" style="margin-top:0">Primary Font — headlines, hooks, title cards</div>
+    <div style="position:relative;margin-bottom:4px">
+      <input type="text" id="font-primary" placeholder="e.g. Bebas Neue, Playfair Display, Montserrat..." style="margin-bottom:0" oninput="gfSuggest('font-primary','gf-suggest-1')">
+      <div id="gf-suggest-1" class="gf-suggest-list" style="display:none"></div>
     </div>
-    <input type="text" id="font-primary" placeholder="Font name — e.g. Bebas Neue, Playfair Display, Montserrat...">
-    <div class="q">Secondary Font — body text, captions, supporting copy</div>
-    <div class="og" id="g-font2style">
-      <button class="opt" data-g="font2style">Clean sans-serif (minimal, modern)</button>
-      <button class="opt" data-g="font2style">Light serif (elegant, editorial)</button>
-      <button class="opt" data-g="font2style">Monospace (technical, precise)</button>
-      <button class="opt" data-g="font2style">Light sans-serif (simple, clear)</button>
+    <a href="https://fonts.google.com" target="_blank" style="font-size:11px;color:var(--orange);text-decoration:none;display:inline-flex;align-items:center;gap:4px;margin-bottom:.85rem">
+      <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+      Browse Google Fonts →
+    </a>
+
+    <div class="q">Body Font — captions, supporting copy, longer text</div>
+    <div style="position:relative;margin-bottom:4px">
+      <input type="text" id="font-secondary" placeholder="e.g. Inter, DM Sans, Source Sans Pro..." style="margin-bottom:0" oninput="gfSuggest('font-secondary','gf-suggest-2')">
+      <div id="gf-suggest-2" class="gf-suggest-list" style="display:none"></div>
     </div>
-    <input type="text" id="font-secondary" placeholder="Font name — e.g. Inter, DM Sans, Source Sans Pro...">
-    <div class="q">Typography rules (how you'll use your fonts consistently)</div>
-    <textarea rows="3" id="typographyRules" placeholder="1. Primary font is always used for: &#10;2. Secondary font is always used for: &#10;3. I never use more than ___ fonts in one piece of content"></textarea>
+    <a href="https://fonts.google.com" target="_blank" style="font-size:11px;color:var(--orange);text-decoration:none;display:inline-flex;align-items:center;gap:4px;margin-bottom:.85rem">
+      <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+      Browse Google Fonts →
+    </a>
+
+    <div style="display:flex;align-items:center;gap:10px;padding:10px 12px;border:1px solid var(--border);border-radius:var(--radius-md);background:var(--surface);margin-bottom:.85rem;cursor:pointer" onclick="toggleCustomFonts(this)">
+      <div id="customFontToggle" style="width:16px;height:16px;border-radius:3px;border:1.5px solid var(--dimmer);display:flex;align-items:center;justify-content:center;transition:all .15s;flex-shrink:0"></div>
+      <span style="font-size:13px;color:var(--dim)">I use custom / brand fonts (not on Google Fonts)</span>
+    </div>
+    <div id="customFontNote" style="display:none;background:var(--orange-tint);border:1px solid var(--orange-border);border-radius:var(--radius-md);padding:.75rem 1rem;margin-bottom:.85rem">
+      <div style="font-size:12px;color:var(--orange-dark);line-height:1.6">Type the font name above exactly as it appears in your design tool (Figma, Canva, Adobe). Your style guide will reference it — just make sure you have the license.</div>
+    </div>
+
+    <div class="q">Typography rules</div>
+    <textarea rows="3" id="typographyRules" placeholder="1. Primary font is always used for: &#10;2. Body font is always used for: &#10;3. I never use more than ___ fonts in one piece of content"></textarea>
   </div>
 
   <h2>Typography Checklist</h2>
@@ -1412,7 +1504,7 @@ textarea::placeholder,input[type=text]::placeholder{color:var(--dimmer)}
 </div></div></div>
 
 <script>
-var TABS=['Welcome','Creator Analysis','Mood Board','Color Palette','Typography','Visual World','Style Guide'];
+var TABS=['Intro','Creator Analysis','Mood Board','Color Palette','Typography','Visual World','Style Guide'];
 var ICONS=[
   '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>',
   '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>',
@@ -1628,6 +1720,119 @@ function initChecklists() {
       saveData();
     });
   });
+}
+
+/* ═══════════════════════════════════════════════════════
+   PHOTO-TO-PALETTE
+══════════════════════════════════════════════════════════ */
+var palPhotoBase64 = null;
+var palPhotoMime = 'image/jpeg';
+
+function palHandleDrop(e) {
+  e.preventDefault();
+  document.getElementById('palPhotoZone').classList.remove('dragover');
+  var file = e.dataTransfer.files[0];
+  if (file && file.type.startsWith('image/')) palHandleFile(file);
+}
+
+function palHandleFile(file) {
+  if (!file) return;
+  palPhotoMime = file.type || 'image/jpeg';
+  var reader = new FileReader();
+  reader.onload = function(ev) {
+    palPhotoBase64 = ev.target.result.split(',')[1];
+    var preview = document.getElementById('palPhotoPreview');
+    var prompt = document.getElementById('palPhotoPrompt');
+    var btn = document.getElementById('palExtractBtn');
+    if (preview) { preview.src = ev.target.result; preview.style.display = 'block'; }
+    if (prompt) prompt.style.display = 'none';
+    if (btn) btn.style.display = 'block';
+  };
+  reader.readAsDataURL(file);
+}
+
+async function palExtractColors() {
+  if (!palPhotoBase64) return;
+  var btn = document.getElementById('palExtractBtn');
+  var results = document.getElementById('palExtractResults');
+  btn.disabled = true;
+  btn.textContent = 'Extracting...';
+  results.innerHTML = '<div style="font-size:12px;color:var(--dimmer);padding:.5rem 0">Analyzing image for color palettes...</div>';
+
+  var apiKey = localStorage.getItem('fsc-anthropic-key') || '';
+  if (!apiKey) {
+    results.innerHTML = '<div style="font-size:12px;color:rgba(255,100,100,.8)">No API key — set it in admin.html first.</div>';
+    btn.disabled = false;
+    btn.textContent = 'Extract Color Palettes →';
+    return;
+  }
+
+  try {
+    var res = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': apiKey,
+        'anthropic-version': '2023-06-01',
+        'anthropic-dangerous-direct-browser-calls': 'true'
+      },
+      body: JSON.stringify({
+        model: 'claude-opus-4-5',
+        max_tokens: 800,
+        messages: [{
+          role: 'user',
+          content: [
+            {type:'image',source:{type:'base64',media_type:palPhotoMime,data:palPhotoBase64}},
+            {type:'text',text:'Analyze this image and extract 3 distinct color palette options from it. For each palette, give me exactly 4 hex codes (Primary, Secondary, Accent, Neutral) and a short palette name (2-3 words). Format your response as valid JSON array:\n[\n  {\n    "name": "Palette Name",\n    "mood": "One sentence mood description",\n    "primary": "#hexcode",\n    "secondary": "#hexcode",\n    "accent": "#hexcode",\n    "neutral": "#hexcode"\n  },\n  ... (3 total)\n]\nOnly return the JSON, no other text.'}
+          ]
+        }]
+      })
+    });
+    var data = await res.json();
+    if (data.error) throw new Error(data.error.message);
+    var text = (data.content||[]).map(function(b){return b.text||'';}).join('');
+    var palettes = JSON.parse(text.replace(/```json|```/g,'').trim());
+    renderPalExtractResults(palettes);
+  } catch(e) {
+    results.innerHTML = '<div style="font-size:12px;color:rgba(255,100,100,.8)">Error: '+e.message+'</div>';
+  }
+  btn.disabled = false;
+  btn.textContent = 'Extract Color Palettes →';
+}
+
+function renderPalExtractResults(palettes) {
+  var results = document.getElementById('palExtractResults');
+  if (!results || !palettes || !palettes.length) return;
+  results.innerHTML = palettes.map(function(pal, i) {
+    return '<div style="border:1px solid var(--border);border-radius:var(--radius-lg);overflow:hidden;margin-bottom:.75rem">' +
+      '<div style="display:flex;height:52px">' +
+      '<div style="flex:2;background:'+pal.primary+'"></div>' +
+      '<div style="flex:1.5;background:'+pal.secondary+'"></div>' +
+      '<div style="flex:1;background:'+pal.accent+'"></div>' +
+      '<div style="flex:1;background:'+pal.neutral+'"></div>' +
+      '</div>' +
+      '<div style="padding:.75rem 1rem;background:var(--surface);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px">' +
+      '<div><div style="font-size:13px;font-weight:600;color:var(--text);margin-bottom:2px">'+pal.name+'</div>' +
+      '<div style="font-size:11px;color:var(--dimmer)">'+pal.mood+'</div></div>' +
+      '<div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap">' +
+      [pal.primary,pal.secondary,pal.accent,pal.neutral].map(function(h){
+        return '<span style="font-size:10px;font-family:monospace;color:var(--dim);background:var(--card);border:1px solid var(--border);border-radius:3px;padding:2px 6px">'+h+'</span>';
+      }).join('') +
+      '<button onclick="palUsePalette(\''+pal.primary+'\',\''+pal.secondary+'\',\''+pal.accent+'\',\''+pal.neutral+'\',\''+pal.name+'\')" style="padding:5px 12px;border-radius:var(--radius-md);font-size:11.5px;cursor:pointer;background:var(--orange);color:#fff;border:none;font-family:var(--font);font-weight:600">Use This →</button>' +
+      '</div></div></div>';
+  }).join('');
+}
+
+function palUsePalette(primary, secondary, accent, neutral, name) {
+  var set = function(id, val) { var e=document.getElementById(id); if(e){e.value=val; e.dispatchEvent(new Event('input'));} };
+  set('col-primary', primary);
+  set('col-secondary', secondary);
+  set('col-accent', accent);
+  set('col-neutral', neutral);
+  set('paletteName', name);
+  // Scroll to palette inputs
+  var el = document.getElementById('col-primary');
+  if(el) el.scrollIntoView({behavior:'smooth',block:'center'});
 }
 
 function initColorSwatches() {
@@ -2155,7 +2360,7 @@ async function analyzeIG(n) {
   try {
     var aiResp = await fetch('https://api.anthropic.com/v1/messages',{
       method:'POST',
-      headers:{'Content-Type':'application/json','x-api-key':ANTHROPIC_API_KEY,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},
+      headers:{'Content-Type':'application/json','x-api-key':ANTHROPIC_API_KEY,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-calls':'true'},
       body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:600,messages:[{role:'user',content:promptParts.join(' ')}]})
     });
     var aiData = await aiResp.json();
@@ -2409,40 +2614,134 @@ function buildGuide() {
 }
 
 /* ═══════════════════════════════════════════════════════
+   MOOD BOARD ANALYSIS
+══════════════════════════════════════════════════════════ */
+var mbAnalyzeImages = [];
+
+function mbHandleAnalyzeDrop(e) {
+  e.preventDefault();
+  document.getElementById('mbAnalyzeZone').style.borderColor = '';
+  var files = e.dataTransfer.files;
+  mbHandleAnalyzeFiles(files);
+}
+
+function mbHandleAnalyzeFiles(files) {
+  var row = document.getElementById('mbAnalyzeImgRow');
+  Array.from(files).slice(0, 4).forEach(function(file) {
+    if (!file.type.startsWith('image/')) return;
+    var reader = new FileReader();
+    reader.onload = function(ev) {
+      mbAnalyzeImages.push(ev.target.result);
+      var img = document.createElement('img');
+      img.src = ev.target.result;
+      img.style.cssText = 'width:60px;height:60px;object-fit:cover;border-radius:4px;border:1px solid var(--border)';
+      if(row) row.appendChild(img);
+    };
+    reader.readAsDataURL(file);
+  });
+}
+
+async function analyzeMoodBoard() {
+  var btn = document.getElementById('mbAnalyzeBtn');
+  btn.disabled = true;
+  var statusEl = document.getElementById('mbAnalyzeStatus');
+  var resultEl = document.getElementById('mbAnalyzeResult');
+  statusEl.className = 'ai-status loading';
+  statusEl.innerHTML = '<span class="ai-spinner"></span>Analyzing your visual world...';
+  resultEl.classList.remove('show');
+
+  var apiKey = localStorage.getItem('fsc-anthropic-key') || '';
+  if (!apiKey) {
+    statusEl.className = 'ai-status error';
+    statusEl.textContent = 'No API key — set it in admin.html';
+    btn.disabled = false;
+    return;
+  }
+
+  var colors = (document.getElementById('mbColors')||{}).value || '';
+  var mood = (document.getElementById('mbMood')||{}).value || '';
+  var lighting = document.querySelector('.opt[data-g="mblight"].sel');
+  var textures = document.querySelector('.opt[data-g="mbtex"].sel');
+  var movie = (document.getElementById('mbMovie')||{}).value || '';
+  var time = (document.getElementById('mbTime')||{}).value || '';
+  var place = (document.getElementById('mbPlace')||{}).value || '';
+
+  var contextText = 'Mood Board Analysis:\n'+
+    'Colors: '+(colors||'not specified')+'\n'+
+    'Mood: '+(mood||'not specified')+'\n'+
+    'Lighting: '+(lighting?lighting.textContent:'not specified')+'\n'+
+    'Textures: '+(textures?textures.textContent:'not specified')+'\n'+
+    'Movie: '+(movie||'not specified')+'\n'+
+    'Time of day: '+(time||'not specified')+'\n'+
+    'Place: '+(place||'not specified');
+
+  var promptText = 'You are a visual brand strategist. Analyze this creator\'s mood board data and give them:\n\n'+
+    '1. A 1-sentence summary of their visual world\n'+
+    '2. 3 specific strengths of this visual direction\n'+
+    '3. 2 specific refinements or gaps to watch for\n'+
+    '4. A "visual world archetype" — a 2-3 word name for the visual world they\'re creating (e.g. "Dark Coastal Luxury", "Warm Urban Editorial", "Clean Minimalist Power")\n\n'+
+    contextText+'\n\n'+
+    'Be specific, visual, and direct. Format clearly with labels. No fluff.';
+
+  try {
+    var messages = [{role: 'user', content: promptText}];
+    // If images uploaded, add vision content
+    if (mbAnalyzeImages.length > 0) {
+      var imageContents = mbAnalyzeImages.slice(0,3).map(function(dataUrl) {
+        var base64 = dataUrl.split(',')[1];
+        var mime = dataUrl.split(';')[0].split(':')[1];
+        return {type:'image',source:{type:'base64',media_type:mime,data:base64}};
+      });
+      imageContents.push({type:'text',text:promptText});
+      messages = [{role:'user',content:imageContents}];
+    }
+
+    var res = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': apiKey,
+        'anthropic-version': '2023-06-01',
+        'anthropic-dangerous-direct-browser-calls': 'true'
+      },
+      body: JSON.stringify({model:'claude-opus-4-5',max_tokens:800,messages:messages})
+    });
+    var data = await res.json();
+    if (data.error) throw new Error(data.error.message);
+    var text = (data.content||[]).map(function(b){return b.text||'';}).join('');
+    statusEl.className = 'ai-status success';
+    statusEl.innerHTML = '✓ Analysis complete';
+    resultEl.textContent = text;
+    resultEl.classList.add('show');
+    // If mbStatement is empty, use first sentence
+    var stmtEl = document.getElementById('mbStatement');
+    if (stmtEl && !stmtEl.value.trim()) {
+      stmtEl.value = text.split('\n')[0].replace(/^1\.\s*/,'');
+    }
+  } catch(e) {
+    statusEl.className = 'ai-status error';
+    statusEl.textContent = 'Error — ' + e.message;
+  }
+  btn.disabled = false;
+}
+
+/* ═══════════════════════════════════════════════════════
    PINTEREST EMBED
 ══════════════════════════════════════════════════════════ */
 function updatePinterestEmbed() {
-  var input = document.getElementById('mbLink');
-  var wrap  = document.getElementById('pinterest-embed-wrap');
+  var url = (document.getElementById('mbLink')||{}).value || '';
+  var wrap = document.getElementById('pinterest-embed-wrap');
   var container = document.getElementById('pinterest-embed-container');
-  if (!input || !wrap || !container) return;
-
-  var url = input.value.trim();
-  var isPinterest = url.indexOf('pinterest.com') !== -1;
-
-  if (!isPinterest) { wrap.style.display = 'none'; return; }
-
-  /* Extract board URL — handle pins, boards, profiles */
-  var boardUrl = url;
-  /* Strip query params and trailing slashes */
-  boardUrl = boardUrl.split('?')[0].replace(/\/+$/,'');
-
-  wrap.style.display = '';
-  container.innerHTML = '<span style="font-size:12px;color:var(--dimmer)">Loading board...</span>';
-
-  /* Use Pinterest widget embed */
-  container.innerHTML = '<a data-pin-do="embedBoard" data-pin-board-width="100%" data-pin-scale-height="320" data-pin-scale-width="100" href="'+boardUrl+'"></a>';
-
-  /* Load or re-run Pinterest widget script */
-  if (window.PinUtils) {
-    try { window.PinUtils.build(); } catch(e){}
+  if (!wrap || !container) return;
+  if (url && (url.includes('pinterest') || url.includes('http'))) {
+    wrap.style.display = 'block';
+    container.innerHTML = '<div style="padding:1.5rem;text-align:center">' +
+      '<div style="font-size:13px;color:var(--dim);margin-bottom:12px">Pinterest boards can\'t be embedded directly — open your board in a new tab to reference it while you work.</div>' +
+      '<a href="'+url+'" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:8px;padding:10px 18px;background:var(--orange);color:#fff;border-radius:6px;font-size:13px;font-weight:600;text-decoration:none">'+
+      '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>' +
+      'Open My Board →</a></div>';
   } else {
-    var s = document.createElement('script');
-    s.async = true;
-    s.src = 'https://assets.pinterest.com/js/pinit.js';
-    s.setAttribute('data-pin-build', 'doBuild');
-    s.onload = function() { if(window.PinUtils) { try{window.PinUtils.build();}catch(e){} } };
-    document.body.appendChild(s);
+    wrap.style.display = 'none';
   }
 }
 
@@ -2535,48 +2834,96 @@ var TYP_PAIRINGS = {
   'dark-cinematic': [
     {name:'Cinematic Authority',header:{f:'Bebas Neue',w:'400',s:'display sans-serif'},body:{f:'DM Sans',w:'400',s:'geometric sans-serif'},preview:'BRAND NAME',previewBody:'The most cinematic creators aren\'t the most talented — they\'re the most intentional.',why:'Bebas Neue is the most cinematic display font on Google Fonts. Big, bold, commanding. DM Sans keeps body copy modern and clean.',gf:'https://fonts.google.com/specimen/Bebas+Neue'},
     {name:'Dark Editorial',header:{f:'Barlow Condensed',w:'700',s:'condensed sans-serif'},body:{f:'Barlow',w:'400',s:'humanist sans-serif'},preview:'DARK EDITORIAL',previewBody:'Your visual world is the setting of your brand — the environment and atmosphere that shows up in every piece of content.',why:'The Barlow family creates a cohesive, professional editorial system. Condensed headers command attention; regular body stays readable.',gf:'https://fonts.google.com/specimen/Barlow+Condensed'},
-    {name:'Documentary Weight',header:{f:'DM Serif Display',w:'400',s:'transitional serif'},body:{f:'DM Sans',w:'300',s:'geometric sans-serif'},preview:'Your Story',previewBody:'The creators who build real brands understand one thing that everyone else misses: the visual world is the message.',why:'DM Serif Display has the gravitas of legacy media — newspapers, magazines. Against DM Sans Light it feels like premium documentary content.',gf:'https://fonts.google.com/specimen/DM+Serif+Display'}
+    {name:'Documentary Weight',header:{f:'DM Serif Display',w:'400',s:'transitional serif'},body:{f:'DM Sans',w:'300',s:'geometric sans-serif'},preview:'Your Story',previewBody:'The creators who build real brands understand one thing that everyone else misses: the visual world is the message.',why:'DM Serif Display has the gravitas of legacy media — newspapers, magazines. Against DM Sans Light it feels like premium documentary content.',gf:'https://fonts.google.com/specimen/DM+Serif+Display'},
+    {name:'Grotesk Dark',header:{f:'Syne',w:'700',s:'geometric sans-serif'},body:{f:'Jost',w:'300',s:'geometric sans-serif'},preview:'DARK WORLD',previewBody:'The visual world you build is the first thing your audience experiences. Make it unforgettable.',why:'Syne\'s geometric character reads as modern and cinematic. Jost Light keeps the body airy, letting the darkness breathe.',gf:'https://fonts.google.com/specimen/Syne'},
+    {name:'Space Editorial',header:{f:'Space Grotesk',w:'700',s:'geometric sans-serif'},body:{f:'Inter',w:'300',s:'interface sans-serif'},preview:'EDITORIAL',previewBody:'Premium content isn\'t about production value — it\'s about intentionality in every frame.',why:'Space Grotesk has a futuristic, considered feel. Inter at light weight keeps body copy clean and contemporary.',gf:'https://fonts.google.com/specimen/Space+Grotesk'},
+    {name:'Barlow System',header:{f:'Barlow',w:'700',s:'humanist sans-serif'},body:{f:'Barlow',w:'300',s:'humanist sans-serif'},preview:'SYSTEM',previewBody:'When every detail is deliberate, the brand becomes unmistakable. No accident. All intention.',why:'A single-family approach using Barlow\'s wide weight range creates a clean, cinematic system with no visual friction.',gf:'https://fonts.google.com/specimen/Barlow'}
   ],
   'clean-minimal': [
     {name:'Modern Minimal',header:{f:'Inter',w:'700',s:'interface sans-serif'},body:{f:'Inter',w:'400',s:'interface sans-serif'},preview:'Clean System',previewBody:'Designed for screens. Perfectly legible at any size. A single-family approach creates the most cohesive, digital-native feel.',why:'Inter was designed specifically for digital interfaces. Using one family with multiple weights creates a clean, intentional system.',gf:'https://fonts.google.com/specimen/Inter'},
     {name:'Clean Confidence',header:{f:'Syne',w:'800',s:'geometric sans-serif'},body:{f:'Inter',w:'400',s:'interface sans-serif'},preview:'Considered',previewBody:'Every visual decision you make either builds your brand or dilutes it. There is no neutral.',why:'Syne has subtle geometric quirks that add personality to a minimal look. Considered and modern without being corporate.',gf:'https://fonts.google.com/specimen/Syne'},
-    {name:'Technical Precision',header:{f:'Space Grotesk',w:'700',s:'quirky geometric'},body:{f:'DM Sans',w:'400',s:'geometric sans-serif'},preview:'Precise',previewBody:'The difference between content that looks cheap and content that looks premium is almost never the camera.',why:'Space Grotesk has deliberate imperfections that feel human and smart. Paired with DM Sans for clean, technical precision.',gf:'https://fonts.google.com/specimen/Space+Grotesk'}
+    {name:'Technical Precision',header:{f:'Space Grotesk',w:'700',s:'quirky geometric'},body:{f:'DM Sans',w:'400',s:'geometric sans-serif'},preview:'Precise',previewBody:'The difference between content that looks cheap and content that looks premium is almost never the camera.',why:'Space Grotesk has deliberate imperfections that feel human and smart. Paired with DM Sans for clean, technical precision.',gf:'https://fonts.google.com/specimen/Space+Grotesk'},
+    {name:'DM Duo',header:{f:'DM Sans',w:'700',s:'geometric sans-serif'},body:{f:'DM Sans',w:'300',s:'geometric sans-serif'},preview:'Minimal',previewBody:'Clarity is a brand value. The simplest system is often the most sophisticated.',why:'DM Sans as a single-family system is deeply considered and quietly premium. Light weight body creates visual breathing room.',gf:'https://fonts.google.com/specimen/DM+Sans'},
+    {name:'Classic Minimal',header:{f:'Montserrat',w:'700',s:'geometric sans-serif'},body:{f:'Open Sans',w:'400',s:'humanist sans-serif'},preview:'Clean',previewBody:'The best minimal brands remove everything that doesn\'t serve the message. What\'s left is the brand.',why:'A timeless pairing used by thousands of premium brands. Montserrat\'s geometric precision pairs perfectly with Open Sans\'s warmth.',gf:'https://fonts.google.com/specimen/Montserrat'},
+    {name:'Grotesk Minimal',header:{f:'Space Grotesk',w:'700',s:'geometric sans-serif'},body:{f:'Lato',w:'300',s:'humanist sans-serif'},preview:'Grotesk',previewBody:'Minimal doesn\'t mean empty. It means purposeful. Every element earns its place.',why:'Space Grotesk\'s slight quirkiness adds personality to a minimal palette. Lato Light keeps body copy warm and human.',gf:'https://fonts.google.com/specimen/Space+Grotesk'}
   ],
   'bold-statement': [
     {name:'Lifestyle Bold',header:{f:'Archivo Black',w:'400',s:'grotesque sans-serif'},body:{f:'Archivo',w:'400',s:'grotesque sans-serif'},preview:'STATEMENT',previewBody:'Stop posting content that blends in. Your brand should be impossible to scroll past.',why:'Archivo Black is loud, proud, and impossible to ignore. The full family gives both impact for headers and readability for body.',gf:'https://fonts.google.com/specimen/Archivo+Black'},
     {name:'Brand Machine',header:{f:'Montserrat',w:'900',s:'geometric sans-serif'},body:{f:'Open Sans',w:'400',s:'humanist sans-serif'},preview:'YOUR BRAND',previewBody:'Build a brand that speaks before you say a word. Visual identity is the fastest form of communication.',why:'Montserrat at Black weight is a brand machine — used by hundreds of premium brands worldwide. Open Sans keeps it accessible.',gf:'https://fonts.google.com/specimen/Montserrat'},
-    {name:'Maximum Impact',header:{f:'Barlow Condensed',w:'800',s:'condensed sans-serif'},body:{f:'Barlow',w:'400',s:'humanist sans-serif'},preview:'MAXIMUM IMPACT',previewBody:'Your typography communicates who you are before anyone reads a word. Make it count.',why:'Maximum impact per pixel. Condensed headers make strong statements. Barlow body stays clean and readable at any size.',gf:'https://fonts.google.com/specimen/Barlow+Condensed'}
+    {name:'Maximum Impact',header:{f:'Barlow Condensed',w:'800',s:'condensed sans-serif'},body:{f:'Barlow',w:'400',s:'humanist sans-serif'},preview:'MAXIMUM IMPACT',previewBody:'Your typography communicates who you are before anyone reads a word. Make it count.',why:'Maximum impact per pixel. Condensed headers make strong statements. Barlow body stays clean and readable at any size.',gf:'https://fonts.google.com/specimen/Barlow+Condensed'},
+    {name:'Condensed Power',header:{f:'Barlow Condensed',w:'800',s:'condensed sans-serif'},body:{f:'Barlow',w:'400',s:'humanist sans-serif'},preview:'POWER',previewBody:'Condensed type communicates density — more signal, less noise. Every word earns its place.',why:'Barlow Condensed at heavy weight dominates any layout. The regular Barlow body creates clear hierarchy and strong contrast.',gf:'https://fonts.google.com/specimen/Barlow+Condensed'},
+    {name:'Syne Statement',header:{f:'Syne',w:'800',s:'geometric sans-serif'},body:{f:'Jost',w:'400',s:'geometric sans-serif'},preview:'BOLD',previewBody:'The brands that win are the ones that are impossible to confuse with anyone else. Own your voice.',why:'Syne at 800 weight is bold and geometric with personality. Jost body is modern, neutral, and clean.',gf:'https://fonts.google.com/specimen/Syne'},
+    {name:'Archivo System',header:{f:'Archivo Black',w:'400',s:'grotesque sans-serif'},body:{f:'Archivo',w:'400',s:'grotesque sans-serif'},preview:'BRAND',previewBody:'A bold brand is not an accident. It\'s a decision made before anything was designed.',why:'Archivo Black for display — dominant and proud. Archivo Regular for body — friendly and readable. A complete bold system.',gf:'https://fonts.google.com/specimen/Archivo+Black'}
   ],
   'warm-approachable': [
     {name:'Warm Creator',header:{f:'Lora',w:'700',s:'contemporary serif'},body:{f:'Source Sans Pro',w:'400',s:'humanist sans-serif'},preview:'Your Story',previewBody:'The brands people trust are the ones that feel human. Warmth is not weakness — it\'s a strategic decision.',why:'Lora feels human and warm — like a handwritten letter that grew up. Source Sans Pro keeps body copy clean and accessible.',gf:'https://fonts.google.com/specimen/Lora'},
     {name:'Friendly Authority',header:{f:'Nunito',w:'800',s:'rounded sans-serif'},body:{f:'Nunito Sans',w:'400',s:'rounded sans-serif'},preview:'Welcome In',previewBody:'Approachable brands make people feel safe before they feel sold to. Build trust first. Revenue follows.',why:'Rounded terminals make Nunito feel approachable and kind. Authority without intimidation.',gf:'https://fonts.google.com/specimen/Nunito'},
-    {name:'Human Editorial',header:{f:'Playfair Display',w:'700',s:'transitional serif'},body:{f:'Inter',w:'400',s:'interface sans-serif'},preview:'The Human Brand',previewBody:'When people feel seen in your content, they trust you. When they trust you, they buy from you.',why:'Playfair Display brings warmth and editorial elegance. Inter grounds it with the clean, modern readability of a digital-first brand.',gf:'https://fonts.google.com/specimen/Playfair+Display'}
+    {name:'Human Editorial',header:{f:'Playfair Display',w:'700',s:'transitional serif'},body:{f:'Inter',w:'400',s:'interface sans-serif'},preview:'The Human Brand',previewBody:'When people feel seen in your content, they trust you. When they trust you, they buy from you.',why:'Playfair Display brings warmth and editorial elegance. Inter grounds it with the clean, modern readability of a digital-first brand.',gf:'https://fonts.google.com/specimen/Playfair+Display'},
+    {name:'Rounded Warmth',header:{f:'Nunito',w:'800',s:'rounded sans-serif'},body:{f:'Nunito Sans',w:'400',s:'rounded sans-serif'},preview:'Welcome',previewBody:'Warmth in design is not softness — it\'s accessibility. A brand that feels safe to approach is a brand that converts.',why:'Nunito\'s rounded terminals create immediate warmth and trust. The sans companion keeps body copy clean and readable.',gf:'https://fonts.google.com/specimen/Nunito'},
+    {name:'Serif Warmth',header:{f:'Playfair Display',w:'700',s:'transitional serif'},body:{f:'Lato',w:'400',s:'humanist sans-serif'},preview:'Your World',previewBody:'Serif fonts carry decades of trust signals. Combined with a warm sans, the result feels both credible and approachable.',why:'Playfair\'s warmth comes from its elegant curves. Lato body is one of the most readable, approachable typefaces available.',gf:'https://fonts.google.com/specimen/Playfair+Display'},
+    {name:'DM Warmth',header:{f:'DM Serif Display',w:'400',s:'transitional serif'},body:{f:'DM Sans',w:'400',s:'geometric sans-serif'},preview:'Warmth',previewBody:'The brands that last are the ones that feel like people — not like corporations. Design for trust.',why:'DM Serif Display\'s italic quality adds warmth and personality. DM Sans keeps body copy grounded and readable.',gf:'https://fonts.google.com/specimen/DM+Serif+Display'}
   ],
   'luxury-editorial': [
     {name:'Luxury Editorial',header:{f:'Cormorant Garamond',w:'700',s:'garalde serif'},body:{f:'Jost',w:'300',s:'geometric sans-serif'},preview:'Élégance',previewBody:'The most premium brands in the world share one thing: every decision is intentional. Nothing is arbitrary.',why:'Cormorant Garamond is the most refined font on Google Fonts. Thin, elegant, expensive-looking. Jost at light weight matches its delicacy.',gf:'https://fonts.google.com/specimen/Cormorant+Garamond'},
     {name:'Premium Authority',header:{f:'Playfair Display',w:'700',s:'transitional serif'},body:{f:'Montserrat',w:'300',s:'geometric sans-serif'},preview:'Prestige',previewBody:'Luxury isn\'t about price. It\'s about the feeling someone gets when they encounter your brand.',why:'The classic premium pairing. Playfair Display for prestige, Montserrat Light for precision. Used by luxury brands worldwide.',gf:'https://fonts.google.com/specimen/Playfair+Display'},
-    {name:'Refined Minimal',header:{f:'DM Serif Display',w:'400',s:'transitional serif'},body:{f:'DM Sans',w:'300',s:'geometric sans-serif'},preview:'Curated',previewBody:'Restraint is a luxury. Knowing what not to include is the mark of a designer who understands premium.',why:'The DM family was designed together for maximum harmony. Serif and sans from the same designer — refined and intentional.',gf:'https://fonts.google.com/specimen/DM+Serif+Display'}
+    {name:'Refined Minimal',header:{f:'DM Serif Display',w:'400',s:'transitional serif'},body:{f:'DM Sans',w:'300',s:'geometric sans-serif'},preview:'Curated',previewBody:'Restraint is a luxury. Knowing what not to include is the mark of a designer who understands premium.',why:'The DM family was designed together for maximum harmony. Serif and sans from the same designer — refined and intentional.',gf:'https://fonts.google.com/specimen/DM+Serif+Display'},
+    {name:'Haute Couture',header:{f:'Italiana',w:'400',s:'elegant serif'},body:{f:'Raleway',w:'300',s:'geometric sans-serif'},preview:'Haute',previewBody:'True luxury is effortless. The typography disappears into the content, elevating without announcing itself.',why:'Italiana is pure high fashion — magazine masthead energy. Raleway Light matches its elegant restraint perfectly.',gf:'https://fonts.google.com/specimen/Italiana'},
+    {name:'Editorial Italic',header:{f:'Cormorant Garamond',w:'700',s:'garalde serif'},body:{f:'Montserrat',w:'300',s:'geometric sans-serif'},preview:'Editorial',previewBody:'The gap between looking expensive and looking cheap is almost always in the typography. Cormorant closes it.',why:'Cormorant Garamond italic at heavy weight is one of the most editorial combinations in digital typography. Montserrat Light grounds it.',gf:'https://fonts.google.com/specimen/Cormorant+Garamond'},
+    {name:'DM Luxury',header:{f:'DM Serif Display',w:'400',s:'transitional serif'},body:{f:'Inter',w:'300',s:'interface sans-serif'},preview:'Curated',previewBody:'Luxury brands say more by doing less. White space, restraint, and deliberate typography are the product.',why:'DM Serif Display in italic is the most refined option in the DM family. Inter at Light weight feels contemporary and precise.',gf:'https://fonts.google.com/specimen/DM+Serif+Display'}
   ],
   'creative-expressive': [
     {name:'Creative Director',header:{f:'Abril Fatface',w:'400',s:'display serif'},body:{f:'Lato',w:'400',s:'humanist sans-serif'},preview:'ART',previewBody:'The most creative brands don\'t follow trends. They make them. Your typography should say that before anyone reads a word.',why:'Abril Fatface is theatrical and confident — stops the scroll immediately. Lato brings it back to earth for body copy.',gf:'https://fonts.google.com/specimen/Abril+Fatface'},
     {name:'Arts & Culture',header:{f:'Syne',w:'800',s:'geometric sans-serif'},body:{f:'Lato',w:'300',s:'humanist sans-serif'},preview:'Original',previewBody:'Creative brands need typography that proves it before you say anything. Your font is the first piece of art they see.',why:'Syne was designed for arts and culture institutions. Bold and confident with subtle quirks that mark it as genuinely creative.',gf:'https://fonts.google.com/specimen/Syne'},
-    {name:'Fashion Lifestyle',header:{f:'Italiana',w:'400',s:'elegant serif'},body:{f:'Raleway',w:'300',s:'geometric sans-serif'},preview:'Couture',previewBody:'When the typography is right, the brand feels effortless. Like it was always meant to look exactly this way.',why:'Italiana feels like a high-fashion magazine masthead. Raleway Light brings geometric elegance to body copy. Together: effortlessly premium.',gf:'https://fonts.google.com/specimen/Italiana'}
+    {name:'Fashion Lifestyle',header:{f:'Italiana',w:'400',s:'elegant serif'},body:{f:'Raleway',w:'300',s:'geometric sans-serif'},preview:'Couture',previewBody:'When the typography is right, the brand feels effortless. Like it was always meant to look exactly this way.',why:'Italiana feels like a high-fashion magazine masthead. Raleway Light brings geometric elegance to body copy. Together: effortlessly premium.',gf:'https://fonts.google.com/specimen/Italiana'},
+    {name:'Grotesk Expressive',header:{f:'Syne',w:'800',s:'geometric sans-serif'},body:{f:'Jost',w:'300',s:'geometric sans-serif'},preview:'EXPRESSIVE',previewBody:'Creative brands don\'t apologize for being different. They build systems that make the difference undeniable.',why:'Syne was literally designed for arts and culture. At 800 weight it\'s expressive and confident. Jost Light balances it with quiet precision.',gf:'https://fonts.google.com/specimen/Syne'},
+    {name:'Condensed Creative',header:{f:'Bebas Neue',w:'400',s:'display sans-serif'},body:{f:'Raleway',w:'300',s:'geometric sans-serif'},preview:'CREATIVE',previewBody:'The most creative visual worlds are built on disciplined systems. Freedom within structure — that\'s the mark of a real art director.',why:'Bebas Neue is pure creative energy — used in editorial, fashion, and culture worldwide. Raleway Light adds elegance to the mix.',gf:'https://fonts.google.com/specimen/Bebas+Neue'},
+    {name:'Archivo Creative',header:{f:'Archivo Black',w:'400',s:'grotesque sans-serif'},body:{f:'Source Sans Pro',w:'400',s:'humanist sans-serif'},preview:'ORIGINAL',previewBody:'Creative brands stand for something specific. The typography makes the statement before the content does.',why:'Archivo Black\'s grotesque character is raw and expressive. Source Sans Pro grounds the body in warmth and readability.',gf:'https://fonts.google.com/specimen/Archivo+Black'}
   ]
 };
 
 var typCurrentFile = null;
 var typCurrentMood = null;
+var currentPairingOffset = 0;
 
 function typSelectMood(card) {
   document.querySelectorAll('.mood-card').forEach(function(c){c.classList.remove('selected');});
   card.classList.add('selected');
-  typCurrentMood = card.getAttribute('data-mood');
-  typRenderPairings(typCurrentMood);
+  var mood = card.getAttribute('data-mood');
+  typCurrentMood = mood;
+  currentPairingOffset = 0;
+  typRenderPairings(mood, 0, 3);
+  document.getElementById('pairingResults').style.display = 'block';
+  document.getElementById('pairingResultsTitle').textContent = card.querySelector('.mood-card-label').textContent + ' — Pairings';
+  var moreBtn = document.getElementById('seeMorePairingsBtn');
+  if (moreBtn) {
+    var total = (TYP_PAIRINGS[mood]||[]).length;
+    moreBtn.style.display = total > 3 ? 'block' : 'none';
+    moreBtn.setAttribute('data-mood', mood);
+    moreBtn.textContent = 'See 3 More Options →';
+  }
+  document.getElementById('pairingResults').scrollIntoView({behavior:'smooth',block:'nearest'});
 }
 
-function typRenderPairings(mood) {
-  var pairings = TYP_PAIRINGS[mood];
-  if (!pairings) return;
+function showMorePairings() {
+  var btn = document.getElementById('seeMorePairingsBtn');
+  var mood = btn ? btn.getAttribute('data-mood') : '';
+  if (!mood) return;
+  currentPairingOffset += 3;
+  var total = (TYP_PAIRINGS[mood]||[]).length;
+  typRenderPairings(mood, currentPairingOffset, 3);
+  if (currentPairingOffset + 3 >= total) {
+    // Wrap back around
+    currentPairingOffset = -3;
+    btn.textContent = 'See First 3 Again →';
+  } else {
+    btn.textContent = 'See 3 More Options →';
+  }
+}
+
+function typRenderPairings(mood, offset, count) {
+  var allPairings = TYP_PAIRINGS[mood];
+  if (!allPairings) return;
+  var pairings = allPairings.slice(offset||0, (offset||0)+(count||3));
   var brandName = (document.getElementById('brandName') && document.getElementById('brandName').value) ? document.getElementById('brandName').value : 'Your Brand';
   var html = '';
   pairings.forEach(function(p, i) {
@@ -2600,15 +2947,67 @@ function typRenderPairings(mood) {
     html += '</div>';
   });
   document.getElementById('pairingCards').innerHTML = html;
-  document.getElementById('pairingResults').style.display = 'block';
-  document.getElementById('pairingResultsTitle').textContent = 'Recommended Pairings — ' + card_label_for(mood);
-  document.getElementById('pairingResults').scrollIntoView({behavior:'smooth',block:'nearest'});
 }
 
 function card_label_for(mood) {
   var labels = {'dark-cinematic':'Dark & Cinematic','clean-minimal':'Clean & Minimal','bold-statement':'Bold & Statement','warm-approachable':'Warm & Approachable','luxury-editorial':'Luxury & Editorial','creative-expressive':'Creative & Expressive'};
   return labels[mood] || mood;
 }
+
+/* ═══════════════════════════════════════════════════════
+   GOOGLE FONTS SUGGEST + CUSTOM FONT TOGGLE
+══════════════════════════════════════════════════════════ */
+var GF_FONTS = ['Inter','Montserrat','Playfair Display','Lora','DM Sans','DM Serif Display','Barlow','Barlow Condensed','Bebas Neue','Archivo','Archivo Black','Syne','Space Grotesk','Jost','Raleway','Nunito','Nunito Sans','Source Sans Pro','Open Sans','Lato','Italiana','Cormorant Garamond','Abril Fatface','Work Sans','Poppins','Roboto','Oswald','Merriweather','Libre Baskerville','Bitter','Spectral','Crimson Text','EB Garamond','Josefin Sans','Quicksand','Karla','Rubik','Manrope','Plus Jakarta Sans','Outfit','Figtree','Cabinet Grotesk'];
+
+function gfSuggest(inputId, listId) {
+  var input = document.getElementById(inputId);
+  var list = document.getElementById(listId);
+  if (!input || !list) return;
+  var val = input.value.toLowerCase().trim();
+  if (!val || val.length < 2) { list.style.display = 'none'; return; }
+  var matches = GF_FONTS.filter(function(f){ return f.toLowerCase().includes(val); }).slice(0,6);
+  if (!matches.length) { list.style.display = 'none'; return; }
+  list.innerHTML = matches.map(function(f){
+    return '<div class="gf-suggest-item" onclick="gfSelect(\''+inputId+'\',\''+listId+'\',\''+f+'\')">'+f+'</div>';
+  }).join('');
+  list.style.display = 'block';
+}
+
+function gfSelect(inputId, listId, fontName) {
+  var input = document.getElementById(inputId);
+  var list = document.getElementById(listId);
+  if (input) input.value = fontName;
+  if (list) list.style.display = 'none';
+  // Load font preview
+  var link = document.createElement('link');
+  link.rel = 'stylesheet';
+  link.href = 'https://fonts.googleapis.com/css2?family='+encodeURIComponent(fontName)+':wght@400;700&display=swap';
+  document.head.appendChild(link);
+}
+
+function toggleCustomFonts(row) {
+  var toggle = document.getElementById('customFontToggle');
+  var note = document.getElementById('customFontNote');
+  var isOn = toggle.style.background === 'var(--orange)' || toggle.innerHTML.trim() !== '';
+  if (isOn) {
+    toggle.style.background = '';
+    toggle.innerHTML = '';
+    toggle.style.borderColor = 'var(--dimmer)';
+    if (note) note.style.display = 'none';
+  } else {
+    toggle.style.background = 'var(--orange)';
+    toggle.style.borderColor = 'var(--orange)';
+    toggle.innerHTML = '<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>';
+    if (note) note.style.display = 'block';
+  }
+}
+
+// Close suggest lists on outside click
+document.addEventListener('click', function(e) {
+  if (!e.target.closest('[id^="gf-suggest"]') && !e.target.closest('#font-primary') && !e.target.closest('#font-secondary')) {
+    document.querySelectorAll('.gf-suggest-list').forEach(function(l){ l.style.display='none'; });
+  }
+});
 
 function typUsePairing(headerFont, bodyFont, idx) {
   document.getElementById('font-primary').value = headerFont;
@@ -2674,7 +3073,7 @@ function typIdentifyFonts() {
         'Content-Type': 'application/json',
         'x-api-key': apiKey,
         'anthropic-version': '2023-06-01',
-        'anthropic-dangerous-direct-browser-access': 'true'
+        'anthropic-dangerous-direct-browser-calls': 'true'
       },
       body: JSON.stringify({
         model: 'claude-opus-4-5',
