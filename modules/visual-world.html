@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>FSCreative™ — Define Your Visual World™</title>
-<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;800;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;800;900&family=Barlow:wght@300;400;700&family=Bebas+Neue:wght@400&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,700&family=DM+Serif+Display:ital@0;1&family=Playfair+Display:ital,wght@0,700;1,700&family=Cormorant+Garamond:ital,wght@0,700;1,400&family=Syne:wght@700;800&family=Space+Grotesk:wght@700&family=Archivo+Black:wght@400&family=Archivo:wght@400&family=Abril+Fatface:wght@400&family=Lato:wght@300;400&family=Lora:wght@700&family=Source+Sans+Pro:wght@300;400&family=Nunito:wght@800&family=Nunito+Sans:wght@400&family=Italiana:wght@400&family=Raleway:wght@300;400&family=Jost:wght@300;400&family=Montserrat:wght@300;400;700;900&family=Inter:wght@300;400;700&family=Open+Sans:wght@400&display=swap" rel="stylesheet">
 <style>
 /* ─── RESET ─── */
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
@@ -706,6 +706,52 @@ textarea::placeholder,input[type=text]::placeholder{color:var(--dimmer)}
 .id-note{font-size:11px;color:var(--dimmer);margin-top:1rem;text-align:center;line-height:1.5;}
 .save-dot.syncing{background:var(--orange)!important;animation:pulse .8s infinite alternate;}
 @keyframes pulse{to{opacity:.4}}
+
+/* ─── TYPOGRAPHY WORKSHOP ─── */
+.mood-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:1.5rem;}
+@media(max-width:600px){.mood-grid{grid-template-columns:repeat(2,1fr);}}
+.mood-card{border:2px solid var(--border);border-radius:var(--radius-lg);padding:1rem;cursor:pointer;transition:all .2s;background:var(--surface);}
+.mood-card:hover{border-color:var(--border2);transform:translateY(-2px);box-shadow:0 4px 12px rgba(0,0,0,.3);}
+.mood-card.selected{border-color:var(--orange);background:var(--orange-tint);}
+.mood-card-label{font-size:9.5px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--orange);margin-bottom:6px;}
+.mood-card-preview{font-size:24px;font-weight:700;color:var(--text);line-height:1.1;margin-bottom:8px;min-height:32px;}
+.mood-card-tags{display:flex;flex-wrap:wrap;gap:4px;}
+.mood-card-tag{font-size:9px;color:var(--dimmer);border:1px solid var(--border);border-radius:20px;padding:2px 7px;}
+.pairing-cards{display:flex;flex-direction:column;gap:12px;margin-bottom:1.5rem;}
+.font-pair-card{border:2px solid var(--border);border-radius:var(--radius-lg);padding:1.25rem;background:var(--surface);transition:all .2s;}
+.font-pair-card:hover{border-color:var(--border2);}
+.font-pair-card.chosen{border-color:var(--green-text) !important;background:rgba(93,202,165,0.05);}
+.fp-label{font-size:9.5px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--orange);margin-bottom:10px;}
+.fp-preview{margin-bottom:12px;padding:16px;background:var(--bg);border-radius:var(--radius-md);border:1px solid var(--border);}
+.fp-headline{font-size:28px;line-height:1.15;color:var(--text);margin-bottom:5px;}
+.fp-body-text{font-size:13px;color:var(--dim);line-height:1.65;}
+.fp-meta{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px;}
+.fp-meta-item{background:var(--card);border:1px solid var(--border);border-radius:var(--radius-md);padding:8px 10px;}
+.fp-meta-role{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--dimmer);margin-bottom:2px;}
+.fp-meta-name{font-size:12px;font-weight:600;color:var(--text);}
+.fp-meta-style{font-size:10px;color:var(--dimmer);}
+.fp-why{font-size:12.5px;color:var(--dim);line-height:1.6;margin-bottom:12px;font-style:italic;}
+.fp-actions{display:flex;gap:8px;align-items:center;flex-wrap:wrap;}
+.fp-use-btn{padding:7px 16px;background:var(--orange);color:#fff;border:none;border-radius:var(--radius-md);font-size:12px;font-weight:600;cursor:pointer;transition:all .15s;font-family:var(--font);}
+.fp-use-btn:hover{background:var(--orange-hover);}
+.fp-use-btn.used{background:var(--green-text);cursor:default;}
+.fp-gf-link{font-size:11px;color:var(--dimmer);text-decoration:none;border-bottom:1px solid var(--border2);padding-bottom:1px;transition:color .15s;}
+.fp-gf-link:hover{color:var(--orange);}
+.font-id-zone{border:2px dashed var(--border2);border-radius:var(--radius-lg);padding:2rem;text-align:center;cursor:pointer;transition:all .2s;background:var(--bg);margin-bottom:1rem;position:relative;}
+.font-id-zone:hover,.font-id-zone.dragover{border-color:var(--orange);background:var(--orange-tint);}
+.font-id-icon{font-size:28px;margin-bottom:8px;}
+.font-id-text{font-size:13px;color:var(--dim);line-height:1.6;}
+.font-id-text strong{color:var(--text);}
+.font-id-img-preview{width:100%;max-height:180px;object-fit:cover;border-radius:var(--radius-md);border:1px solid var(--border);display:none;margin-bottom:12px;}
+.fi-results{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-md);padding:1rem;margin-top:12px;display:none;}
+.fi-result-item{border-bottom:1px solid var(--border);padding:12px 0;}
+.fi-result-item:last-child{border-bottom:none;padding-bottom:0;}
+.fi-font-name{font-size:14px;font-weight:700;color:var(--text);margin-bottom:3px;}
+.fi-font-desc{font-size:12px;color:var(--dim);line-height:1.5;margin-bottom:8px;}
+.fi-btn{padding:5px 12px;background:var(--surface);border:1px solid var(--border2);border-radius:var(--radius-md);font-size:11px;color:var(--dim);cursor:pointer;font-family:var(--font);transition:all .15s;margin-right:6px;}
+.fi-btn:hover{border-color:var(--orange);color:var(--orange);}
+.fi-analyzing{text-align:center;padding:1.5rem;color:var(--dim);font-size:13px;}
+.fi-spin{display:inline-block;width:14px;height:14px;border:2px solid var(--border2);border-top-color:var(--orange);border-radius:50%;animation:aispin .6s linear infinite;vertical-align:middle;margin-right:6px;}
 </style>
 </head>
 <body>
@@ -1033,13 +1079,77 @@ textarea::placeholder,input[type=text]::placeholder{color:var(--dimmer)}
 <div class="sc" id="s4">
   <div class="pl">Workshop 4</div>
   <h1>Define Your Typography</h1>
-  <p class="intro">Your typography is the written voice of your visual world. It should feel like a natural extension of your color palette and mood. The right font pairing creates visual hierarchy and makes your content instantly recognizable.</p>
-  <div class="teach">
-    <p><strong>Font pairing principle: create contrast.</strong> If your primary font is bold, your secondary should be light. If your primary is serif, your secondary should be sans-serif. Contrast creates visual hierarchy and makes your content easier to read.</p>
+  <p class="intro">Your typography is the written voice of your visual world. Use the Font Finder to discover the right pairing for your brand aesthetic — or drop in any image to identify fonts you love.</p>
+
+  <!-- FONT FINDER -->
+  <h2>Font Finder</h2>
+  <p class="intro" style="margin-bottom:1rem">Which of these feels closest to your brand world? Pick the aesthetic that matches your mood board.</p>
+  <div class="mood-grid" id="moodGrid">
+    <div class="mood-card" data-mood="dark-cinematic" onclick="typSelectMood(this)">
+      <div class="mood-card-label">Dark & Cinematic</div>
+      <div class="mood-card-preview" style="font-family:'Barlow Condensed',sans-serif;letter-spacing:.02em">IMPACT</div>
+      <div class="mood-card-tags"><span class="mood-card-tag">bold</span><span class="mood-card-tag">dramatic</span><span class="mood-card-tag">cinematic</span></div>
+    </div>
+    <div class="mood-card" data-mood="clean-minimal" onclick="typSelectMood(this)">
+      <div class="mood-card-label">Clean & Minimal</div>
+      <div class="mood-card-preview" style="font-family:'Inter',sans-serif;font-weight:700">Clarity</div>
+      <div class="mood-card-tags"><span class="mood-card-tag">modern</span><span class="mood-card-tag">digital</span><span class="mood-card-tag">precise</span></div>
+    </div>
+    <div class="mood-card" data-mood="bold-statement" onclick="typSelectMood(this)">
+      <div class="mood-card-label">Bold & Statement</div>
+      <div class="mood-card-preview" style="font-family:'Montserrat',sans-serif;font-weight:900">LOUD</div>
+      <div class="mood-card-tags"><span class="mood-card-tag">loud</span><span class="mood-card-tag">confident</span><span class="mood-card-tag">energy</span></div>
+    </div>
+    <div class="mood-card" data-mood="warm-approachable" onclick="typSelectMood(this)">
+      <div class="mood-card-label">Warm & Approachable</div>
+      <div class="mood-card-preview" style="font-family:'Lora',serif;font-weight:700">Human</div>
+      <div class="mood-card-tags"><span class="mood-card-tag">warm</span><span class="mood-card-tag">trusting</span><span class="mood-card-tag">personal</span></div>
+    </div>
+    <div class="mood-card" data-mood="luxury-editorial" onclick="typSelectMood(this)">
+      <div class="mood-card-label">Luxury & Editorial</div>
+      <div class="mood-card-preview" style="font-family:'Playfair Display',serif;font-weight:700;font-style:italic">Élégant</div>
+      <div class="mood-card-tags"><span class="mood-card-tag">refined</span><span class="mood-card-tag">premium</span><span class="mood-card-tag">editorial</span></div>
+    </div>
+    <div class="mood-card" data-mood="creative-expressive" onclick="typSelectMood(this)">
+      <div class="mood-card-label">Creative & Expressive</div>
+      <div class="mood-card-preview" style="font-family:'Abril Fatface',serif">Art</div>
+      <div class="mood-card-tags"><span class="mood-card-tag">artistic</span><span class="mood-card-tag">unique</span><span class="mood-card-tag">expressive</span></div>
+    </div>
   </div>
 
+  <div id="pairingResults" style="display:none">
+    <h2 id="pairingResultsTitle" style="margin-bottom:.5rem">Recommended Pairings</h2>
+    <p class="intro" style="margin-bottom:1rem">Click <strong>Use This Pairing</strong> to auto-fill your fonts.</p>
+    <div class="pairing-cards" id="pairingCards"></div>
+  </div>
+
+  <!-- AI FONT IDENTIFIER -->
+  <h2 style="margin-top:1rem">AI Font Identifier</h2>
+  <p class="intro" style="margin-bottom:.85rem">Drop in a screenshot or image with fonts you love — a brand, a poster, a design. AI will identify the fonts and suggest free Google Fonts alternatives.</p>
+  <div class="font-id-zone" id="fontIdZone"
+    onclick="document.getElementById('fontIdInput').click()"
+    ondragover="event.preventDefault();this.classList.add('dragover')"
+    ondragleave="this.classList.remove('dragover')"
+    ondrop="typHandleDrop(event)">
+    <input type="file" id="fontIdInput" accept="image/*" style="display:none" onchange="typHandleFile(this.files[0])">
+    <img id="fontIdImgPreview" class="font-id-img-preview">
+    <div id="fontIdPrompt">
+      <div class="font-id-icon">🔍</div>
+      <div class="font-id-text"><strong>Drop an image here</strong> or click to upload<br><span style="font-size:11px;color:var(--dimmer)">Brand screenshots, magazine pages, logos — anything with type</span></div>
+    </div>
+  </div>
+  <button id="fontIdBtn" class="btn p" style="display:none;margin-bottom:1rem;width:100%;padding:11px" onclick="typIdentifyFonts()">
+    Identify Fonts with AI →
+  </button>
+  <div class="fi-results" id="fontIdResults"></div>
+
+  <!-- MANUAL ENTRY -->
+  <h2 style="margin-top:1.5rem">Your Typography</h2>
+  <div class="teach">
+    <p><strong>Font pairing principle: create contrast.</strong> Bold header + light body. Serif + sans-serif. Contrast creates hierarchy and makes your content immediately readable.</p>
+  </div>
   <div class="ec">
-    <div class="elbl">Your Typography</div>
+    <div class="elbl">Typography Setup</div>
     <div class="q">Primary Font — headlines, hooks, title cards</div>
     <div class="og" id="g-font1style">
       <button class="opt" data-g="font1style">Bold sans-serif (clean, modern)</button>
@@ -1047,8 +1157,7 @@ textarea::placeholder,input[type=text]::placeholder{color:var(--dimmer)}
       <button class="opt" data-g="font1style">Display / statement (unique)</button>
       <button class="opt" data-g="font1style">Script / handwritten (personal)</button>
     </div>
-    <input type="text" id="font-primary" placeholder="Font name — e.g. Helvetica Neue Bold, Canela, Playfair Display...">
-
+    <input type="text" id="font-primary" placeholder="Font name — e.g. Bebas Neue, Playfair Display, Montserrat...">
     <div class="q">Secondary Font — body text, captions, supporting copy</div>
     <div class="og" id="g-font2style">
       <button class="opt" data-g="font2style">Clean sans-serif (minimal, modern)</button>
@@ -1056,8 +1165,7 @@ textarea::placeholder,input[type=text]::placeholder{color:var(--dimmer)}
       <button class="opt" data-g="font2style">Monospace (technical, precise)</button>
       <button class="opt" data-g="font2style">Light sans-serif (simple, clear)</button>
     </div>
-    <input type="text" id="font-secondary" placeholder="Font name — e.g. Inter Light, Garamond, DM Sans...">
-
+    <input type="text" id="font-secondary" placeholder="Font name — e.g. Inter, DM Sans, Source Sans Pro...">
     <div class="q">Typography rules (how you'll use your fonts consistently)</div>
     <textarea rows="3" id="typographyRules" placeholder="1. Primary font is always used for: &#10;2. Secondary font is always used for: &#10;3. I never use more than ___ fonts in one piece of content"></textarea>
   </div>
@@ -1066,7 +1174,7 @@ textarea::placeholder,input[type=text]::placeholder{color:var(--dimmer)}
   <div class="checklist" id="typChecklist">
     <div class="check-item" data-key="typ1"><div class="check-box"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div><div class="check-text">I have 2 defined fonts with clear rules for each</div></div>
     <div class="check-item" data-key="typ2"><div class="check-box"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div><div class="check-text">My fonts create contrast and hierarchy</div></div>
-    <div class="check-item" data-key="typ3"><div class="check-box"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div><div class="check-text">I've tested my palette and typography together — it feels cohesive and premium</div></div>
+    <div class="check-item" data-key="typ3"><div class="check-box"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div><div class="check-text">My typography matches the mood of my color palette and mood board</div></div>
   </div>
   <div class="nr"><button class="btn" id="b4b">← Back</button><span class="si">4/6</span><button class="btn p" id="b4n">Save & Continue →</button></div>
 </div>
@@ -2419,6 +2527,218 @@ setTimeout(function(){
     window.parent.postMessage({type:'ready',cur:cur,done:doneArr},'*');
   }
 },300);
+
+/* ═══════════════════════════════════════════════════════
+   TYPOGRAPHY WORKSHOP
+══════════════════════════════════════════════════════════ */
+var TYP_PAIRINGS = {
+  'dark-cinematic': [
+    {name:'Cinematic Authority',header:{f:'Bebas Neue',w:'400',s:'display sans-serif'},body:{f:'DM Sans',w:'400',s:'geometric sans-serif'},preview:'BRAND NAME',previewBody:'The most cinematic creators aren\'t the most talented — they\'re the most intentional.',why:'Bebas Neue is the most cinematic display font on Google Fonts. Big, bold, commanding. DM Sans keeps body copy modern and clean.',gf:'https://fonts.google.com/specimen/Bebas+Neue'},
+    {name:'Dark Editorial',header:{f:'Barlow Condensed',w:'700',s:'condensed sans-serif'},body:{f:'Barlow',w:'400',s:'humanist sans-serif'},preview:'DARK EDITORIAL',previewBody:'Your visual world is the setting of your brand — the environment and atmosphere that shows up in every piece of content.',why:'The Barlow family creates a cohesive, professional editorial system. Condensed headers command attention; regular body stays readable.',gf:'https://fonts.google.com/specimen/Barlow+Condensed'},
+    {name:'Documentary Weight',header:{f:'DM Serif Display',w:'400',s:'transitional serif'},body:{f:'DM Sans',w:'300',s:'geometric sans-serif'},preview:'Your Story',previewBody:'The creators who build real brands understand one thing that everyone else misses: the visual world is the message.',why:'DM Serif Display has the gravitas of legacy media — newspapers, magazines. Against DM Sans Light it feels like premium documentary content.',gf:'https://fonts.google.com/specimen/DM+Serif+Display'}
+  ],
+  'clean-minimal': [
+    {name:'Modern Minimal',header:{f:'Inter',w:'700',s:'interface sans-serif'},body:{f:'Inter',w:'400',s:'interface sans-serif'},preview:'Clean System',previewBody:'Designed for screens. Perfectly legible at any size. A single-family approach creates the most cohesive, digital-native feel.',why:'Inter was designed specifically for digital interfaces. Using one family with multiple weights creates a clean, intentional system.',gf:'https://fonts.google.com/specimen/Inter'},
+    {name:'Clean Confidence',header:{f:'Syne',w:'800',s:'geometric sans-serif'},body:{f:'Inter',w:'400',s:'interface sans-serif'},preview:'Considered',previewBody:'Every visual decision you make either builds your brand or dilutes it. There is no neutral.',why:'Syne has subtle geometric quirks that add personality to a minimal look. Considered and modern without being corporate.',gf:'https://fonts.google.com/specimen/Syne'},
+    {name:'Technical Precision',header:{f:'Space Grotesk',w:'700',s:'quirky geometric'},body:{f:'DM Sans',w:'400',s:'geometric sans-serif'},preview:'Precise',previewBody:'The difference between content that looks cheap and content that looks premium is almost never the camera.',why:'Space Grotesk has deliberate imperfections that feel human and smart. Paired with DM Sans for clean, technical precision.',gf:'https://fonts.google.com/specimen/Space+Grotesk'}
+  ],
+  'bold-statement': [
+    {name:'Lifestyle Bold',header:{f:'Archivo Black',w:'400',s:'grotesque sans-serif'},body:{f:'Archivo',w:'400',s:'grotesque sans-serif'},preview:'STATEMENT',previewBody:'Stop posting content that blends in. Your brand should be impossible to scroll past.',why:'Archivo Black is loud, proud, and impossible to ignore. The full family gives both impact for headers and readability for body.',gf:'https://fonts.google.com/specimen/Archivo+Black'},
+    {name:'Brand Machine',header:{f:'Montserrat',w:'900',s:'geometric sans-serif'},body:{f:'Open Sans',w:'400',s:'humanist sans-serif'},preview:'YOUR BRAND',previewBody:'Build a brand that speaks before you say a word. Visual identity is the fastest form of communication.',why:'Montserrat at Black weight is a brand machine — used by hundreds of premium brands worldwide. Open Sans keeps it accessible.',gf:'https://fonts.google.com/specimen/Montserrat'},
+    {name:'Maximum Impact',header:{f:'Barlow Condensed',w:'800',s:'condensed sans-serif'},body:{f:'Barlow',w:'400',s:'humanist sans-serif'},preview:'MAXIMUM IMPACT',previewBody:'Your typography communicates who you are before anyone reads a word. Make it count.',why:'Maximum impact per pixel. Condensed headers make strong statements. Barlow body stays clean and readable at any size.',gf:'https://fonts.google.com/specimen/Barlow+Condensed'}
+  ],
+  'warm-approachable': [
+    {name:'Warm Creator',header:{f:'Lora',w:'700',s:'contemporary serif'},body:{f:'Source Sans Pro',w:'400',s:'humanist sans-serif'},preview:'Your Story',previewBody:'The brands people trust are the ones that feel human. Warmth is not weakness — it\'s a strategic decision.',why:'Lora feels human and warm — like a handwritten letter that grew up. Source Sans Pro keeps body copy clean and accessible.',gf:'https://fonts.google.com/specimen/Lora'},
+    {name:'Friendly Authority',header:{f:'Nunito',w:'800',s:'rounded sans-serif'},body:{f:'Nunito Sans',w:'400',s:'rounded sans-serif'},preview:'Welcome In',previewBody:'Approachable brands make people feel safe before they feel sold to. Build trust first. Revenue follows.',why:'Rounded terminals make Nunito feel approachable and kind. Authority without intimidation.',gf:'https://fonts.google.com/specimen/Nunito'},
+    {name:'Human Editorial',header:{f:'Playfair Display',w:'700',s:'transitional serif'},body:{f:'Inter',w:'400',s:'interface sans-serif'},preview:'The Human Brand',previewBody:'When people feel seen in your content, they trust you. When they trust you, they buy from you.',why:'Playfair Display brings warmth and editorial elegance. Inter grounds it with the clean, modern readability of a digital-first brand.',gf:'https://fonts.google.com/specimen/Playfair+Display'}
+  ],
+  'luxury-editorial': [
+    {name:'Luxury Editorial',header:{f:'Cormorant Garamond',w:'700',s:'garalde serif'},body:{f:'Jost',w:'300',s:'geometric sans-serif'},preview:'Élégance',previewBody:'The most premium brands in the world share one thing: every decision is intentional. Nothing is arbitrary.',why:'Cormorant Garamond is the most refined font on Google Fonts. Thin, elegant, expensive-looking. Jost at light weight matches its delicacy.',gf:'https://fonts.google.com/specimen/Cormorant+Garamond'},
+    {name:'Premium Authority',header:{f:'Playfair Display',w:'700',s:'transitional serif'},body:{f:'Montserrat',w:'300',s:'geometric sans-serif'},preview:'Prestige',previewBody:'Luxury isn\'t about price. It\'s about the feeling someone gets when they encounter your brand.',why:'The classic premium pairing. Playfair Display for prestige, Montserrat Light for precision. Used by luxury brands worldwide.',gf:'https://fonts.google.com/specimen/Playfair+Display'},
+    {name:'Refined Minimal',header:{f:'DM Serif Display',w:'400',s:'transitional serif'},body:{f:'DM Sans',w:'300',s:'geometric sans-serif'},preview:'Curated',previewBody:'Restraint is a luxury. Knowing what not to include is the mark of a designer who understands premium.',why:'The DM family was designed together for maximum harmony. Serif and sans from the same designer — refined and intentional.',gf:'https://fonts.google.com/specimen/DM+Serif+Display'}
+  ],
+  'creative-expressive': [
+    {name:'Creative Director',header:{f:'Abril Fatface',w:'400',s:'display serif'},body:{f:'Lato',w:'400',s:'humanist sans-serif'},preview:'ART',previewBody:'The most creative brands don\'t follow trends. They make them. Your typography should say that before anyone reads a word.',why:'Abril Fatface is theatrical and confident — stops the scroll immediately. Lato brings it back to earth for body copy.',gf:'https://fonts.google.com/specimen/Abril+Fatface'},
+    {name:'Arts & Culture',header:{f:'Syne',w:'800',s:'geometric sans-serif'},body:{f:'Lato',w:'300',s:'humanist sans-serif'},preview:'Original',previewBody:'Creative brands need typography that proves it before you say anything. Your font is the first piece of art they see.',why:'Syne was designed for arts and culture institutions. Bold and confident with subtle quirks that mark it as genuinely creative.',gf:'https://fonts.google.com/specimen/Syne'},
+    {name:'Fashion Lifestyle',header:{f:'Italiana',w:'400',s:'elegant serif'},body:{f:'Raleway',w:'300',s:'geometric sans-serif'},preview:'Couture',previewBody:'When the typography is right, the brand feels effortless. Like it was always meant to look exactly this way.',why:'Italiana feels like a high-fashion magazine masthead. Raleway Light brings geometric elegance to body copy. Together: effortlessly premium.',gf:'https://fonts.google.com/specimen/Italiana'}
+  ]
+};
+
+var typCurrentFile = null;
+var typCurrentMood = null;
+
+function typSelectMood(card) {
+  document.querySelectorAll('.mood-card').forEach(function(c){c.classList.remove('selected');});
+  card.classList.add('selected');
+  typCurrentMood = card.getAttribute('data-mood');
+  typRenderPairings(typCurrentMood);
+}
+
+function typRenderPairings(mood) {
+  var pairings = TYP_PAIRINGS[mood];
+  if (!pairings) return;
+  var brandName = (document.getElementById('brandName') && document.getElementById('brandName').value) ? document.getElementById('brandName').value : 'Your Brand';
+  var html = '';
+  pairings.forEach(function(p, i) {
+    var hf = p.header.f;
+    var bf = p.body.f;
+    html += '<div class="font-pair-card" id="fpc-'+i+'">';
+    html += '<div class="fp-label">'+p.name+'</div>';
+    html += '<div class="fp-preview">';
+    html += '<div class="fp-headline" style="font-family:\''+hf+'\',serif,sans-serif;font-weight:'+p.header.w+'">'+brandName+'</div>';
+    html += '<div class="fp-body-text" style="font-family:\''+bf+'\',sans-serif;font-weight:'+p.body.w+'">'+p.previewBody+'</div>';
+    html += '</div>';
+    html += '<div class="fp-meta">';
+    html += '<div class="fp-meta-item"><div class="fp-meta-role">Primary Font</div><div class="fp-meta-name">'+hf+'</div><div class="fp-meta-style">'+p.header.s+'</div></div>';
+    html += '<div class="fp-meta-item"><div class="fp-meta-role">Body Font</div><div class="fp-meta-name">'+bf+'</div><div class="fp-meta-style">'+p.body.s+'</div></div>';
+    html += '</div>';
+    html += '<div class="fp-why">'+p.why+'</div>';
+    html += '<div class="fp-actions">';
+    html += '<button class="fp-use-btn" id="fpubtn-'+i+'" onclick="typUsePairing(\''+hf+'\',\''+bf+'\','+i+')">Use This Pairing</button>';
+    html += '<a href="'+p.gf+'" target="_blank" class="fp-gf-link">View on Google Fonts &#8594;</a>';
+    html += '</div>';
+    html += '</div>';
+  });
+  document.getElementById('pairingCards').innerHTML = html;
+  document.getElementById('pairingResults').style.display = 'block';
+  document.getElementById('pairingResultsTitle').textContent = 'Recommended Pairings — ' + card_label_for(mood);
+  document.getElementById('pairingResults').scrollIntoView({behavior:'smooth',block:'nearest'});
+}
+
+function card_label_for(mood) {
+  var labels = {'dark-cinematic':'Dark & Cinematic','clean-minimal':'Clean & Minimal','bold-statement':'Bold & Statement','warm-approachable':'Warm & Approachable','luxury-editorial':'Luxury & Editorial','creative-expressive':'Creative & Expressive'};
+  return labels[mood] || mood;
+}
+
+function typUsePairing(headerFont, bodyFont, idx) {
+  document.getElementById('font-primary').value = headerFont;
+  document.getElementById('font-secondary').value = bodyFont;
+  // Trigger input events so saveData picks up the changes
+  ['font-primary','font-secondary'].forEach(function(id){
+    var el = document.getElementById(id);
+    if (el) { el.dispatchEvent(new Event('input', {bubbles:true})); el.dispatchEvent(new Event('change', {bubbles:true})); }
+  });
+  // Update button state
+  document.querySelectorAll('.fp-use-btn').forEach(function(b){b.textContent='Use This Pairing';b.classList.remove('used');});
+  document.querySelectorAll('.font-pair-card').forEach(function(c){c.classList.remove('chosen');});
+  var btn = document.getElementById('fpubtn-'+idx);
+  var card = document.getElementById('fpc-'+idx);
+  if (btn) { btn.textContent='\u2713 Using This Pairing';btn.classList.add('used'); }
+  if (card) card.classList.add('chosen');
+  saveData();
+  // Scroll to manual inputs so user sees it filled in
+  setTimeout(function(){ document.getElementById('font-primary').scrollIntoView({behavior:'smooth',block:'center'}); },300);
+}
+
+function typHandleDrop(e) {
+  e.preventDefault();
+  document.getElementById('fontIdZone').classList.remove('dragover');
+  var file = e.dataTransfer.files[0];
+  if (file && file.type.startsWith('image/')) typHandleFile(file);
+}
+
+function typHandleFile(file) {
+  if (!file) return;
+  typCurrentFile = file;
+  var reader = new FileReader();
+  reader.onload = function(ev) {
+    var img = document.getElementById('fontIdImgPreview');
+    img.src = ev.target.result;
+    img.style.display = 'block';
+    document.getElementById('fontIdPrompt').style.display = 'none';
+    document.getElementById('fontIdBtn').style.display = 'block';
+    document.getElementById('fontIdResults').style.display = 'none';
+  };
+  reader.readAsDataURL(file);
+}
+
+function typIdentifyFonts() {
+  if (!typCurrentFile) return;
+  var apiKey = localStorage.getItem('fsc-anthropic-key') || '';
+  if (!apiKey) {
+    alert('No Anthropic API key found. Go to admin.html and save your API key first.');
+    return;
+  }
+  var results = document.getElementById('fontIdResults');
+  results.style.display = 'block';
+  results.innerHTML = '<div class="fi-analyzing"><span class="fi-spin"></span>Analyzing fonts in image...</div>';
+  document.getElementById('fontIdBtn').disabled = true;
+
+  var reader = new FileReader();
+  reader.onload = function(ev) {
+    var b64 = ev.target.result.split(',')[1];
+    var mediaType = typCurrentFile.type || 'image/jpeg';
+    fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': apiKey,
+        'anthropic-version': '2023-06-01',
+        'anthropic-dangerous-direct-browser-access': 'true'
+      },
+      body: JSON.stringify({
+        model: 'claude-opus-4-5',
+        max_tokens: 800,
+        messages: [{
+          role: 'user',
+          content: [
+            {type:'image', source:{type:'base64', media_type:mediaType, data:b64}},
+            {type:'text', text:'Look at the typography in this image. Identify up to 3 fonts you can see. For each one, respond in this exact JSON format (no other text):\n\n[{"name":"Font Name or closest match","description":"Brief description of the style (1 sentence)","googleFontsAlternative":"Closest free Google Fonts equivalent","googleFontsUrl":"https://fonts.google.com/specimen/Name","role":"headline|body|display","confidence":"high|medium|low"},{"name":"..."}]\n\nIf you cannot identify a specific font, name the closest Google Fonts equivalent based on the style. Always return valid JSON array.'}
+          ]
+        }]
+      })
+    })
+    .then(function(r){return r.json();})
+    .then(function(data) {
+      document.getElementById('fontIdBtn').disabled = false;
+      if (data.error) { results.innerHTML = '<div class="fi-analyzing" style="color:#e05555">Error: '+data.error.message+'</div>'; return; }
+      var text = data.content && data.content[0] && data.content[0].text;
+      try {
+        // extract JSON from response
+        var jsonMatch = text.match(/\[[\s\S]*\]/);
+        if (!jsonMatch) throw new Error('No JSON found');
+        var fonts = JSON.parse(jsonMatch[0]);
+        var html = '';
+        fonts.forEach(function(f) {
+          html += '<div class="fi-result-item">';
+          html += '<div class="fi-font-name">'+f.name+'</div>';
+          html += '<div class="fi-font-desc">'+f.description;
+          if (f.googleFontsAlternative && f.googleFontsAlternative !== f.name) {
+            html += ' Free alternative: <strong>'+f.googleFontsAlternative+'</strong>';
+          }
+          html += '</div>';
+          html += '<div style="margin-top:7px">';
+          var useTarget = (f.role === 'body') ? 'font-secondary' : 'font-primary';
+          var useFont = f.googleFontsAlternative || f.name;
+          html += '<button class="fi-btn" onclick="typFillFont(\''+useFont+'\',\''+useTarget+'\')">Use as '+(useTarget==='font-primary'?'Primary':'Body')+'</button>';
+          if (f.googleFontsUrl) html += '<a href="'+f.googleFontsUrl+'" target="_blank" class="fp-gf-link">View on Google Fonts &#8594;</a>';
+          html += '</div>';
+          html += '</div>';
+        });
+        results.innerHTML = html || '<div class="fi-analyzing">No fonts identified. Try a clearer image.</div>';
+      } catch(err) {
+        // fallback: show raw text
+        results.innerHTML = '<div class="fi-result-item"><div class="fi-font-name">Analysis Result</div><div class="fi-font-desc" style="white-space:pre-wrap">'+text+'</div></div>';
+      }
+    })
+    .catch(function(err) {
+      document.getElementById('fontIdBtn').disabled = false;
+      results.innerHTML = '<div class="fi-analyzing" style="color:#e05555">Connection error. Check your API key in admin.html.</div>';
+    });
+  };
+  reader.readAsDataURL(typCurrentFile);
+}
+
+function typFillFont(fontName, inputId) {
+  var el = document.getElementById(inputId);
+  if (!el) return;
+  el.value = fontName;
+  el.dispatchEvent(new Event('input', {bubbles:true}));
+  el.dispatchEvent(new Event('change', {bubbles:true}));
+  saveData();
+  el.style.borderColor = 'var(--green-text)';
+  setTimeout(function(){ el.style.borderColor=''; }, 2000);
+}
 </script>
 </body>
 </html>
