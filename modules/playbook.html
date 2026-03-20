@@ -88,6 +88,16 @@ body.light .icon-moon{display:none}body.light .icon-sun{display:block}
 .pb-print-btn{display:block;width:100%;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-md);padding:10px;font-size:12px;font-family:var(--font);color:var(--dim);cursor:pointer;text-align:center;margin-top:2rem;transition:all .15s;}
 .pb-print-btn:hover{background:var(--card);color:var(--text);}
 
+/* ─── RESPONSIVE ─── */
+@media(max-width:899px){
+  #sidebar{display:none}
+  #main{margin-left:0;display:block}
+  #wb{padding:1.25rem 1.25rem 5rem}
+}
+@media(min-width:900px){
+  .topbar{display:none}
+}
+
 @media print{
   #sidebar,#topbar-wrap,.pb-print-btn{display:none!important}
   #main{margin-left:0!important}
