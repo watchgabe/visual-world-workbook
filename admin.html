@@ -122,6 +122,18 @@ body{background:var(--bg);color:var(--text);font-family:var(--font);font-size:14
   </div>
 
   <div class="dash-body">
+
+    <!-- API KEY SETUP -->
+    <div id="api-key-bar" style="background:#161616;border:1px solid #2a2a2a;border-radius:8px;padding:.85rem 1.1rem;margin-bottom:1.25rem;display:flex;align-items:center;gap:12px;flex-wrap:wrap;">
+      <div style="flex:1;min-width:0">
+        <div style="font-size:9.5px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#F0601B;margin-bottom:3px;">Anthropic API Key</div>
+        <div style="font-size:12px;color:#a0a0a0;" id="api-key-status">Used for Creator Analysis AI features. Stored in this browser only.</div>
+      </div>
+      <input type="password" id="api-key-input" placeholder="sk-ant-api03-..." autocomplete="off"
+        style="width:260px;border:1px solid #2a2a2a;border-radius:6px;padding:7px 10px;font-size:12px;font-family:inherit;color:#fff;background:#0a0a0a;outline:none;">
+      <button onclick="saveApiKey()" style="background:#F0601B;color:#fff;border:none;border-radius:6px;padding:7px 14px;font-size:12px;font-weight:600;cursor:pointer;white-space:nowrap;">Save Key</button>
+    </div>
+
     <div class="stat-row" id="stat-row">
       <div class="stat-card"><div class="stat-num" id="s-total">—</div><div class="stat-lbl">Total Users</div></div>
       <div class="stat-card"><div class="stat-num" id="s-active">—</div><div class="stat-lbl">Started</div></div>
@@ -189,6 +201,7 @@ function checkAuth() {
     document.getElementById('auth-screen').style.display = 'none';
     document.getElementById('dashboard').style.display = 'block';
     loadDashboard();
+    initApiKeyBar();
   } else {
     err.style.display = 'block';
     document.getElementById('auth-pass').value = '';
@@ -200,6 +213,27 @@ function logout() {
   document.getElementById('auth-screen').style.display = 'flex';
   document.getElementById('dashboard').style.display = 'none';
   document.getElementById('auth-pass').value = '';
+}
+
+function saveApiKey() {
+  var key = (document.getElementById('api-key-input').value || '').trim();
+  if (!key) return;
+  localStorage.setItem('fsc-anthropic-key', key);
+  document.getElementById('api-key-input').value = '';
+  var status = document.getElementById('api-key-status');
+  status.textContent = '✓ Key saved — Creator Analysis is now active in this browser.';
+  status.style.color = '#5DCAA5';
+  setTimeout(function(){ status.textContent = 'Used for Creator Analysis AI features. Stored in this browser only.'; status.style.color = ''; }, 3000);
+}
+
+function initApiKeyBar() {
+  var existing = localStorage.getItem('fsc-anthropic-key');
+  if (existing) {
+    var status = document.getElementById('api-key-status');
+    status.textContent = '✓ Key active — last 8 chars: ...' + existing.slice(-8);
+    status.style.color = '#5DCAA5';
+    document.getElementById('api-key-input').placeholder = 'Paste new key to update...';
+  }
 }
 
 async function loadDashboard() {
