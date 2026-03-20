@@ -322,8 +322,10 @@ textarea::placeholder,input[type=text]::placeholder{color:var(--dimmer)}
 .sg{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-bottom:1.1rem}
 .sc3{
   border:1px solid var(--border);border-radius:var(--radius-md);
-  padding:11px;background:var(--surface);
+  background:var(--surface);overflow:hidden;
 }
+.sc3-img{width:100%;aspect-ratio:16/9;object-fit:cover;display:block;}
+.sc3-body{padding:10px 11px 11px;}
 .sn2{font-size:12px;font-weight:600;color:var(--text);margin-bottom:4px}
 .sd{font-size:11.5px;color:var(--dim);line-height:1.65}
 
@@ -619,18 +621,14 @@ textarea::placeholder,input[type=text]::placeholder{color:var(--dimmer)}
   <h2>Shots & Angles</h2>
   <p style="font-size:13px;color:var(--dim);line-height:1.7;margin-bottom:1rem">Every shot you choose communicates something before you say a word. Height is power. Distance is intimacy. Use these deliberately — never accidentally.</p>
   <div class="sg">
-    <div class="sc3"><div class="sn2">Extreme Wide (EWS)</div><div class="sd">Subject tiny relative to environment. Establishing location, showing scale, opening a scene.</div></div>
-    <div class="sc3"><div class="sn2">Wide Shot (WS)</div><div class="sd">Full body visible, environment prominent. Intros, lifestyle, showing your workspace and world.</div></div>
-    <div class="sc3"><div class="sn2">Medium Shot (MS)</div><div class="sd">Waist to top of head. The standard conversational shot — professional, approachable, presence.</div></div>
-    <div class="sc3"><div class="sn2">Medium Close-Up (MCU)</div><div class="sd">Chest to top of head. More intimate — feels like direct conversation. Strong for trust-building.</div></div>
-    <div class="sc3"><div class="sn2">Close-Up (CU)</div><div class="sd">Shoulders to top of head. Intensity, intimacy, focus. Use to drive a point home or create emotional connection.</div></div>
-    <div class="sc3"><div class="sn2">Extreme Close-Up (ECU)</div><div class="sd">Face or specific detail only. Maximum intensity. B-roll details — hands, coffee, keyboard, product.</div></div>
-    <div class="sc3"><div class="sn2">Eye Level</div><div class="sd">Camera at subject's eye height. Neutral, relatable, conversational. Default for direct-to-camera — equal footing with viewer.</div></div>
-    <div class="sc3"><div class="sn2">Low Angle</div><div class="sd">Camera below eye level, looking up. Powerful, dominant, larger than life. Use for authority content and cinematic B-roll.</div></div>
-    <div class="sc3"><div class="sn2">Bird's Eye / Overhead</div><div class="sd">Camera directly above, looking straight down. Unique and shareable. Flat lay B-roll — desk setups, products, process reveals.</div></div>
-    <div class="sc3"><div class="sn2">Over the Shoulder (OTS)</div><div class="sd">Camera behind and to the side. Creates perspective and POV — great for tutorials and reaction shots.</div></div>
-    <div class="sc3"><div class="sn2">Dutch Angle</div><div class="sd">Camera tilted on its axis, horizon diagonal. Creates tension or drama. Use intentionally — never accidentally.</div></div>
-    <div class="sc3"><div class="sn2">POV Shot</div><div class="sd">Camera represents subject's point of view. Immersion and first-person experience. Powerful for process and day-in-the-life.</div></div>
+    <div class="sc3"><img class="sc3-img" src="https://res.cloudinary.com/dy0kchxh8/image/upload/v1773986589/image_9_gu23ww.png" alt="Extreme Wide Shot"><div class="sc3-body"><div class="sn2">Extreme Wide Shot (EWS)</div><div class="sd">Subject tiny relative to environment. Establishing location, showing scale, opening a scene.</div></div></div>
+    <div class="sc3"><img class="sc3-img" src="https://res.cloudinary.com/dy0kchxh8/image/upload/v1773986589/image_3_qgeojn.png" alt="Wide Shot"><div class="sc3-body"><div class="sn2">Wide Shot (WS)</div><div class="sd">Full body visible, environment prominent. Intros, lifestyle, showing your workspace and world.</div></div></div>
+    <div class="sc3"><img class="sc3-img" src="https://res.cloudinary.com/dy0kchxh8/image/upload/v1773986589/image_ffjurg.png" alt="Medium Shot"><div class="sc3-body"><div class="sn2">Medium Shot (MS)</div><div class="sd">Waist to top of head. The standard conversational shot — professional, approachable, presence.</div></div></div>
+    <div class="sc3"><img class="sc3-img" src="https://res.cloudinary.com/dy0kchxh8/image/upload/v1773986589/image_5_nzw12h.png" alt="Medium Close-Up"><div class="sc3-body"><div class="sn2">Medium Close-Up (MCU)</div><div class="sd">Chest to top of head. More intimate — feels like direct conversation. Strong for trust-building.</div></div></div>
+    <div class="sc3"><img class="sc3-img" src="https://res.cloudinary.com/dy0kchxh8/image/upload/v1773986589/image_8_rsz1az.png" alt="Close-Up"><div class="sc3-body"><div class="sn2">Close-Up (CU)</div><div class="sd">Shoulders to top of head. Intensity, intimacy, focus. Use to drive a point home or create emotional connection.</div></div></div>
+    <div class="sc3"><img class="sc3-img" src="https://res.cloudinary.com/dy0kchxh8/image/upload/v1773986589/image_7_jdzo8x.png" alt="Extreme Close-Up"><div class="sc3-body"><div class="sn2">Extreme Close-Up (ECU)</div><div class="sd">Face or specific detail only. Maximum intensity. B-roll details — hands, coffee, keyboard, product.</div></div></div>
+    <div class="sc3"><img class="sc3-img" src="https://res.cloudinary.com/dy0kchxh8/image/upload/v1773986589/image_1_wzwhjx.png" alt="Low Angle"><div class="sc3-body"><div class="sn2">Low Angle</div><div class="sd">Camera below eye level, looking up. Powerful, dominant, larger than life. Use for authority content and cinematic B-roll.</div></div></div>
+    <div class="sc3"><img class="sc3-img" src="https://res.cloudinary.com/dy0kchxh8/image/upload/v1773986589/image_6_hvszxa.png" alt="Bird's Eye"><div class="sc3-body"><div class="sn2">Bird's Eye / Overhead</div><div class="sd">Camera directly above, looking straight down. Unique and shareable. Flat lay B-roll — desk setups, products, process reveals.</div></div></div>
   </div>
   <h2>Creative framing techniques</h2>
   <div class="teach"><p>Creative framing turns an ordinary location into a cinematic one. Instead of placing your subject in an open frame, use the environment itself to frame them.</p><ul><li><strong>Shoot through objects:</strong> Place something between the camera and subject — a plant, glass, candle, furniture. Keep it slightly out of focus in the foreground. This creates depth and makes the shot feel expensive immediately.</li><li><strong>Frame within a frame:</strong> Use doorframes, windows, archways, or open books to create a natural frame around your subject. Guides the viewer's eye exactly where you want it.</li><li><strong>Leading lines:</strong> Stairs, hallways, bookshelves, table edges — position yourself so lines in the environment lead toward you and draw the eye through the frame.</li><li><strong>Shoot through foliage:</strong> Plants, leaves, or branches slightly out of focus in the foreground. This single technique makes your content look 10x more cinematic instantly.</li><li><strong>Reflections:</strong> Mirrors, windows, puddles, glass surfaces. Reflections add a second layer to the composition and create unexpected, visually interesting frames.</li><li><strong>Negative space:</strong> Intentionally leave large areas of empty space. Counterintuitive but powerful — creates breathing room, draws attention to your subject, communicates confidence in your composition.</li></ul></div>
