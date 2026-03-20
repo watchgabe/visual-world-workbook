@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FSCreative™ — Your Playbook™</title>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;800;900&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+:root{
+  --bg:#0a0a0a;--surface:#111111;--card:#161616;--border:#1f1f1f;--border2:#2a2a2a;
+  --text:#ffffff;--dim:#a0a0a0;--dimmer:#555555;
+  --orange:#F0601B;--orange-hover:#ff6d28;--orange-tint:rgba(240,96,27,0.1);
+  --orange-border:rgba(240,96,27,0.28);--orange-dark:#ff8050;
+  --green-bg:rgba(61,184,100,0.1);--green-text:#5DCAA5;--green-border:rgba(93,202,165,0.3);
+  --radius-lg:10px;--radius-md:6px;
+  --font:'Helvetica Neue',Helvetica,Arial,sans-serif;
+  --font-num:'Barlow Condensed',sans-serif;
+}
+body.light{
+  --bg:#f7f6f4;--surface:#edecea;--card:#e2e0dc;--border:#ccc9c2;--border2:#b8b4ac;
+  --text:#0a0a0a;--dim:#404040;--dimmer:#888888;
+  --orange-tint:#FEF0E8;--orange-border:#F4B89A;--orange-dark:#B84410;
+  --green-bg:#E6F5EF;--green-text:#085041;--green-border:#5DCAA5;
+}
+body{background:var(--bg);color:var(--text);font-family:var(--font);font-size:15px;line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden;transition:background .25s,color .25s;}
+body::before{content:'';position:fixed;inset:0;z-index:9999;pointer-events:none;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='grain'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23grain)' opacity='0.025'/%3E%3C/svg%3E");mix-blend-mode:overlay;}
+
+#layout{display:flex;min-height:100vh}
+#sidebar{width:228px;min-width:228px;background:var(--surface);border-right:1px solid var(--border);display:flex;flex-direction:column;position:fixed;top:0;left:0;bottom:0;z-index:10;}
+.sb-top{padding:1.35rem 1.25rem 1.1rem;border-bottom:1px solid var(--border);flex-shrink:0;}
+.sb-brand{font-size:11px;font-weight:700;color:var(--orange);letter-spacing:.1em;text-transform:uppercase;margin-bottom:3px;}
+.sb-title{font-size:12px;font-weight:500;color:var(--dim);line-height:1.45}
+.sb-foot{padding:1rem 1.25rem;border-top:1px solid var(--border);display:flex;align-items:center;gap:10px;flex-shrink:0;}
+#main{flex:1;margin-left:228px;display:flex;justify-content:center}
+#wb{width:100%;max-width:700px;padding:2rem 2rem 5rem}
+
+.topbar{display:flex;align-items:center;justify-content:space-between;padding:1rem 0 1.25rem;border-bottom:1px solid var(--border);margin-bottom:2rem;}
+.logo{font-size:11px;font-weight:600;color:var(--dimmer);letter-spacing:.1em;text-transform:uppercase;}
+.theme-btn{background:none;border:1px solid var(--border2);border-radius:var(--radius-md);padding:5px 8px;cursor:pointer;color:var(--dimmer);display:flex;align-items:center;justify-content:center;transition:all .2s;flex-shrink:0;}
+.theme-btn:hover{color:var(--text)}
+.icon-moon{display:block}.icon-sun{display:none}
+body.light .icon-moon{display:none}body.light .icon-sun{display:block}
+
+/* ── PLAYBOOK SPECIFIC STYLES ── */
+.pb-cover{text-align:center;padding:3rem 0 2.5rem;margin-bottom:2rem;border-bottom:2px solid var(--orange);position:relative;}
+.pb-cover::before{content:'';position:absolute;bottom:-2px;left:0;width:60px;height:2px;background:var(--bg);}
+.pb-eyebrow{font-size:10px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--orange);margin-bottom:1rem;}
+.pb-title{font-family:var(--font-num);font-size:64px;font-weight:900;line-height:1;letter-spacing:-1px;color:var(--text);margin-bottom:.75rem;}
+.pb-name{font-size:18px;color:var(--dim);font-weight:400;margin-bottom:6px;}
+.pb-date{font-size:12px;color:var(--dimmer);}
+
+.pb-chapter{margin-bottom:3rem;}
+.pb-ch-header{display:flex;align-items:center;gap:16px;margin-bottom:1.5rem;padding-bottom:1rem;border-bottom:1px solid var(--border);}
+.pb-ch-num{font-family:var(--font-num);font-size:48px;font-weight:900;color:var(--orange);line-height:1;opacity:.35;flex-shrink:0;}
+.pb-ch-info{}
+.pb-ch-label{font-size:9px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--dimmer);margin-bottom:2px;}
+.pb-ch-title{font-size:18px;font-weight:700;color:var(--text);line-height:1.25;}
+
+.pb-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:1rem;}
+.pb-grid.full{grid-template-columns:1fr;}
+.pb-field{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-md);padding:.9rem 1rem;}
+.pb-label{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--orange);margin-bottom:5px;}
+.pb-value{font-size:13px;color:var(--text);line-height:1.6;}
+.pb-value.empty{color:var(--dimmer);font-style:italic;}
+
+.pb-highlight{background:var(--orange-tint);border:1px solid var(--orange-border);border-radius:var(--radius-lg);padding:1.1rem 1.4rem;margin-bottom:1rem;}
+.pb-highlight .pb-label{color:var(--orange-dark);}
+.pb-highlight .pb-value{color:var(--text);font-size:14px;font-weight:500;line-height:1.7;}
+
+.pb-color-row{display:flex;gap:8px;margin-top:6px;flex-wrap:wrap;}
+.pb-swatch{width:32px;height:32px;border-radius:4px;border:1px solid var(--border2);flex-shrink:0;}
+.pb-color-info{display:flex;flex-direction:column;justify-content:center;}
+.pb-color-name{font-size:11px;font-weight:600;color:var(--text);}
+.pb-color-hex{font-size:10px;color:var(--dimmer);}
+
+.pb-pillars{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:1rem;}
+.pb-pillar{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-md);padding:.85rem;}
+.pb-pillar-n{font-family:var(--font-num);font-size:22px;font-weight:900;color:var(--orange);opacity:.4;line-height:1;margin-bottom:4px;}
+.pb-pillar-name{font-size:12px;font-weight:600;color:var(--text);line-height:1.3;}
+.pb-pillar-sub{font-size:11px;color:var(--dimmer);margin-top:3px;line-height:1.4;}
+
+.pb-empty-chapter{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.5rem;text-align:center;margin-bottom:1rem;}
+.pb-empty-text{font-size:13px;color:var(--dimmer);line-height:1.6;}
+.pb-empty-link{font-size:12px;color:var(--orange);margin-top:.5rem;display:block;font-weight:500;}
+
+.pb-print-btn{display:block;width:100%;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-md);padding:10px;font-size:12px;font-family:var(--font);color:var(--dim);cursor:pointer;text-align:center;margin-top:2rem;transition:all .15s;}
+.pb-print-btn:hover{background:var(--card);color:var(--text);}
+
+@media print{
+  #sidebar,#topbar-wrap,.pb-print-btn{display:none!important}
+  #main{margin-left:0!important}
+  body{background:#fff;color:#000}
+}
+</style>
+</head>
+<body>
+<div id="layout">
+  <aside id="sidebar">
+    <div class="sb-top">
+      <div class="sb-brand">FSCreative™ — Module 05</div>
+      <div class="sb-title">Your Playbook™</div>
+    </div>
+    <div style="flex:1;display:flex;align-items:center;justify-content:center;padding:1rem;text-align:center;">
+      <div style="font-size:12px;color:var(--dimmer);line-height:1.6">This is your master reference document. All your answers in one place.</div>
+    </div>
+    <div class="sb-foot">
+      <button class="theme-btn" onclick="document.body.classList.toggle('light');localStorage.setItem('blp-theme',document.body.classList.contains('light')?'light':'dark')" aria-label="Toggle theme">
+        <svg class="icon-moon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+        <svg class="icon-sun" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+      </button>
+    </div>
+  </aside>
+
+  <div id="main">
+    <div id="wb">
+      <div id="topbar-wrap" class="topbar">
+        <div class="logo">FSCreative™ — Your Playbook™</div>
+        <button class="theme-btn" onclick="document.body.classList.toggle('light');localStorage.setItem('blp-theme',document.body.classList.contains('light')?'light':'dark')" aria-label="Toggle theme">
+          <svg class="icon-moon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+          <svg class="icon-sun" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+        </button>
+      </div>
+
+      <div id="playbook-doc">
+        <!-- Rendered by JS -->
+        <div style="text-align:center;padding:4rem 0;color:var(--dimmer);font-size:13px;">Loading your playbook...</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ── THEME ── */
+(function(){var t=localStorage.getItem('blp-theme');if(t==='light')document.body.classList.add('light');})();
+
+/* ── HELPERS ── */
+function val(v, fallback) {
+  if (!v || v === '' || v === null || v === undefined) return fallback || '';
+  return String(v).trim();
+}
+function field(label, value, opts) {
+  var v = val(value);
+  var isEmpty = !v;
+  var cls = opts && opts.full ? 'pb-field' : 'pb-field';
+  return '<div class="' + cls + '"><div class="pb-label">' + label + '</div><div class="pb-value' + (isEmpty?' empty':'') + '">' + (isEmpty ? '—' : escHtml(v)) + '</div></div>';
+}
+function highlight(label, value) {
+  var v = val(value);
+  if (!v) return '';
+  return '<div class="pb-highlight"><div class="pb-label">' + label + '</div><div class="pb-value">' + escHtml(v) + '</div></div>';
+}
+function escHtml(s) {
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g,'<br>');
+}
+function chapter(num, label, title, content) {
+  return '<div class="pb-chapter"><div class="pb-ch-header"><div class="pb-ch-num">' + num + '</div><div class="pb-ch-info"><div class="pb-ch-label">' + label + '</div><div class="pb-ch-title">' + title + '</div></div></div>' + content + '</div>';
+}
+function emptyChapter(msg) {
+  return '<div class="pb-empty-chapter"><div class="pb-empty-text">' + msg + '</div></div>';
+}
+function grid(fields) { return '<div class="pb-grid">' + fields.join('') + '</div>'; }
+function gridFull(fields) { return '<div class="pb-grid full">' + fields.join('') + '</div>'; }
+
+/* ── LOAD DATA ── */
+function loadKey(key) {
+  try {
+    var raw = localStorage.getItem(key);
+    if (!raw) return {};
+    return JSON.parse(raw) || {};
+  } catch(e) { return {}; }
+}
+
+function buildPlaybook() {
+  var cf = loadKey('cfww-v2');    // Brand Foundation
+  var vw = loadKey('vww-v1');     // Visual World
+  var cc = loadKey('ccb-v1');     // Create Your Content
+  var la = loadKey('launch-v1'); // Launch
+
+  var userName = val(localStorage.getItem('vww-user-name')) || val(cf.brandName) || val(vw.brandName) || 'Your Brand';
+  var today = new Date().toLocaleDateString('en-US',{year:'numeric',month:'long',day:'numeric'});
+
+  var html = '';
+
+  /* ── COVER ── */
+  html += '<div class="pb-cover">';
+  html += '<div class="pb-eyebrow">FSCreative™ — The Brand Launch Playbook™</div>';
+  html += '<div class="pb-title">YOUR<br>PLAYBOOK</div>';
+  html += '<div class="pb-name">' + escHtml(userName) + '</div>';
+  html += '<div class="pb-date">Generated ' + today + '</div>';
+  html += '</div>';
+
+  /* ── CHAPTER 01: BRAND FOUNDATION ── */
+  var cfEmpty = !cf || Object.keys(cf).length === 0;
+  var cfContent = '';
+  if (cfEmpty) {
+    cfContent = emptyChapter('Complete Module 01 — Brand Foundation to see your answers here.');
+  } else {
+    cfContent += highlight('Brand Journey Statement', cf.brandJourney);
+    cfContent += highlight('Core Mission', cf.coreMission || cf.missionStatement);
+    cfContent += grid([
+      field('Desired Outcome', cf.desiredOutcome),
+      field('Known For', cf.knownFor)
+    ]);
+    cfContent += highlight('Avatar — Who You\'re Building For', cf.avatarStatement || cf.avatar);
+    cfContent += grid([
+      field('Avatar Pain Point', cf.avatarPain),
+      field('Avatar Dream Outcome', cf.avatarDream)
+    ]);
+    cfContent += grid([
+      field('Value 1', cf.value1name),
+      field('Value 2', cf.value2name),
+      field('Value 3', cf.value3name),
+      field('Value 4', cf.value4name)
+    ]);
+    /* Pillars */
+    var pillarsHtml = '<div class="pb-pillars">';
+    for (var i = 1; i <= 5; i++) {
+      var pname = val(cf['pillar'+i+'name'] || cf['pillarName'+i]);
+      if (pname) {
+        pillarsHtml += '<div class="pb-pillar"><div class="pb-pillar-n">0'+i+'</div><div class="pb-pillar-name">'+escHtml(pname)+'</div>';
+        var psub = val(cf['pillar'+i+'audience'] || cf['pillarSub'+i]);
+        if (psub) pillarsHtml += '<div class="pb-pillar-sub">'+escHtml(psub)+'</div>';
+        pillarsHtml += '</div>';
+      }
+    }
+    pillarsHtml += '</div>';
+    if (pillarsHtml !== '<div class="pb-pillars"></div>') {
+      cfContent += '<div style="margin-bottom:6px"><div class="pb-label" style="margin-bottom:8px">Content Pillars</div></div>' + pillarsHtml;
+    }
+    cfContent += highlight('Origin Story', cf.originStory || cf.storyFinal);
+    cfContent += highlight('Brand Mission Statement', cf.brandMission || cf.missionFinal);
+  }
+  html += chapter('01', 'Module 01', 'Brand Foundation', cfContent);
+
+  /* ── CHAPTER 02: VISUAL WORLD ── */
+  var vwEmpty = !vw || Object.keys(vw).length === 0;
+  var vwContent = '';
+  if (vwEmpty) {
+    vwContent = emptyChapter('Complete Module 02 — Define Your Visual World to see your answers here.');
+  } else {
+    vwContent += highlight('Mood Board Statement', vw.mbStatement);
+    vwContent += grid([
+      field('Palette Name', vw.paletteName),
+      field('Color Grade Approach', vw.colorGrade)
+    ]);
+    /* Color swatches */
+    var colors = [
+      {label:'Primary', val:vw['col-primary'], emo:vw['col-primary-emotion']},
+      {label:'Secondary', val:vw['col-secondary']},
+      {label:'Accent', val:vw['col-accent']},
+      {label:'Neutral', val:vw['col-neutral']}
+    ];
+    var swatchHtml = '<div class="pb-field" style="margin-bottom:10px"><div class="pb-label">Color Palette</div>';
+    colors.forEach(function(c){
+      var cv = val(c.val);
+      if (!cv) return;
+      var bg = cv.startsWith('#') ? cv : 'transparent';
+      swatchHtml += '<div class="pb-color-row"><div class="pb-swatch" style="background:'+escHtml(bg)+';border-color:'+escHtml(bg)+'"></div><div class="pb-color-info"><div class="pb-color-name">'+c.label+(c.emo?' — '+escHtml(val(c.emo)):'')+'</div><div class="pb-color-hex">'+escHtml(cv)+'</div></div></div>';
+    });
+    swatchHtml += '</div>';
+    vwContent += swatchHtml;
+    vwContent += grid([
+      field('Primary Font', vw['font-primary']),
+      field('Secondary Font', vw['font-secondary'])
+    ]);
+    vwContent += highlight('Typography Rules', vw.typographyRules);
+    vwContent += grid([
+      field('Setting', vw['e1-statement'] || vw.e1location),
+      field('Mood', vw['e2-statement'] || vw.e2time)
+    ]);
+    vwContent += highlight('Visual World Statement', vw.vwStatement || vw['e6-statement']);
+    vwContent += highlight('Content Approach', vw['e5-statement'] || vw.contentApproach);
+  }
+  html += chapter('02', 'Module 02', 'Define Your Visual World', vwContent);
+
+  /* ── CHAPTER 03: CREATE YOUR CONTENT ── */
+  var ccEmpty = !cc || Object.keys(cc).length === 0;
+  var ccContent = '';
+  if (ccEmpty) {
+    ccContent = emptyChapter('Complete Module 03 — Create Your Content to see your answers here.');
+  } else {
+    ccContent += highlight('Content Goal', cc.goal);
+    ccContent += highlight('Ideal Viewer', cc.viewer);
+    ccContent += highlight('The Painful Problem I Solve', cc.painProblem);
+    ccContent += highlight('My Unique Solution', cc.uniqueSol);
+    ccContent += highlight('My Contextual Credibility', cc.credibility);
+    ccContent += grid([
+      field('Primary Platform', cc.primary || cc.sauron),
+      field('Secondary Platform', cc.secondary),
+      field('Weekly Hours', cc.weekHours),
+      field('Content Cadence', cc.cadence)
+    ]);
+    ccContent += gridFull([
+      field('Primary Short-Form Format', cc.goal_sf || cc.sf),
+      field('Pillar Content Format', cc.pillar)
+    ]);
+    /* Hooks */
+    var h1 = [val(cc.h1a), val(cc.h1b), val(cc.h1c)].filter(Boolean).join(' · ');
+    if (h1) ccContent += highlight('Hook 1', h1);
+    var h2 = [val(cc.h2a), val(cc.h2b), val(cc.h2c)].filter(Boolean).join(' · ');
+    if (h2) ccContent += highlight('Hook 2', h2);
+    ccContent += grid([
+      field('Filming Day', cc.fday),
+      field('Editing Day', cc.eday),
+      field('Publishing Day', cc.pday),
+      field('Maker Hours', cc.maker)
+    ]);
+  }
+  html += chapter('03', 'Module 03', 'Create Your Content', ccContent);
+
+  /* ── CHAPTER 04: LAUNCH ── */
+  var laEmpty = !la || Object.keys(la).length === 0;
+  var laContent = '';
+  if (laEmpty) {
+    laContent = emptyChapter('Complete Module 04 — Launch to see your answers here.');
+  } else {
+    laContent += highlight('Funnel Summary', la.funnelSummary || la.funnelNarrative);
+    laContent += grid([
+      field('Email Platform', la.emailPlatform),
+      field('ManyChat Keyword', la.manychatKeyword)
+    ]);
+    laContent += highlight('Lead Magnet', la.leadMagnetTitle || la.leadMagnet);
+    laContent += highlight('Optimized Bio', la.bioFinal || la.bio);
+    laContent += highlight('Launch Content Plan', la.launchPlan || la.launchContent);
+    laContent += grid([
+      field('Launch Goal', la.launchGoal),
+      field('Launch Win Metric', la.launchWin)
+    ]);
+  }
+  html += chapter('04', 'Module 04', 'Launch', laContent);
+
+  /* ── PRINT BUTTON ── */
+  html += '<button class="pb-print-btn" onclick="window.print()">🖨 Print / Save as PDF</button>';
+
+  document.getElementById('playbook-doc').innerHTML = html;
+}
+
+buildPlaybook();
+
+/* ── IFRAME BRIDGE ── */
+var PB_IN_FRAME = (window.self !== window.top);
+if(PB_IN_FRAME){
+  var sb=document.getElementById('sidebar');if(sb)sb.style.display='none';
+  var mn=document.getElementById('main');if(mn){mn.style.marginLeft='0';mn.style.width='100%';}
+  var wb=document.getElementById('wb');if(wb)wb.style.maxWidth='100%';
+  var tb=document.getElementById('topbar-wrap');if(tb)tb.style.display='none';
+}
+function pbNotifyShell(){
+  if(!PB_IN_FRAME)return;
+  window.parent.postMessage({type:'sectionChange',cur:0,done:[]},'*');
+}
+window.addEventListener('message',function(e){
+  if(!e.data||e.data.type!=='navigate')return;
+  window.scrollTo(0,0);
+  buildPlaybook(); /* Refresh data on navigate */
+  pbNotifyShell();
+});
+setTimeout(function(){
+  if(!PB_IN_FRAME)return;
+  window.parent.postMessage({type:'ready',cur:0,done:[]},'*');
+},300);
+</script>
+</body>
+</html>

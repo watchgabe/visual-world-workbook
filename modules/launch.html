@@ -195,7 +195,7 @@ textarea::placeholder,input[type=text]::placeholder{color:var(--dimmer)}
   <div class="sb-foot">
     <div class="sb-prog">
       <div class="pb"><div class="pf" id="sbpf" style="width:0%"></div></div>
-      <div class="pt" id="sbpt" style="margin-top:5px;font-size:10px">0/6</div>
+      <div class="pt" id="sbpt" style="margin-top:5px;font-size:10px">0/7</div>
     </div>
     <div class="save-dot" id="saveDot"></div>
     <button class="theme-btn" onclick="document.body.classList.toggle('light')">
@@ -210,7 +210,7 @@ textarea::placeholder,input[type=text]::placeholder{color:var(--dimmer)}
   <div class="logo">FSCreative&#8482; &#8212; Launch&#8482;</div>
   <div class="pw">
     <div class="pb"><div class="pf" id="toppf" style="width:0%"></div></div>
-    <div class="pt" id="toppt">0/6</div>
+    <div class="pt" id="toppt">0/7</div>
     <button class="theme-btn" onclick="document.body.classList.toggle('light')">
       <svg class="icon-moon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
       <svg class="icon-sun" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
@@ -223,42 +223,24 @@ textarea::placeholder,input[type=text]::placeholder{color:var(--dimmer)}
 <div class="sc show" id="s0">
   <div class="pl">FSCreative&#8482; &#8212; Module 04</div>
   <h1>Launch&#8482;</h1>
-  <p class="intro">You&#8217;ve built the foundation. You&#8217;ve defined your visual world. You&#8217;ve installed the content system. Now it&#8217;s time to build the infrastructure that turns attention into subscribers and subscribers into buyers &#8212; then announce your brand to the world with clarity and momentum.</p>
+  <p class="intro">Now it&#8217;s time to build the infrastructure that turns attention into subscribers and subscribers into buyers &#8212; then announce your brand to the world with clarity and momentum. You don&#8217;t own your audience. Every follower you have lives on a platform that can change its algorithm, ban your account, or disappear entirely. This module is how you fix that.</p>
   <div class="sr">
-    <div class="sc2"><div class="sn">6</div><div class="sl">Workshops</div></div>
+    <div class="sc2"><div class="sn">7</div><div class="sl">Workshops</div></div>
     <div class="sc2"><div class="sn">7</div><div class="sl">Deliverables</div></div>
     <div class="sc2"><div class="sn" id="dc">0</div><div class="sl">Completed</div></div>
   </div>
-  <div class="ins"><p>You don&#8217;t own your audience. Every follower you have lives on a platform that can change its algorithm, ban your account, or disappear entirely. <strong>This module is how you fix that.</strong></p></div>
-  <div class="teach">
-    <p><strong>This module covers:</strong></p>
-    <ul>
-      <li><strong>Automated Sales Funnel</strong> &#8212; The complete system that converts attention into revenue</li>
-      <li><strong>ManyChat Setup</strong> &#8212; Automate your Instagram lead generation</li>
-      <li><strong>Newsletter Setup</strong> &#8212; Build the audience you actually own</li>
-      <li><strong>Lead Magnet Creation</strong> &#8212; The free resource that builds your list</li>
-      <li><strong>Bio Optimization</strong> &#8212; Your positioning statement in 150 characters</li>
-      <li><strong>Brand Launch Content + 7-Day Calendar</strong> &#8212; Announce with momentum</li>
-      <li><strong>90-Day Goals</strong> &#8212; The roadmap that keeps you growing after launch</li>
-    </ul>
-  </div>
   <h2>Module Roadmap</h2>
   <div class="roadmap">
-    <div class="rm-card"><div class="rm-num">01</div><div class="rm-title">Automated Funnel</div><div class="rm-sub">Map the system that converts attention to revenue</div></div>
-    <div class="rm-card"><div class="rm-num">02</div><div class="rm-title">ManyChat + Newsletter</div><div class="rm-sub">Build the infrastructure you own</div></div>
-    <div class="rm-card"><div class="rm-num">03</div><div class="rm-title">Lead Magnet</div><div class="rm-sub">Create the free resource that builds your list</div></div>
-    <div class="rm-card"><div class="rm-num">04</div><div class="rm-title">Bio Optimization</div><div class="rm-sub">Your first impression and positioning statement</div></div>
-    <div class="rm-card"><div class="rm-num">05</div><div class="rm-title">Brand Launch Content</div><div class="rm-sub">The content that announces your new brand</div></div>
-    <div class="rm-card" style="grid-column:1/-1"><div class="rm-num">06</div><div class="rm-title">7-Day Calendar + 90-Day Goals</div><div class="rm-sub">Execute your launch and build the roadmap for what comes next</div></div>
+    <div class="rm-card" onclick="go(1)" style="cursor:pointer;transition:transform .15s" onmouseover="this.style.transform='scale(1.02)'" onmouseout="this.style.transform='scale(1)'"><div class="rm-num">01</div><div class="rm-title">Your Funnel</div><div class="rm-sub">Map the path from attention to customer</div></div>
+    <div class="rm-card" onclick="go(2)" style="cursor:pointer;transition:transform .15s" onmouseover="this.style.transform='scale(1.02)'" onmouseout="this.style.transform='scale(1)'"><div class="rm-num">02</div><div class="rm-title">ManyChat &amp; Newsletter</div><div class="rm-sub">Build the infrastructure you actually own</div></div>
+    <div class="rm-card" onclick="go(3)" style="cursor:pointer;transition:transform .15s" onmouseover="this.style.transform='scale(1.02)'" onmouseout="this.style.transform='scale(1)'"><div class="rm-num">03</div><div class="rm-title">Lead Magnet</div><div class="rm-sub">Create the offer that earns the opt-in</div></div>
+    <div class="rm-card" onclick="go(4)" style="cursor:pointer;transition:transform .15s" onmouseover="this.style.transform='scale(1.02)'" onmouseout="this.style.transform='scale(1)'"><div class="rm-num">04</div><div class="rm-title">Bio Optimization</div><div class="rm-sub">Turn your profile into a conversion tool</div></div>
+    <div class="rm-card" onclick="go(5)" style="cursor:pointer;transition:transform .15s" onmouseover="this.style.transform='scale(1.02)'" onmouseout="this.style.transform='scale(1)'"><div class="rm-num">05</div><div class="rm-title">Launch Content</div><div class="rm-sub">The content that announces your brand</div></div>
+    <div class="rm-card" onclick="go(6)" style="cursor:pointer;transition:transform .15s" onmouseover="this.style.transform='scale(1.02)'" onmouseout="this.style.transform='scale(1)'"><div class="rm-num">06</div><div class="rm-title">Calendar &amp; Goals</div><div class="rm-sub">Plan and execute your 30-day launch</div></div>
+    <div class="rm-card" onclick="go(7)" style="cursor:pointer;transition:transform .15s;grid-column:1/-1" onmouseover="this.style.transform='scale(1.02)'" onmouseout="this.style.transform='scale(1)'"><div class="rm-num">07</div><div class="rm-title">Launch Doc</div><div class="rm-sub">Your complete go-to-market document</div></div>
   </div>
-  <div class="nr" style="justify-content:flex-end;border-top:none;padding-top:0;flex-direction:column;align-items:stretch;gap:10px">
-    <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1rem 1.2rem;">
-      <div class="elbl" style="margin-bottom:8px">Before you begin</div>
-      <div class="q" style="margin-top:0">Your name or brand handle</div>
-      <div class="qh">This will appear on your final Launch Document.</div>
-      <input type="text" id="brandName" placeholder="e.g. Alex Rivera, @yourhandle, Studio Name...">
-    </div>
-    <div style="display:flex;justify-content:flex-end"><button class="btn p" onclick="go(1)">Begin Workshop 1 &#8594;</button></div>
+  <div style="display:flex;justify-content:flex-end;margin-top:1rem">
+    <button class="btn p" id="b0n" onclick="go(1)">Begin Workshop 1 &#8594;</button>
   </div>
   <div style="margin-top:1.5rem;padding-top:1.25rem;border-top:1px solid var(--border);display:flex;align-items:center;gap:10px;flex-wrap:wrap">
     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--dimmer);flex-shrink:0"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
@@ -270,7 +252,7 @@ textarea::placeholder,input[type=text]::placeholder{color:var(--dimmer)}
 <!-- S1 FUNNEL -->
 <div class="sc" id="s1">
   <div class="pl">Workshop 1</div>
-  <h1>Automated Sales Funnel</h1>
+  <h1>Your Funnel</h1>
   <p class="intro">Most creators think they have an audience problem. They think they need more followers. But the real problem is they have no system to capture the attention they&#8217;re already generating. This module fixes that.</p>
   <div class="ins"><p>Once it&#8217;s built, it runs automatically. You create content. Content drives people into the funnel. The funnel converts them into buyers. <strong>You wake up to sales.</strong></p></div>
 
@@ -322,13 +304,13 @@ textarea::placeholder,input[type=text]::placeholder{color:var(--dimmer)}
     <div class="check-item" data-key="f3"><div class="check-box"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div><div class="check-text">Offer defined with clear price point and conversion mechanism</div></div>
   </div>
 
-  <div class="nr"><button class="btn" onclick="go(0)">&#8592; Back</button><span class="si">1/6</span><button class="btn p" onclick="go(2)">Save &amp; Continue &#8594;</button></div>
+  <div class="nr"><button class="btn" onclick="go(0)">&#8592; Back</button><span class="si">1/7</span><button class="btn p" onclick="go(2)">Save &amp; Continue &#8594;</button></div>
 </div>
 
-<!-- S2 MANYCHAT + NEWSLETTER -->
+<!-- S2 MANYCHAT & NEWSLETTER -->
 <div class="sc" id="s2">
   <div class="pl">Workshop 2</div>
-  <h1>ManyChat + Newsletter</h1>
+  <h1>ManyChat &amp; Newsletter</h1>
   <p class="intro">ManyChat turns your Instagram comments into an automated lead machine. When someone comments a keyword, ManyChat sends them a DM with your lead magnet automatically &#8212; no manual work, no missed leads. Combine this with your newsletter and you have an audience you truly own.</p>
   <div class="ins"><p>Comment-triggered DMs convert at <strong>70&#8211;75%</strong> vs 50&#8211;55% for a landing page. It drives engagement, feels personal, and captures leads without requiring people to leave the app.</p></div>
 
@@ -441,7 +423,7 @@ textarea::placeholder,input[type=text]::placeholder{color:var(--dimmer)}
     <div class="check-item" data-key="nl6"><div class="check-box"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div><div class="check-text">First newsletter written and scheduled</div></div>
   </div>
 
-  <div class="nr"><button class="btn" onclick="go(1)">&#8592; Back</button><span class="si">2/6</span><button class="btn p" onclick="go(3)">Save &amp; Continue &#8594;</button></div>
+  <div class="nr"><button class="btn" onclick="go(1)">&#8592; Back</button><span class="si">2/7</span><button class="btn p" onclick="go(3)">Save &amp; Continue &#8594;</button></div>
 </div>
 
 <!-- S3 LEAD MAGNET -->
@@ -513,7 +495,7 @@ textarea::placeholder,input[type=text]::placeholder{color:var(--dimmer)}
     <div class="check-item" data-key="lm5"><div class="check-box"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div><div class="check-text">Delivery set up and connected to email platform</div></div>
   </div>
 
-  <div class="nr"><button class="btn" onclick="go(2)">&#8592; Back</button><span class="si">3/6</span><button class="btn p" onclick="go(4)">Save &amp; Continue &#8594;</button></div>
+  <div class="nr"><button class="btn" onclick="go(2)">&#8592; Back</button><span class="si">3/7</span><button class="btn p" onclick="go(4)">Save &amp; Continue &#8594;</button></div>
 </div>
 
 <!-- S4 BIO -->
@@ -589,13 +571,13 @@ textarea::placeholder,input[type=text]::placeholder{color:var(--dimmer)}
     <div class="check-item" data-key="b6"><div class="check-box"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div><div class="check-text">Bio updated on all active platforms</div></div>
   </div>
 
-  <div class="nr"><button class="btn" onclick="go(3)">&#8592; Back</button><span class="si">4/6</span><button class="btn p" onclick="go(5)">Save &amp; Continue &#8594;</button></div>
+  <div class="nr"><button class="btn" onclick="go(3)">&#8592; Back</button><span class="si">4/7</span><button class="btn p" onclick="go(5)">Save &amp; Continue &#8594;</button></div>
 </div>
 
 <!-- S5 LAUNCH CONTENT -->
 <div class="sc" id="s5">
   <div class="pl">Workshop 5</div>
-  <h1>Brand Launch Content</h1>
+  <h1>Launch Content</h1>
   <p class="intro">Your relaunch is not just a new aesthetic. It&#8217;s a statement. It&#8217;s you telling your audience: &#8220;I&#8217;ve done the work. I&#8217;ve built something intentional. And I&#8217;m ready to show up at a level that matches my actual skills.&#8221;</p>
   <div class="ins"><p>Your brand launch content has three phases: <strong>Tease</strong> (3&#8211;5 days before), <strong>Launch</strong> (Day 1&#8211;3), and <strong>Sustain</strong> (Day 4&#8211;7). Done right, it creates momentum that carries you through the first 90 days.</p></div>
 
@@ -670,13 +652,13 @@ textarea::placeholder,input[type=text]::placeholder{color:var(--dimmer)}
     <div class="check-item" data-key="lc7"><div class="check-box"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div><div class="check-text">3&#8211;4 sustain content pieces filmed and edited</div></div>
   </div>
 
-  <div class="nr"><button class="btn" onclick="go(4)">&#8592; Back</button><span class="si">5/6</span><button class="btn p" onclick="go(6)">Save &amp; Continue &#8594;</button></div>
+  <div class="nr"><button class="btn" onclick="go(4)">&#8592; Back</button><span class="si">5/7</span><button class="btn p" onclick="go(6)">Save &amp; Continue &#8594;</button></div>
 </div>
 
-<!-- S6 CALENDAR + GOALS -->
+<!-- S6 CALENDAR & GOALS -->
 <div class="sc" id="s6">
   <div class="pl">Workshop 6</div>
-  <h1>7-Day Calendar + 90-Day Goals</h1>
+  <h1>Calendar &amp; Goals</h1>
   <p class="intro">A relaunch without a plan is just a post. Your 7-Day Launch Calendar turns your relaunch into a campaign. Then your 90-Day Goals turn the momentum from your launch into a sustainable growth system.</p>
 
   <h2>7-Day Launch Calendar</h2>
@@ -761,6 +743,7 @@ textarea::placeholder,input[type=text]::placeholder{color:var(--dimmer)}
 
   <div class="nr">
     <button class="btn" onclick="go(5)">&#8592; Back</button>
+    <span class="si">6/7</span>
     <div style="display:flex;gap:8px">
       <button class="btn" onclick="printFull()" style="font-size:11.5px">Print Workbook</button>
       <button class="btn p" onclick="go(7)">Build My Launch Doc &#8594;</button>
@@ -770,6 +753,12 @@ textarea::placeholder,input[type=text]::placeholder{color:var(--dimmer)}
 
 <!-- S7 LAUNCH DOCUMENT -->
 <div class="sc" id="s7">
+  <div class="ec" style="margin-bottom:1.25rem">
+    <div class="elbl">Document Setup</div>
+    <div class="q" style="margin-top:0">Your name or brand handle</div>
+    <div class="qh">This appears as the title on your Launch Document.</div>
+    <input type="text" id="brandName" placeholder="e.g. Alex Rivera, @yourhandle, Studio Name..." oninput="buildDoc()">
+  </div>
   <div class="vg-cover">
     <div class="vg-cover-bar"></div>
     <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.14em;color:var(--orange);margin-bottom:8px">Launch&#8482; &#8212; Document</div>
@@ -778,7 +767,7 @@ textarea::placeholder,input[type=text]::placeholder{color:var(--dimmer)}
   </div>
 
   <div class="vg-sg-section">
-    <div class="vg-sg-label">01 &#8212; Automated Funnel</div>
+    <div class="vg-sg-label">01 &#8212; Your Funnel</div>
     <div class="vg-field-grid">
       <div class="vg-field-card"><div class="vg-field-lbl">Content Platform(s)</div><div class="vg-field-val" id="vg-platforms"></div></div>
       <div class="vg-field-card"><div class="vg-field-lbl">Content CTA</div><div class="vg-field-val" id="vg-cta"></div></div>
@@ -788,7 +777,7 @@ textarea::placeholder,input[type=text]::placeholder{color:var(--dimmer)}
   </div>
 
   <div class="vg-sg-section">
-    <div class="vg-sg-label">02 &#8212; ManyChat + Newsletter</div>
+    <div class="vg-sg-label">02 &#8212; ManyChat &amp; Newsletter</div>
     <div class="vg-field-grid">
       <div class="vg-field-card"><div class="vg-field-lbl">Trigger Keyword</div><div class="vg-field-val" id="vg-keyword"></div></div>
       <div class="vg-field-card"><div class="vg-field-lbl">Newsletter Name</div><div class="vg-field-val" id="vg-nlname"></div></div>
@@ -861,7 +850,7 @@ textarea::placeholder,input[type=text]::placeholder{color:var(--dimmer)}
 </div></div></div>
 
 <script>
-var TABS=['Welcome','Funnel','ManyChat + NL','Lead Magnet','Bio','Launch Content','Calendar + Goals','Launch Doc'];
+var TABS=['Welcome','Your Funnel','ManyChat & Newsletter','Lead Magnet','Bio','Launch Content','Calendar & Goals','Launch Doc'];
 var ICONS=['<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>','<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>','<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>','<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>','<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>','<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg>','<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>','<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>'];
 var KEY='launch-v1';
 var cur=0;
@@ -888,9 +877,9 @@ function updateProgress(){
   var count=Object.keys(done).filter(function(k){return done[k]&&k!=='0'&&k!=='7';}).length;
   var pct=Math.round(count/6*100);
   document.getElementById('toppf').style.width=pct+'%';
-  document.getElementById('toppt').textContent=count+'/6';
+  document.getElementById('toppt').textContent=count+'/7';
   document.getElementById('sbpf').style.width=pct+'%';
-  document.getElementById('sbpt').textContent=count+'/6';
+  document.getElementById('sbpt').textContent=count+'/7';
   var dc=document.getElementById('dc');if(dc)dc.textContent=count;
 }
 
@@ -1067,16 +1056,17 @@ function laSyncToSupabase(){
 /* ── iframe bridge ── */
 var LA_IN_FRAME=(window.self!==window.top);
 if(LA_IN_FRAME){
-  document.getElementById('sidebar').style.display='none';
-  document.querySelector('.topbar').style.display='none';
-  document.getElementById('tabbar').style.display='none';
-  document.getElementById('main').style.marginLeft='0';
-  document.getElementById('wb').style.maxWidth='100%';
+  var sidebar=document.getElementById('sidebar');if(sidebar)sidebar.style.display='none';
+  var main=document.getElementById('main');if(main){main.style.marginLeft='0';main.style.width='100%';}
+  var wb=document.getElementById('wb');if(wb)wb.style.maxWidth='100%';
+  var topbar=document.querySelector('.topbar');if(topbar)topbar.style.display='none';
+  var tabbar=document.getElementById('tabbar');if(tabbar)tabbar.style.display='none';
+  var identityModal=document.getElementById('identity-modal');if(identityModal)identityModal.style.display='none';
 }
 function laNotifyShell(){
   if(!LA_IN_FRAME)return;
-  var d=[];for(var k in done){if(done[k])d.push(parseInt(k));}
-  parent.postMessage({type:'sectionChange',cur:cur,done:d},'*');
+  var doneArr=Object.keys(done).filter(function(k){return done[k];}).map(Number);
+  window.parent.postMessage({type:'sectionChange',cur:cur,done:doneArr},'*');
 }
 window.addEventListener('message',function(e){
   if(!e.data||e.data.type!=='navigate')return;
@@ -1091,9 +1081,9 @@ var _laGo=go;
 go=function(n){_laGo(n);laNotifyShell();};
 setTimeout(function(){
   if(!LA_IN_FRAME)return;
-  var d=[];for(var k in done){if(done[k])d.push(parseInt(k));}
-  parent.postMessage({type:'ready',cur:cur,done:d},'*');
-},250);
+  var doneArr=Object.keys(done).filter(function(k){return done[k];}).map(Number);
+  window.parent.postMessage({type:'ready',cur:cur,done:doneArr},'*');
+},300);
 </script>
 </body>
 </html>

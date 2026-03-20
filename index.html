@@ -269,12 +269,14 @@ body.light .icon-moon{display:none}body.light .icon-sun{display:block}
   <div class="id-box">
     <div class="id-brand">FSCreative™ — The Brand Launch Playbook™</div>
     <div class="id-title">Let's save your work.</div>
-    <div class="id-sub">Enter your name and email so your answers are saved to the cloud — no matter what device or browser you use.</div>
+    <div class="id-sub">Your answers are saved to the cloud — so you never lose your progress, no matter what device or browser you use.</div>
     <div id="id-error" class="id-error"></div>
     <label class="id-label" for="id-name">First Name</label>
     <input type="text" id="id-name" class="id-input" placeholder="Your first name" autocomplete="given-name">
     <label class="id-label" for="id-email">Email</label>
-    <input type="text" id="id-email" class="id-input" placeholder="you@example.com" autocomplete="email" onkeydown="if(event.key==='Enter')submitIdentity()">
+    <input type="text" id="id-email" class="id-input" placeholder="you@example.com" autocomplete="email">
+    <label class="id-label" for="id-handle">Brand or Social Handle</label>
+    <input type="text" id="id-handle" class="id-input" placeholder="e.g. @yourhandle or Studio Name" autocomplete="off" onkeydown="if(event.key==='Enter')submitIdentity()">
     <button id="id-submit" class="id-btn" onclick="submitIdentity()">Continue →</button>
     <div class="id-note">Your email is only used to save your progress. We won't send you anything.</div>
   </div>
@@ -364,7 +366,7 @@ var MODULES = [
     title: 'Define Your Visual World',
     subtitle: 'Build the Aesthetic That Makes You Premium',
     file: 'modules/visual-world.html',
-    sections: ['Welcome','Creator Analysis','Mood Board','Color & Type','Shot System','Visual World','Your Guide'],
+    sections: ['Welcome','Creator Analysis','Mood Board','Color Palette','Typography','Visual World','Style Guide'],
     locked: false,
     saveKey: 'vww-v1'
   },
@@ -384,9 +386,19 @@ var MODULES = [
     title: 'Launch',
     subtitle: 'Your Go-to-Market Strategy',
     file: 'modules/launch.html',
-    sections: ['Welcome','Funnel','ManyChat + NL','Lead Magnet','Bio','Launch Content','Calendar + Goals','Launch Doc'],
+    sections: ['Welcome','Your Funnel','ManyChat & Newsletter','Lead Magnet','Bio','Launch Content','Calendar & Goals','Launch Doc'],
     locked: false,
     saveKey: 'launch-v1'
+  },
+  {
+    id: 'playbook',
+    num: '05',
+    title: 'Your Playbook',
+    subtitle: 'Every Answer. One Document.',
+    file: 'modules/playbook.html',
+    sections: ['Your Playbook'],
+    locked: false,
+    saveKey: null
   }
 ];
 
@@ -404,8 +416,9 @@ var iframeLoading = false;
 ══════════════════════════════════════════════════════════ */
 var SUPABASE_URL  = 'https://ljddfhzrjvxpedvfebli.supabase.co';
 var SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxqZGRmaHpyanZ4cGVkdmZlYmxpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDc2MDc2MzgsImV4cCI6MjA2MzE4MzYzOH0.qJR_LtPu7qH0QNPmv1lnkk6U2p5EJm7RVInH7T5mDsU';
-var USER_EMAIL = localStorage.getItem('vww-user-email') || '';
-var USER_NAME  = localStorage.getItem('vww-user-name')  || '';
+var USER_EMAIL  = localStorage.getItem('vww-user-email')  || '';
+var USER_NAME   = localStorage.getItem('vww-user-name')   || '';
+var USER_HANDLE = localStorage.getItem('vww-user-handle') || '';
 
 function sbHeaders() {
   return {
@@ -426,12 +439,14 @@ function initIdentity() {
 }
 
 async function submitIdentity() {
-  var nameEl  = document.getElementById('id-name');
-  var emailEl = document.getElementById('id-email');
-  var errEl   = document.getElementById('id-error');
-  var btn     = document.getElementById('id-submit');
-  var name    = nameEl  ? nameEl.value.trim()               : '';
-  var email   = emailEl ? emailEl.value.trim().toLowerCase() : '';
+  var nameEl   = document.getElementById('id-name');
+  var emailEl  = document.getElementById('id-email');
+  var handleEl = document.getElementById('id-handle');
+  var errEl    = document.getElementById('id-error');
+  var btn      = document.getElementById('id-submit');
+  var name     = nameEl   ? nameEl.value.trim()                : '';
+  var email    = emailEl  ? emailEl.value.trim().toLowerCase() : '';
+  var handle   = handleEl ? handleEl.value.trim()              : '';
   if (!name || !email || email.indexOf('@') < 0) {
     if (errEl) { errEl.textContent = 'Please enter your name and a valid email.'; errEl.style.display = 'block'; }
     return;
@@ -444,9 +459,10 @@ async function submitIdentity() {
       headers: sbHeaders(),
       body: JSON.stringify({email: email, name: name, last_seen: new Date().toISOString()})
     });
-    USER_EMAIL = email; USER_NAME = name;
-    localStorage.setItem('vww-user-email', email);
-    localStorage.setItem('vww-user-name',  name);
+    USER_EMAIL = email; USER_NAME = name; USER_HANDLE = handle;
+    localStorage.setItem('vww-user-email',  email);
+    localStorage.setItem('vww-user-name',   name);
+    localStorage.setItem('vww-user-handle', handle);
     var modal = document.getElementById('identity-modal');
     if (modal) modal.style.display = 'none';
   } catch(e) {
@@ -644,6 +660,11 @@ function loadModule(moduleId, sectionIndex) {
 function navigateSection(moduleId, sectionIndex) {
   // Close sidebar on mobile after selecting
   if (isMobile()) closeSidebar();
+
+  // Immediately update cur in state so sidebar highlights right away
+  if (!moduleStates[moduleId]) moduleStates[moduleId] = {cur: 0, done: []};
+  moduleStates[moduleId].cur = sectionIndex;
+  renderSidebar();
 
   if (activeModule === moduleId && !iframeLoading) {
     var iframe = document.getElementById('module-iframe');

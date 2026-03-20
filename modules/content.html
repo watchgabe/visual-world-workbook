@@ -433,6 +433,13 @@ textarea::placeholder,input[type=text]::placeholder{color:var(--dimmer)}
   .topbar,.tabs{display:none}
 }
 
+/* ─── ROADMAP ─── */
+.roadmap{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:1.5rem;}
+.rm-card{border:1px solid var(--border);border-radius:var(--radius-md);padding:.85rem;background:var(--surface);}
+.rm-num{font-family:var(--font-num);font-size:28px;font-weight:900;color:var(--orange);line-height:1;}
+.rm-title{font-size:12px;font-weight:600;color:var(--text);margin-top:4px;line-height:1.35;}
+.rm-sub{font-size:11px;color:var(--dimmer);margin-top:3px;line-height:1.4;}
+
 /* ─── PRINT ─── */
 @media print{
   body::before,#sidebar,.topbar,.tabs,.nr,.ups,.theme-btn{display:none!important}
@@ -494,17 +501,29 @@ textarea::placeholder,input[type=text]::placeholder{color:var(--dimmer)}
 <div class="tabs" id="tabbar"></div>
 
 <div class="sc show" id="s0">
-  <div class="pl">FSCreative™</div>
-  <h1>The Cinematic Creator Blueprint™</h1>
-  <p class="intro">How to create content that looks premium, builds trust, and gets customers. Each section teaches you the framework, then gives you an exercise to apply it. By the end you'll have a complete personalized content playbook.</p>
+  <div class="pl">FSCreative™ — Module 03</div>
+  <h1>Create Your Content™</h1>
+  <p class="intro">How to create content that looks premium, builds trust, and gets customers. Each section teaches you the framework, then gives you an exercise to apply it. By the end you'll have a complete personalized content playbook. The creators who win aren't the most talented. They're the most consistent. They understand three things: how to look premium, how to build trust, and how to get customers. This workbook covers all three.</p>
   <div class="sr">
     <div class="sc2"><div class="sn">6</div><div class="sl">Parts</div></div>
     <div class="sc2"><div class="sn">24</div><div class="sl">Exercises</div></div>
     <div class="sc2"><div class="sn" id="dc">0</div><div class="sl">Completed</div></div>
   </div>
-  <div class="ins"><p>The creators who win aren't the most talented. They're the most consistent. They understand three things: how to look premium, how to build trust, and how to get customers. This workbook covers all three.</p></div>
-  <div class="teach"><p>Most content fails before anyone watches it — not because the information is bad, but because it doesn't feel premium enough to stop the scroll, doesn't build enough trust to create belief, and doesn't have a clear enough system to sustain itself. We're living in the most saturated content environment in history. The creators who win aren't the most talented or the most knowledgeable. They're the ones who understand how all three pillars work together to create content that doesn't just get views — it gets customers. This workbook is designed to be worked through, not just read. Each section has a framework, an exercise, and a clear deliverable.</p></div>
-  <div class="nr" style="justify-content:flex-end;border-top:none;padding-top:0"><button class="btn p" id="b0n">Begin Part 1 — Foundation →</button></div>
+  <h2>Module Roadmap</h2>
+  <div class="roadmap">
+    <div class="rm-card" onclick="go(1)" style="cursor:pointer;transition:transform .15s" onmouseover="this.style.transform='scale(1.02)'" onmouseout="this.style.transform='scale(1)'"><div class="rm-num">01</div><div class="rm-title">Content Strategy</div><div class="rm-sub">The framework behind effective content</div></div>
+    <div class="rm-card" onclick="go(2)" style="cursor:pointer;transition:transform .15s" onmouseover="this.style.transform='scale(1.02)'" onmouseout="this.style.transform='scale(1)'"><div class="rm-num">02</div><div class="rm-title">Sustainable Foundation</div><div class="rm-sub">Build a system that keeps you consistent</div></div>
+    <div class="rm-card" onclick="go(3)" style="cursor:pointer;transition:transform .15s" onmouseover="this.style.transform='scale(1.02)'" onmouseout="this.style.transform='scale(1)'"><div class="rm-num">03</div><div class="rm-title">Cinematic Content</div><div class="rm-sub">How to make everyday content look premium</div></div>
+    <div class="rm-card" onclick="go(4)" style="cursor:pointer;transition:transform .15s" onmouseover="this.style.transform='scale(1.02)'" onmouseout="this.style.transform='scale(1)'"><div class="rm-num">04</div><div class="rm-title">Shots & B-Roll</div><div class="rm-sub">Build your repeatable shot system</div></div>
+    <div class="rm-card" onclick="go(5)" style="cursor:pointer;transition:transform .15s" onmouseover="this.style.transform='scale(1.02)'" onmouseout="this.style.transform='scale(1)'"><div class="rm-num">05</div><div class="rm-title">Creator Starter Kit</div><div class="rm-sub">The gear that gives you professional results</div></div>
+    <div class="rm-card" onclick="go(6)" style="cursor:pointer;transition:transform .15s" onmouseover="this.style.transform='scale(1.02)'" onmouseout="this.style.transform='scale(1)'"><div class="rm-num">06</div><div class="rm-title">Hooks & Storytelling</div><div class="rm-sub">Capture attention and build belief</div></div>
+    <div class="rm-card" onclick="go(7)" style="cursor:pointer;transition:transform .15s" onmouseover="this.style.transform='scale(1.02)'" onmouseout="this.style.transform='scale(1)'"><div class="rm-num">07</div><div class="rm-title">Content Formats & System</div><div class="rm-sub">Short-form, carousels, long-form, and batching</div></div>
+    <div class="rm-card" onclick="go(8)" style="cursor:pointer;transition:transform .15s" onmouseover="this.style.transform='scale(1.02)'" onmouseout="this.style.transform='scale(1)'"><div class="rm-num">08</div><div class="rm-title">Trust & Conversion</div><div class="rm-sub">Turn attention into subscribers and buyers</div></div>
+    <div class="rm-card" onclick="go(9)" style="cursor:pointer;transition:transform .15s;grid-column:1/-1" onmouseover="this.style.transform='scale(1.02)'" onmouseout="this.style.transform='scale(1)'"><div class="rm-num">09</div><div class="rm-title">Your Content Playbook</div><div class="rm-sub">Your complete personalized content system</div></div>
+  </div>
+  <div style="display:flex;justify-content:flex-end;margin-top:1rem">
+    <button class="btn p" id="b0n">Begin Part 1 — Strategy →</button>
+  </div>
   <div style="margin-top:1.5rem;padding-top:1.25rem;border-top:1px solid var(--border);display:flex;align-items:center;gap:10px;flex-wrap:wrap">
     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--dimmer);flex-shrink:0"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
     <span style="font-size:12.5px;color:var(--dim)">Prefer pen &amp; paper? Print the full workbook and complete it by hand.</span>
@@ -577,9 +596,9 @@ textarea::placeholder,input[type=text]::placeholder{color:var(--dimmer)}
 </div>
 
 <div class="sc" id="s3">
-  <div class="pl">Part 2 — Visual Identity · Chapters 4–7</div>
-  <h1>How to look as premium as you actually are</h1>
-  <p class="intro">People judge your content before they even watch it — before they read your caption, hear your voice, or process a single word. They make a judgment based on what they see. If it looks cheap, generic, or inconsistent, they'll assume your offer is too.</p>
+  <div class="pl">Part 2 — Visual Identity</div>
+  <h1>Cinematic Content — How to Make Everyday Look Premium</h1>
+  <p class="intro">People judge your content before they even watch it. If it looks cheap, generic, or inconsistent, they'll assume your offer is too. You don't need expensive gear to look premium — you need intentional decisions. Here's exactly what those decisions are.</p>
   <h2>The visual world concept</h2>
   <div class="teach"><p>Your visual world is the setting of your brand — the environment, atmosphere, and mood that shows up in every piece of content. Think of it like a movie. You can watch 10 seconds of a Wes Anderson film and know it's Wes Anderson. You can watch a Christopher Nolan film and immediately recognize the tone, the lighting, the atmosphere. Your brand should be the same.</p><p>Three layers: <strong>Setting</strong> (the physical environment where your content lives), <strong>Mood</strong> (the emotional tone and atmosphere), <strong>Design Details</strong> (recurring objects, textures, and elements that make you instantly recognizable).</p></div>
   <div class="ins"><p>How you do one thing is how you do everything. If you don't put effort into how your content looks, why would anyone believe you'll put effort into helping them? Looking premium doesn't require expensive gear. It requires intention.</p></div>
@@ -591,29 +610,6 @@ textarea::placeholder,input[type=text]::placeholder{color:var(--dimmer)}
   <div class="teach"><ul><li><strong>Frame rate:</strong> 24fps for the cinematic "movie look." 60fps or 120fps only when you plan to slow down footage for B-roll.</li><li><strong>Shutter speed:</strong> Always double your frame rate. 24fps = 1/50. 60fps = 1/120. This keeps motion blur natural and cinematic.</li><li><strong>Aperture:</strong> f1.8–f2.8 for talking head content — gives you background blur and cinematic depth. Lower f-stop = more blur.</li></ul></div>
   <h2>Color grading: for emotion, not trends</h2>
   <div class="teach"><p>Color is emotion. Before someone listens to what you're saying, they feel your content. Your grade should reinforce your visual world — not follow what's trending. A consistent grade that's slightly off is better than a perfect grade that changes every video.</p><ul><li><strong>Warm tones</strong> (oranges, yellows, warm whites) — energy, success, approachability</li><li><strong>Cool tones</strong> (blues, grays, cool whites) — authority, clarity, professionalism</li><li><strong>Desaturated / film-like</strong> (muted colors) — raw, honest, authentic</li><li><strong>High contrast</strong> (deep blacks, bright highlights) — cinematic, premium, dramatic</li></ul></div>
-  <div class="ec">
-    <div class="elbl">Exercises 4–7 — Build your complete visual world</div>
-    <div class="q">Content environment:</div>
-    <div class="og" id="g-env"><button class="opt" data-g="env">Calm and minimal</button><button class="opt" data-g="env">Creative and eclectic</button><button class="opt" data-g="env">Professional and polished</button><button class="opt" data-g="env">Luxurious and elevated</button></div>
-    <div class="q">What do you want people to FEEL when they see your content?</div>
-    <div class="og" id="g-feel"><button class="opt" data-g="feel">Inspired</button><button class="opt" data-g="feel">Motivated</button><button class="opt" data-g="feel">Confident</button><button class="opt" data-g="feel">Curious / challenged</button></div>
-    <div class="q">Lighting approach:</div>
-    <div class="og" id="g-light"><button class="opt" data-g="light">Warm golden natural light</button><button class="opt" data-g="light">Bright even studio light</button><button class="opt" data-g="light">High contrast dramatic</button><button class="opt" data-g="light">Soft diffused light</button></div>
-    <div class="q">Brand color palette:</div>
-    <div class="tc3"><input type="text" id="col1" placeholder="Primary" style="margin-bottom:0"><input type="text" id="col2" placeholder="Secondary" style="margin-bottom:0"><input type="text" id="col3" placeholder="Accent/CTA" style="margin-bottom:0"></div>
-    <div class="q" style="margin-top:10px">3–5 objects that will consistently appear in your content:</div>
-    <textarea rows="2" id="objects" placeholder="e.g. coffee mug, notebook, plants, books, candle..."></textarea>
-    <div class="q">Textures that define your visual world:</div>
-    <div class="og" id="g-tex"><button class="opt" data-g="tex">Natural (wood, plants, stone)</button><button class="opt" data-g="tex">Modern (concrete, metal, glass)</button><button class="opt" data-g="tex">Vintage (leather, aged wood)</button><button class="opt" data-g="tex">Mixed / eclectic</button></div>
-    <div class="q">What will you NEVER show in your content?</div>
-    <textarea rows="2" id="never" placeholder="Defining what's off-brand is just as important as what's on-brand."></textarea>
-    <div class="q">Your visual world narrative (1–2 sentences — your visual identity bible):</div>
-    <textarea rows="3" id="vnarr" placeholder="My brand lives in... The mood is... Every piece of content feels..."></textarea>
-    <div class="q">Color grade approach:</div>
-    <div class="og" id="g-grade"><button class="opt" data-g="grade">Warm tones</button><button class="opt" data-g="grade">Cool tones</button><button class="opt" data-g="grade">Desaturated / film-like</button><button class="opt" data-g="grade">High contrast</button></div>
-    <div class="q">Visual reference (creator or film whose world you want to study):</div>
-    <input type="text" id="vref" placeholder="e.g. specific creator or film director">
-  </div>
   <div class="nr"><button class="btn" id="b3b">← Back</button><span class="si">2/6</span><button class="btn p" id="b3n">Save & Continue →</button></div>
 </div>
 

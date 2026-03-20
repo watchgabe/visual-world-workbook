@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>FSCreative™ — Creator Foundation™</title>
+<title>FSCreative™ — Brand Foundation™</title>
 <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;800;900&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
@@ -246,50 +246,31 @@ textarea::placeholder,input[type=text]::placeholder{color:var(--dimmer)}
 
 <!-- S0 WELCOME -->
 <div class="sc show" id="s0">
-  <div class="pl">FSCreative&#8482; &#8212; Module 01</div>
-  <h1>Creator Foundation&#8482;</h1>
-  <p class="intro">Your Creator Foundation is the strategic bedrock of your entire brand. Everything you build &#8212; your visual identity, your content, your offers &#8212; flows from this. Don&#8217;t rush it. The creators who do this work are the ones who build brands that last.</p>
+  <div class="pl">FSCreative™ — Module 01</div>
+  <h1>Brand Foundation™</h1>
+  <p class="intro">Your Brand Foundation is the strategic bedrock of your entire brand. Everything you build — your visual identity, your content, your offers — flows from this. Don't rush it. The creators who do this work are the ones who build brands that last. Most creators fail not because they lack talent — they fail because they start in the wrong place. They build an aesthetic without knowing what they stand for. They create offers without knowing why anyone should trust them. This module fixes that.</p>
   <div class="sr">
     <div class="sc2"><div class="sn">7</div><div class="sl">Workshops</div></div>
     <div class="sc2"><div class="sn">8</div><div class="sl">Deliverables</div></div>
     <div class="sc2"><div class="sn" id="dc">0</div><div class="sl">Completed</div></div>
   </div>
-  <div class="ins"><p>Most creators fail not because they lack talent &#8212; they fail because they start in the wrong place. They build an aesthetic without knowing what they stand for. They create offers without knowing why anyone should trust them. <strong>This guide fixes that.</strong></p></div>
-  <div class="teach">
-    <p><strong>Your Creator Foundation includes:</strong></p>
-    <ul>
-      <li><strong>Brand Journey Framework</strong> &#8212; Where you&#8217;re going and what you need to do to get there</li>
-      <li><strong>Avatar Profile</strong> &#8212; Know exactly who you&#8217;re building for</li>
-      <li><strong>Core Mission + Ikigai</strong> &#8212; Why you do what you do</li>
-      <li><strong>Core Values</strong> &#8212; The principles that guide everything</li>
-      <li><strong>Content Pillars</strong> &#8212; Always know what to talk about</li>
-      <li><strong>Origin Story + Brand Mission</strong> &#8212; The journey that makes you relatable</li>
-      <li><strong>Brand Audit</strong> &#8212; See where you are before you build</li>
-    </ul>
-  </div>
   <h2>Module Roadmap</h2>
   <div class="roadmap">
-    <div class="rm-card"><div class="rm-num">01</div><div class="rm-title">Brand Journey Framework</div><div class="rm-sub">Where you&#8217;re going and how to get there</div></div>
-    <div class="rm-card"><div class="rm-num">02</div><div class="rm-title">Define Your Avatar</div><div class="rm-sub">Know exactly who you&#8217;re building for</div></div>
-    <div class="rm-card"><div class="rm-num">03</div><div class="rm-title">Core Mission + Ikigai</div><div class="rm-sub">Why you do what you do</div></div>
-    <div class="rm-card"><div class="rm-num">04</div><div class="rm-title">Core Values</div><div class="rm-sub">The principles that guide everything</div></div>
-    <div class="rm-card"><div class="rm-num">05</div><div class="rm-title">Content Pillars</div><div class="rm-sub">Always know what to talk about</div></div>
-    <div class="rm-card"><div class="rm-num">06</div><div class="rm-title">Origin Story + Brand Mission</div><div class="rm-sub">Your journey and the movement you&#8217;re building</div></div>
-    <div class="rm-card" style="grid-column:1/-1"><div class="rm-num">07</div><div class="rm-title">Brand Audit</div><div class="rm-sub">See where you are before you build where you&#8217;re going</div></div>
+    <div class="rm-card" onclick="go(1)" style="cursor:pointer;transition:transform .15s" onmouseover="this.style.transform='scale(1.02)'" onmouseout="this.style.transform='scale(1)'"><div class="rm-num">01</div><div class="rm-title">Brand Journey</div><div class="rm-sub">Where you're going and what you need to do to get there</div></div>
+    <div class="rm-card" onclick="go(2)" style="cursor:pointer;transition:transform .15s" onmouseover="this.style.transform='scale(1.02)'" onmouseout="this.style.transform='scale(1)'"><div class="rm-num">02</div><div class="rm-title">Avatar Profile</div><div class="rm-sub">Know exactly who you're building for</div></div>
+    <div class="rm-card" onclick="go(3)" style="cursor:pointer;transition:transform .15s" onmouseover="this.style.transform='scale(1.02)'" onmouseout="this.style.transform='scale(1)'"><div class="rm-num">03</div><div class="rm-title">Core Mission</div><div class="rm-sub">Why you do what you do</div></div>
+    <div class="rm-card" onclick="go(4)" style="cursor:pointer;transition:transform .15s" onmouseover="this.style.transform='scale(1.02)'" onmouseout="this.style.transform='scale(1)'"><div class="rm-num">04</div><div class="rm-title">Core Values</div><div class="rm-sub">The principles that guide everything</div></div>
+    <div class="rm-card" onclick="go(5)" style="cursor:pointer;transition:transform .15s" onmouseover="this.style.transform='scale(1.02)'" onmouseout="this.style.transform='scale(1)'"><div class="rm-num">05</div><div class="rm-title">Content Pillars</div><div class="rm-sub">Always know what to talk about</div></div>
+    <div class="rm-card" onclick="go(6)" style="cursor:pointer;transition:transform .15s" onmouseover="this.style.transform='scale(1.02)'" onmouseout="this.style.transform='scale(1)'"><div class="rm-num">06</div><div class="rm-title">Origin Story</div><div class="rm-sub">The journey that makes you relatable</div></div>
+    <div class="rm-card" onclick="go(7)" style="cursor:pointer;transition:transform .15s" onmouseover="this.style.transform='scale(1.02)'" onmouseout="this.style.transform='scale(1)'"><div class="rm-num">07</div><div class="rm-title">Brand Audit</div><div class="rm-sub">See where you are before you build</div></div>
   </div>
-  <div class="nr" style="justify-content:flex-end;border-top:none;padding-top:0;flex-direction:column;align-items:stretch;gap:10px">
-    <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1rem 1.2rem;">
-      <div class="elbl" style="margin-bottom:8px">Before you begin</div>
-      <div class="q" style="margin-top:0">Your name or brand handle</div>
-      <div class="qh">This will appear on your final Foundation Document.</div>
-      <input type="text" id="brandName" placeholder="e.g. Alex Rivera, @yourhandle, Studio Name...">
-    </div>
-    <div style="display:flex;justify-content:flex-end"><button class="btn p" onclick="go(1)">Begin Workshop 1 &#8594;</button></div>
+  <div style="display:flex;justify-content:flex-end;margin-top:1rem">
+    <button class="btn p" id="b0n" onclick="go(1)">Begin Workshop 1 →</button>
   </div>
   <div style="margin-top:1.5rem;padding-top:1.25rem;border-top:1px solid var(--border);display:flex;align-items:center;gap:10px;flex-wrap:wrap">
     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--dimmer);flex-shrink:0"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
     <span style="font-size:12.5px;color:var(--dim)">Prefer pen &amp; paper? Print the full workbook and complete it by hand.</span>
-    <button class="btn" onclick="printFull()" style="margin-left:auto;font-size:11.5px">Print Full Workbook</button>
+    <button id="printFullBtn" class="btn" onclick="printFull()" style="margin-left:auto;font-size:11.5px">Print Full Workbook</button>
   </div>
 </div>
 
@@ -638,7 +619,7 @@ textarea::placeholder,input[type=text]::placeholder{color:var(--dimmer)}
     <div class="qh">&#8220;Right now my brand is [current state] but it should be [desired state]. The biggest gap is [primary issue].&#8221;</div>
     <textarea rows="2" id="auditSummary" placeholder="Right now my brand is..."></textarea>
   </div>
-  <h2>Creator Foundation Completion Checklist</h2>
+  <h2>Brand Foundation Completion Checklist</h2>
   <div class="ins"><p>Before moving to Visual Identity, confirm you have each deliverable completed.</p></div>
   <div class="checklist" id="cfChecklist">
     <div class="check-item" data-key="cf1"><div class="check-box"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div><div class="check-text">Brand Journey Framework &#8212; 4 questions answered and summary written</div></div>
@@ -663,9 +644,9 @@ textarea::placeholder,input[type=text]::placeholder{color:var(--dimmer)}
 <div class="sc" id="s8">
   <div class="vg-cover">
     <div class="vg-cover-bar"></div>
-    <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.14em;color:var(--orange);margin-bottom:8px">Creator Foundation&#8482; &#8212; Document</div>
+    <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.14em;color:var(--orange);margin-bottom:8px">FSCreative&#8482; &#8212; Module 01 &#183; Document</div>
     <div class="vg-cover-name" id="vg-cover-name">Your Brand</div>
-    <div class="vg-cover-sub">Creator Foundation Document</div>
+    <div class="vg-cover-sub">Brand Foundation Document</div>
   </div>
   <div class="vg-sg-section">
     <div class="vg-sg-label">01 &#8212; Brand Journey</div>
@@ -715,7 +696,7 @@ textarea::placeholder,input[type=text]::placeholder{color:var(--dimmer)}
     </div>
   </div>
   <div class="div"></div>
-  <div class="ins"><p>Your Creator Foundation is not finished when you complete this module &#8212; it&#8217;s a living document. The goal right now is not perfection. The goal is clarity. A clear, defined Creator Foundation that&#8217;s 80% right is infinitely more powerful than a perfect one that exists only in your head. Define it. Document it. Use it. Refine it as you grow.</p></div>
+  <div class="ins"><p>Your Brand Foundation is not finished when you complete this module &#8212; it&#8217;s a living document. The goal right now is not perfection. The goal is clarity. A clear, defined Brand Foundation that&#8217;s 80% right is infinitely more powerful than a perfect one that exists only in your head. Define it. Document it. Use it. Refine it as you grow.</p></div>
   <div class="nr">
     <button class="btn" onclick="go(7)">&#8592; Back</button>
     <div style="display:flex;gap:8px">
