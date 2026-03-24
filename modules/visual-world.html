@@ -1020,14 +1020,6 @@ textarea::placeholder,input[type=text]::placeholder{color:var(--dimmer)}
     <textarea rows="4" id="mbStatement" placeholder="My mood board represents a world that feels... The dominant energy is... When someone steps into this world they feel..."></textarea>
   </div>
 
-  <h2>Mood Board Checklist</h2>
-  <div class="checklist" id="mbChecklist">
-    <div class="check-item" data-key="mb1"><div class="check-box"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div><div class="check-text">I have 30 curated images (10-10-10)</div></div>
-    <div class="check-item" data-key="mb2"><div class="check-box"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div><div class="check-text">My images feel cohesive (not random)</div></div>
-    <div class="check-item" data-key="mb3"><div class="check-box"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div><div class="check-text">My images represent a clear mood</div></div>
-    <div class="check-item" data-key="mb4"><div class="check-box"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div><div class="check-text">I've identified dominant colors, lighting, and textures</div></div>
-    <div class="check-item" data-key="mb5"><div class="check-box"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div><div class="check-text">I've written my mood board statement</div></div>
-  </div>
 
   <div class="nr"><button class="btn" id="b2b">← Back</button><span class="si">2/6</span><button class="btn p" id="b2n">Save & Continue →</button></div>
 </div>
@@ -1137,12 +1129,6 @@ textarea::placeholder,input[type=text]::placeholder{color:var(--dimmer)}
     <input type="text" id="paletteName" placeholder='e.g. "Warm Minimal" · "Dark Cinematic" · "Cool Authority" · "Golden Hour"'>
   </div>
 
-  <h2>Color Palette Checklist</h2>
-  <div class="checklist" id="colChecklist">
-    <div class="check-item" data-key="col1"><div class="check-box"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div><div class="check-text">I have 4 defined colors with hex codes</div></div>
-    <div class="check-item" data-key="col2"><div class="check-box"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div><div class="check-text">My colors match the mood of my mood board</div></div>
-    <div class="check-item" data-key="col3"><div class="check-box"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div><div class="check-text">I've given my palette a name that captures the mood</div></div>
-  </div>
   <div class="nr"><button class="btn" id="b3b">← Back</button><span class="si">3/6</span><button class="btn p" id="b3n">Save & Continue →</button></div>
 </div>
 
@@ -1263,12 +1249,6 @@ textarea::placeholder,input[type=text]::placeholder{color:var(--dimmer)}
     <textarea rows="3" id="typographyRules" placeholder="1. Primary font is always used for: &#10;2. Body font is always used for: &#10;3. I never use more than ___ fonts in one piece of content"></textarea>
   </div>
 
-  <h2>Typography Checklist</h2>
-  <div class="checklist" id="typChecklist">
-    <div class="check-item" data-key="typ1"><div class="check-box"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div><div class="check-text">I have 2 defined fonts with clear rules for each</div></div>
-    <div class="check-item" data-key="typ2"><div class="check-box"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div><div class="check-text">My fonts create contrast and hierarchy</div></div>
-    <div class="check-item" data-key="typ3"><div class="check-box"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div><div class="check-text">My typography matches the mood of my color palette and mood board</div></div>
-  </div>
   <div class="nr"><button class="btn" id="b4b">← Back</button><span class="si">4/5</span><button class="btn p" id="b4n">Save &amp; Continue →</button></div>
 </div>
 
@@ -2658,17 +2638,36 @@ function updatePinterestEmbed() {
   var wrap = document.getElementById('pinterest-embed-wrap');
   var container = document.getElementById('pinterest-embed-container');
   if (!wrap || !container) return;
-  // Normalize URL — add https:// if missing
   if (url && !url.match(/^https?:\/\//)) url = 'https://' + url;
-  if (url && (url.includes('pinterest') || url.includes('http'))) {
-    wrap.style.display = 'block';
-    container.innerHTML = '<div style="padding:1.5rem;text-align:center">' +
-      '<div style="font-size:13px;color:var(--dim);margin-bottom:12px">Pinterest boards can\'t be embedded directly — open your board in a new tab to reference it while you work.</div>' +
-      '<a href="'+url+'" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:8px;padding:10px 18px;background:var(--orange);color:#fff;border-radius:6px;font-size:13px;font-weight:600;text-decoration:none">'+
-      '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>' +
-      'Open My Board →</a></div>';
+  if (!url) { wrap.style.display = 'none'; return; }
+
+  wrap.style.display = 'block';
+
+  // Pinterest board — use official embed widget
+  if (url.includes('pinterest.com')) {
+    container.innerHTML =
+      '<div style="overflow:auto;-webkit-overflow-scrolling:touch;max-height:520px;border-radius:8px">' +
+      '<a data-pin-do="embedBoard" data-pin-board-width="800" data-pin-scale-height="480" data-pin-scale-width="80" href="'+url+'"></a>' +
+      '</div>' +
+      '<div style="margin-top:10px;text-align:right">' +
+      '<a href="'+url+'" target="_blank" rel="noopener" style="font-size:11px;color:var(--dimmer);text-decoration:none">Open in Pinterest ↗</a>' +
+      '</div>';
+    // Load or re-run Pinterest's embed script
+    if (window.PinUtils) {
+      window.PinUtils.build();
+    } else {
+      var s = document.createElement('script');
+      s.async = true; s.defer = true;
+      s.src = '//assets.pinterest.com/js/pinit.js';
+      document.body.appendChild(s);
+    }
   } else {
-    wrap.style.display = 'none';
+    // Non-Pinterest URL — try iframe, fall back to open button
+    container.innerHTML =
+      '<iframe src="'+url+'" style="width:100%;height:480px;border:none;border-radius:8px" sandbox="allow-scripts allow-same-origin allow-popups"></iframe>' +
+      '<div style="margin-top:10px;text-align:right">' +
+      '<a href="'+url+'" target="_blank" rel="noopener" style="font-size:11px;color:var(--dimmer);text-decoration:none">Open in new tab ↗</a>' +
+      '</div>';
   }
 }
 
