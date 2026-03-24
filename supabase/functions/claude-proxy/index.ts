@@ -12,11 +12,17 @@ serve(async (req) => {
   }
 
   try {
-    const { prompt, maxTokens } = await req.json();
+    const { prompt, messages, maxTokens } = await req.json();
 
-    if (!prompt || typeof prompt !== "string" || prompt.trim().length < 5) {
+    // Accept either a plain text prompt or a full messages array (for vision/image calls)
+    let messagePayload: any[];
+    if (messages && Array.isArray(messages)) {
+      messagePayload = messages;
+    } else if (prompt && typeof prompt === "string" && prompt.trim().length >= 5) {
+      messagePayload = [{ role: "user", content: prompt }];
+    } else {
       return new Response(
-        JSON.stringify({ error: "A prompt is required." }),
+        JSON.stringify({ error: "A prompt or messages array is required." }),
         { status: 400, headers: { ...CORS, "Content-Type": "application/json" } }
       );
     }
@@ -39,7 +45,7 @@ serve(async (req) => {
       body: JSON.stringify({
         model: "claude-sonnet-4-5",
         max_tokens: maxTokens || 1000,
-        messages: [{ role: "user", content: prompt }],
+        messages: messagePayload,
       }),
     });
 

@@ -666,6 +666,10 @@ function loadModule(moduleId, sectionIndex) {
   activeModule = moduleId;
   pendingNavigation = sectionIndex;
 
+  // Persist current position so refresh restores it
+  localStorage.setItem('blp-last-module', moduleId);
+  localStorage.setItem('blp-last-section', sectionIndex);
+
   updateMobileTitle(moduleId);
   showLoading(mod.title);
 
@@ -687,6 +691,9 @@ function navigateSection(moduleId, sectionIndex) {
   if (!moduleStates[moduleId]) moduleStates[moduleId] = {cur: 0, done: []};
   moduleStates[moduleId].cur = sectionIndex;
   renderSidebar();
+
+  localStorage.setItem('blp-last-module', moduleId);
+  localStorage.setItem('blp-last-section', sectionIndex);
 
   if (activeModule === moduleId && !iframeLoading) {
     var iframe = document.getElementById('module-iframe');
@@ -789,10 +796,25 @@ function initTheme() {
 function init() {
   initTheme();
   initModuleStates();
-  expandedModules['brand-foundation'] = true;
+
+  // First-time visitor → Welcome; returning visitor → restore last position
+  var lastModule  = localStorage.getItem('blp-last-module');
+  var lastSection = parseInt(localStorage.getItem('blp-last-section') || '0', 10);
+
+  if (!lastModule) {
+    // First visit — land on Welcome
+    lastModule  = 'welcome';
+    lastSection = 0;
+  } else {
+    // Validate the saved module still exists and is accessible
+    var validModule = MODULES.find(function(m){ return m.id === lastModule && !m.locked && m.file; });
+    if (!validModule) { lastModule = 'welcome'; lastSection = 0; }
+  }
+
+  expandedModules[lastModule] = true;
   renderSidebar();
   initIdentity();
-  loadModule('brand-foundation', 0);
+  loadModule(lastModule, lastSection);
 }
 
 init();

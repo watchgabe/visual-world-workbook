@@ -1646,26 +1646,12 @@ async function palExtractColors() {
   btn.textContent = 'Extracting...';
   results.innerHTML = '<div style="font-size:12px;color:var(--dimmer);padding:.5rem 0">Analyzing image for color palettes...</div>';
 
-  var apiKey = localStorage.getItem('fsc-anthropic-key') || '';
-  if (!apiKey) {
-    results.innerHTML = '<div style="font-size:12px;color:rgba(255,100,100,.8)">No API key — set it in admin.html first.</div>';
-    btn.disabled = false;
-    btn.textContent = 'Extract Color Palettes →';
-    return;
-  }
-
   try {
-    var res = await fetch('https://api.anthropic.com/v1/messages', {
+    var res = await fetch(SUPABASE_URL+'/functions/v1/claude-proxy', {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'x-api-key': apiKey,
-        'anthropic-version': '2023-06-01',
-        'anthropic-dangerous-direct-browser-calls': 'true'
-      },
+      headers: {'Content-Type':'application/json','Authorization':'Bearer '+SUPABASE_ANON},
       body: JSON.stringify({
-        model: 'claude-opus-4-5',
-        max_tokens: 800,
+        maxTokens: 800,
         messages: [{
           role: 'user',
           content: [
@@ -1676,8 +1662,8 @@ async function palExtractColors() {
       })
     });
     var data = await res.json();
-    if (data.error) throw new Error(data.error.message);
-    var text = (data.content||[]).map(function(b){return b.text||'';}).join('');
+    if (data.error) throw new Error(data.error);
+    var text = data.text||'';
     // Strip markdown fences and find JSON array
     var cleaned = text.replace(/```json|```/g,'').trim();
     var jsonStart = cleaned.indexOf('[');
@@ -2151,16 +2137,20 @@ async function analyzeIG(n) {
     var feedData = await feedResp.json();
     console.log('Feed response:', JSON.stringify(feedData).slice(0,600));
     posts = [];
-    var rawPosts = feedData.posts || feedData.data || [];
+    var rawPosts = feedData.posts || feedData.data || feedData.items || feedData.medias || feedData.feed || [];
+    if (rawPosts && !Array.isArray(rawPosts) && rawPosts.data) rawPosts = rawPosts.data;
+    if (rawPosts && !Array.isArray(rawPosts) && rawPosts.items) rawPosts = rawPosts.items;
+    console.log('Feed rawPosts type:', typeof rawPosts, 'length:', Array.isArray(rawPosts)?rawPosts.length:'n/a');
     if (Array.isArray(rawPosts)) {
       rawPosts.forEach(function(item) {
-        var node = item.node || item;
+        var node = item.node || item.media || item;
         posts.push(node);
       });
     }
     thumbUrls = posts.slice(0,12).map(function(p){
-      return p.display_url || p.thumbnail_url || p.image_url ||
+      return p.display_url || p.image_url || p.thumbnail_url || p.media_url ||
         (p.thumbnail_resources && p.thumbnail_resources[3] && p.thumbnail_resources[3].src) ||
+        (p.thumbnail_resources && p.thumbnail_resources[2] && p.thumbnail_resources[2].src) ||
         (p.image_versions2 && p.image_versions2.candidates && p.image_versions2.candidates[0] && p.image_versions2.candidates[0].url) || '';
     }).filter(Boolean);
   } catch(igErr) {
@@ -2169,22 +2159,36 @@ async function analyzeIG(n) {
 
   var fullName='', bio='', followers='', postsCount='', picUrl='';
   if (profile) {
-    var u = profile.data || profile.user || profile;
-    fullName   = u.full_name   || u.name                          || '';
-    bio        = u.biography   || u.bio                          || '';
-    followers  = u.follower_count || u.followers_count           || u.edge_followed_by && u.edge_followed_by.count || '';
-    postsCount = u.media_count || u.posts_count                  || u.edge_owner_to_timeline_media && u.edge_owner_to_timeline_media.count || '';
-    picUrl     = u.profile_pic_url_hd || u.profile_pic_url       || '';
+    // Try every known nesting pattern the API might return
+    var u = profile;
+    if (profile.data && profile.data.user) u = profile.data.user;
+    else if (profile.data && (profile.data.full_name||profile.data.follower_count)) u = profile.data;
+    else if (profile.user) u = profile.user;
+    else if (profile.graphql && profile.graphql.user) u = profile.graphql.user;
+    console.log('Parsed user object keys:', Object.keys(u).slice(0,15));
+    fullName   = u.full_name   || u.fullName   || u.name         || '';
+    bio        = u.biography   || u.bio        || u.description  || '';
+    followers  = u.follower_count || u.followers_count || u.followers ||
+                 (u.edge_followed_by && u.edge_followed_by.count) ||
+                 (u.counts && u.counts.followed_by) || '';
+    postsCount = u.media_count || u.posts_count || u.mediaCount  ||
+                 (u.edge_owner_to_timeline_media && u.edge_owner_to_timeline_media.count) ||
+                 (u.counts && u.counts.media) || '';
+    picUrl     = u.profile_pic_url_hd || u.profile_pic_url || u.profile_image || u.hd_profile_pic_url_info && u.hd_profile_pic_url_info.url || '';
   }
 
   var totalLikes = 0;
   posts.slice(0,12).forEach(function(p){
-    totalLikes += p.like_count || (p.edge_media_preview_like && p.edge_media_preview_like.count) || 0;
+    totalLikes += p.like_count || p.likes_count || p.likeCount ||
+                  (p.edge_media_preview_like && p.edge_media_preview_like.count) ||
+                  (p.likes && p.likes.count) || 0;
   });
   var avgLikes = posts.length ? Math.round(totalLikes/Math.min(posts.length,12)) : 0;
 
   var freq = '-';
-  var dates = posts.slice(0,12).map(function(p){return p.taken_at||p.taken_at_timestamp;}).filter(Boolean);
+  var dates = posts.slice(0,12).map(function(p){
+    return p.taken_at || p.taken_at_timestamp || p.timestamp || p.created_at;
+  }).filter(Boolean);
   if (dates.length>=2) {
     var span = (Math.max.apply(null,dates)-Math.min.apply(null,dates))/(7*24*3600);
     if (span>0) freq = (dates.length/span).toFixed(1);
@@ -2246,15 +2250,20 @@ async function analyzeIG(n) {
   ];
 
   try {
-    var aiResp = await fetch('https://api.anthropic.com/v1/messages',{
+    var aiResp = await fetch(SUPABASE_URL+'/functions/v1/claude-proxy',{
       method:'POST',
-      headers:{'Content-Type':'application/json','x-api-key':ANTHROPIC_API_KEY,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-calls':'true'},
-      body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:600,messages:[{role:'user',content:promptParts.join(' ')}]})
+      headers:{'Content-Type':'application/json','Authorization':'Bearer '+SUPABASE_ANON},
+      body:JSON.stringify({prompt:promptParts.join(' '),maxTokens:600})
     });
     var aiData = await aiResp.json();
-    if (aiData.error) throw new Error(aiData.error.message);
-    var aiText = (aiData.content||[]).map(function(b){return b.text||'';}).join('');
-    var r = JSON.parse(aiText.replace(/```json|```/g,'').trim());
+    if (aiData.error) throw new Error(aiData.error);
+    var aiText = aiData.text||'';
+    var cleaned = aiText.replace(/```json|```/g,'').trim();
+    // Find the JSON object in the response
+    var jsonStart = cleaned.indexOf('{');
+    var jsonEnd = cleaned.lastIndexOf('}');
+    if (jsonStart === -1 || jsonEnd === -1) throw new Error('No JSON in AI response: '+cleaned.slice(0,80));
+    var r = JSON.parse(cleaned.slice(jsonStart, jsonEnd+1));
 
     /* Update niche in handle line now we have it */
     setEl('cac-ig-'+n, '@'+handle+(r.niche?' · '+r.niche:''));
@@ -2299,8 +2308,9 @@ async function analyzeIG(n) {
     saveData();
 
   } catch(e) {
+    console.error('AI analysis error:', e);
     showEl('cac-notes-'+n);
-    setCacStatus(n,'error','AI analysis unavailable — add your Anthropic API key to enable it.');
+    setCacStatus(n,'error','AI error — '+e.message);
     /* Still save what we got from Instagram */
     creatorStore[n] = {
       analyzed: true, handle: handle,
@@ -2535,14 +2545,6 @@ async function analyzeMoodBoard() {
   statusEl.innerHTML = '<span class="ai-spinner"></span>Analyzing your visual world...';
   resultEl.classList.remove('show');
 
-  var apiKey = localStorage.getItem('fsc-anthropic-key') || '';
-  if (!apiKey) {
-    statusEl.className = 'ai-status error';
-    statusEl.textContent = 'No API key — set it in admin.html';
-    btn.disabled = false;
-    return;
-  }
-
   var colors = (document.getElementById('mbColors')||{}).value || '';
   var mood = (document.getElementById('mbMood')||{}).value || '';
   var lighting = document.querySelector('.opt[data-g="mblight"].sel');
@@ -2581,19 +2583,14 @@ async function analyzeMoodBoard() {
       messages = [{role:'user',content:imageContents}];
     }
 
-    var res = await fetch('https://api.anthropic.com/v1/messages', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'x-api-key': apiKey,
-        'anthropic-version': '2023-06-01',
-        'anthropic-dangerous-direct-browser-calls': 'true'
-      },
-      body: JSON.stringify({model:'claude-opus-4-5',max_tokens:800,messages:messages})
+    var res = await fetch(SUPABASE_URL+'/functions/v1/claude-proxy',{
+      method:'POST',
+      headers:{'Content-Type':'application/json','Authorization':'Bearer '+SUPABASE_ANON},
+      body:JSON.stringify({prompt:promptText,maxTokens:800})
     });
     var data = await res.json();
-    if (data.error) throw new Error(data.error.message);
-    var text = (data.content||[]).map(function(b){return b.text||'';}).join('');
+    if (data.error) throw new Error(data.error);
+    var text = data.text||'';
     statusEl.className = 'ai-status success';
     statusEl.innerHTML = '✓ Analysis complete';
     resultEl.textContent = text;

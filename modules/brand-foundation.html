@@ -339,6 +339,11 @@ textarea::placeholder,input[type=text]::placeholder{color:var(--dimmer)}
   <h1>Define Your Avatar</h1>
   <p class="intro">You are no longer speaking to a niche — you are speaking to one exact person, your perfect dream customer. This is how you build true trust and relatability, because you're speaking to one person who feels like they've been talking to you the whole time. If you don't know who that one person is, your content will never land. Speaking to everyone means you're actually speaking to no one.</p>
 
+  <div style="background:var(--orange-tint);border:1px solid var(--orange-border);border-radius:var(--radius-md);padding:1rem 1.2rem;margin-bottom:1.5rem">
+    <div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.13em;color:var(--orange);margin-bottom:.5rem">&#9733; Bonus Tip</div>
+    <div style="font-size:13px;color:var(--text);line-height:1.75"><strong>If you&#8217;re unsure where to start, use two past versions of yourself.</strong> Maybe 5 years ago and 2 years ago. Speak from experience and explain:<br><br>+ How the old version of you could become the current version faster<br>+ The struggles and pain points you could have avoided<br>+ Your future goals and how you plan to get there</div>
+  </div>
+
   <!-- AVATAR 1 -->
   <div class="avatar-card" id="av1Card">
     <div class="avatar-card-head" onclick="toggleAvatar('av1')">
@@ -366,31 +371,39 @@ textarea::placeholder,input[type=text]::placeholder{color:var(--dimmer)}
         </div>
       </div>
       <div class="q" style="margin-top:0">What is their current situation?</div>
-      <textarea rows="2" id="av1Situation" placeholder="Describe their day-to-day..."></textarea>
+      <textarea rows="2" id="av1Situation" placeholder="Describe their day-to-day life and where they&#8217;re at right now..."></textarea>
+      <div class="q">Who are they?</div>
+      <textarea rows="2" id="av1Who" placeholder="Their identity — how they see themselves, their values, their world..."></textarea>
+      <div class="q">What do they look like?</div>
+      <textarea rows="2" id="av1Look" placeholder="Physical appearance, style, vibe — paint a picture..."></textarea>
+      <div class="q">What&#8217;s their story?</div>
+      <textarea rows="2" id="av1Story" placeholder="Background, life stage, key experiences that shaped them..."></textarea>
+      <div class="q">What are their goals, dreams, and desires?</div>
+      <textarea rows="2" id="av1Goals" placeholder="Short-term and long-term — what does winning look like for them?"></textarea>
+      <div class="q">What are their passions and hobbies?</div>
+      <textarea rows="2" id="av1Passions" placeholder="What do they love, follow, and spend time on outside of work?"></textarea>
       <div class="q">What are they struggling with most?</div>
       <textarea rows="2" id="av1Struggle" placeholder="The specific problem that keeps them up at night..."></textarea>
       <div class="q">What have they already tried?</div>
       <textarea rows="2" id="av1Tried" placeholder="Previous courses, strategies, approaches..."></textarea>
       <div class="q">Their desired outcome</div>
       <textarea rows="2" id="av1Desired" placeholder="Their dream result in specific, tangible terms..."></textarea>
-      <div class="q">What fears stop them?</div>
+      <div class="q">What fears and objections do they have?</div>
       <textarea rows="2" id="av1Fears" placeholder="Fear of failure, looking stupid, wasting money..."></textarea>
       <div class="two-col">
         <div>
           <div class="q" style="margin-top:0">Most active platforms</div><input type="text" id="av1Platforms" placeholder="Instagram, TikTok, YouTube...">
         </div>
         <div>
-          <div class="q" style="margin-top:0">How are you 2–3 steps ahead?</div><input type="text" id="av1Connection" placeholder="What did you figure out they haven't?">
+          <div class="q" style="margin-top:0">How are you 2–3 steps ahead?</div><input type="text" id="av1Connection" placeholder="What did you figure out they haven&#8217;t?">
         </div>
       </div>
       <div class="ec" style="margin-top:1rem">
-        <div class="elbl">AI — Generate Avatar 1</div>
-        <div class="qh">Fill in the fields above, then click Generate. AI will name this avatar, write their profile, and create a visual.</div>
-        <button class="btn-ai" id="av1Btn" onclick="generateAvatar(1)">✦ Generate Avatar 1</button>
+        <div class="elbl">AI &#8212; Generate My Avatar</div>
+        <div class="qh">Fill in the fields above, then click Generate.</div>
+        <button class="btn-ai" id="av1Btn" onclick="generateAvatar(1)">&#10022; Generate Avatar</button>
         <div class="ai-status" id="av1Status"></div>
-        <div class="ai-result" id="av1Result"></div>
-        <div class="q" style="margin-top:.5rem">Avatar Statement</div>
-        <textarea rows="4" id="av1Statement" placeholder="Write or paste your avatar statement here..."></textarea>
+        <textarea rows="5" id="av1Statement" placeholder="Generated avatar statement — edit freely..."></textarea>
       </div>
     </div>
   </div>
@@ -422,44 +435,41 @@ textarea::placeholder,input[type=text]::placeholder{color:var(--dimmer)}
         </div>
       </div>
       <div class="q" style="margin-top:0">What is their current situation?</div>
-      <textarea rows="2" id="av2Situation" placeholder="Describe their day-to-day..."></textarea>
+      <textarea rows="2" id="av2Situation" placeholder="Describe their day-to-day life and where they&#8217;re at right now..."></textarea>
+      <div class="q">Who are they?</div>
+      <textarea rows="2" id="av2Who" placeholder="Their identity — how they see themselves, their values, their world..."></textarea>
+      <div class="q">What do they look like?</div>
+      <textarea rows="2" id="av2Look" placeholder="Physical appearance, style, vibe — paint a picture..."></textarea>
+      <div class="q">What&#8217;s their story?</div>
+      <textarea rows="2" id="av2Story" placeholder="Background, life stage, key experiences that shaped them..."></textarea>
+      <div class="q">What are their goals, dreams, and desires?</div>
+      <textarea rows="2" id="av2Goals" placeholder="Short-term and long-term — what does winning look like for them?"></textarea>
+      <div class="q">What are their passions and hobbies?</div>
+      <textarea rows="2" id="av2Passions" placeholder="What do they love, follow, and spend time on outside of work?"></textarea>
       <div class="q">What are they struggling with most?</div>
       <textarea rows="2" id="av2Struggle" placeholder="The specific problem that keeps them up at night..."></textarea>
       <div class="q">What have they already tried?</div>
       <textarea rows="2" id="av2Tried" placeholder="Previous courses, strategies, approaches..."></textarea>
       <div class="q">Their desired outcome</div>
       <textarea rows="2" id="av2Desired" placeholder="Their dream result in specific, tangible terms..."></textarea>
-      <div class="q">What fears stop them?</div>
+      <div class="q">What fears and objections do they have?</div>
       <textarea rows="2" id="av2Fears" placeholder="Fear of failure, looking stupid, wasting money..."></textarea>
       <div class="two-col">
         <div>
           <div class="q" style="margin-top:0">Most active platforms</div><input type="text" id="av2Platforms" placeholder="Instagram, LinkedIn, YouTube...">
         </div>
         <div>
-          <div class="q" style="margin-top:0">How are you 2–3 steps ahead?</div><input type="text" id="av2Connection" placeholder="What did you figure out they haven't?">
+          <div class="q" style="margin-top:0">How are you 2–3 steps ahead?</div><input type="text" id="av2Connection" placeholder="What did you figure out they haven&#8217;t?">
         </div>
       </div>
       <div class="ec" style="margin-top:1rem">
-        <div class="elbl">AI — Generate Avatar 2</div>
+        <div class="elbl">AI &#8212; Generate Avatar 2</div>
         <div class="qh">Fill in the fields above, then click Generate.</div>
-        <button class="btn-ai" id="av2Btn" onclick="generateAvatar(2)">✦ Generate Avatar 2</button>
+        <button class="btn-ai" id="av2Btn" onclick="generateAvatar(2)">&#10022; Generate Avatar 2</button>
         <div class="ai-status" id="av2Status"></div>
-        <div class="ai-result" id="av2Result"></div>
-        <div class="q" style="margin-top:.5rem">Avatar Statement</div>
-        <textarea rows="4" id="av2Statement" placeholder="Write or paste your avatar statement here..."></textarea>
+        <textarea rows="5" id="av2Statement" placeholder="Generated avatar statement — edit freely..."></textarea>
       </div>
     </div>
-  </div>
-
-  <!-- SYNTHESIS -->
-  <div class="ec" style="margin-top:1.5rem">
-    <div class="elbl">AI — Synthesize Both Avatars</div>
-    <div class="qh">Once both avatars are defined, synthesize them into your Primary Dream Customer — the ONE person your content speaks to.</div>
-    <button class="btn-ai" id="synthBtn" onclick="synthesizeAvatars()">✦ Synthesize Into One Dream Customer</button>
-    <div class="ai-status" id="synthStatus"></div>
-    <div class="ai-result" id="synthResult"></div>
-    <div class="q" style="margin-top:.5rem">Your Dream Customer (combined)</div>
-    <textarea rows="5" id="avatarStatement" placeholder="The synthesis of both avatars — your single most important customer..."></textarea>
   </div>
 
   <div class="nr"><button class="btn" onclick="go(1)">← Back</button><span class="si">2/7</span><button class="btn p" onclick="go(3)">Save &amp; Continue →</button></div>
@@ -471,34 +481,7 @@ textarea::placeholder,input[type=text]::placeholder{color:var(--dimmer)}
   <h1>Core Mission + Ikigai</h1>
   <p class="intro">Your core mission is your &#8220;why.&#8221; Ikigai is a Japanese concept meaning &#8220;reason for being&#8221; &#8212; the intersection of what you love, what you&#8217;re good at, what the world needs, and what you can be paid for. When your mission aligns with your Ikigai, your brand has purpose people can feel.</p>
   <div style="margin-bottom:1.5rem;text-align:center">
-    <svg viewBox="0 0 320 280" width="100%" style="max-width:360px;display:block;margin:0 auto" xmlns="http://www.w3.org/2000/svg">
-      <!-- Circle Love (top-left) -->
-      <circle cx="130" cy="110" r="90" fill="#F0601B" fill-opacity="0.13" stroke="#F0601B" stroke-width="1.5" stroke-opacity="0.4"/>
-      <!-- Circle Good (top-right) -->
-      <circle cx="190" cy="110" r="90" fill="#4A9EDE" fill-opacity="0.13" stroke="#4A9EDE" stroke-width="1.5" stroke-opacity="0.4"/>
-      <!-- Circle Need (bottom-left) -->
-      <circle cx="130" cy="170" r="90" fill="#5DCAA5" fill-opacity="0.13" stroke="#5DCAA5" stroke-width="1.5" stroke-opacity="0.4"/>
-      <!-- Circle Paid (bottom-right) -->
-      <circle cx="190" cy="170" r="90" fill="#A97DE8" fill-opacity="0.13" stroke="#A97DE8" stroke-width="1.5" stroke-opacity="0.4"/>
-      <!-- Center labels -->
-      <text x="160" y="137" text-anchor="middle" font-family="Helvetica Neue,sans-serif" font-size="9" font-weight="700" fill="#F0601B" letter-spacing="1">IKIGAI</text>
-      <text x="160" y="150" text-anchor="middle" font-family="Helvetica Neue,sans-serif" font-size="7" fill="rgba(255,255,255,0.5)">your reason</text>
-      <text x="160" y="159" text-anchor="middle" font-family="Helvetica Neue,sans-serif" font-size="7" fill="rgba(255,255,255,0.5)">for being</text>
-      <!-- Outer labels -->
-      <text x="90" y="55" text-anchor="middle" font-family="Helvetica Neue,sans-serif" font-size="10" font-weight="700" fill="#F0601B">WHAT YOU</text>
-      <text x="90" y="67" text-anchor="middle" font-family="Helvetica Neue,sans-serif" font-size="10" font-weight="700" fill="#F0601B">LOVE</text>
-      <text x="232" y="55" text-anchor="middle" font-family="Helvetica Neue,sans-serif" font-size="10" font-weight="700" fill="#4A9EDE">WHAT YOU'RE</text>
-      <text x="232" y="67" text-anchor="middle" font-family="Helvetica Neue,sans-serif" font-size="10" font-weight="700" fill="#4A9EDE">GOOD AT</text>
-      <text x="90" y="240" text-anchor="middle" font-family="Helvetica Neue,sans-serif" font-size="10" font-weight="700" fill="#5DCAA5">WHAT THE</text>
-      <text x="90" y="252" text-anchor="middle" font-family="Helvetica Neue,sans-serif" font-size="10" font-weight="700" fill="#5DCAA5">WORLD NEEDS</text>
-      <text x="232" y="240" text-anchor="middle" font-family="Helvetica Neue,sans-serif" font-size="10" font-weight="700" fill="#A97DE8">WHAT YOU CAN</text>
-      <text x="232" y="252" text-anchor="middle" font-family="Helvetica Neue,sans-serif" font-size="10" font-weight="700" fill="#A97DE8">BE PAID FOR</text>
-      <!-- Overlap labels -->
-      <text x="160" y="90" text-anchor="middle" font-family="Helvetica Neue,sans-serif" font-size="7.5" fill="rgba(255,255,255,0.6)">Passion</text>
-      <text x="160" y="210" text-anchor="middle" font-family="Helvetica Neue,sans-serif" font-size="7.5" fill="rgba(255,255,255,0.6)">Mission</text>
-      <text x="118" y="144" text-anchor="middle" font-family="Helvetica Neue,sans-serif" font-size="7.5" fill="rgba(255,255,255,0.6)">Vocation</text>
-      <text x="204" y="144" text-anchor="middle" font-family="Helvetica Neue,sans-serif" font-size="7.5" fill="rgba(255,255,255,0.6)">Profession</text>
-    </svg>
+    <img src="https://res.cloudinary.com/dy0kchxh8/image/upload/v1774367914/_make_the_background_less_color_0a0a0a_drop_the_copy_on_the_bottom_left_and_bottom_right_remove_the_k7lyamv8nltjtlc1eetm_zyxfv3.png" alt="Ikigai Diagram" style="width:100%;display:block;border-radius:8px">
   </div>
   <h2>The Ikigai Exercise</h2>
   <div class="teach"><p>Answer each quadrant honestly. The more specific your answers, the clearer your Ikigai becomes. Avoid generic answers &#8212; go deep.</p></div>
@@ -517,7 +500,6 @@ textarea::placeholder,input[type=text]::placeholder{color:var(--dimmer)}
     <div class="qh">Fill in all four quadrants above, then click Generate. The AI will identify the thread that runs through all four.</div>
     <button class="btn-ai" id="ikigaiBtn" onclick="generateIkigai()">&#10022; Find My Ikigai</button>
     <div class="ai-status" id="ikigaiStatus"></div>
-    <div class="ai-result" id="ikigaiResult"></div>
   </div>
   <h2>Your Core Mission Statement</h2>
   <div class="teach">
@@ -545,34 +527,69 @@ textarea::placeholder,input[type=text]::placeholder{color:var(--dimmer)}
 <div class="sc" id="s4">
   <div class="pl">Workshop 4</div>
   <h1>Core Values</h1>
-  <p class="intro">Your core values are not just nice words on a website. They&#8217;re the beliefs that guide every decision you make &#8212; the things you won&#8217;t compromise on. When your values are clear, you attract people who share them. Those are the people you actually want to work with.</p>
-  <h2>Values Discovery</h2>
-  <div class="ec">
-    <div class="elbl">Discovery Questions</div>
-    <div class="qh">Answer honestly before identifying your values. Your real values live in your honest answers &#8212; not in words that sound good.</div>
-    <div class="q" style="margin-top:4px">What do you believe that most people in your industry don&#8217;t?</div>
-    <textarea rows="2" id="valDiscover1" placeholder="The contrarian belief that shapes how you operate..."></textarea>
-    <div class="q">What would you never do, even if it made you more money?</div>
-    <textarea rows="2" id="valDiscover2" placeholder="The line you won&#39;t cross..."></textarea>
-    <div class="q">What do you stand for that you&#8217;d be willing to lose followers over?</div>
-    <textarea rows="2" id="valDiscover3" placeholder="The hill you&#39;ll die on..."></textarea>
-    <div class="q">What do you want people to say about how you do business?</div>
-    <textarea rows="2" id="valDiscover4" placeholder="The reputation you&#39;re building..."></textarea>
+
+  <p class="intro">Your Avatar tells you <em>who</em> you&#8217;re speaking to. Your Core Mission tells you <em>why</em> you&#8217;re creating. Your Core Values tell you <em>how</em> you show up.</p>
+  <p class="intro" style="margin-top:-.75rem">Core values are the guiding principles that shape the way you create, communicate, and connect. They&#8217;re the guardrails that keep your brand authentic and aligned, no matter what trends come and go. With them, you build consistency, trust, and integrity in your personal brand.</p>
+
+  <div style="background:var(--card);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.1rem 1.25rem;margin-bottom:1.75rem">
+    <div style="font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--orange);margin-bottom:.85rem">Ask Yourself These Questions</div>
+    <div style="display:flex;flex-direction:column;gap:7px">
+      <div style="font-size:13px;color:var(--dim);padding-left:14px;position:relative;line-height:1.6"><span style="position:absolute;left:0;color:var(--orange);font-weight:700">→</span> What principles guide my creativity and decision-making?</div>
+      <div style="font-size:13px;color:var(--dim);padding-left:14px;position:relative;line-height:1.6"><span style="position:absolute;left:0;color:var(--orange);font-weight:700">→</span> What qualities do I want my brand to always reflect?</div>
+      <div style="font-size:13px;color:var(--dim);padding-left:14px;position:relative;line-height:1.6"><span style="position:absolute;left:0;color:var(--orange);font-weight:700">→</span> What do I stand for, even if it&#8217;s not popular or trendy?</div>
+      <div style="font-size:13px;color:var(--dim);padding-left:14px;position:relative;line-height:1.6"><span style="position:absolute;left:0;color:var(--orange);font-weight:700">→</span> What do I want people to feel when they interact with my content?</div>
+      <div style="font-size:13px;color:var(--dim);padding-left:14px;position:relative;line-height:1.6"><span style="position:absolute;left:0;color:var(--orange);font-weight:700">→</span> What traits do I admire most in the creators, brands, or mentors I look up to?</div>
+      <div style="font-size:13px;color:var(--dim);padding-left:14px;position:relative;line-height:1.6"><span style="position:absolute;left:0;color:var(--orange);font-weight:700">→</span> What do I refuse to compromise on in my work or lifestyle?</div>
+      <div style="font-size:13px;color:var(--dim);padding-left:14px;position:relative;line-height:1.6"><span style="position:absolute;left:0;color:var(--orange);font-weight:700">→</span> When I&#8217;m at my best, what values am I living out?</div>
+    </div>
   </div>
-  <h2>Your Core Values</h2>
-  <div class="ins"><p>Choose <strong>3&#8211;5 core values</strong>. For each one, write what it means in practice &#8212; not the definition, but how it shows up in your content, offers, and relationships.</p></div>
-  <div class="value-row"><div class="value-row-num">01</div><div><div class="q" style="margin-top:0">Value name</div><input type="text" id="val1name" placeholder="e.g. Honesty, Excellence, Craft..."><div class="q">What this means in practice:</div><textarea rows="2" id="val1practice" placeholder="How this shows up in your content, offers, and client relationships..."></textarea></div></div>
-  <div class="value-row"><div class="value-row-num">02</div><div><div class="q" style="margin-top:0">Value name</div><input type="text" id="val2name" placeholder="e.g. Generosity, Boldness, Clarity..."><div class="q">What this means in practice:</div><textarea rows="2" id="val2practice" placeholder="How this shows up..."></textarea></div></div>
-  <div class="value-row"><div class="value-row-num">03</div><div><div class="q" style="margin-top:0">Value name</div><input type="text" id="val3name" placeholder="e.g. Integrity, Premium, Simplicity..."><div class="q">What this means in practice:</div><textarea rows="2" id="val3practice" placeholder="How this shows up..."></textarea></div></div>
-  <div class="value-row"><div class="value-row-num">04</div><div><div class="q" style="margin-top:0">Value name <span style="font-size:10px;color:var(--dimmer)">(optional)</span></div><input type="text" id="val4name" placeholder="4th value..."><div class="q">What this means in practice:</div><textarea rows="2" id="val4practice" placeholder="..."></textarea></div></div>
-  <div class="value-row"><div class="value-row-num">05</div><div><div class="q" style="margin-top:0">Value name <span style="font-size:10px;color:var(--dimmer)">(optional)</span></div><input type="text" id="val5name" placeholder="5th value..."><div class="q">What this means in practice:</div><textarea rows="2" id="val5practice" placeholder="..."></textarea></div></div>
-  <div class="ec" style="margin-top:1.1rem">
-    <div class="elbl">Values in Action</div>
-    <div class="q" style="margin-top:0">How do your values show up in your content?</div>
-    <textarea rows="2" id="valContent" placeholder="The specific ways your values influence what you post..."></textarea>
-    <div class="q">What would someone who shares your values think when they see your brand?</div>
-    <textarea rows="2" id="valReaction" placeholder="Finally, someone who gets it..."></textarea>
+
+  <h2>Your Values <span style="font-size:10px;font-weight:400;color:var(--dimmer);text-transform:none;letter-spacing:0">(aim for 6)</span></h2>
+  <div style="display:flex;flex-direction:column;gap:6px;margin-bottom:1.5rem">
+    <div style="display:grid;grid-template-columns:28px 1fr 2fr;gap:10px;align-items:center;background:var(--card);border:1px solid var(--border);border-radius:var(--radius-md);padding:10px 14px">
+      <div style="font-family:var(--font-num);font-size:1.3rem;font-weight:900;color:var(--orange);line-height:1">1</div>
+      <input type="text" id="val1name" placeholder="Value name" style="margin:0">
+      <input type="text" id="val1practice" placeholder="short description of what it means to you..." style="margin:0">
+    </div>
+    <div style="display:grid;grid-template-columns:28px 1fr 2fr;gap:10px;align-items:center;background:var(--card);border:1px solid var(--border);border-radius:var(--radius-md);padding:10px 14px">
+      <div style="font-family:var(--font-num);font-size:1.3rem;font-weight:900;color:var(--orange);line-height:1">2</div>
+      <input type="text" id="val2name" placeholder="Value name" style="margin:0">
+      <input type="text" id="val2practice" placeholder="short description of what it means to you..." style="margin:0">
+    </div>
+    <div style="display:grid;grid-template-columns:28px 1fr 2fr;gap:10px;align-items:center;background:var(--card);border:1px solid var(--border);border-radius:var(--radius-md);padding:10px 14px">
+      <div style="font-family:var(--font-num);font-size:1.3rem;font-weight:900;color:var(--orange);line-height:1">3</div>
+      <input type="text" id="val3name" placeholder="Value name" style="margin:0">
+      <input type="text" id="val3practice" placeholder="short description of what it means to you..." style="margin:0">
+    </div>
+    <div style="display:grid;grid-template-columns:28px 1fr 2fr;gap:10px;align-items:center;background:var(--card);border:1px solid var(--border);border-radius:var(--radius-md);padding:10px 14px">
+      <div style="font-family:var(--font-num);font-size:1.3rem;font-weight:900;color:var(--orange);line-height:1">4</div>
+      <input type="text" id="val4name" placeholder="Value name" style="margin:0">
+      <input type="text" id="val4practice" placeholder="short description of what it means to you..." style="margin:0">
+    </div>
+    <div style="display:grid;grid-template-columns:28px 1fr 2fr;gap:10px;align-items:center;background:var(--card);border:1px solid var(--border);border-radius:var(--radius-md);padding:10px 14px">
+      <div style="font-family:var(--font-num);font-size:1.3rem;font-weight:900;color:var(--orange);line-height:1">5</div>
+      <input type="text" id="val5name" placeholder="Value name" style="margin:0">
+      <input type="text" id="val5practice" placeholder="short description of what it means to you..." style="margin:0">
+    </div>
+    <div style="display:grid;grid-template-columns:28px 1fr 2fr;gap:10px;align-items:center;background:var(--card);border:1px solid var(--border);border-radius:var(--radius-md);padding:10px 14px">
+      <div style="font-family:var(--font-num);font-size:1.3rem;font-weight:900;color:var(--orange);line-height:1">6</div>
+      <input type="text" id="val6name" placeholder="Value name" style="margin:0">
+      <input type="text" id="val6practice" placeholder="short description of what it means to you..." style="margin:0">
+    </div>
   </div>
+
+  <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.1rem 1.25rem;margin-bottom:1.75rem">
+    <div style="font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--dimmer);margin-bottom:.85rem">Example &#8212; Mine</div>
+    <div style="display:flex;flex-direction:column;gap:6px">
+      <div style="font-size:13px;color:var(--dim);line-height:1.6"><strong style="color:var(--text)">Adventure</strong> &#8212; seeking the unknown, creatively and physically</div>
+      <div style="font-size:13px;color:var(--dim);line-height:1.6"><strong style="color:var(--text)">Ownership</strong> &#8212; taking control of your path and results</div>
+      <div style="font-size:13px;color:var(--dim);line-height:1.6"><strong style="color:var(--text)">Authenticity</strong> &#8212; showing the real story, not just the highlight reel</div>
+      <div style="font-size:13px;color:var(--dim);line-height:1.6"><strong style="color:var(--text)">Craft</strong> &#8212; commitment to intentional, high-quality work</div>
+      <div style="font-size:13px;color:var(--dim);line-height:1.6"><strong style="color:var(--text)">Freedom</strong> &#8212; designing life and business on your own terms</div>
+      <div style="font-size:13px;color:var(--dim);line-height:1.6"><strong style="color:var(--text)">Clarity</strong> &#8212; cutting through the noise with structure and purpose</div>
+    </div>
+  </div>
+
   <div class="nr"><button class="btn" onclick="go(3)">&#8592; Back</button><span class="si">4/7</span><button class="btn p" onclick="go(5)">Save &amp; Continue &#8594;</button></div>
 </div>
 
@@ -645,7 +662,8 @@ textarea::placeholder,input[type=text]::placeholder{color:var(--dimmer)}
 <div class="sc" id="s6">
   <div class="pl">Workshop 6</div>
   <h1>Origin Story</h1>
-  <p class="intro">Your origin story is what makes you human. People don't connect with your success — they connect with your struggle. Your 80% honest story is more powerful than a 100% polished one. Don't sanitize it.</p>
+  <p class="intro">Your origin story is what makes you human. People don&#8217;t connect with your success &#8212; they connect with your struggle. Your 80% honest story is more powerful than a 100% polished one. Don&#8217;t sanitize it.</p>
+  <p class="intro" style="margin-top:-.75rem">For each part, be as in-depth as possible. Hit the 10-minute timer, let the thoughts flow, and don&#8217;t filter yourself &#8212; just write everything down. We&#8217;ll whittle it down into the final story after.</p>
   <h2>The Four-Part Story Arc</h2>
   <div class="story-grid">
     <div class="story-part" data-n="1"><div class="spl">Part 1</div><div class="spt">Where You Started<br><small style="font-weight:400;font-size:11px;color:var(--dimmer)">The Relatable Struggle</small></div><textarea id="story1" placeholder="What was your situation before everything changed? What pain were you experiencing? Why were you stuck?"></textarea><button class="timer-btn" id="timer1" onclick="startTimer(1)"><svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg> 10 min</button></div>
@@ -655,10 +673,9 @@ textarea::placeholder,input[type=text]::placeholder{color:var(--dimmer)}
   </div>
   <div class="ec">
     <div class="elbl">AI &#8212; Write My Origin Story</div>
-    <div class="qh">Fill in all four story parts above, then click Generate. The AI will write a compelling 3&#8211;5 paragraph origin story in your voice.</div>
+    <div class="qh">Fill in all four parts above, then click Generate. The AI will piece together exactly what you wrote &#8212; it won&#8217;t fill in gaps or assume anything. If something is unclear it will flag it with [???] for you to fill in.</div>
     <button class="btn-ai" id="storyBtn" onclick="generateOriginStory()">&#10022; Write My Origin Story</button>
     <div class="ai-status" id="storyStatus"></div>
-    <div class="ai-result" id="storyResult"></div>
     <div class="q" style="margin-top:.5rem">Your Complete Origin Story</div>
     <div class="qh">Use the AI output as a starting point and refine in your own voice.</div>
     <textarea rows="8" id="originStory" placeholder="Write or paste your complete origin story here..."></textarea>
@@ -687,26 +704,9 @@ textarea::placeholder,input[type=text]::placeholder{color:var(--dimmer)}
     <div class="q">What will people say about your brand in 10 years?</div>
     <textarea rows="2" id="visionLegacy" placeholder="The legacy you're building..."></textarea>
   </div>
-  <div class="ec">
-    <div class="elbl">AI — Write My Brand Vision Statement</div>
-    <div class="qh">Fill in the fields above, then click Generate.</div>
-    <button class="btn-ai" id="visionBtn" onclick="generateBrandVision()">✦ Generate Vision Statement</button>
-    <div class="ai-status" id="visionStatus"></div>
-    <div class="ai-result" id="visionResult"></div>
-    <div class="q" style="margin-top:.5rem">Brand Vision Statement (final)</div>
-    <textarea rows="3" id="brandVision" placeholder="Write or refine your brand vision statement here..."></textarea>
-  </div>
+  <div class="q">Brand Vision Statement</div>
+  <textarea rows="3" id="brandVision" placeholder="Write your brand vision statement here..."></textarea>
 
-  <h2>Brand Foundation Completion Checklist</h2>
-  <div class="checklist" id="cfChecklist">
-    <div class="check-item" data-key="cf1"><div class="check-box"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div><div class="check-text">Brand Journey Framework &#8212; 4 questions answered and summary written</div></div>
-    <div class="check-item" data-key="cf2"><div class="check-box"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div><div class="check-text">Avatar Profile Document &#8212; detailed, specific, honest</div></div>
-    <div class="check-item" data-key="cf3"><div class="check-box"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div><div class="check-text">Core Mission + Ikigai &#8212; purpose statement written</div></div>
-    <div class="check-item" data-key="cf4"><div class="check-box"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div><div class="check-text">Core Values &#8212; 3&#8211;5 values with practical definitions</div></div>
-    <div class="check-item" data-key="cf5"><div class="check-box"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div><div class="check-text">Content Pillars &#8212; 3&#8211;5 pillars with sub-topics and connection to offer</div></div>
-    <div class="check-item" data-key="cf6"><div class="check-box"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div><div class="check-text">Origin Story &#8212; all 4 parts mapped and written</div></div>
-    <div class="check-item" data-key="cf8"><div class="check-box"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div><div class="check-text">Brand Vision Statement &#8212; 3-year vision documented</div></div>
-  </div>
   <div class="nr"><button class="btn" onclick="go(6)">&#8592; Back</button><span class="si">7/7</span></div>
 </div>
 
@@ -931,21 +931,24 @@ async function generateAvatar(num){
   var btn=document.getElementById('av'+num+'Btn');
   btn.disabled=true;
   setStatus('av'+num+'Status','loading','<span class="ai-spinner"></span>Building your avatar...');
-  document.getElementById('av'+num+'Result').classList.remove('show');
   try{
     var age=gv('av'+num+'Age'), gender=gv('av'+num+'Gender'), occ=gv('av'+num+'Occupation');
     var income=gv('av'+num+'Income'), sit=gv('av'+num+'Situation'), struggle=gv('av'+num+'Struggle');
     var tried=gv('av'+num+'Tried'), desired=gv('av'+num+'Desired'), fears=gv('av'+num+'Fears');
     var conn=gv('av'+num+'Connection');
+    var who=gv('av'+num+'Who'), look=gv('av'+num+'Look'), story=gv('av'+num+'Story');
+    var goals=gv('av'+num+'Goals'), passions=gv('av'+num+'Passions');
     var r=await callClaude(
       'You are a personal brand strategist. Do TWO things:\n\n'+
-      '1. Give this avatar a realistic first name that fits their demographic perfectly (just the name, nothing else on the first line, format: "NAME: [name]")\n\n'+
-      '2. Then write a compelling avatar statement in this format:\n'+
-      '"[Name] is [vivid description]. They\'re currently [situation/struggle]. They\'ve tried [previous attempts] but [why it failed]. What they really want is [desired outcome]. The thing holding them back most is [primary obstacle]. They trust creators who [connection]."\n\n'+
-      'Avatar '+num+' data:\n'+
+      '1. Give this avatar a realistic first name that fits their demographic perfectly (format: "NAME: [name]")\n\n'+
+      '2. Write a compelling avatar statement using exactly this structure — one flowing paragraph:\n'+
+      '"[Name] is [who they are + what they look like + their story]. They love [passions/hobbies]. They\'re currently [situation]. They\'ve tried [previous attempts] but nothing has fully worked. What they really want is [goals/desired outcome]. The thing holding them back most is [fears/obstacles]. They trust creators who [connection]."\n\n'+
+      'Avatar data:\n'+
       'Age: '+age+' | Gender: '+gender+' | Occupation: '+occ+' | Income: '+income+'\n'+
+      'Who they are: '+who+'\nWhat they look like: '+look+'\nTheir story: '+story+'\n'+
+      'Goals & Desires: '+goals+'\nPassions & Hobbies: '+passions+'\n'+
       'Situation: '+sit+'\nStruggle: '+struggle+'\nTried: '+tried+'\nDesired: '+desired+'\nFears: '+fears+'\nCreator is ahead because: '+conn+'\n\n'+
-      'Be specific, vivid, and real. No preamble.'
+      'Be specific, vivid, and real. One paragraph only. No preamble. No markdown. No asterisks.'
     );
     // Extract name from response
     var nameMatch=r.match(/NAME:\s*([^\n]+)/i);
@@ -954,7 +957,6 @@ async function generateAvatar(num){
     // Clean the statement (remove the NAME: line)
     var statement=r.replace(/NAME:\s*[^\n]+\n?/i,'').trim();
     setStatus('av'+num+'Status','success','✓ '+avatarName+' — avatar built');
-    showResult('av'+num+'Result',statement);
     var ta=document.getElementById('av'+num+'Statement');
     if(ta){ta.value=statement;ta.style.height='auto';ta.style.height=ta.scrollHeight+'px';ta.scrollIntoView({behavior:'smooth',block:'center'});}
     // Update display name
@@ -970,38 +972,16 @@ async function generateAvatar(num){
   btn.disabled=false;
 }
 
-async function synthesizeAvatars(){
-  var btn=document.getElementById('synthBtn');
-  btn.disabled=true;
-  setStatus('synthStatus','loading','<span class="ai-spinner"></span>Synthesizing your dream customer...');
-  document.getElementById('synthResult').classList.remove('show');
-  try{
-    var av1=gv('av1Statement')||'Avatar 1 not defined';
-    var av2=gv('av2Statement')||'Avatar 2 not defined';
-    var r=await callClaude(
-      'You are a personal brand strategist. Synthesize these two avatar profiles into ONE combined Dream Customer profile.\n\n'+
-      'Avatar 1:\n'+av1+'\n\nAvatar 2:\n'+av2+'\n\n'+
-      'Find the shared core pain, desire, identity, and motivation between both. Write a unified Dream Customer statement in 2–3 sentences that captures the ONE person this creator\'s content should speak to. This is the bullseye — the person who, when they find this creator, feels like they\'ve found exactly what they were looking for. No preamble, write directly.'
-    );
-    setStatus('synthStatus','success','✓ Dream Customer synthesized');
-    showResult('synthResult',r);
-    var ta=document.getElementById('avatarStatement');
-    if(ta){ta.value=r;ta.style.height='auto';ta.style.height=ta.scrollHeight+'px';ta.scrollIntoView({behavior:'smooth',block:'center'});}
-    saveData();
-  }catch(e){setStatus('synthStatus','error','Error — '+e.message);}
-  btn.disabled=false;
-}
 
 async function generateIkigai(){
   var btn=document.getElementById('ikigaiBtn');btn.disabled=true;
   setStatus('ikigaiStatus','loading','<span class="ai-spinner"></span>Discovering your Ikigai...');
-  document.getElementById('ikigaiResult').classList.remove('show');
   try{
     var r=await callClaude('You are a personal brand strategist. Identify this creator\'s Ikigai.\n\nLOVE: '+gv('ikigaiLove')+'\nGOOD AT: '+gv('ikigaiGood')+'\nWORLD NEEDS: '+gv('ikigaiWorld')+'\nPAID FOR: '+gv('ikigaiPaid')+'\n\nIn 3 sentences: (1) State the Ikigai clearly &#8212; the thread that runs through all four. (2) Why this is their unique intersection. (3) A single-line Ikigai statement they can use as a mission foundation. Be specific and show them something they might not have articulated. No preamble.');
+    var clean=r.replace(/#{1,6}\s*/g,'').replace(/\*{1,3}/g,'').replace(/^["""]|["""]$/g,'').trim();
     setStatus('ikigaiStatus','success','&#10003; Ikigai found');
-    showResult('ikigaiResult',r);
     var ta=document.getElementById('ikigaiCenter');
-    if(ta){ta.value=r;ta.style.height='auto';ta.style.height=ta.scrollHeight+'px';ta.scrollIntoView({behavior:'smooth',block:'center'});}
+    if(ta){ta.value=clean;ta.style.height='auto';ta.style.height=ta.scrollHeight+'px';ta.scrollIntoView({behavior:'smooth',block:'center'});}
     saveData();
   }catch(e){setStatus('ikigaiStatus','error','Error &#8212; check connection and try again');}
   btn.disabled=false;
@@ -1039,13 +1019,12 @@ function startTimer(partNum){
 async function generateOriginStory(){
   var btn=document.getElementById('storyBtn');btn.disabled=true;
   setStatus('storyStatus','loading','<span class="ai-spinner"></span>Writing your origin story...');
-  document.getElementById('storyResult').classList.remove('show');
   try{
-    var r=await callClaude('You are a personal brand storyteller. Write a compelling, authentic 3-5 paragraph origin story in first person. Lead with the struggle. Be honest &#8212; share the failures and doubts. End with a lesson or invitation for the reader who is where the creator once was. No fluff, no hype.\n\nPart 1 &#8212; The Struggle: '+gv('story1')+'\nPart 2 &#8212; The Turning Point: '+gv('story2')+'\nPart 3 &#8212; The Journey: '+gv('story3')+'\nPart 4 &#8212; The Transformation: '+gv('story4')+'\n\nWrite in a warm, direct, relatable voice. No preamble.');
+    var r=await callClaude('You are a personal brand storyteller. Your job is to piece together what the creator has written into a cohesive, flowing origin story — NOT to invent, assume, or fill in any gaps.\n\nCRITICAL RULES:\n- Use ONLY what is explicitly written. Do not assume any details not provided.\n- If something is vague or incomplete, write it as-is or use [???] as a placeholder — e.g. "I moved to [???]" or "I started working with [???]"\n- Never guess locations, names, dates, outcomes, or emotions that were not stated.\n- Your role is to connect the dots they gave you — not add new ones.\n\nWrite a compelling, authentic 3-5 paragraph story in first person. Lead with the struggle. End with a lesson or invitation for the reader. Warm, direct, relatable voice. No fluff, no hype, no preamble.\n\nPart 1 &#8212; The Struggle: '+gv('story1')+'\nPart 2 &#8212; The Turning Point: '+gv('story2')+'\nPart 3 &#8212; The Journey: '+gv('story3')+'\nPart 4 &#8212; The Transformation: '+gv('story4'));
+    var clean=r.replace(/#{1,6}\s*/g,'').replace(/\*{1,3}/g,'').replace(/^["""]|["""]$/g,'').trim();
     setStatus('storyStatus','success','&#10003; Story written');
-    showResult('storyResult',r);
     var ta=document.getElementById('originStory');
-    if(ta){ta.value=r;ta.style.height='auto';ta.style.height=ta.scrollHeight+'px';ta.scrollIntoView({behavior:'smooth',block:'center'});}
+    if(ta){ta.value=clean;ta.style.height='auto';ta.style.height=ta.scrollHeight+'px';ta.scrollIntoView({behavior:'smooth',block:'center'});}
     saveData();
   }catch(e){setStatus('storyStatus','error','Error &#8212; check connection and try again');}
   btn.disabled=false;
