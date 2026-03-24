@@ -431,6 +431,7 @@ textarea::placeholder,input[type=text]::placeholder{color:var(--dimmer)}
 .mb-tab.on{background:var(--orange-tint);color:var(--orange-dark);border-color:var(--orange-border)}
 .mb-tab.full{background:var(--green-bg);color:var(--green-text);border-color:var(--green-border)}
 .mb-panels{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:10px;}
+@media(max-width:600px){.mb-panels{grid-template-columns:1fr;}}
 .mb-panel{background:var(--bg);border:1px solid var(--border);border-radius:var(--radius-lg);overflow:hidden;}
 .mb-panel-head{
   padding:8px 12px;border-bottom:1px solid var(--border);
@@ -466,6 +467,7 @@ textarea::placeholder,input[type=text]::placeholder{color:var(--dimmer)}
 }
 .mb-add:hover{border-color:var(--orange);color:var(--orange);}
 /* ─── MOSAIC GALLERY ─── */
+#mb-mosaic{columns:3 120px;gap:5px;}
 #mb-mosaic img{width:100%;display:block;border-radius:4px;margin-bottom:5px;break-inside:avoid;}
 
 .mb-strip{
@@ -988,12 +990,6 @@ textarea::placeholder,input[type=text]::placeholder{color:var(--dimmer)}
     <input type="text" id="mbPlace" placeholder="e.g. A minimalist Tokyo apartment, a coastal studio...">
   </div>
 
-  <h2>Your Mood Board Statement</h2>
-  <div class="ec">
-    <div class="elbl">Mood Board Statement</div>
-    <div class="qh">In 2–3 sentences, describe the visual world your mood board represents.</div>
-    <textarea rows="4" id="mbStatement" placeholder="My mood board represents a world that feels... The dominant energy is... When someone steps into this world they feel..."></textarea>
-  </div>
 
 
   <div class="nr"><button class="btn" id="b2b">← Back</button><span class="si">2/6</span><button class="btn p" id="b2n">Save & Continue →</button></div>
@@ -1806,9 +1802,10 @@ function mbBindDrop(cat) {
     dz.addEventListener('drop',function(e){e.preventDefault();dz.classList.remove('over');mbDropFiles(cat,Array.from(e.dataTransfer.files));});
   }
   var panel=document.getElementById('mbp-'+cat);
-  if(panel&&!dz){
+  if(panel&&!dz&&!panel._mbBound){
+    panel._mbBound=true;
     panel.addEventListener('dragover',function(e){e.preventDefault();});
-    panel.addEventListener('drop',function(e){e.preventDefault();mbDropFiles(cat,Array.from(e.dataTransfer.files));});
+    panel.addEventListener('drop',function(e){e.stopPropagation();e.preventDefault();mbDropFiles(cat,Array.from(e.dataTransfer.files));});
   }
 }
 
