@@ -470,6 +470,13 @@ textarea::placeholder,input[type=text]::placeholder{color:var(--dimmer)}
 #mb-mosaic{columns:3 120px;gap:5px;}
 #mb-mosaic img{width:100%;display:block;border-radius:4px;margin-bottom:5px;break-inside:avoid;}
 
+/* ─── MOSAIC FILTER BUTTONS ─── */
+.mb-filters{display:flex;gap:4px;flex-wrap:wrap;}
+.mb-filter{padding:3px 9px;border-radius:20px;border:1px solid var(--border);background:transparent;color:var(--dimmer);font-size:10.5px;font-weight:500;cursor:pointer;font-family:var(--font);transition:all .15s;}
+.mb-filter:hover{border-color:var(--orange);color:var(--orange);}
+.mb-filter.active{background:var(--orange);border-color:var(--orange);color:#fff;}
+.mb-filter span{opacity:.7;margin-left:2px;}
+
 /* ─── CLEAR CONFIRM DIALOG ─── */
 #mb-clear-dialog{
   display:none;position:fixed;inset:0;z-index:999;
@@ -911,65 +918,59 @@ textarea::placeholder,input[type=text]::placeholder{color:var(--dimmer)}
   <p class="intro">Your mood board is the visual DNA of your brand. Not a Pinterest board of things you think look cool — a curated collection of images that, when placed together, tell one clear story about the world your brand lives in. The mood board comes before the color palette, before the typography, before any design decisions. All of those decisions should flow from the mood you create here.</p>
 
   <h2>Your Mood Board Gallery</h2>
-
-  <!-- 10-10-10 RULE CARDS -->
-  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:1.25rem">
-    <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-md);padding:1rem">
-      <div style="font-family:var(--font-num);font-size:32px;font-weight:900;color:var(--orange);line-height:1;margin-bottom:6px">10</div>
-      <div style="font-size:12px;font-weight:600;color:var(--text);margin-bottom:4px">Platform</div>
-      <div style="font-size:11.5px;color:var(--dimmer);line-height:1.5">The best visual content you've seen on your platform. Content that stopped your scroll.</div>
-    </div>
-    <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-md);padding:1rem">
-      <div style="font-family:var(--font-num);font-size:32px;font-weight:900;color:var(--orange);line-height:1;margin-bottom:6px">10</div>
-      <div style="font-size:12px;font-weight:600;color:var(--text);margin-bottom:4px">Industry</div>
-      <div style="font-size:11.5px;color:var(--dimmer);line-height:1.5">Competitors, adjacent creators, brands in your space. What does premium look like here?</div>
-    </div>
-    <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-md);padding:1rem">
-      <div style="font-family:var(--font-num);font-size:32px;font-weight:900;color:var(--orange);line-height:1;margin-bottom:6px">10</div>
-      <div style="font-size:12px;font-weight:600;color:var(--text);margin-bottom:4px">Outside</div>
-      <div style="font-size:11.5px;color:var(--dimmer);line-height:1.5">Fashion, architecture, film, photography. This is where your visual world gets interesting.</div>
-    </div>
-  </div>
-
-  <p style="font-size:13.5px;color:var(--dim);line-height:1.7;margin-bottom:1.25rem">Drop images directly into each zone below — <strong style="color:var(--text)">10 from your platform, 10 from your industry, 10 from outside</strong>. They carry through to your final style guide.</p>
+  <p style="font-size:13.5px;color:var(--dim);line-height:1.7;margin-bottom:1.25rem">Drop images into each zone — we suggest <strong style="color:var(--text)">10 from each</strong>, but upload as many as you like. They carry through to your final style guide.</p>
 
   <!-- DROP ZONES -->
   <div class="mb-gallery" id="mbGallery">
     <div class="mb-panels">
       <div class="mb-panel" id="mbp-platform">
         <div class="mb-panel-head">
-          <span class="mb-panel-label">Platform</span>
-          <span class="mb-count" id="mb-cnt-platform">0 / 10</span>
+          <div>
+            <span class="mb-panel-label">Platform</span>
+            <div style="font-size:10px;color:var(--dimmer);margin-top:1px">Best content on your platform · 10 suggested</div>
+          </div>
+          <span class="mb-count" id="mb-cnt-platform">0</span>
         </div>
         <div id="mbz-platform"></div>
       </div>
       <div class="mb-panel" id="mbp-industry">
         <div class="mb-panel-head">
-          <span class="mb-panel-label">Industry</span>
-          <span class="mb-count" id="mb-cnt-industry">0 / 10</span>
+          <div>
+            <span class="mb-panel-label">Industry</span>
+            <div style="font-size:10px;color:var(--dimmer);margin-top:1px">Creators &amp; brands in your space · 10 suggested</div>
+          </div>
+          <span class="mb-count" id="mb-cnt-industry">0</span>
         </div>
         <div id="mbz-industry"></div>
       </div>
       <div class="mb-panel" id="mbp-outside">
         <div class="mb-panel-head">
-          <span class="mb-panel-label">Outside</span>
-          <span class="mb-count" id="mb-cnt-outside">0 / 10</span>
+          <div>
+            <span class="mb-panel-label">Outside</span>
+            <div style="font-size:10px;color:var(--dimmer);margin-top:1px">Fashion, film, architecture · 10 suggested</div>
+          </div>
+          <span class="mb-count" id="mb-cnt-outside">0</span>
         </div>
         <div id="mbz-outside"></div>
       </div>
     </div>
-    <div class="mb-progress"><div class="mb-progress-fill" id="mb-prog-fill" style="width:0%"></div></div>
-    <div style="display:flex;align-items:center;justify-content:space-between;padding:0 2px;margin-bottom:1.25rem;">
-      <span style="font-size:11px;color:var(--dimmer)" id="mb-total-label">0 of 30 images added</span>
-      <div style="display:flex;align-items:center;gap:10px;">
-        <span style="font-size:11px;color:var(--green-text);display:none" id="mb-complete-badge">✓ Mood board complete</span>
-        <button onclick="openClearMoodBoard()" id="mb-clear-btn" style="display:none;background:none;border:none;font-size:11px;color:var(--dimmer);cursor:pointer;padding:0;font-family:var(--font);text-decoration:underline;text-underline-offset:2px;" title="Clear all images">Clear all</button>
-      </div>
+
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:2px 2px 1rem;">
+      <span style="font-size:11px;color:var(--dimmer)" id="mb-total-label">0 images added</span>
+      <button onclick="openClearMoodBoard()" id="mb-clear-btn" style="display:none;background:none;border:none;font-size:11px;color:var(--dimmer);cursor:pointer;padding:0;font-family:var(--font);text-decoration:underline;text-underline-offset:2px;">Clear all</button>
     </div>
 
     <!-- MOSAIC GALLERY -->
     <div id="mb-mosaic-wrap" style="display:none;margin-bottom:1.5rem">
-      <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--orange);margin-bottom:.75rem">Your Mood Board</div>
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.75rem">
+        <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--orange)">Your Mood Board</div>
+        <div class="mb-filters" id="mb-filters">
+          <button class="mb-filter active" data-filter="all" onclick="mbSetFilter('all')">All</button>
+          <button class="mb-filter" data-filter="platform" onclick="mbSetFilter('platform')">Platform <span id="mff-platform">0</span></button>
+          <button class="mb-filter" data-filter="industry" onclick="mbSetFilter('industry')">Industry <span id="mff-industry">0</span></button>
+          <button class="mb-filter" data-filter="outside" onclick="mbSetFilter('outside')">Outside <span id="mff-outside">0</span></button>
+        </div>
+      </div>
       <div id="mb-mosaic"></div>
     </div>
   </div>
@@ -1788,12 +1789,12 @@ function mbTotal() { return mbImages.platform.length+mbImages.industry.length+mb
 function mbRenderPanel(cat) {
   var imgs=mbImages[cat]; var zone=document.getElementById('mbz-'+cat); var cnt=document.getElementById('mb-cnt-'+cat);
   if(!zone||!cnt) return;
-  cnt.textContent=imgs.length+' / 10'; cnt.className='mb-count'+(imgs.length>=10?' done':'');
+  cnt.textContent=imgs.length; cnt.className='mb-count'+(imgs.length>=10?' done':'');
   if (imgs.length===0) {
     zone.innerHTML='<div class="mb-drop" id="mbdrop-'+cat+'"><svg class="mb-drop-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg><div class="mb-drop-hint">Drop images or click to browse</div></div>';
   } else {
     var thumbs=imgs.map(function(src,i){ return '<div class="mb-thumb"><img src="'+src+'" loading="lazy"><button class="mb-del" onclick="mbRemove(\''+cat+'\','+i+')">x</button></div>'; }).join('');
-    if(imgs.length<10) thumbs+='<div class="mb-add" onclick="mbPick(\''+cat+'\')">+</div>';
+    thumbs+='<div class="mb-add" onclick="mbPick(\''+cat+'\')">+</div>';
     zone.innerHTML='<div class="mb-img-grid">'+thumbs+'</div>';
   }
   mbBindDrop(cat);
@@ -1801,22 +1802,43 @@ function mbRenderPanel(cat) {
   mbUpdateProgress();
 }
 
+var mbMosaicFilter='all';
+
+function mbSetFilter(cat) {
+  mbMosaicFilter=cat;
+  document.querySelectorAll('.mb-filter').forEach(function(b){
+    b.classList.toggle('active', b.getAttribute('data-filter')===cat);
+  });
+  mbRenderStrip();
+}
+
 function mbRenderStrip() {
   var mosaic=document.getElementById('mb-mosaic');
   var mosaicWrap=document.getElementById('mb-mosaic-wrap');
-  var all=[]; MB_CATS.forEach(function(c){mbImages[c].forEach(function(s){all.push(s);});});
-  if(mosaic){
-    if(!all.length){ if(mosaicWrap)mosaicWrap.style.display='none'; return; }
-    if(mosaicWrap)mosaicWrap.style.display='block';
-    mosaic.innerHTML=all.map(function(s){return '<img src="'+s+'" loading="lazy">';}).join('');
+  var total=mbTotal();
+  // Update filter counts
+  MB_CATS.forEach(function(c){
+    var el=document.getElementById('mff-'+c); if(el) el.textContent=mbImages[c].length;
+  });
+  if(!mosaic) return;
+  if(!total){ if(mosaicWrap)mosaicWrap.style.display='none'; return; }
+  if(mosaicWrap)mosaicWrap.style.display='block';
+  var show=[];
+  if(mbMosaicFilter==='all'){
+    MB_CATS.forEach(function(c){mbImages[c].forEach(function(s){show.push(s);});});
+  } else {
+    show=mbImages[mbMosaicFilter]||[];
   }
+  mosaic.innerHTML=show.length
+    ? show.map(function(s){return '<img src="'+s+'" loading="lazy">';}).join('')
+    : '<p style="font-size:12px;color:var(--dimmer);padding:8px 0">No images in this zone yet.</p>';
 }
 
 function mbUpdateProgress() {
-  var t=mbTotal(); var pct=Math.round((t/30)*100);
-  var fill=document.getElementById('mb-prog-fill'); var label=document.getElementById('mb-total-label'); var badge=document.getElementById('mb-complete-badge');
+  var t=mbTotal();
+  var label=document.getElementById('mb-total-label');
   var clearBtn=document.getElementById('mb-clear-btn');
-  if(fill)fill.style.width=pct+'%'; if(label)label.textContent=t+' of 30 images added'; if(badge)badge.style.display=(t>=30)?'inline':'none';
+  if(label)label.textContent=t+' image'+(t===1?'':'s')+' added';
   if(clearBtn)clearBtn.style.display=(t>0)?'inline':'none';
 }
 
@@ -1837,9 +1859,9 @@ function mbRemove(cat,idx) { mbImages[cat].splice(idx,1); mbRenderPanel(cat); mb
 function mbPick(cat) {
   var inp=document.createElement('input'); inp.type='file'; inp.accept='image/*'; inp.multiple=true;
   inp.onchange=function(e){
-    var files=Array.from(e.target.files); var remaining=10-mbImages[cat].length; var toLoad=files.slice(0,remaining); var loaded=0;
-    if(!toLoad.length) return;
-    toLoad.forEach(function(f){ var r=new FileReader(); r.onload=function(ev){ mbImages[cat].push(ev.target.result); loaded++; if(loaded===toLoad.length){mbRenderPanel(cat);mbSave();} }; r.readAsDataURL(f); });
+    var files=Array.from(e.target.files); if(!files.length) return;
+    var loaded=0;
+    files.forEach(function(f){ var r=new FileReader(); r.onload=function(ev){ mbImages[cat].push(ev.target.result); loaded++; if(loaded===files.length){mbRenderPanel(cat);mbSave();} }; r.readAsDataURL(f); });
   };
   inp.click();
 }
@@ -1862,9 +1884,9 @@ function mbBindDrop(cat) {
 
 function mbDropFiles(cat,files) {
   var imgs=files.filter(function(f){return f.type.startsWith('image/');});
-  var remaining=10-mbImages[cat].length; var toLoad=imgs.slice(0,remaining); var loaded=0;
-  if(!toLoad.length) return;
-  toLoad.forEach(function(f){ var r=new FileReader(); r.onload=function(ev){ mbImages[cat].push(ev.target.result); loaded++; if(loaded===toLoad.length){mbRenderPanel(cat);mbSave();} }; r.readAsDataURL(f); });
+  if(!imgs.length) return;
+  var loaded=0;
+  imgs.forEach(function(f){ var r=new FileReader(); r.onload=function(ev){ mbImages[cat].push(ev.target.result); loaded++; if(loaded===imgs.length){mbRenderPanel(cat);mbSave();} }; r.readAsDataURL(f); });
 }
 
 function initMoodBoard() { MB_CATS.forEach(function(c){mbRenderPanel(c);}); }
