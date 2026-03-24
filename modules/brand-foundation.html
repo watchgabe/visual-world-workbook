@@ -910,8 +910,8 @@ async function generateBrandJourney(){
   document.getElementById('bjResult').classList.remove('show');
   try{
     var r=await callClaude('You are a personal brand strategist. Synthesize these answers into one powerful Brand Journey Statement in the format: "I want to [desired outcome] by being known for [known for] through [actions] starting with [learning]."\n\nDesired Outcome: '+gv('q1outcome')+'\nWhy: '+gv('q1why')+'\nKnown For: '+gv('q2known')+'\nActions: '+gv('q3do')+'\nLearn: '+gv('q4learn')+'\n\nWrite the one-sentence statement, then 2 sentences explaining why this North Star is powerful. Use their exact language. No fluff, no preamble.');
-    setStatus('bjStatus','success','&#10003; Generated');showResult('bjResult',r);
-    if(!gv('brandJourneyStmt'))document.getElementById('brandJourneyStmt').value=r;
+    setStatus('bjStatus','success','&#10003; Generated');
+    document.getElementById('brandJourneyStmt').value=r;
     saveData();
   }catch(e){setStatus('bjStatus','error','Error &#8212; check connection and try again');}
   btn.disabled=false;
@@ -955,8 +955,7 @@ async function generateAvatar(num){
     // Clean the statement (remove the NAME: line)
     var statement=r.replace(/NAME:\s*[^\n]+\n?/i,'').trim();
     setStatus('av'+num+'Status','success','✓ '+avatarName+' — avatar built');
-    showResult('av'+num+'Result',statement);
-    if(!gv('av'+num+'Statement'))document.getElementById('av'+num+'Statement').value=statement;
+    document.getElementById('av'+num+'Statement').value=statement;
     // Update display name
     var dn=document.getElementById('av'+num+'DisplayName');
     if(dn)dn.textContent=avatarName;
@@ -984,8 +983,7 @@ async function synthesizeAvatars(){
       'Find the shared core pain, desire, identity, and motivation between both. Write a unified Dream Customer statement in 2–3 sentences that captures the ONE person this creator\'s content should speak to. This is the bullseye — the person who, when they find this creator, feels like they\'ve found exactly what they were looking for. No preamble, write directly.'
     );
     setStatus('synthStatus','success','✓ Dream Customer synthesized');
-    showResult('synthResult',r);
-    if(!gv('avatarStatement'))document.getElementById('avatarStatement').value=r;
+    document.getElementById('avatarStatement').value=r;
     saveData();
   }catch(e){setStatus('synthStatus','error','Error — '+e.message);}
   btn.disabled=false;
@@ -997,8 +995,8 @@ async function generateIkigai(){
   document.getElementById('ikigaiResult').classList.remove('show');
   try{
     var r=await callClaude('You are a personal brand strategist. Identify this creator\'s Ikigai.\n\nLOVE: '+gv('ikigaiLove')+'\nGOOD AT: '+gv('ikigaiGood')+'\nWORLD NEEDS: '+gv('ikigaiWorld')+'\nPAID FOR: '+gv('ikigaiPaid')+'\n\nIn 3 sentences: (1) State the Ikigai clearly &#8212; the thread that runs through all four. (2) Why this is their unique intersection. (3) A single-line Ikigai statement they can use as a mission foundation. Be specific and show them something they might not have articulated. No preamble.');
-    setStatus('ikigaiStatus','success','&#10003; Ikigai found');showResult('ikigaiResult',r);
-    if(!gv('ikigaiCenter'))document.getElementById('ikigaiCenter').value=r;
+    setStatus('ikigaiStatus','success','&#10003; Ikigai found');
+    document.getElementById('ikigaiCenter').value=r;
     saveData();
   }catch(e){setStatus('ikigaiStatus','error','Error &#8212; check connection and try again');}
   btn.disabled=false;
@@ -1039,8 +1037,8 @@ async function generateOriginStory(){
   document.getElementById('storyResult').classList.remove('show');
   try{
     var r=await callClaude('You are a personal brand storyteller. Write a compelling, authentic 3-5 paragraph origin story in first person. Lead with the struggle. Be honest &#8212; share the failures and doubts. End with a lesson or invitation for the reader who is where the creator once was. No fluff, no hype.\n\nPart 1 &#8212; The Struggle: '+gv('story1')+'\nPart 2 &#8212; The Turning Point: '+gv('story2')+'\nPart 3 &#8212; The Journey: '+gv('story3')+'\nPart 4 &#8212; The Transformation: '+gv('story4')+'\n\nWrite in a warm, direct, relatable voice. No preamble.');
-    setStatus('storyStatus','success','&#10003; Story written');showResult('storyResult',r);
-    if(!gv('originStory'))document.getElementById('originStory').value=r;
+    setStatus('storyStatus','success','&#10003; Story written');
+    document.getElementById('originStory').value=r;
     saveData();
   }catch(e){setStatus('storyStatus','error','Error &#8212; check connection and try again');}
   btn.disabled=false;
@@ -1053,8 +1051,7 @@ async function generateBrandVision(){
   try{
     var r=await callClaude('You are a personal brand strategist. Write a powerful, specific Brand Vision Statement in 2–3 sentences based on these inputs.\n\n3-Year Vision: '+gv('vision3yr')+'\nIdeal Day: '+gv('visionDay')+'\nImpact: '+gv('visionImpact')+'\nLegacy: '+gv('visionLegacy')+'\n\nThe vision statement should be inspiring, specific, and paint a clear picture of where this brand is going. Start with "By [year]..." or "In 3 years..." Make it bold and concrete. No preamble.');
     setStatus('visionStatus','success','&#10003; Vision written');
-    showResult('visionResult',r);
-    if(!gv('brandVision'))document.getElementById('brandVision').value=r;
+    document.getElementById('brandVision').value=r;
     saveData();
   }catch(e){setStatus('visionStatus','error','Error &#8212; '+e.message);}
   btn.disabled=false;
