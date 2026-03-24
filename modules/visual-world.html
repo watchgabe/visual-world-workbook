@@ -3248,81 +3248,69 @@ function typHandleFile(file) {
   reader.readAsDataURL(file);
 }
 
-function typIdentifyFonts() {
+async function typIdentifyFonts() {
   if (!typCurrentFile) return;
-  var apiKey = localStorage.getItem('fsc-anthropic-key') || '';
-  if (!apiKey) {
-    alert('No Anthropic API key found. Go to admin.html and save your API key first.');
-    return;
-  }
   var results = document.getElementById('fontIdResults');
   results.style.display = 'block';
   results.innerHTML = '<div class="fi-analyzing"><span class="fi-spin"></span>Analyzing fonts in image...</div>';
   document.getElementById('fontIdBtn').disabled = true;
 
-  var reader = new FileReader();
-  reader.onload = function(ev) {
-    var b64 = ev.target.result.split(',')[1];
+  try {
+    var dataUrl = await new Promise(function(resolve, reject) {
+      var reader = new FileReader();
+      reader.onload = function(ev) { resolve(ev.target.result); };
+      reader.onerror = reject;
+      reader.readAsDataURL(typCurrentFile);
+    });
+    var b64 = dataUrl.split(',')[1];
     var mediaType = typCurrentFile.type || 'image/jpeg';
-    fetch('https://api.anthropic.com/v1/messages', {
+
+    var res = await fetch(SUPABASE_URL + '/functions/v1/claude-proxy', {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'x-api-key': apiKey,
-        'anthropic-version': '2023-06-01',
-        'anthropic-dangerous-direct-browser-calls': 'true'
-      },
+      headers: {'Content-Type':'application/json','Authorization':'Bearer '+SUPABASE_ANON},
       body: JSON.stringify({
-        model: 'claude-opus-4-5',
-        max_tokens: 800,
+        maxTokens: 800,
         messages: [{
           role: 'user',
           content: [
             {type:'image', source:{type:'base64', media_type:mediaType, data:b64}},
-            {type:'text', text:'Look at the typography in this image. Identify up to 3 fonts you can see. For each one, respond in this exact JSON format (no other text):\n\n[{"name":"Font Name or closest match","description":"Brief description of the style (1 sentence)","googleFontsAlternative":"Closest free Google Fonts equivalent","googleFontsUrl":"https://fonts.google.com/specimen/Name","role":"headline|body|display","confidence":"high|medium|low"},{"name":"..."}]\n\nIf you cannot identify a specific font, name the closest Google Fonts equivalent based on the style. Always return valid JSON array.'}
+            {type:'text', text:'Look at the typography in this image. Identify up to 3 fonts you can see. For each one, respond in this exact JSON format (no other text):\n\n[{"name":"Font Name or closest match","description":"Brief description of the style (1 sentence)","googleFontsAlternative":"Closest free Google Fonts equivalent","googleFontsUrl":"https://fonts.google.com/specimen/Name","role":"headline|body|display","confidence":"high|medium|low"}]\n\nIf you cannot identify a specific font, name the closest Google Fonts equivalent based on the style. Always return valid JSON array.'}
           ]
         }]
       })
-    })
-    .then(function(r){return r.json();})
-    .then(function(data) {
-      document.getElementById('fontIdBtn').disabled = false;
-      if (data.error) { results.innerHTML = '<div class="fi-analyzing" style="color:#e05555">Error: '+data.error.message+'</div>'; return; }
-      var text = data.content && data.content[0] && data.content[0].text;
-      try {
-        // extract JSON from response
-        var jsonMatch = text.match(/\[[\s\S]*\]/);
-        if (!jsonMatch) throw new Error('No JSON found');
-        var fonts = JSON.parse(jsonMatch[0]);
-        var html = '';
-        fonts.forEach(function(f) {
-          html += '<div class="fi-result-item">';
-          html += '<div class="fi-font-name">'+f.name+'</div>';
-          html += '<div class="fi-font-desc">'+f.description;
-          if (f.googleFontsAlternative && f.googleFontsAlternative !== f.name) {
-            html += ' Free alternative: <strong>'+f.googleFontsAlternative+'</strong>';
-          }
-          html += '</div>';
-          html += '<div style="margin-top:7px">';
-          var useTarget = (f.role === 'body') ? 'font-secondary' : 'font-primary';
-          var useFont = f.googleFontsAlternative || f.name;
-          html += '<button class="fi-btn" onclick="typFillFont(\''+useFont+'\',\''+useTarget+'\')">Use as '+(useTarget==='font-primary'?'Primary':'Body')+'</button>';
-          if (f.googleFontsUrl) html += '<a href="'+f.googleFontsUrl+'" target="_blank" class="fp-gf-link">View on Google Fonts &#8594;</a>';
-          html += '</div>';
-          html += '</div>';
-        });
-        results.innerHTML = html || '<div class="fi-analyzing">No fonts identified. Try a clearer image.</div>';
-      } catch(err) {
-        // fallback: show raw text
-        results.innerHTML = '<div class="fi-result-item"><div class="fi-font-name">Analysis Result</div><div class="fi-font-desc" style="white-space:pre-wrap">'+text+'</div></div>';
-      }
-    })
-    .catch(function(err) {
-      document.getElementById('fontIdBtn').disabled = false;
-      results.innerHTML = '<div class="fi-analyzing" style="color:#e05555">Connection error. Check your API key in admin.html.</div>';
     });
-  };
-  reader.readAsDataURL(typCurrentFile);
+
+    var data = await res.json();
+    if (data.error) throw new Error(data.error);
+    var text = data.text || '';
+    try {
+      var jsonMatch = text.match(/\[[\s\S]*\]/);
+      if (!jsonMatch) throw new Error('No JSON found');
+      var fonts = JSON.parse(jsonMatch[0]);
+      var html = '';
+      fonts.forEach(function(f) {
+        html += '<div class="fi-result-item">';
+        html += '<div class="fi-font-name">'+f.name+'</div>';
+        html += '<div class="fi-font-desc">'+f.description;
+        if (f.googleFontsAlternative && f.googleFontsAlternative !== f.name) {
+          html += ' Free alternative: <strong>'+f.googleFontsAlternative+'</strong>';
+        }
+        html += '</div>';
+        html += '<div style="margin-top:7px">';
+        var useTarget = (f.role === 'body') ? 'font-secondary' : 'font-primary';
+        var useFont = f.googleFontsAlternative || f.name;
+        html += '<button class="fi-btn" onclick="typFillFont(\''+useFont+'\',\''+useTarget+'\')">Use as '+(useTarget==='font-primary'?'Primary':'Body')+'</button>';
+        if (f.googleFontsUrl) html += '<a href="'+f.googleFontsUrl+'" target="_blank" class="fp-gf-link">View on Google Fonts &#8594;</a>';
+        html += '</div></div>';
+      });
+      results.innerHTML = html || '<div class="fi-analyzing">No fonts identified. Try a clearer image.</div>';
+    } catch(err) {
+      results.innerHTML = '<div class="fi-result-item"><div class="fi-font-name">Analysis Result</div><div class="fi-font-desc" style="white-space:pre-wrap">'+text+'</div></div>';
+    }
+  } catch(e) {
+    results.innerHTML = '<div class="fi-analyzing" style="color:#e05555">Error: '+e.message+'</div>';
+  }
+  document.getElementById('fontIdBtn').disabled = false;
 }
 
 function typFillFont(fontName, inputId) {
