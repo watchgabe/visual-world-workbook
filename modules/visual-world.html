@@ -1282,8 +1282,6 @@ textarea::placeholder,input[type=text]::placeholder{color:var(--dimmer)}
       <div style="font-size:12px;color:var(--orange-dark);line-height:1.6">Type the font name above exactly as it appears in your design tool (Figma, Canva, Adobe). Your style guide will reference it — just make sure you have the license.</div>
     </div>
 
-    <div class="q">Typography rules</div>
-    <textarea rows="3" id="typographyRules" placeholder="1. Primary font is always used for: &#10;2. Body font is always used for: &#10;3. I never use more than ___ fonts in one piece of content"></textarea>
   </div>
 
   <div class="nr"><button class="btn" id="b4b">← Back</button><span class="si">4/5</span><button class="btn p" id="b4n">Save &amp; Continue →</button></div>
@@ -2912,8 +2910,16 @@ function updatePinterestEmbed() {
    THEME
 ══════════════════════════════════════════════════════════ */
 (function(){
+  // Apply saved theme on load
+  if(localStorage.getItem('blp-theme')==='light') document.body.classList.add('light');
+  // Theme buttons: toggle local + save + tell parent
   document.querySelectorAll('.theme-btn').forEach(function(btn){
-    btn.addEventListener('click',function(){document.body.classList.toggle('light');});
+    btn.addEventListener('click',function(){
+      document.body.classList.toggle('light');
+      var t=document.body.classList.contains('light')?'light':'dark';
+      localStorage.setItem('blp-theme',t);
+      try{window.parent.postMessage({type:'toggle-theme',value:t},'*');}catch(e){}
+    });
   });
 })();
 
@@ -2965,7 +2971,9 @@ if (VW_IN_FRAME) {
 }
 
 window.addEventListener('message',function(e){
-  if(!e.data||e.data.type!=='navigate')return;
+  if(!e.data) return;
+  if(e.data.type==='theme'){document.body.classList.toggle('light',e.data.value==='light');return;}
+  if(e.data.type!=='navigate')return;
   var n=e.data.to;
   cur=n;
   document.querySelectorAll('.sc').forEach(function(s){s.classList.remove('show');});
@@ -3253,16 +3261,14 @@ function typHandleFile(file) {
   reader.readAsDataURL(file);
 }
 
-function _fiLoadFont(fontName, isItalic) {
+function _fiLoadFont(fontName) {
   if (!fontName) return;
-  var key = fontName + (isItalic ? ':i' : '');
-  if (document.querySelector('link[data-fi="'+key+'"]')) return; // already loaded
-  var family = fontName.replace(/\s+/g, '+');
-  var variants = isItalic ? 'ital,wght@0,400;0,700;1,400' : 'wght@400;700';
-  var url = 'https://fonts.googleapis.com/css2?family=' + family + ':' + variants + '&display=swap';
+  if (document.querySelector('link[data-fi="'+fontName+'"]')) return;
   var link = document.createElement('link');
-  link.rel = 'stylesheet'; link.href = url;
-  link.setAttribute('data-fi', key);
+  link.rel = 'stylesheet';
+  // Use display=block so preview only shows once the actual font is ready
+  link.href = 'https://fonts.googleapis.com/css2?family=' + fontName.replace(/\s+/g,'+') + '&display=block';
+  link.setAttribute('data-fi', fontName);
   document.head.appendChild(link);
 }
 
@@ -3305,8 +3311,15 @@ async function typIdentifyFonts() {
       var jsonMatch = text.match(/\[[\s\S]*\]/);
       if (!jsonMatch) throw new Error('No JSON found');
       var fonts = JSON.parse(jsonMatch[0]);
-      // Load all fonts from Google Fonts before rendering
-      fonts.forEach(function(f) { _fiLoadFont(f.googleFontName, f.isItalic); });
+      // Inject Google Fonts links
+      fonts.forEach(function(f) { _fiLoadFont(f.googleFontName); });
+      // Wait for fonts to finish loading before rendering previews
+      results.innerHTML = '<div class="fi-analyzing"><span class="fi-spin"></span>Loading font previews...</div>';
+      try {
+        await Promise.all(fonts.map(function(f) {
+          return document.fonts.load((f.isItalic ? 'italic ' : '') + '1em "' + f.googleFontName + '"').catch(function(){});
+        }));
+      } catch(fe){}
       var html = '';
       fonts.forEach(function(f) {
         var fname = f.googleFontName || f.name;

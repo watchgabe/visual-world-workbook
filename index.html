@@ -837,6 +837,12 @@ window.addEventListener('message', function(e) {
     }
     hideLoading();
     iframeLoading = false;
+    // Push current theme into the freshly loaded iframe
+    var _iframe = document.getElementById('module-iframe');
+    var _theme = localStorage.getItem('blp-theme') || 'dark';
+    if (_iframe && _iframe.contentWindow) {
+      try { _iframe.contentWindow.postMessage({type:'theme', value:_theme}, '*'); } catch(e) {}
+    }
     if (pendingNavigation !== null) {
       var nav = pendingNavigation;
       pendingNavigation = null;
@@ -857,6 +863,11 @@ window.addEventListener('message', function(e) {
 
   if (type === 'navigate-module' && e.data.to) {
     loadModule(e.data.to, 0);
+  }
+
+  if (type === 'toggle-theme' && e.data.value) {
+    document.body.classList.toggle('light', e.data.value === 'light');
+    localStorage.setItem('blp-theme', e.data.value);
   }
 });
 
@@ -879,7 +890,13 @@ function hideLoading() {
 ══════════════════════════════════════════════════════════ */
 function toggleTheme() {
   document.body.classList.toggle('light');
-  localStorage.setItem('blp-theme', document.body.classList.contains('light') ? 'light' : 'dark');
+  var theme = document.body.classList.contains('light') ? 'light' : 'dark';
+  localStorage.setItem('blp-theme', theme);
+  // Sync active iframe
+  var iframe = document.getElementById('module-iframe');
+  if (iframe && iframe.contentWindow) {
+    try { iframe.contentWindow.postMessage({type:'theme', value:theme}, '*'); } catch(e) {}
+  }
 }
 function initTheme() {
   var saved = localStorage.getItem('blp-theme');
