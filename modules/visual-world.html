@@ -1985,6 +1985,7 @@ function addCreatorCard() {
   card.id = 'cac-' + n;
   card.innerHTML = buildCreatorCardHTML(n);
   list.appendChild(card);
+  renumberCards();
   saveData();
 }
 
@@ -2007,6 +2008,7 @@ function buildCreatorCardHTML(n) {
     + '</div>'
     + '<div class="cac-header-right">'
     + '<span class="cac-chevron open" id="cac-chev-'+n+'">▼</span>'
+    + '<button class="cac-remove" onclick="event.stopPropagation();clearCreatorCard('+n+')" title="Clear & re-analyze" style="opacity:.5;font-size:13px">↺</button>'
     + (n>1?'<button class="cac-remove" onclick="event.stopPropagation();removeCreatorCard('+n+')" title="Remove">&#215;</button>':'')
     + '</div>'
     + '</div>'
@@ -2076,10 +2078,54 @@ function saveCreatorHandle(n) {
   saveCreators();
 }
 
+function renumberCards() {
+  var cards = document.querySelectorAll('.creator-analysis-card');
+  cards.forEach(function(card, i) {
+    var pos = i + 1;
+    var numEl = card.querySelector('.cac-num');
+    if (numEl) numEl.textContent = 'Creator ' + pos;
+    // Update avatar initial only for unanalyzed cards (still showing a digit)
+    var iniEl = card.querySelector('[id^="cac-hav-ini-"]');
+    if (iniEl && /^\d+$/.test(iniEl.textContent.trim())) {
+      iniEl.textContent = pos;
+    }
+  });
+}
+
+function clearCreatorCard(n) {
+  // Clear handle input
+  var h = document.getElementById('cac-handle-'+n);
+  if (h) h.value = '';
+  // Reset header
+  var hname = document.getElementById('cac-hname-'+n);
+  if (hname) hname.textContent = 'Add Instagram handle to analyze';
+  var hmeta = document.getElementById('cac-hmeta-'+n);
+  if (hmeta) hmeta.textContent = '';
+  // Reset avatar back to number
+  var hav = document.getElementById('cac-hav-'+n);
+  var ini = document.getElementById('cac-hav-ini-'+n);
+  if (hav) { hav.style.cssText = ''; hav.innerHTML = '<span id="cac-hav-ini-'+n+'">'+n+'</span>'; }
+  // Hide profile, AI, feed, notes sections
+  ['cac-profile-'+n,'cac-ai-'+n,'cac-feed-'+n,'cac-notes-'+n].forEach(function(id){
+    var e = document.getElementById(id);
+    if (e) e.className = (e.className||'').replace('open','') + ' cac-hidden';
+  });
+  // Clear status
+  var st = document.getElementById('cac-status-'+n);
+  if (st) { st.className = 'cac-status'; st.innerHTML = ''; }
+  // Wipe from store
+  delete creatorStore[n];
+  saveCreators();
+  renumberCards();
+}
+
 function removeCreatorCard(n) {
   var card = document.getElementById('cac-'+n);
   if (card) card.remove();
+  delete creatorStore[n];
+  saveCreators();
   saveData();
+  renumberCards();
 }
 
 function setCacStatus(n, state, msg) {
