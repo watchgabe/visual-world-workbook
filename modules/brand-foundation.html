@@ -322,15 +322,13 @@ textarea::placeholder,input[type=text]::placeholder{color:var(--dimmer)}
     <textarea rows="3" id="q4learn" placeholder="How to write hooks that stop the scroll&#10;How to show up on camera confidently&#10;How to build a monetization funnel"></textarea>
   </div>
   <h2>Brand Journey Statement</h2>
-  <div class="teach"><p>Synthesize your four answers into a one-sentence North Star statement. Print it. Put it somewhere you&#8217;ll see it every day.</p></div>
+  <div class="teach"><p>Your Brand Journey Statement is your North Star. It puts everything in one sentence so you always know where you&#8217;re going and why.</p><p style="margin-top:.6rem;font-family:var(--font);font-size:13.5px;color:var(--text);font-style:italic;border-left:3px solid var(--orange);padding-left:.85rem">&#8220;I want to [desired outcome] by being known for [known for] through [actions] starting with [learning].&#8221;</p><p style="margin-top:.6rem">Synthesize your four answers into this one sentence. Print it. Put it somewhere you&#8217;ll see it every day. Shoot towards it every day.</p></div>
   <div class="ec">
     <div class="elbl">AI &#8212; Generate My Brand Journey Statement</div>
     <div class="qh">Fill in all four questions above, then click Generate.</div>
     <button class="btn-ai" id="bjBtn" onclick="generateBrandJourney()">&#10022; Generate Statement</button>
     <div class="ai-status" id="bjStatus"></div>
-    <div class="ai-result" id="bjResult"></div>
-    <div class="q" style="margin-top:.5rem">&#8220;I want to [desired outcome] by being known for [known for] through [actions] starting with [learning].&#8221;</div>
-    <textarea rows="3" id="brandJourneyStmt" placeholder="Generate and modify your Brand Journey Statement here..."></textarea>
+    <textarea rows="4" id="brandJourneyStmt" placeholder="Generate and modify your Brand Journey Statement here..."></textarea>
   </div>
   <div class="nr"><button class="btn" onclick="go(0)">&#8592; Back</button><span class="si">1/7</span><button class="btn p" onclick="go(2)">Save &amp; Continue &#8594;</button></div>
 </div>
@@ -908,11 +906,11 @@ async function generateBrandJourney(){
   setStatus('bjStatus','loading','<span class="ai-spinner"></span>Synthesizing your Brand Journey...');
   document.getElementById('bjResult').classList.remove('show');
   try{
-    var r=await callClaude('You are a personal brand strategist. Synthesize these answers into one powerful Brand Journey Statement in the format: "I want to [desired outcome] by being known for [known for] through [actions] starting with [learning]."\n\nDesired Outcome: '+gv('q1outcome')+'\nWhy: '+gv('q1why')+'\nKnown For: '+gv('q2known')+'\nActions: '+gv('q3do')+'\nLearn: '+gv('q4learn')+'\n\nWrite the one-sentence statement, then 2 sentences explaining why this North Star is powerful. Use their exact language. No fluff, no preamble.');
+    var r=await callClaude('You are a personal brand strategist. Write ONE sentence using EXACTLY this format: "I want to [desired outcome] by being known for [known for] through [actions] starting with [learning]."\n\nFill in the brackets using their exact words below. Output ONLY the single sentence. No headers, no explanation, no asterisks, no markdown, no quotation marks around the sentence.\n\nDesired Outcome: '+gv('q1outcome')+'\nKnown For: '+gv('q2known')+'\nActions: '+gv('q3do')+'\nLearn: '+gv('q4learn'));
+    var clean=r.replace(/#{1,6}\s*/g,'').replace(/\*{1,3}/g,'').replace(/^[""]|[""]$/g,'').trim();
     setStatus('bjStatus','success','&#10003; Generated — edit below');
-    showResult('bjResult',r);
     var ta=document.getElementById('brandJourneyStmt');
-    if(ta){ta.value=r;ta.style.height='auto';ta.style.height=ta.scrollHeight+'px';ta.scrollIntoView({behavior:'smooth',block:'center'});}
+    if(ta){ta.value=clean;ta.style.height='auto';ta.style.height=ta.scrollHeight+'px';ta.scrollIntoView({behavior:'smooth',block:'center'});}
     saveData();
   }catch(e){setStatus('bjStatus','error','Error &#8212; check connection and try again');}
   btn.disabled=false;
