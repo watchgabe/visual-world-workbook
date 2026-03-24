@@ -226,7 +226,9 @@ textarea::placeholder,input[type=text]::placeholder{color:var(--dimmer)}
 
 /* ─── COLOR INPUT WITH SWATCH ─── */
 .color-row{display:flex;align-items:center;gap:8px;margin-bottom:9px;}
-.color-swatch{width:32px;height:32px;border-radius:var(--radius-md);border:1px solid var(--border);flex-shrink:0;transition:background .2s;}
+.color-swatch{width:32px;height:32px;border-radius:var(--radius-md);border:1px solid var(--border);flex-shrink:0;transition:background .2s;cursor:pointer;position:relative;}
+.color-swatch:hover::after{content:'';position:absolute;inset:0;border-radius:inherit;background:rgba(255,255,255,.15);}
+.color-swatch input[type=color]{position:absolute;inset:0;width:100%;height:100%;opacity:0;cursor:pointer;border:none;padding:0;}
 .color-row input[type=text]{margin-bottom:0;flex:1;}
 
 /* ─── OPTION GRIDS ─── */
@@ -1119,27 +1121,24 @@ textarea::placeholder,input[type=text]::placeholder{color:var(--dimmer)}
 
     <div class="q">Primary Color — your dominant brand color</div>
     <div class="color-row">
-      <div class="color-swatch" id="sw-primary"></div>
+      <div class="color-swatch" id="sw-primary"><input type="color" id="cp-primary" oninput="cpSync('cp-primary','col-primary')"></div>
       <input type="text" id="col-primary" placeholder="#hex or color name — e.g. #F0601B" style="margin-bottom:0">
     </div>
-    <div class="qh">What emotion do you want this color to create?</div>
-    <input type="text" id="col-primary-emotion" placeholder="e.g. Energy, warmth, confidence...">
-
     <div class="q">Secondary Color — your supporting color</div>
     <div class="color-row">
-      <div class="color-swatch" id="sw-secondary"></div>
+      <div class="color-swatch" id="sw-secondary"><input type="color" id="cp-secondary" oninput="cpSync('cp-secondary','col-secondary')"></div>
       <input type="text" id="col-secondary" placeholder="#hex or color name — e.g. #1A1A1A" style="margin-bottom:0">
     </div>
 
     <div class="q">Accent Color — used sparingly, for emphasis</div>
     <div class="color-row">
-      <div class="color-swatch" id="sw-accent"></div>
+      <div class="color-swatch" id="sw-accent"><input type="color" id="cp-accent" oninput="cpSync('cp-accent','col-accent')"></div>
       <input type="text" id="col-accent" placeholder="#hex or color name — e.g. #FFD700" style="margin-bottom:0">
     </div>
 
     <div class="q">Neutral Base — your background canvas</div>
     <div class="color-row">
-      <div class="color-swatch" id="sw-neutral"></div>
+      <div class="color-swatch" id="sw-neutral"><input type="color" id="cp-neutral" oninput="cpSync('cp-neutral','col-neutral')"></div>
       <input type="text" id="col-neutral" placeholder="#hex or color name — e.g. #F7F6F4" style="margin-bottom:0">
     </div>
 
@@ -1737,11 +1736,27 @@ function initColorSwatches() {
   });
 }
 
+function cpSync(cpId, txtId) {
+  var cp=document.getElementById(cpId); var txt=document.getElementById(txtId);
+  if(!cp||!txt) return;
+  txt.value=cp.value;
+  saveData(); updateSwatches();
+}
+
 function updateSwatches() {
-  [['col-primary','sw-primary'],['col-secondary','sw-secondary'],['col-accent','sw-accent'],['col-neutral','sw-neutral']].forEach(function(p){
-    var inp=document.getElementById(p[0]); var sw=document.getElementById(p[1]);
+  [['col-primary','sw-primary','cp-primary'],['col-secondary','sw-secondary','cp-secondary'],['col-accent','sw-accent','cp-accent'],['col-neutral','sw-neutral','cp-neutral']].forEach(function(p){
+    var inp=document.getElementById(p[0]); var sw=document.getElementById(p[1]); var cp=document.getElementById(p[2]);
     if(!inp||!sw) return;
-    var v=inp.value.trim(); if(v){sw.style.background=v;sw.style.borderColor='transparent';}else{sw.style.background='';sw.style.borderColor='';}
+    var v=inp.value.trim();
+    if(v){
+      sw.style.background=v;
+      sw.style.borderColor='transparent';
+      // sync color picker if value is a valid hex
+      if(cp && /^#[0-9a-fA-F]{6}$/.test(v)) cp.value=v;
+    } else {
+      sw.style.background='';
+      sw.style.borderColor='';
+    }
   });
 }
 
