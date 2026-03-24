@@ -1848,9 +1848,9 @@ function mbBindDrop(cat) {
   var dz=document.getElementById('mbdrop-'+cat);
   if(dz){
     dz.addEventListener('click',function(){mbPick(cat);});
-    dz.addEventListener('dragover',function(e){e.preventDefault();dz.classList.add('over');});
+    dz.addEventListener('dragover',function(e){e.preventDefault();e.stopPropagation();dz.classList.add('over');});
     dz.addEventListener('dragleave',function(){dz.classList.remove('over');});
-    dz.addEventListener('drop',function(e){e.preventDefault();dz.classList.remove('over');mbDropFiles(cat,Array.from(e.dataTransfer.files));});
+    dz.addEventListener('drop',function(e){e.preventDefault();e.stopPropagation();dz.classList.remove('over');mbDropFiles(cat,Array.from(e.dataTransfer.files));});
   }
   var panel=document.getElementById('mbp-'+cat);
   if(panel&&!dz&&!panel._mbBound){
