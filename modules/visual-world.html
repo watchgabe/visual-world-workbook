@@ -2046,7 +2046,6 @@ function buildCreatorCardHTML(n) {
     + '<div class="cac-ai-field"><div class="cac-ai-field-lbl">Lighting</div><div class="cac-ai-field-val" id="cac-ai-light-'+n+'"></div></div>'
     + '<div class="cac-ai-field"><div class="cac-ai-field-lbl">Color Palette</div><div class="cac-ai-field-val" id="cac-ai-colors-'+n+'"></div></div>'
     + '<div class="cac-ai-field wide"><div class="cac-ai-field-lbl">What makes them look premium</div><div id="cac-ai-premium-'+n+'"></div></div>'
-    + '<div class="cac-ai-field wide"><div class="cac-ai-field-lbl">Your gap</div><div class="cac-ai-field-val" id="cac-ai-gap-'+n+'"></div></div>'
     + '</div></div>'
     + '</div>'
     + '<div class="cac-notes cac-hidden" id="cac-notes-'+n+'">'
@@ -2474,7 +2473,6 @@ function _buildGuide_removed_placeholder() {
           + (s.aiMood?'<div class="cac-ai-field"><div class="cac-ai-field-lbl">Mood</div><div class="cac-ai-field-val">'+esc(s.aiMood)+'</div></div>':'')
           + (s.aiLight?'<div class="cac-ai-field"><div class="cac-ai-field-lbl">Lighting</div><div class="cac-ai-field-val">'+esc(s.aiLight)+'</div></div>':'')
           + (s.aiColors?'<div class="cac-ai-field"><div class="cac-ai-field-lbl">Colors</div><div class="cac-ai-field-val">'+esc(s.aiColors)+'</div></div>':'')
-          + (s.aiGap?'<div class="cac-ai-field wide"><div class="cac-ai-field-lbl">Your Gap</div><div class="cac-ai-field-val">'+esc(s.aiGap)+'</div></div>':'')
           + '</div>';
       }
       var getNote = function(id){ var e=document.getElementById(id); return e?e.value.trim():''; };
@@ -2484,7 +2482,6 @@ function _buildGuide_removed_placeholder() {
         {lbl:'Weaknesses', val:getNote('cac-n-weak-'+k)},
         {lbl:'What Can I Steal?', val:getNote('cac-n-steal-'+k)},
         {lbl:'What to Avoid', val:getNote('cac-n-avoid-'+k)},
-        {lbl:'My Gap', val:getNote('cac-n-gap-'+k)}
       ].filter(function(f){return f.val;});
       var notesHtml = noteFields.length ? '<div class="vg-creator-notes">'
         + noteFields.map(function(f){ return '<div class="vg-creator-note"><div class="vg-creator-note-lbl">'+esc(f.lbl)+'</div><div class="vg-creator-note-val">'+esc(f.val)+'</div></div>'; }).join('')
