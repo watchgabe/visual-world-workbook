@@ -402,7 +402,12 @@ textarea::placeholder,input[type=text]::placeholder{color:var(--dimmer)}
 .ig-pillar-card{display:flex;gap:12px;align-items:center;padding:9px 13px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-md)}
 .ig-pillar-num{font-family:var(--font-num);font-size:28px;font-weight:900;color:var(--orange);line-height:1;flex-shrink:0;opacity:.45;min-width:32px}
 .ig-pillar-card input{margin:0!important;flex:1}
-.ig-pg-hdr{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--orange);margin:1.2rem 0 .45rem;padding-bottom:.35rem;border-bottom:1px solid var(--border)}
+.ig-pg-hdr{margin:1.2rem 0 .45rem;padding-bottom:.35rem;border-bottom:1px solid var(--border)}
+.ig-pg-num{display:block;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--orange);line-height:1.6}
+.ig-pg-name{display:block;font-size:14px;font-weight:600;color:var(--text);line-height:1.4;min-height:.5em}
+.ig-ai-psel{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:8px}
+.ig-ai-psel button{flex:1;min-width:0;font-size:11px;font-weight:600;padding:5px 6px;border-radius:7px;border:1px solid var(--border);background:var(--surface);color:var(--dim);cursor:pointer;text-overflow:ellipsis;overflow:hidden;white-space:nowrap;transition:border-color .15s,color .15s}
+.ig-ai-psel button.sel{border-color:var(--orange);color:var(--orange);background:var(--orange-tint)}
 details.ig-d{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-md);margin-bottom:5px;overflow:hidden}
 details.ig-d summary{cursor:pointer;padding:9px 13px;font-size:13px;font-weight:500;color:var(--text);user-select:none;display:flex;align-items:center;gap:6px;list-style:none}
 details.ig-d summary::-webkit-details-marker{display:none}
@@ -933,35 +938,35 @@ details.ig-d[open] summary::after{content:'－'}
   <div class="teach"><p>Take each idea from Step 2 and break it into 4 specific content angles &#8212; concrete enough to film. Click any idea to expand it. Example: idea = &#8220;how to batch record&#8221; &#8594; angles: &#8220;my 4-hour filming day routine&#8221;, &#8220;3 outfit changes that batch 3 weeks&#8221;, &#8220;why I film at 6am&#8221;, &#8220;the gear I use on batch days&#8221;.</p></div>
 
   <div style="margin-bottom:1.1rem">
-    <div class="ig-pg-hdr" id="igS3P1hdr">Pillar 1</div>
+    <div class="ig-pg-hdr" id="igS3P1hdr"><span class="ig-pg-num">Pillar 1</span><span class="ig-pg-name" id="igS3P1name"></span></div>
     <details class="ig-d"><summary><span id="igDS_p1i1">Idea 1</span><span class="ig-d-tag">4 angles</span></summary><div class="ig-d-body"><input type="text" id="ig_p1i1a1" placeholder="Angle 1&#8230;"><input type="text" id="ig_p1i1a2" placeholder="Angle 2&#8230;"><input type="text" id="ig_p1i1a3" placeholder="Angle 3&#8230;"><input type="text" id="ig_p1i1a4" placeholder="Angle 4&#8230;"></div></details>
     <details class="ig-d"><summary><span id="igDS_p1i2">Idea 2</span><span class="ig-d-tag">4 angles</span></summary><div class="ig-d-body"><input type="text" id="ig_p1i2a1" placeholder="Angle 1&#8230;"><input type="text" id="ig_p1i2a2" placeholder="Angle 2&#8230;"><input type="text" id="ig_p1i2a3" placeholder="Angle 3&#8230;"><input type="text" id="ig_p1i2a4" placeholder="Angle 4&#8230;"></div></details>
     <details class="ig-d"><summary><span id="igDS_p1i3">Idea 3</span><span class="ig-d-tag">4 angles</span></summary><div class="ig-d-body"><input type="text" id="ig_p1i3a1" placeholder="Angle 1&#8230;"><input type="text" id="ig_p1i3a2" placeholder="Angle 2&#8230;"><input type="text" id="ig_p1i3a3" placeholder="Angle 3&#8230;"><input type="text" id="ig_p1i3a4" placeholder="Angle 4&#8230;"></div></details>
     <details class="ig-d"><summary><span id="igDS_p1i4">Idea 4</span><span class="ig-d-tag">4 angles</span></summary><div class="ig-d-body"><input type="text" id="ig_p1i4a1" placeholder="Angle 1&#8230;"><input type="text" id="ig_p1i4a2" placeholder="Angle 2&#8230;"><input type="text" id="ig_p1i4a3" placeholder="Angle 3&#8230;"><input type="text" id="ig_p1i4a4" placeholder="Angle 4&#8230;"></div></details>
   </div>
   <div style="margin-bottom:1.1rem">
-    <div class="ig-pg-hdr" id="igS3P2hdr">Pillar 2</div>
+    <div class="ig-pg-hdr" id="igS3P2hdr"><span class="ig-pg-num">Pillar 2</span><span class="ig-pg-name" id="igS3P2name"></span></div>
     <details class="ig-d"><summary><span id="igDS_p2i1">Idea 1</span><span class="ig-d-tag">4 angles</span></summary><div class="ig-d-body"><input type="text" id="ig_p2i1a1" placeholder="Angle 1&#8230;"><input type="text" id="ig_p2i1a2" placeholder="Angle 2&#8230;"><input type="text" id="ig_p2i1a3" placeholder="Angle 3&#8230;"><input type="text" id="ig_p2i1a4" placeholder="Angle 4&#8230;"></div></details>
     <details class="ig-d"><summary><span id="igDS_p2i2">Idea 2</span><span class="ig-d-tag">4 angles</span></summary><div class="ig-d-body"><input type="text" id="ig_p2i2a1" placeholder="Angle 1&#8230;"><input type="text" id="ig_p2i2a2" placeholder="Angle 2&#8230;"><input type="text" id="ig_p2i2a3" placeholder="Angle 3&#8230;"><input type="text" id="ig_p2i2a4" placeholder="Angle 4&#8230;"></div></details>
     <details class="ig-d"><summary><span id="igDS_p2i3">Idea 3</span><span class="ig-d-tag">4 angles</span></summary><div class="ig-d-body"><input type="text" id="ig_p2i3a1" placeholder="Angle 1&#8230;"><input type="text" id="ig_p2i3a2" placeholder="Angle 2&#8230;"><input type="text" id="ig_p2i3a3" placeholder="Angle 3&#8230;"><input type="text" id="ig_p2i3a4" placeholder="Angle 4&#8230;"></div></details>
     <details class="ig-d"><summary><span id="igDS_p2i4">Idea 4</span><span class="ig-d-tag">4 angles</span></summary><div class="ig-d-body"><input type="text" id="ig_p2i4a1" placeholder="Angle 1&#8230;"><input type="text" id="ig_p2i4a2" placeholder="Angle 2&#8230;"><input type="text" id="ig_p2i4a3" placeholder="Angle 3&#8230;"><input type="text" id="ig_p2i4a4" placeholder="Angle 4&#8230;"></div></details>
   </div>
   <div style="margin-bottom:1.1rem">
-    <div class="ig-pg-hdr" id="igS3P3hdr">Pillar 3</div>
+    <div class="ig-pg-hdr" id="igS3P3hdr"><span class="ig-pg-num">Pillar 3</span><span class="ig-pg-name" id="igS3P3name"></span></div>
     <details class="ig-d"><summary><span id="igDS_p3i1">Idea 1</span><span class="ig-d-tag">4 angles</span></summary><div class="ig-d-body"><input type="text" id="ig_p3i1a1" placeholder="Angle 1&#8230;"><input type="text" id="ig_p3i1a2" placeholder="Angle 2&#8230;"><input type="text" id="ig_p3i1a3" placeholder="Angle 3&#8230;"><input type="text" id="ig_p3i1a4" placeholder="Angle 4&#8230;"></div></details>
     <details class="ig-d"><summary><span id="igDS_p3i2">Idea 2</span><span class="ig-d-tag">4 angles</span></summary><div class="ig-d-body"><input type="text" id="ig_p3i2a1" placeholder="Angle 1&#8230;"><input type="text" id="ig_p3i2a2" placeholder="Angle 2&#8230;"><input type="text" id="ig_p3i2a3" placeholder="Angle 3&#8230;"><input type="text" id="ig_p3i2a4" placeholder="Angle 4&#8230;"></div></details>
     <details class="ig-d"><summary><span id="igDS_p3i3">Idea 3</span><span class="ig-d-tag">4 angles</span></summary><div class="ig-d-body"><input type="text" id="ig_p3i3a1" placeholder="Angle 1&#8230;"><input type="text" id="ig_p3i3a2" placeholder="Angle 2&#8230;"><input type="text" id="ig_p3i3a3" placeholder="Angle 3&#8230;"><input type="text" id="ig_p3i3a4" placeholder="Angle 4&#8230;"></div></details>
     <details class="ig-d"><summary><span id="igDS_p3i4">Idea 4</span><span class="ig-d-tag">4 angles</span></summary><div class="ig-d-body"><input type="text" id="ig_p3i4a1" placeholder="Angle 1&#8230;"><input type="text" id="ig_p3i4a2" placeholder="Angle 2&#8230;"><input type="text" id="ig_p3i4a3" placeholder="Angle 3&#8230;"><input type="text" id="ig_p3i4a4" placeholder="Angle 4&#8230;"></div></details>
   </div>
   <div style="margin-bottom:1.1rem">
-    <div class="ig-pg-hdr" id="igS3P4hdr">Pillar 4</div>
+    <div class="ig-pg-hdr" id="igS3P4hdr"><span class="ig-pg-num">Pillar 4</span><span class="ig-pg-name" id="igS3P4name"></span></div>
     <details class="ig-d"><summary><span id="igDS_p4i1">Idea 1</span><span class="ig-d-tag">4 angles</span></summary><div class="ig-d-body"><input type="text" id="ig_p4i1a1" placeholder="Angle 1&#8230;"><input type="text" id="ig_p4i1a2" placeholder="Angle 2&#8230;"><input type="text" id="ig_p4i1a3" placeholder="Angle 3&#8230;"><input type="text" id="ig_p4i1a4" placeholder="Angle 4&#8230;"></div></details>
     <details class="ig-d"><summary><span id="igDS_p4i2">Idea 2</span><span class="ig-d-tag">4 angles</span></summary><div class="ig-d-body"><input type="text" id="ig_p4i2a1" placeholder="Angle 1&#8230;"><input type="text" id="ig_p4i2a2" placeholder="Angle 2&#8230;"><input type="text" id="ig_p4i2a3" placeholder="Angle 3&#8230;"><input type="text" id="ig_p4i2a4" placeholder="Angle 4&#8230;"></div></details>
     <details class="ig-d"><summary><span id="igDS_p4i3">Idea 3</span><span class="ig-d-tag">4 angles</span></summary><div class="ig-d-body"><input type="text" id="ig_p4i3a1" placeholder="Angle 1&#8230;"><input type="text" id="ig_p4i3a2" placeholder="Angle 2&#8230;"><input type="text" id="ig_p4i3a3" placeholder="Angle 3&#8230;"><input type="text" id="ig_p4i3a4" placeholder="Angle 4&#8230;"></div></details>
     <details class="ig-d"><summary><span id="igDS_p4i4">Idea 4</span><span class="ig-d-tag">4 angles</span></summary><div class="ig-d-body"><input type="text" id="ig_p4i4a1" placeholder="Angle 1&#8230;"><input type="text" id="ig_p4i4a2" placeholder="Angle 2&#8230;"><input type="text" id="ig_p4i4a3" placeholder="Angle 3&#8230;"><input type="text" id="ig_p4i4a4" placeholder="Angle 4&#8230;"></div></details>
   </div>
   <div style="margin-bottom:1.5rem">
-    <div class="ig-pg-hdr" id="igS3P5hdr">Pillar 5</div>
+    <div class="ig-pg-hdr" id="igS3P5hdr"><span class="ig-pg-num">Pillar 5</span><span class="ig-pg-name" id="igS3P5name"></span></div>
     <details class="ig-d"><summary><span id="igDS_p5i1">Idea 1</span><span class="ig-d-tag">4 angles</span></summary><div class="ig-d-body"><input type="text" id="ig_p5i1a1" placeholder="Angle 1&#8230;"><input type="text" id="ig_p5i1a2" placeholder="Angle 2&#8230;"><input type="text" id="ig_p5i1a3" placeholder="Angle 3&#8230;"><input type="text" id="ig_p5i1a4" placeholder="Angle 4&#8230;"></div></details>
     <details class="ig-d"><summary><span id="igDS_p5i2">Idea 2</span><span class="ig-d-tag">4 angles</span></summary><div class="ig-d-body"><input type="text" id="ig_p5i2a1" placeholder="Angle 1&#8230;"><input type="text" id="ig_p5i2a2" placeholder="Angle 2&#8230;"><input type="text" id="ig_p5i2a3" placeholder="Angle 3&#8230;"><input type="text" id="ig_p5i2a4" placeholder="Angle 4&#8230;"></div></details>
     <details class="ig-d"><summary><span id="igDS_p5i3">Idea 3</span><span class="ig-d-tag">4 angles</span></summary><div class="ig-d-body"><input type="text" id="ig_p5i3a1" placeholder="Angle 1&#8230;"><input type="text" id="ig_p5i3a2" placeholder="Angle 2&#8230;"><input type="text" id="ig_p5i3a3" placeholder="Angle 3&#8230;"><input type="text" id="ig_p5i3a4" placeholder="Angle 4&#8230;"></div></details>
@@ -970,7 +975,15 @@ details.ig-d[open] summary::after{content:'－'}
 
   <div style="border:1px solid var(--orange-border);background:var(--orange-tint);border-radius:10px;padding:16px 18px;margin-bottom:1.5rem">
     <div style="font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--orange);margin-bottom:8px">Stuck? Generate ideas with AI</div>
-    <p style="font-size:13px;color:var(--text);line-height:1.6;margin:0 0 12px">Paste the pillar or topic you&#8217;re struggling to fill &#8212; AI generates 10 specific content ideas you can add directly to Step 2 above.</p>
+    <p style="font-size:13px;color:var(--text);line-height:1.6;margin:0 0 12px">Paste the topic you&#8217;re struggling with &#8212; AI generates 10 ideas you can add directly to the pillar you select below.</p>
+    <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--dim);margin-bottom:5px">Add to pillar:</div>
+    <div class="ig-ai-psel" id="igAIPillarSel">
+      <button onclick="igSetTargetPillar(1)" id="igAIPS1" class="sel">P1</button>
+      <button onclick="igSetTargetPillar(2)" id="igAIPS2">P2</button>
+      <button onclick="igSetTargetPillar(3)" id="igAIPS3">P3</button>
+      <button onclick="igSetTargetPillar(4)" id="igAIPS4">P4</button>
+      <button onclick="igSetTargetPillar(5)" id="igAIPS5">P5</button>
+    </div>
     <input type="text" id="igAITopic" placeholder="Paste whichever topic you&#8217;re stuck on&#8230;" style="margin-bottom:8px">
     <button class="btn p" onclick="igGenerateIdeas()" id="igAIBtn" style="width:100%;margin-bottom:8px">Generate 10 Ideas &#8594;</button>
     <div id="igAIStatus" style="display:none;font-size:12px;color:var(--dim);padding:5px 0;line-height:1.5"></div>
@@ -1538,11 +1551,13 @@ function buildPlaybook(){
 // ─── GEAR ANALYZER ───
 // ─── IDEA GENERATION ───
 function igInit(){
+  if(!window._igTargetPillar)window._igTargetPillar=1;
   var hasPillars=false;
   for(var i=1;i<=5;i++){var el=document.getElementById('ig_pillar'+i);if(el&&el.value.trim()){hasPillars=true;break;}}
   if(!hasPillars)igPullPillars();
   else igSyncLabels();
   for(var p=1;p<=5;p++)for(var j=1;j<=4;j++)igSyncStep3(p,j);
+  igSetTargetPillar(window._igTargetPillar);
 }
 
 function igPullPillars(){
@@ -1571,12 +1586,21 @@ function igPullPillars(){
 
 function igSyncLabels(){
   for(var p=1;p<=5;p++){
-    var v=(document.getElementById('ig_pillar'+p)||{}).value||('Pillar '+p);
+    var v=(document.getElementById('ig_pillar'+p)||{}).value||'';
     var s2=document.getElementById('igS2P'+p+'lbl');
-    var s3=document.getElementById('igS3P'+p+'hdr');
-    if(s2)s2.textContent=v;
-    if(s3)s3.textContent=v;
+    var s3name=document.getElementById('igS3P'+p+'name');
+    var psel=document.getElementById('igAIPS'+p);
+    if(s2)s2.textContent=v||('Pillar '+p);
+    if(s3name)s3name.textContent=v;
+    if(psel)psel.textContent=v||('P'+p);
   }
+}
+
+function igSetTargetPillar(p){
+  window._igTargetPillar=p;
+  document.querySelectorAll('.ig-ai-psel button').forEach(function(b,i){
+    b.classList.toggle('sel',i+1===p);
+  });
 }
 
 function igSyncStep3(p,i){
@@ -1588,18 +1612,18 @@ function igSyncStep3(p,i){
 function igAddToList(idx){
   var text=window._igAILines&&window._igAILines[idx]||'';
   if(!text)return;
-  for(var p=1;p<=5;p++){
-    for(var i=1;i<=4;i++){
-      var el=document.getElementById('ig_p'+p+'i'+i);
-      if(el&&!el.value.trim()){
-        el.value=text;igSyncStep3(p,i);saveData();
-        var _e=el;_e.style.background='rgba(241,96,27,.15)';
-        setTimeout(function(){_e.style.background='';},800);
-        return;
-      }
+  var p=window._igTargetPillar||1;
+  for(var i=1;i<=4;i++){
+    var el=document.getElementById('ig_p'+p+'i'+i);
+    if(el&&!el.value.trim()){
+      el.value=text;igSyncStep3(p,i);saveData();
+      var _e=el;_e.style.background='rgba(241,96,27,.15)';
+      setTimeout(function(){_e.style.background='';},800);
+      return;
     }
   }
-  alert('All 20 idea slots are filled — clear one in Step 2 to make room.');
+  var pname=(document.getElementById('ig_pillar'+p)||{}).value||('Pillar '+p);
+  alert(pname+' is full (4/4 ideas). Select a different pillar or clear a slot in Step 2.');
 }
 
 function igAddTop2(){igAddToList(0);igAddToList(1);}
