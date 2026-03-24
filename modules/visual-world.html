@@ -787,6 +787,9 @@ textarea::placeholder,input[type=text]::placeholder{color:var(--dimmer)}
 .font-id-text strong{color:var(--text);}
 .font-id-img-preview{width:100%;max-height:180px;object-fit:cover;border-radius:var(--radius-md);border:1px solid var(--border);display:none;margin-bottom:12px;}
 .fi-results{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-md);padding:1rem;margin-top:12px;display:none;}
+.font-italic-btn{padding:0 10px;height:38px;background:var(--card);border:1px solid var(--border2);border-radius:var(--radius-md);font-style:italic;font-weight:700;font-size:14px;color:var(--dim);cursor:pointer;transition:all .15s;flex-shrink:0;line-height:1;}
+.font-italic-btn:hover{border-color:var(--orange);color:var(--orange);}
+.font-italic-btn.on{background:var(--orange-tint);border-color:var(--orange-border);color:var(--orange);}
 .fi-result-item{border:1px solid var(--border);border-radius:var(--radius-lg);padding:16px;margin-bottom:10px;background:var(--card);}
 .fi-result-item:last-child{margin-bottom:0;}
 .fi-preview{min-height:56px;padding:12px 14px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-md);margin-bottom:10px;display:flex;flex-direction:column;gap:4px;}
@@ -1245,10 +1248,14 @@ textarea::placeholder,input[type=text]::placeholder{color:var(--dimmer)}
     <div class="elbl">Enter Your Fonts</div>
 
     <div class="q" style="margin-top:0">Primary Font — headlines, hooks, title cards</div>
-    <div style="position:relative;margin-bottom:4px">
-      <input type="text" id="font-primary" placeholder="e.g. Bebas Neue, Playfair Display, Montserrat..." style="margin-bottom:0" oninput="gfSuggest('font-primary','gf-suggest-1');updateFontPreview('primary')">
-      <div id="gf-suggest-1" class="gf-suggest-list" style="display:none"></div>
+    <div style="display:flex;gap:6px;align-items:flex-start;margin-bottom:4px">
+      <div style="flex:1;position:relative">
+        <input type="text" id="font-primary" placeholder="e.g. Bebas Neue, Playfair Display, Montserrat..." style="margin-bottom:0" oninput="gfSuggest('font-primary','gf-suggest-1');updateFontPreview('primary')">
+        <div id="gf-suggest-1" class="gf-suggest-list" style="display:none"></div>
+      </div>
+      <button id="font-primary-italic-btn" class="font-italic-btn" onclick="toggleFontItalic('primary')" title="Toggle italic style">I</button>
     </div>
+    <input type="text" id="font-primary-italic" value="" style="display:none">
     <div id="font-preview-primary" style="display:none;border:1px solid var(--border);border-radius:var(--radius-md);padding:1rem 1.25rem;margin-bottom:.75rem;background:var(--card)">
       <div id="font-preview-primary-name" style="font-size:9.5px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--orange);margin-bottom:.5rem"></div>
       <div id="font-preview-primary-headline" style="font-size:26px;line-height:1.15;color:var(--text);margin-bottom:.35rem">Your Brand Headline</div>
@@ -1260,10 +1267,14 @@ textarea::placeholder,input[type=text]::placeholder{color:var(--dimmer)}
     </a>
 
     <div class="q">Body Font — captions, supporting copy, longer text</div>
-    <div style="position:relative;margin-bottom:4px">
-      <input type="text" id="font-secondary" placeholder="e.g. Inter, DM Sans, Source Sans Pro..." style="margin-bottom:0" oninput="gfSuggest('font-secondary','gf-suggest-2');updateFontPreview('secondary')">
-      <div id="gf-suggest-2" class="gf-suggest-list" style="display:none"></div>
+    <div style="display:flex;gap:6px;align-items:flex-start;margin-bottom:4px">
+      <div style="flex:1;position:relative">
+        <input type="text" id="font-secondary" placeholder="e.g. Inter, DM Sans, Source Sans Pro..." style="margin-bottom:0" oninput="gfSuggest('font-secondary','gf-suggest-2');updateFontPreview('secondary')">
+        <div id="gf-suggest-2" class="gf-suggest-list" style="display:none"></div>
+      </div>
+      <button id="font-secondary-italic-btn" class="font-italic-btn" onclick="toggleFontItalic('secondary')" title="Toggle italic style">I</button>
     </div>
+    <input type="text" id="font-secondary-italic" value="" style="display:none">
     <div id="font-preview-secondary" style="display:none;border:1px solid var(--border);border-radius:var(--radius-md);padding:1rem 1.25rem;margin-bottom:.75rem;background:var(--card)">
       <div id="font-preview-secondary-name" style="font-size:9.5px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--orange);margin-bottom:.5rem"></div>
       <div id="font-preview-secondary-body" style="font-size:14px;line-height:1.75;color:var(--dim);margin-bottom:.35rem">This is how your body copy and captions will look. Clean, readable, and consistent across every piece of content you create.</div>
@@ -2935,7 +2946,15 @@ initChecklists();
 /* Restore Pinterest embed if URL was saved */
 setTimeout(function(){ var l=document.getElementById('mbLink'); if(l&&l.value) updatePinterestEmbed(); }, 100);
 /* Restore font previews if fonts were saved */
-setTimeout(function(){ updateFontPreview('primary'); updateFontPreview('secondary'); }, 150);
+setTimeout(function(){
+  // Restore italic toggle button visual state from saved data
+  ['primary','secondary'].forEach(function(w){
+    var hidden = document.getElementById('font-'+w+'-italic');
+    var btn = document.getElementById('font-'+w+'-italic-btn');
+    if (hidden && btn) btn.classList.toggle('on', hidden.value === '1');
+  });
+  updateFontPreview('primary'); updateFontPreview('secondary');
+}, 150);
 var creatorList = document.getElementById('creator-list');
 if (creatorList) {
   loadCreators();
@@ -3181,34 +3200,42 @@ document.addEventListener('click', function(e) {
   }
 });
 
+function toggleFontItalic(which) {
+  var btn = document.getElementById('font-'+which+'-italic-btn');
+  var hidden = document.getElementById('font-'+which+'-italic');
+  if (!btn) return;
+  var isOn = btn.classList.toggle('on');
+  if (hidden) hidden.value = isOn ? '1' : '';
+  updateFontPreview(which);
+  saveData();
+}
+
 function updateFontPreview(which) {
   var inputId = which === 'primary' ? 'font-primary' : 'font-secondary';
   var input = document.getElementById(inputId);
   if (!input) return;
   var fontName = input.value.trim();
+  var isItalic = (document.getElementById('font-'+which+'-italic')||{}).value === '1';
   var previewWrap = document.getElementById('font-preview-' + which);
   if (!previewWrap) return;
   if (!fontName) { previewWrap.style.display = 'none'; return; }
   // Load font from Google Fonts
   var encoded = encodeURIComponent(fontName).replace(/%20/g,'+');
-  var existing = document.querySelector('link[data-gf="'+encoded+'"]');
-  if (!existing) {
+  if (!document.querySelector('link[data-gf="'+encoded+'"]')) {
     var link = document.createElement('link');
     link.rel = 'stylesheet';
     link.setAttribute('data-gf', encoded);
-    link.href = 'https://fonts.googleapis.com/css2?family='+encoded+':ital,wght@0,300;0,400;0,700;0,900;1,400&display=swap';
+    link.href = 'https://fonts.googleapis.com/css2?family='+encoded+':ital,wght@0,300;0,400;0,700;1,400&display=swap';
     document.head.appendChild(link);
   }
-  // Update preview name label
   var nameEl = document.getElementById('font-preview-' + which + '-name');
   if (nameEl) nameEl.textContent = fontName + (which === 'primary' ? ' — Primary Font' : ' — Body Font');
-  // Apply font family to preview text
   if (which === 'primary') {
     var hl = document.getElementById('font-preview-primary-headline');
-    if (hl) hl.style.fontFamily = '"'+fontName+'", sans-serif';
+    if (hl) { hl.style.fontFamily = '"'+fontName+'", sans-serif'; hl.style.fontStyle = isItalic ? 'italic' : 'normal'; }
   } else {
     var bl = document.getElementById('font-preview-secondary-body');
-    if (bl) bl.style.fontFamily = '"'+fontName+'", sans-serif';
+    if (bl) { bl.style.fontFamily = '"'+fontName+'", sans-serif'; bl.style.fontStyle = isItalic ? 'italic' : 'normal'; }
   }
   previewWrap.style.display = 'block';
 }
@@ -3262,14 +3289,25 @@ function typHandleFile(file) {
 }
 
 function _fiLoadFont(fontName) {
-  if (!fontName) return;
-  if (document.querySelector('link[data-fi="'+fontName+'"]')) return;
-  var link = document.createElement('link');
-  link.rel = 'stylesheet';
-  // Use display=block so preview only shows once the actual font is ready
-  link.href = 'https://fonts.googleapis.com/css2?family=' + fontName.replace(/\s+/g,'+') + '&display=block';
-  link.setAttribute('data-fi', fontName);
-  document.head.appendChild(link);
+  return new Promise(function(resolve) {
+    if (!fontName) { resolve(); return; }
+    var existing = document.querySelector('link[data-fi="'+fontName+'"]');
+    if (existing) {
+      // Already injected — just wait for the font to be available
+      document.fonts.load('400 1em "'+fontName+'"').then(resolve).catch(resolve);
+      return;
+    }
+    var link = document.createElement('link');
+    link.rel = 'stylesheet';
+    link.href = 'https://fonts.googleapis.com/css2?family=' + fontName.replace(/\s+/g,'+') + '&display=block';
+    link.setAttribute('data-fi', fontName);
+    link.onload = function() {
+      // CSS parsed — now wait for the actual font bytes
+      document.fonts.load('400 1em "'+fontName+'"').then(resolve).catch(resolve);
+    };
+    link.onerror = resolve;
+    document.head.appendChild(link);
+  });
 }
 
 async function typIdentifyFonts() {
@@ -3311,15 +3349,10 @@ async function typIdentifyFonts() {
       var jsonMatch = text.match(/\[[\s\S]*\]/);
       if (!jsonMatch) throw new Error('No JSON found');
       var fonts = JSON.parse(jsonMatch[0]);
-      // Inject Google Fonts links
-      fonts.forEach(function(f) { _fiLoadFont(f.googleFontName); });
-      // Wait for fonts to finish loading before rendering previews
+      // Load fonts and wait — _fiLoadFont returns a Promise that resolves only after
+      // the Google Fonts CSS is parsed AND the font bytes are available
       results.innerHTML = '<div class="fi-analyzing"><span class="fi-spin"></span>Loading font previews...</div>';
-      try {
-        await Promise.all(fonts.map(function(f) {
-          return document.fonts.load((f.isItalic ? 'italic ' : '') + '1em "' + f.googleFontName + '"').catch(function(){});
-        }));
-      } catch(fe){}
+      await Promise.all(fonts.map(function(f) { return _fiLoadFont(f.googleFontName); }));
       var html = '';
       fonts.forEach(function(f) {
         var fname = f.googleFontName || f.name;
@@ -3335,8 +3368,8 @@ async function typIdentifyFonts() {
         html += '<div class="fi-font-name">'+fname+(isItalic?' <span style="font-style:italic;font-weight:400;color:var(--dim);font-size:11px">italic</span>':'')+'</div>';
         html += '<div class="fi-font-desc">'+f.description+'</div>';
         html += '<div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap">';
-        html += '<button class="fi-btn primary" onclick="typFillFont(\''+fname+'\',\'font-primary\')">Use as Primary</button>';
-        html += '<button class="fi-btn" onclick="typFillFont(\''+fname+'\',\'font-secondary\')">Use as Body</button>';
+        html += '<button class="fi-btn primary" onclick="typFillFont(\''+fname+'\',\'font-primary\','+isItalic+')">Use as Primary</button>';
+        html += '<button class="fi-btn" onclick="typFillFont(\''+fname+'\',\'font-secondary\','+isItalic+')">Use as Body</button>';
         html += '<a href="'+gfUrl+'" target="_blank" class="fp-gf-link">Google Fonts &#8594;</a>';
         html += '</div></div>';
       });
@@ -3350,10 +3383,16 @@ async function typIdentifyFonts() {
   document.getElementById('fontIdBtn').disabled = false;
 }
 
-function typFillFont(fontName, inputId) {
+function typFillFont(fontName, inputId, isItalic) {
   var el = document.getElementById(inputId);
   if (!el) return;
   el.value = fontName;
+  // Set italic state
+  var which = inputId === 'font-primary' ? 'primary' : 'secondary';
+  var italicBtn = document.getElementById('font-'+which+'-italic-btn');
+  var italicHidden = document.getElementById('font-'+which+'-italic');
+  if (italicBtn) italicBtn.classList.toggle('on', !!isItalic);
+  if (italicHidden) italicHidden.value = isItalic ? '1' : '';
   el.dispatchEvent(new Event('input', {bubbles:true}));
   el.dispatchEvent(new Event('change', {bubbles:true}));
   saveData();
