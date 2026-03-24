@@ -224,7 +224,6 @@ textarea::placeholder,input[type=text]::placeholder{color:var(--dimmer)}
   body::before,#sidebar,.topbar,.tabs,.nr,.theme-btn{display:none!important}
   #layout{display:block!important}#main{margin-left:0!important;display:block!important}
   #wb{max-width:100%!important;padding:1rem!important}
-  body.print-guide #s8{display:block!important}
   body.print-full .sc{display:block!important}
 }
 </style>
@@ -292,11 +291,6 @@ textarea::placeholder,input[type=text]::placeholder{color:var(--dimmer)}
   </div>
   <div style="display:flex;justify-content:flex-end;margin-top:1rem">
     <button class="btn p" id="b0n" onclick="go(1)">Begin Workshop 1 →</button>
-  </div>
-  <div style="margin-top:1.5rem;padding-top:1.25rem;border-top:1px solid var(--border);display:flex;align-items:center;gap:10px;flex-wrap:wrap">
-    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--dimmer);flex-shrink:0"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
-    <span style="font-size:12.5px;color:var(--dim)">Prefer pen &amp; paper? Print the full workbook and complete it by hand.</span>
-    <button id="printFullBtn" class="btn" onclick="printFull()" style="margin-left:auto;font-size:11.5px">Print Full Workbook</button>
   </div>
 </div>
 
@@ -716,81 +710,15 @@ textarea::placeholder,input[type=text]::placeholder{color:var(--dimmer)}
     <div class="check-item" data-key="cf6"><div class="check-box"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div><div class="check-text">Origin Story &#8212; all 4 parts mapped and written</div></div>
     <div class="check-item" data-key="cf8"><div class="check-box"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div><div class="check-text">Brand Vision Statement &#8212; 3-year vision documented</div></div>
   </div>
-  <div class="nr"><button class="btn" onclick="go(6)">&#8592; Back</button><span class="si">7/7</span><button class="btn p" onclick="go(8)">Build My Foundation &#8594;</button></div>
+  <div class="nr"><button class="btn" onclick="go(6)">&#8592; Back</button><span class="si">7/7</span></div>
 </div>
 
-<!-- S8 FOUNDATION DOCUMENT -->
-<div class="sc" id="s8">
-  <div class="vg-cover">
-    <div class="vg-cover-bar"></div>
-    <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.14em;color:var(--orange);margin-bottom:8px">FSCreative &#8212; Module 01 &#183; Document</div>
-    <div class="vg-cover-name" id="vg-cover-name">Your Brand</div>
-    <div class="vg-cover-sub">Brand Foundation Document</div>
-  </div>
-  <div class="vg-sg-section">
-    <div class="vg-sg-label">01 &#8212; Brand Journey</div>
-    <div style="background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--orange);border-radius:0 var(--radius-md) var(--radius-md) 0;padding:1rem 1.2rem;margin-bottom:.75rem"><div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--orange);margin-bottom:5px">Brand Journey Statement</div><div style="font-size:14px;color:var(--text);line-height:1.75;font-style:italic" id="vg-journey"></div></div>
-    <div class="vg-field-grid">
-      <div class="vg-field-card"><div class="vg-field-lbl">Desired Outcome</div><div class="vg-field-val" id="vg-outcome"></div></div>
-      <div class="vg-field-card"><div class="vg-field-lbl">Known For</div><div class="vg-field-val" id="vg-knownfor"></div></div>
-      <div class="vg-field-card"><div class="vg-field-lbl">Actions</div><div class="vg-field-val" id="vg-actions"></div></div>
-      <div class="vg-field-card"><div class="vg-field-lbl">Learning Priority</div><div class="vg-field-val" id="vg-learn"></div></div>
-    </div>
-  </div>
-  <div class="vg-sg-section">
-    <div class="vg-sg-label">02 &#8212; Avatar</div>
-    <div style="background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--orange);border-radius:0 var(--radius-md) var(--radius-md) 0;padding:1rem 1.2rem;margin-bottom:.75rem"><div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--orange);margin-bottom:5px">Avatar Statement</div><div style="font-size:14px;color:var(--text);line-height:1.75;font-style:italic" id="vg-avatar"></div></div>
-    <div class="vg-field-grid">
-      <div class="vg-field-card"><div class="vg-field-lbl">Demographics</div><div class="vg-field-val" id="vg-demo"></div></div>
-      <div class="vg-field-card"><div class="vg-field-lbl">Primary Struggle</div><div class="vg-field-val" id="vg-struggle"></div></div>
-      <div class="vg-field-card"><div class="vg-field-lbl">Desired Outcome</div><div class="vg-field-val" id="vg-avdesired"></div></div>
-      <div class="vg-field-card"><div class="vg-field-lbl">Where They Hang Out</div><div class="vg-field-val" id="vg-platforms"></div></div>
-    </div>
-  </div>
-  <div class="vg-sg-section">
-    <div class="vg-sg-label">03 &#8212; Core Mission + Ikigai</div>
-    <div style="background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--orange);border-radius:0 var(--radius-md) var(--radius-md) 0;padding:1rem 1.2rem;margin-bottom:.75rem"><div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--orange);margin-bottom:5px">Core Mission Statement</div><div style="font-size:14px;color:var(--text);line-height:1.75;font-style:italic" id="vg-mission"></div></div>
-    <div class="vg-field-card"><div class="vg-field-lbl">Ikigai</div><div class="vg-field-val" id="vg-ikigai"></div></div>
-  </div>
-  <div class="vg-sg-section">
-    <div class="vg-sg-label">04 &#8212; Core Values</div>
-    <div class="vg-values-grid" id="vg-values"></div>
-  </div>
-  <div class="vg-sg-section">
-    <div class="vg-sg-label">05 &#8212; Content Pillars</div>
-    <div class="vg-pillars-grid" id="vg-pillars"></div>
-  </div>
-  <div class="vg-sg-section">
-    <div class="vg-sg-label">06 &#8212; Origin Story</div>
-    <div class="vg-narrative-card"><div class="vg-narrative-text" id="vg-story"></div></div>
-  </div>
-  <div class="vg-sg-section">
-    <div class="vg-sg-label">07 &#8212; Brand Vision</div>
-    <div style="background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--orange);border-radius:0 var(--radius-md) var(--radius-md) 0;padding:1rem 1.2rem;margin-bottom:.75rem">
-      <div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--orange);margin-bottom:5px">Brand Vision Statement</div>
-      <div style="font-size:14px;color:var(--text);line-height:1.75;font-style:italic" id="vg-vision"></div>
-    </div>
-    <div class="vg-field-grid">
-      <div class="vg-field-card"><div class="vg-field-lbl">3-Year Vision</div><div class="vg-field-val" id="vg-vision3yr"></div></div>
-      <div class="vg-field-card"><div class="vg-field-lbl">Impact</div><div class="vg-field-val" id="vg-visionimpact"></div></div>
-    </div>
-  </div>
-  <div class="div"></div>
-  <div class="ins"><p>Your Brand Foundation is not finished when you complete this module &#8212; it&#8217;s a living document. The goal right now is not perfection. The goal is clarity. A clear, defined Brand Foundation that&#8217;s 80% right is infinitely more powerful than a perfect one that exists only in your head. Define it. Document it. Use it. Refine it as you grow.</p></div>
-  <div class="nr">
-    <button class="btn" onclick="go(7)">&#8592; Back</button>
-    <div style="display:flex;gap:8px">
-      <button class="btn" onclick="printFull()" style="font-size:11.5px">Print Workbook</button>
-      <button class="btn p" onclick="printGuide()">Print Foundation Doc &#8594;</button>
-    </div>
-  </div>
-</div>
 
 </div></div></div>
 
 <script>
-var TABS=['Intro','Brand Journey','Avatar','Mission','Values','Pillars','Origin Story','Brand Vision','Your Brand Foundation'];
-var ICONS=['<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>','<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>','<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>','<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>','<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>','<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>','<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>','<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>','<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>'];
+var TABS=['Intro','Brand Journey','Avatar','Mission','Values','Pillars','Origin Story','Brand Vision'];
+var ICONS=['<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>','<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>','<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>','<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>','<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>','<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>','<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>','<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>'];
 var KEY='cfww-v2';
 /* ── SUPABASE SYNC ── */
 var SUPABASE_URL  = 'https://ljddfhzrjvxpedvfebli.supabase.co';
@@ -855,9 +783,9 @@ function updateProgress(){
 }
 
 function go(n){
-  if(cur>0&&cur<8)done[cur]=true;
+  if(!document.getElementById('s'+n))n=0;
+  if(cur>0&&cur<7)done[cur]=true;
   cur=n;
-  if(n===8){buildDoc();done[7]=true;}
   document.querySelectorAll('.sc').forEach(function(s){s.classList.remove('show');});
   var sec=document.getElementById('s'+n);if(sec)sec.classList.add('show');
   buildNav();updateProgress();saveData();window.scrollTo(0,0);
@@ -1145,29 +1073,6 @@ async function generateBrandVision(){
 
 function esc(s){return(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
 
-function buildDoc(){
-  var brand=(gv('brandName')||'Your Brand').toUpperCase();
-  var nm=document.getElementById('vg-cover-name');if(nm)nm.textContent=brand;
-  function sv(fid,eid){var e=document.getElementById(eid);if(e)e.textContent=gv(fid)||'&#8212;';}
-  sv('brandJourneyStmt','vg-journey');sv('q1outcome','vg-outcome');sv('q2known','vg-knownfor');
-  sv('q3do','vg-actions');sv('q4learn','vg-learn');sv('avatarStatement','vg-avatar');
-  var demo=[gv('av1Age'),gv('av1Occupation')].filter(Boolean).join(' \u00b7 ');
-  var de=document.getElementById('vg-demo');if(de)de.textContent=demo||'—';
-  sv('av1Struggle','vg-struggle');sv('av1Desired','vg-avdesired');
-  var plat=[gv('av1Platforms')].filter(Boolean).join(' \u00b7 ');
-  var pe=document.getElementById('vg-platforms');if(pe)pe.textContent=plat||'—';
-  sv('coreMission','vg-mission');sv('ikigaiCenter','vg-ikigai');sv('originStory','vg-story');
-  sv('brandVision','vg-vision');sv('vision3yr','vg-vision3yr');sv('visionImpact','vg-visionimpact');
-  /* values */
-  var vg=document.getElementById('vg-values');
-  if(vg){var vh='';for(var i=1;i<=5;i++){var nm2=gv('val'+i+'name');if(nm2)vh+='<div class="vg-val-card"><div class="vg-val-name">'+esc(nm2)+'</div><div class="vg-val-practice">'+esc(gv('val'+i+'practice'))+'</div></div>';}vg.innerHTML=vh||'<div class="vg-field-card" style="grid-column:1/-1"><div class="vg-field-val" style="color:var(--dimmer)">Complete Workshop 4.</div></div>';}
-  /* pillars */
-  var pg=document.getElementById('vg-pillars');
-  if(pg){var ph='';for(var j=1;j<=5;j++){var pn=gv('pillar'+j+'name');if(pn)ph+='<div class="vg-pillar-card"><div class="vg-pillar-name">'+esc(pn)+'</div><div class="vg-pillar-sub">'+esc(gv('pillar'+j+'sub'))+'</div></div>';}pg.innerHTML=ph||'<div class="vg-field-card" style="grid-column:1/-1"><div class="vg-field-val" style="color:var(--dimmer)">Complete Workshop 5.</div></div>';}
-}
-
-function printFull(){document.body.classList.add('print-full');window.print();document.body.classList.remove('print-full');}
-function printGuide(){document.body.classList.add('print-guide');buildDoc();window.print();document.body.classList.remove('print-guide');}
 
 buildNav();initOpts();wireSave();loadData();initChecklists();go(cur);
 
