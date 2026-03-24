@@ -298,7 +298,6 @@ textarea::placeholder,input[type=text]::placeholder{color:var(--dimmer)}
 <div class="sc" id="s1">
   <div class="pl">Workshop 1</div>
   <h1>Brand Journey Framework</h1>
-  <p class="intro">Four questions that work backwards from your desired outcome to give you complete clarity on what you need to do today. This is your North Star &#8212; come back to it whenever you feel lost.</p>
   <p style="font-size:14px;color:var(--dim);line-height:1.8;margin-bottom:1.5rem;"><strong style="color:var(--text)">Why this comes first.</strong> Most creators start building without knowing where they're going (I did). They post content because they think they should. Six months later they're exhausted, scattered, in the same place — and they quit.<br><br>These four questions work backwards from your desired outcome to give you complete clarity on what you need to do today. This is your North Star — come back to it whenever you feel lost.</p>
   <div class="ec">
     <div class="elbl">Question 1 &#8212; What is my desired outcome?</div>
@@ -331,7 +330,7 @@ textarea::placeholder,input[type=text]::placeholder{color:var(--dimmer)}
     <div class="ai-status" id="bjStatus"></div>
     <div class="ai-result" id="bjResult"></div>
     <div class="q" style="margin-top:.5rem">&#8220;I want to [desired outcome] by being known for [known for] through [actions] starting with [learning].&#8221;</div>
-    <textarea rows="3" id="brandJourneyStmt" placeholder="Write or paste your Brand Journey Statement here..."></textarea>
+    <textarea rows="3" id="brandJourneyStmt" placeholder="Generate and modify your Brand Journey Statement here..."></textarea>
   </div>
   <div class="nr"><button class="btn" onclick="go(0)">&#8592; Back</button><span class="si">1/7</span><button class="btn p" onclick="go(2)">Save &amp; Continue &#8594;</button></div>
 </div>
@@ -893,7 +892,7 @@ function gv(id){var e=document.getElementById(id);return e?e.value.trim():'';}
 async function callClaude(prompt, maxTok){
   var res=await fetch('https://ljddfhzrjvxpedvfebli.supabase.co/functions/v1/claude-proxy',{
     method:'POST',
-    headers:{'Content-Type':'application/json','apikey':'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxqZGRmaHpyanZ4cGVkdmZlYmxpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM5NTEzNjMsImV4cCI6MjA4OTUyNzM2M30.GqZMRvBlZyN4rmr9MrfxLcLSB04d7s59ZPfEw-dQwks'},
+    headers:{'Content-Type':'application/json','Authorization':'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxqZGRmaHpyanZ4cGVkdmZlYmxpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM5NTEzNjMsImV4cCI6MjA4OTUyNzM2M30.GqZMRvBlZyN4rmr9MrfxLcLSB04d7s59ZPfEw-dQwks'},
     body:JSON.stringify({prompt:prompt,maxTokens:maxTok||1000})
   });
   var data=await res.json();
