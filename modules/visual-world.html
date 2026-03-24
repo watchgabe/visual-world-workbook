@@ -787,12 +787,17 @@ textarea::placeholder,input[type=text]::placeholder{color:var(--dimmer)}
 .font-id-text strong{color:var(--text);}
 .font-id-img-preview{width:100%;max-height:180px;object-fit:cover;border-radius:var(--radius-md);border:1px solid var(--border);display:none;margin-bottom:12px;}
 .fi-results{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-md);padding:1rem;margin-top:12px;display:none;}
-.fi-result-item{border-bottom:1px solid var(--border);padding:12px 0;}
-.fi-result-item:last-child{border-bottom:none;padding-bottom:0;}
-.fi-font-name{font-size:14px;font-weight:700;color:var(--text);margin-bottom:3px;}
+.fi-result-item{border:1px solid var(--border);border-radius:var(--radius-lg);padding:16px;margin-bottom:10px;background:var(--card);}
+.fi-result-item:last-child{margin-bottom:0;}
+.fi-preview{min-height:56px;padding:12px 14px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-md);margin-bottom:10px;display:flex;flex-direction:column;gap:4px;}
+.fi-preview-lg{font-size:2rem;line-height:1.2;color:var(--text);}
+.fi-preview-sm{font-size:13px;color:var(--dim);}
+.fi-font-name{font-size:13px;font-weight:700;color:var(--text);margin-bottom:2px;}
 .fi-font-desc{font-size:12px;color:var(--dim);line-height:1.5;margin-bottom:8px;}
 .fi-btn{padding:5px 12px;background:var(--surface);border:1px solid var(--border2);border-radius:var(--radius-md);font-size:11px;color:var(--dim);cursor:pointer;font-family:var(--font);transition:all .15s;margin-right:6px;}
 .fi-btn:hover{border-color:var(--orange);color:var(--orange);}
+.fi-btn.primary{background:var(--orange);border-color:var(--orange);color:#fff;font-weight:600;}
+.fi-btn.primary:hover{background:var(--orange-hover);}
 .fi-analyzing{text-align:center;padding:1.5rem;color:var(--dim);font-size:13px;}
 .fi-spin{display:inline-block;width:14px;height:14px;border:2px solid var(--border2);border-top-color:var(--orange);border-radius:50%;animation:aispin .6s linear infinite;vertical-align:middle;margin-right:6px;}
 .gf-suggest-list{position:absolute;top:100%;left:0;right:0;background:var(--card);border:1px solid var(--border2);border-radius:0 0 var(--radius-md) var(--radius-md);z-index:100;max-height:160px;overflow-y:auto;}
@@ -3248,6 +3253,19 @@ function typHandleFile(file) {
   reader.readAsDataURL(file);
 }
 
+function _fiLoadFont(fontName, isItalic) {
+  if (!fontName) return;
+  var key = fontName + (isItalic ? ':i' : '');
+  if (document.querySelector('link[data-fi="'+key+'"]')) return; // already loaded
+  var family = fontName.replace(/\s+/g, '+');
+  var variants = isItalic ? 'ital,wght@0,400;0,700;1,400' : 'wght@400;700';
+  var url = 'https://fonts.googleapis.com/css2?family=' + family + ':' + variants + '&display=swap';
+  var link = document.createElement('link');
+  link.rel = 'stylesheet'; link.href = url;
+  link.setAttribute('data-fi', key);
+  document.head.appendChild(link);
+}
+
 async function typIdentifyFonts() {
   if (!typCurrentFile) return;
   var results = document.getElementById('fontIdResults');
@@ -3274,7 +3292,7 @@ async function typIdentifyFonts() {
           role: 'user',
           content: [
             {type:'image', source:{type:'base64', media_type:mediaType, data:b64}},
-            {type:'text', text:'Look at the typography in this image. Identify up to 3 fonts you can see. For each one, respond in this exact JSON format (no other text):\n\n[{"name":"Font Name or closest match","description":"Brief description of the style (1 sentence)","googleFontsAlternative":"Closest free Google Fonts equivalent","googleFontsUrl":"https://fonts.google.com/specimen/Name","role":"headline|body|display","confidence":"high|medium|low"}]\n\nIf you cannot identify a specific font, name the closest Google Fonts equivalent based on the style. Always return valid JSON array.'}
+            {type:'text', text:'Look at the main font/typography style in this image. Return exactly 3 free Google Fonts that match this style — from closest match to more creative alternatives.\n\nFor each return:\n- googleFontName: exact name as it appears on fonts.google.com (e.g. "Libre Bodoni", "Playfair Display")\n- isItalic: true if the style in the image is italic, otherwise false\n- description: one sentence on why it matches or how it differs from the others\n- role: "headline" or "body"\n\nReturn ONLY a valid JSON array of exactly 3 items:\n[{"googleFontName":"...","isItalic":false,"description":"...","role":"headline"}]\nOnly return the JSON, no other text.'}
           ]
         }]
       })
@@ -3287,20 +3305,26 @@ async function typIdentifyFonts() {
       var jsonMatch = text.match(/\[[\s\S]*\]/);
       if (!jsonMatch) throw new Error('No JSON found');
       var fonts = JSON.parse(jsonMatch[0]);
+      // Load all fonts from Google Fonts before rendering
+      fonts.forEach(function(f) { _fiLoadFont(f.googleFontName, f.isItalic); });
       var html = '';
       fonts.forEach(function(f) {
+        var fname = f.googleFontName || f.name;
+        var isItalic = !!f.isItalic;
+        var previewStyle = 'font-family:"'+fname+'",serif;'+(isItalic?'font-style:italic;':'');
+        var gfUrl = 'https://fonts.google.com/specimen/'+fname.replace(/\s+/g,'+');
         html += '<div class="fi-result-item">';
-        html += '<div class="fi-font-name">'+f.name+'</div>';
-        html += '<div class="fi-font-desc">'+f.description;
-        if (f.googleFontsAlternative && f.googleFontsAlternative !== f.name) {
-          html += ' Free alternative: <strong>'+f.googleFontsAlternative+'</strong>';
-        }
+        // Live font preview
+        html += '<div class="fi-preview">';
+        html += '<div class="fi-preview-lg" style="'+previewStyle+'">Aa Bb Cc Dd Ee Ff</div>';
+        html += '<div class="fi-preview-sm" style="'+previewStyle+'">The quick brown fox jumps over the lazy dog</div>';
         html += '</div>';
-        html += '<div style="margin-top:7px">';
-        var useTarget = (f.role === 'body') ? 'font-secondary' : 'font-primary';
-        var useFont = f.googleFontsAlternative || f.name;
-        html += '<button class="fi-btn" onclick="typFillFont(\''+useFont+'\',\''+useTarget+'\')">Use as '+(useTarget==='font-primary'?'Primary':'Body')+'</button>';
-        if (f.googleFontsUrl) html += '<a href="'+f.googleFontsUrl+'" target="_blank" class="fp-gf-link">View on Google Fonts &#8594;</a>';
+        html += '<div class="fi-font-name">'+fname+(isItalic?' <span style="font-style:italic;font-weight:400;color:var(--dim);font-size:11px">italic</span>':'')+'</div>';
+        html += '<div class="fi-font-desc">'+f.description+'</div>';
+        html += '<div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap">';
+        html += '<button class="fi-btn primary" onclick="typFillFont(\''+fname+'\',\'font-primary\')">Use as Primary</button>';
+        html += '<button class="fi-btn" onclick="typFillFont(\''+fname+'\',\'font-secondary\')">Use as Body</button>';
+        html += '<a href="'+gfUrl+'" target="_blank" class="fp-gf-link">Google Fonts &#8594;</a>';
         html += '</div></div>';
       });
       results.innerHTML = html || '<div class="fi-analyzing">No fonts identified. Try a clearer image.</div>';
