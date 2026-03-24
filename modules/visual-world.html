@@ -1681,7 +1681,7 @@ async function palExtractColors() {
           role: 'user',
           content: [
             {type:'image',source:{type:'base64',media_type:palPhotoMime,data:palPhotoBase64}},
-            {type:'text',text:'Analyze this image and extract 3 distinct color palette options from it. For each palette, give me exactly 4 hex codes (Primary, Secondary, Accent, Neutral) and a short palette name (2-3 words). Format your response as valid JSON array:\n[\n  {\n    "name": "Palette Name",\n    "mood": "One sentence mood description",\n    "primary": "#hexcode",\n    "secondary": "#hexcode",\n    "accent": "#hexcode",\n    "neutral": "#hexcode"\n  },\n  ... (3 total)\n]\nOnly return the JSON, no other text.'}
+            {type:'text',text:'Analyze this image and extract 3 distinct color palette options. Make them genuinely different from each other:\n- Palette 1: Minimal — only 1 vibrant/bold color from the image, the other 3 slots should be neutral tones (whites, creams, beiges, soft grays, or near-black). This is the "safe starter" palette.\n- Palette 2: Balanced — 2 colors with personality + 2 neutrals.\n- Palette 3: More expressive — 3 colors with character pulled from the image.\n\nFor each, give exactly 4 hex codes (Primary, Secondary, Accent, Neutral) and a short 2-3 word palette name. Return ONLY a valid JSON array:\n[\n  {\n    "name": "Palette Name",\n    "mood": "One sentence mood description",\n    "primary": "#hexcode",\n    "secondary": "#hexcode",\n    "accent": "#hexcode",\n    "neutral": "#hexcode"\n  }\n]\nOnly return the JSON, no other text.'}
           ]
         }]
       })
@@ -1716,9 +1716,9 @@ function renderPalExtractResults(palettes) {
       '<div style="flex:1;background:'+a+'"></div>' +
       '<div style="flex:1.5;background:'+n+'"></div>' +
       '</div>' +
-      '<div style="padding:.75rem 1rem;background:var(--surface);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px">' +
-      '<div><div style="font-size:13px;font-weight:600;color:var(--text);margin-bottom:2px">'+pal.name+'</div>' +
-      '<div style="font-size:11px;color:var(--dimmer)">'+pal.mood+'</div></div>' +
+      '<div style="padding:.75rem 1rem;background:var(--surface)">' +
+      '<div style="font-size:13px;font-weight:600;color:var(--text);margin-bottom:2px">'+pal.name+'</div>' +
+      '<div style="font-size:11px;color:var(--dimmer);margin-bottom:10px">'+pal.mood+'</div>' +
       '<div style="display:flex;gap:5px;align-items:center;flex-wrap:wrap">' +
       [p,s,a,n].map(function(h){
         return '<span style="font-size:10px;font-family:monospace;color:var(--dim);background:var(--card);border:1px solid var(--border);border-radius:3px;padding:2px 6px">'+h+'</span>';
