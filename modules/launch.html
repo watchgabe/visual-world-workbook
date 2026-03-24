@@ -307,7 +307,7 @@ textarea::placeholder,input[type=text]::placeholder{color:var(--dimmer)}
     <div class="check-item" data-key="f3"><div class="check-box"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div><div class="check-text">Offer defined with clear price point and conversion mechanism</div></div>
   </div>
 
-  <div class="nr"><button class="btn" onclick="go(1)">&#8592; Back</button><span class="si">2/7</span><button class="btn p" onclick="go(3)">Save &amp; Continue &#8594;</button></div>
+  <div class="nr"><button class="btn" onclick="go(1)">&#8592; Back</button><span class="si">2/6</span><button class="btn p" onclick="go(3)">Save &amp; Continue &#8594;</button></div>
 </div>
 
 <!-- S2 MANYCHAT & NEWSLETTER -->
@@ -344,7 +344,7 @@ textarea::placeholder,input[type=text]::placeholder{color:var(--dimmer)}
   <h2>Why These Two Platforms</h2>
   <div class="ins"><p>Social media is rented land. Every follower you have lives on a platform that can change its algorithm, ban your account, or disappear entirely. ManyChat converts that rented attention into owned contacts. Email is where the relationship deepens into real trust &#8212; and real trust is what drives sales. Together, ManyChat and email are the infrastructure that makes your content work for you long after you&#8217;ve posted it.</p></div>
 
-  <div class="nr"><button class="btn" onclick="go(2)">&#8592; Back</button><span class="si">3/7</span><button class="btn p" onclick="go(4)">Save &amp; Continue &#8594;</button></div>
+  <div class="nr"><button class="btn" onclick="go(2)">&#8592; Back</button><span class="si">3/6</span><button class="btn p" onclick="go(4)">Save &amp; Continue &#8594;</button></div>
 </div>
 
 <!-- S3 LEAD MAGNET -->
@@ -416,7 +416,7 @@ textarea::placeholder,input[type=text]::placeholder{color:var(--dimmer)}
     <div class="check-item" data-key="lm5"><div class="check-box"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div><div class="check-text">Delivery set up and connected to email platform</div></div>
   </div>
 
-  <div class="nr"><button class="btn" onclick="go(3)">&#8592; Back</button><span class="si">4/7</span><button class="btn p" onclick="go(5)">Save &amp; Continue &#8594;</button></div>
+  <div class="nr"><button class="btn" onclick="go(3)">&#8592; Back</button><span class="si">4/6</span><button class="btn p" onclick="go(5)">Save &amp; Continue &#8594;</button></div>
 </div>
 
 <!-- S4 BIO -->
@@ -540,7 +540,7 @@ textarea::placeholder,input[type=text]::placeholder{color:var(--dimmer)}
     <div class="check-item" data-key="b7"><div class="check-box"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div><div class="check-text">All 5 elements updated across every active platform</div></div>
   </div>
 
-  <div class="nr"><button class="btn" onclick="go(0)">&#8592; Back</button><span class="si">1/7</span><button class="btn p" onclick="go(2)">Save &amp; Continue &#8594;</button></div>
+  <div class="nr"><button class="btn" onclick="go(0)">&#8592; Back</button><span class="si">1/6</span><button class="btn p" onclick="go(2)">Save &amp; Continue &#8594;</button></div>
 </div>
 
 <!-- S5 LAUNCH CONTENT -->
@@ -630,7 +630,7 @@ textarea::placeholder,input[type=text]::placeholder{color:var(--dimmer)}
     <div class="check-item" data-key="lc5"><div class="check-box"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div><div class="check-text">Each video CTA points to your lead magnet</div></div>
   </div>
 
-  <div class="nr"><button class="btn" onclick="go(4)">&#8592; Back</button><span class="si">5/7</span><button class="btn p" onclick="go(6)">Save &amp; Continue &#8594;</button></div>
+  <div class="nr"><button class="btn" onclick="go(4)">&#8592; Back</button><span class="si">5/6</span><button class="btn p" onclick="go(6)">Save &amp; Continue &#8594;</button></div>
 </div>
 
 <!-- S6 CALENDAR & GOALS -->
@@ -843,9 +843,14 @@ function gv(id){var e=document.getElementById(id);return e?e.value.trim():'';}
 function gs(g){var e=document.querySelector('.opt.sel[data-g="'+g+'"]');return e?e.textContent.trim():'';}
 
 async function callClaude(prompt){
-  var res=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1000,messages:[{role:'user',content:prompt}]})});
+  var res=await fetch('https://ljddfhzrjvxpedvfebli.supabase.co/functions/v1/claude-proxy',{
+    method:'POST',
+    headers:{'Content-Type':'application/json','apikey':'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxqZGRmaHpyanZ4cGVkdmZlYmxpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDc2MDc2MzgsImV4cCI6MjA2MzE4MzYzOH0.qJR_LtPu7qH0QNPmv1lnkk6U2p5EJm7RVInH7T5mDsU'},
+    body:JSON.stringify({prompt:prompt,maxTokens:1000})
+  });
   var data=await res.json();
-  return data.content.map(function(b){return b.text||'';}).join('');
+  if(data.error)throw new Error(data.error||'API error');
+  return data.text||'';
 }
 function setStatus(id,state,msg){var e=document.getElementById(id);if(!e)return;e.className='ai-status '+state;e.innerHTML=msg;}
 function showResult(id,text){var e=document.getElementById(id);if(!e)return;e.textContent=text;e.classList.add('show');}
@@ -906,8 +911,7 @@ function laSyncToSupabase(){
 var LA_IN_FRAME=(window.self!==window.top);
 if(LA_IN_FRAME){
   var sidebar=document.getElementById('sidebar');if(sidebar)sidebar.style.display='none';
-  var main=document.getElementById('main');if(main){main.style.marginLeft='0';main.style.width='100%';}
-  var wb=document.getElementById('wb');if(wb)wb.style.maxWidth='100%';
+  var main=document.getElementById('main');if(main){main.style.marginLeft='0';}
   var topbar=document.querySelector('.topbar');if(topbar)topbar.style.display='none';
   var tabbar=document.getElementById('tabbar');if(tabbar)tabbar.style.display='none';
   var identityModal=document.getElementById('identity-modal');if(identityModal)identityModal.style.display='none';
@@ -919,12 +923,7 @@ function laNotifyShell(){
 }
 window.addEventListener('message',function(e){
   if(!e.data||e.data.type!=='navigate')return;
-  var n=e.data.to;
-  cur=n;
-  document.querySelectorAll('.sc').forEach(function(s){s.classList.remove('show');});
-  var sec=document.getElementById('s'+n);if(sec)sec.classList.add('show');
-  buildNav();updateProgress();saveData();window.scrollTo(0,0);
-  laNotifyShell();
+  go(e.data.to);
 });
 var _laGo=go;
 go=function(n){_laGo(n);laNotifyShell();};

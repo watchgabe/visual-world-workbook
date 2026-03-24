@@ -891,25 +891,14 @@ function loadData(){
 function gv(id){var e=document.getElementById(id);return e?e.value.trim():'';}
 
 async function callClaude(prompt, maxTok){
-  var apiKey=localStorage.getItem('fsc-anthropic-key')||'';
-  if(!apiKey){throw new Error('No API key — set it in admin.html');}
-  var res=await fetch('https://api.anthropic.com/v1/messages',{
+  var res=await fetch('https://ljddfhzrjvxpedvfebli.supabase.co/functions/v1/claude-proxy',{
     method:'POST',
-    headers:{
-      'Content-Type':'application/json',
-      'x-api-key':apiKey,
-      'anthropic-version':'2023-06-01',
-      'anthropic-dangerous-direct-browser-calls':'true'
-    },
-    body:JSON.stringify({
-      model:'claude-opus-4-5',
-      max_tokens:maxTok||1000,
-      messages:[{role:'user',content:prompt}]
-    })
+    headers:{'Content-Type':'application/json','apikey':'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxqZGRmaHpyanZ4cGVkdmZlYmxpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM5NTEzNjMsImV4cCI6MjA4OTUyNzM2M30.GqZMRvBlZyN4rmr9MrfxLcLSB04d7s59ZPfEw-dQwks'},
+    body:JSON.stringify({prompt:prompt,maxTokens:maxTok||1000})
   });
   var data=await res.json();
-  if(data.error)throw new Error(data.error.message||'API error');
-  return data.content.map(function(b){return b.text||'';}).join('');
+  if(data.error)throw new Error(data.error||'API error');
+  return data.text||'';
 }
 
 function setStatus(id,state,msg){var e=document.getElementById(id);if(!e)return;e.className='ai-status '+state;e.innerHTML=msg;}
