@@ -226,9 +226,19 @@ textarea::placeholder,input[type=text]::placeholder{color:var(--dimmer)}
 
 /* ─── COLOR INPUT WITH SWATCH ─── */
 .color-row{display:flex;align-items:center;gap:8px;margin-bottom:9px;}
-.color-swatch{width:32px;height:32px;border-radius:var(--radius-md);border:1px solid var(--border);flex-shrink:0;transition:background .2s;cursor:pointer;position:relative;}
-.color-swatch:hover::after{content:'';position:absolute;inset:0;border-radius:inherit;background:rgba(255,255,255,.15);}
-.color-swatch input[type=color]{position:absolute;inset:0;width:100%;height:100%;opacity:0;cursor:pointer;border:none;padding:0;}
+.color-swatch{width:32px;height:32px;border-radius:var(--radius-md);border:1px solid var(--border);flex-shrink:0;transition:background .2s,border-color .2s;cursor:pointer;position:relative;}
+.color-swatch:hover{border-color:var(--orange)!important;}
+.color-swatch:hover::after{content:'';position:absolute;inset:0;border-radius:inherit;background:rgba(255,255,255,.12);}
+
+/* ─── CUSTOM COLOR PICKER DIALOG ─── */
+#cp-dialog{position:fixed;z-index:9500;background:var(--card);border:1px solid var(--border2);border-radius:12px;padding:14px;width:236px;box-shadow:0 12px 40px rgba(0,0,0,.7);display:none;}
+#cp-canvas{display:block;width:100%;height:148px;border-radius:6px;cursor:crosshair;margin-bottom:10px;touch-action:none;}
+#cp-hue-track{height:14px;border-radius:7px;background:linear-gradient(to right,#f00,#ff0,#0f0,#0ff,#00f,#f0f,#f00);position:relative;cursor:pointer;margin-bottom:12px;user-select:none;touch-action:none;}
+#cp-hue-thumb{position:absolute;top:50%;transform:translate(-50%,-50%);width:20px;height:20px;border-radius:50%;border:2.5px solid #fff;box-shadow:0 1px 5px rgba(0,0,0,.5);pointer-events:none;transition:left .05s;}
+#cp-bottom-row{display:flex;gap:8px;align-items:center;margin-bottom:10px;}
+#cp-preview{width:32px;height:32px;border-radius:6px;border:1px solid var(--border);flex-shrink:0;transition:background .1s;}
+#cp-hex-field{margin:0!important;flex:1;font-family:monospace;font-size:13px;letter-spacing:.03em;}
+#cp-apply{width:100%;justify-content:center;}
 .color-row input[type=text]{margin-bottom:0;flex:1;}
 
 /* ─── OPTION GRIDS ─── */
@@ -1121,24 +1131,24 @@ textarea::placeholder,input[type=text]::placeholder{color:var(--dimmer)}
 
     <div class="q">Primary Color — your dominant brand color</div>
     <div class="color-row">
-      <div class="color-swatch" id="sw-primary"><input type="color" id="cp-primary" oninput="cpSync('cp-primary','col-primary')"></div>
+      <div class="color-swatch" id="sw-primary" onclick="cpOpen('sw-primary','col-primary')"></div>
       <input type="text" id="col-primary" placeholder="#hex or color name — e.g. #F0601B" style="margin-bottom:0">
     </div>
     <div class="q">Secondary Color — your supporting color</div>
     <div class="color-row">
-      <div class="color-swatch" id="sw-secondary"><input type="color" id="cp-secondary" oninput="cpSync('cp-secondary','col-secondary')"></div>
+      <div class="color-swatch" id="sw-secondary" onclick="cpOpen('sw-secondary','col-secondary')"></div>
       <input type="text" id="col-secondary" placeholder="#hex or color name — e.g. #1A1A1A" style="margin-bottom:0">
     </div>
 
     <div class="q">Accent Color — used sparingly, for emphasis</div>
     <div class="color-row">
-      <div class="color-swatch" id="sw-accent"><input type="color" id="cp-accent" oninput="cpSync('cp-accent','col-accent')"></div>
+      <div class="color-swatch" id="sw-accent" onclick="cpOpen('sw-accent','col-accent')"></div>
       <input type="text" id="col-accent" placeholder="#hex or color name — e.g. #FFD700" style="margin-bottom:0">
     </div>
 
     <div class="q">Neutral Base — your background canvas</div>
     <div class="color-row">
-      <div class="color-swatch" id="sw-neutral"><input type="color" id="cp-neutral" oninput="cpSync('cp-neutral','col-neutral')"></div>
+      <div class="color-swatch" id="sw-neutral" onclick="cpOpen('sw-neutral','col-neutral')"></div>
       <input type="text" id="col-neutral" placeholder="#hex or color name — e.g. #F7F6F4" style="margin-bottom:0">
     </div>
 
@@ -1736,28 +1746,159 @@ function initColorSwatches() {
   });
 }
 
-function cpSync(cpId, txtId) {
-  var cp=document.getElementById(cpId); var txt=document.getElementById(txtId);
-  if(!cp||!txt) return;
-  txt.value=cp.value;
-  saveData(); updateSwatches();
-}
-
 function updateSwatches() {
-  [['col-primary','sw-primary','cp-primary'],['col-secondary','sw-secondary','cp-secondary'],['col-accent','sw-accent','cp-accent'],['col-neutral','sw-neutral','cp-neutral']].forEach(function(p){
-    var inp=document.getElementById(p[0]); var sw=document.getElementById(p[1]); var cp=document.getElementById(p[2]);
+  [['col-primary','sw-primary'],['col-secondary','sw-secondary'],['col-accent','sw-accent'],['col-neutral','sw-neutral']].forEach(function(p){
+    var inp=document.getElementById(p[0]); var sw=document.getElementById(p[1]);
     if(!inp||!sw) return;
     var v=inp.value.trim();
-    if(v){
-      sw.style.background=v;
-      sw.style.borderColor='transparent';
-      // sync color picker if value is a valid hex
-      if(cp && /^#[0-9a-fA-F]{6}$/.test(v)) cp.value=v;
-    } else {
-      sw.style.background='';
-      sw.style.borderColor='';
-    }
+    if(v){sw.style.background=v;sw.style.borderColor='transparent';}
+    else{sw.style.background='';sw.style.borderColor='';}
   });
+}
+
+// ── Custom Color Picker ───────────────────────────────────────────────
+var _cp={h:0,s:1,v:1,target:null,dragging:false,hueDrag:false};
+
+function cpOpen(swId,txtId){
+  var sw=document.getElementById(swId);
+  _cp.target=txtId;
+  var hex=(document.getElementById(txtId)||{}).value||'';
+  hex=hex.trim();
+  if(/^#[0-9a-fA-F]{6}$/.test(hex)){
+    var rgb=_cpHex2rgb(hex); var hsv=_cpRgb2hsv(rgb.r,rgb.g,rgb.b);
+    _cp.h=hsv.h;_cp.s=hsv.s;_cp.v=hsv.v;
+  } else {_cp.h=20;_cp.s=0.85;_cp.v=0.95;}
+  // Position
+  var dlg=document.getElementById('cp-dialog');
+  dlg.style.display='block';
+  var rect=sw.getBoundingClientRect();
+  var top=rect.bottom+8; var left=rect.left;
+  if(left+248>window.innerWidth) left=window.innerWidth-252;
+  if(top+280>window.innerHeight) top=rect.top-288;
+  dlg.style.top=top+'px'; dlg.style.left=left+'px';
+  _cpDraw();
+}
+
+function cpClose(){
+  document.getElementById('cp-dialog').style.display='none';
+  _cp.target=null;
+}
+
+function cpApply(){
+  var hex=_cpToHex();
+  var txt=document.getElementById(_cp.target);
+  if(txt){txt.value=hex;saveData();updateSwatches();}
+  cpClose();
+}
+
+function _cpDraw(){
+  var canvas=document.getElementById('cp-canvas');
+  if(!canvas) return;
+  var W=canvas.width, H=canvas.height;
+  var ctx=canvas.getContext('2d');
+  // Hue base
+  ctx.fillStyle='hsl('+_cp.h+',100%,50%)';
+  ctx.fillRect(0,0,W,H);
+  // White → transparent (left to right = white to saturated)
+  var wg=ctx.createLinearGradient(0,0,W,0);
+  wg.addColorStop(0,'rgba(255,255,255,1)');
+  wg.addColorStop(1,'rgba(255,255,255,0)');
+  ctx.fillStyle=wg; ctx.fillRect(0,0,W,H);
+  // Black → transparent (bottom = black)
+  var bg=ctx.createLinearGradient(0,0,0,H);
+  bg.addColorStop(0,'rgba(0,0,0,0)');
+  bg.addColorStop(1,'rgba(0,0,0,1)');
+  ctx.fillStyle=bg; ctx.fillRect(0,0,W,H);
+  // Cursor circle
+  var cx=_cp.s*W, cy=(1-_cp.v)*H;
+  ctx.beginPath();ctx.arc(cx,cy,7,0,Math.PI*2);
+  ctx.strokeStyle='#fff';ctx.lineWidth=2.5;ctx.stroke();
+  ctx.beginPath();ctx.arc(cx,cy,7,0,Math.PI*2);
+  ctx.strokeStyle='rgba(0,0,0,.3)';ctx.lineWidth=1;ctx.stroke();
+  // Hue thumb
+  var ht=document.getElementById('cp-hue-thumb');
+  if(ht) ht.style.left=(_cp.h/360*100)+'%';
+  // Preview + hex
+  var hex=_cpToHex();
+  var prev=document.getElementById('cp-preview');
+  if(prev) prev.style.background=hex;
+  var hf=document.getElementById('cp-hex-field');
+  if(hf&&document.activeElement!==hf) hf.value=hex;
+}
+
+function _cpToHex(){
+  var rgb=_cpHsv2rgb(_cp.h,_cp.s,_cp.v);
+  return '#'+[rgb.r,rgb.g,rgb.b].map(function(x){return ('0'+Math.round(x).toString(16)).slice(-2);}).join('');
+}
+
+function cpHexInput(val){
+  val=val.trim();
+  if(/^#?[0-9a-fA-F]{6}$/.test(val)){
+    var hex=val.startsWith('#')?val:'#'+val;
+    var rgb=_cpHex2rgb(hex); var hsv=_cpRgb2hsv(rgb.r,rgb.g,rgb.b);
+    _cp.h=hsv.h;_cp.s=hsv.s;_cp.v=hsv.v; _cpDraw();
+  }
+}
+
+// Canvas drag
+function cpCanvasDown(e){
+  _cp.dragging=true; e.preventDefault(); _cpCanvasMove(e);
+}
+function _cpCanvasMove(e){
+  if(!_cp.dragging) return;
+  var canvas=document.getElementById('cp-canvas');
+  var rect=canvas.getBoundingClientRect();
+  var cx=(e.clientX!==undefined?e.clientX:(e.touches&&e.touches[0].clientX)||0);
+  var cy=(e.clientY!==undefined?e.clientY:(e.touches&&e.touches[0].clientY)||0);
+  _cp.s=Math.max(0,Math.min(1,(cx-rect.left)/rect.width));
+  _cp.v=Math.max(0,Math.min(1,1-(cy-rect.top)/rect.height));
+  _cpDraw();
+}
+
+// Hue drag
+function cpHueDown(e){
+  _cp.hueDrag=true; e.preventDefault(); _cpHueMove(e);
+}
+function _cpHueMove(e){
+  if(!_cp.hueDrag) return;
+  var track=document.getElementById('cp-hue-track');
+  var rect=track.getBoundingClientRect();
+  var cx=(e.clientX!==undefined?e.clientX:(e.touches&&e.touches[0].clientX)||0);
+  _cp.h=Math.max(0,Math.min(359.99,((cx-rect.left)/rect.width)*360));
+  _cpDraw();
+}
+
+document.addEventListener('mouseup',function(){_cp.dragging=false;_cp.hueDrag=false;});
+document.addEventListener('mousemove',function(e){_cpCanvasMove(e);_cpHueMove(e);});
+document.addEventListener('touchend',function(){_cp.dragging=false;_cp.hueDrag=false;});
+document.addEventListener('touchmove',function(e){_cpCanvasMove(e);_cpHueMove(e);},{passive:false});
+document.addEventListener('mousedown',function(e){
+  var dlg=document.getElementById('cp-dialog');
+  if(dlg&&dlg.style.display!=='none'&&!dlg.contains(e.target)&&!e.target.closest('.color-swatch')) cpClose();
+});
+
+// Color math
+function _cpHsv2rgb(h,s,v){
+  var i=Math.floor(h/60)%6,f=h/60-Math.floor(h/60),p=v*(1-s),q=v*(1-f*s),t=v*(1-(1-f)*s);
+  var r,g,b;
+  if(i===0){r=v;g=t;b=p;}else if(i===1){r=q;g=v;b=p;}else if(i===2){r=p;g=v;b=t;}
+  else if(i===3){r=p;g=q;b=v;}else if(i===4){r=t;g=p;b=v;}else{r=v;g=p;b=q;}
+  return{r:r*255,g:g*255,b:b*255};
+}
+function _cpRgb2hsv(r,g,b){
+  r/=255;g/=255;b/=255;
+  var max=Math.max(r,g,b),min=Math.min(r,g,b),d=max-min,h=0,s=max===0?0:d/max,v=max;
+  if(d!==0){
+    if(max===r) h=((g-b)/d+6)%6;
+    else if(max===g) h=(b-r)/d+2;
+    else h=(r-g)/d+4;
+    h*=60;
+  }
+  return{h:h,s:s,v:v};
+}
+function _cpHex2rgb(hex){
+  hex=hex.replace('#','');
+  return{r:parseInt(hex.slice(0,2),16),g:parseInt(hex.slice(2,4),16),b:parseInt(hex.slice(4,6),16)};
 }
 
 function wire() {
@@ -3190,5 +3331,22 @@ function typFillFont(fontName, inputId) {
   setTimeout(function(){ el.style.borderColor=''; }, 2000);
 }
 </script>
+
+<!-- ── Custom Color Picker Dialog ── -->
+<div id="cp-dialog">
+  <canvas id="cp-canvas" width="208" height="148"
+    onmousedown="cpCanvasDown(event)"
+    ontouchstart="cpCanvasDown(event)"></canvas>
+  <div id="cp-hue-track"
+    onmousedown="cpHueDown(event)"
+    ontouchstart="cpHueDown(event)">
+    <div id="cp-hue-thumb"></div>
+  </div>
+  <div id="cp-bottom-row">
+    <div id="cp-preview"></div>
+    <input type="text" id="cp-hex-field" placeholder="#000000" maxlength="7" spellcheck="false" oninput="cpHexInput(this.value)">
+  </div>
+  <button class="btn p" id="cp-apply" onclick="cpApply()">Apply Color</button>
+</div>
 </body>
 </html>
