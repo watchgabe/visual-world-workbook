@@ -470,6 +470,27 @@ textarea::placeholder,input[type=text]::placeholder{color:var(--dimmer)}
 #mb-mosaic{columns:3 120px;gap:5px;}
 #mb-mosaic img{width:100%;display:block;border-radius:4px;margin-bottom:5px;break-inside:avoid;}
 
+/* ─── CLEAR CONFIRM DIALOG ─── */
+#mb-clear-dialog{
+  display:none;position:fixed;inset:0;z-index:999;
+  background:rgba(0,0,0,.7);backdrop-filter:blur(4px);
+  align-items:center;justify-content:center;
+}
+#mb-clear-dialog.open{display:flex;}
+.mb-clear-box{
+  background:var(--surface);border:1px solid var(--border2);
+  border-radius:var(--radius-lg);padding:1.75rem 1.5rem;
+  max-width:340px;width:90%;text-align:center;
+}
+.mb-clear-icon{font-size:28px;margin-bottom:.75rem;}
+.mb-clear-title{font-size:15px;font-weight:700;color:var(--text);margin-bottom:.5rem;}
+.mb-clear-sub{font-size:13px;color:var(--dim);line-height:1.6;margin-bottom:1.25rem;}
+.mb-clear-btns{display:flex;gap:8px;justify-content:center;}
+.mb-clear-cancel{padding:8px 20px;border:1px solid var(--border2);border-radius:var(--radius-md);background:transparent;color:var(--dim);font-size:13px;font-weight:500;cursor:pointer;font-family:var(--font);}
+.mb-clear-cancel:hover{color:var(--text);border-color:var(--text);}
+.mb-clear-confirm{padding:8px 20px;border:1px solid #c0392b;border-radius:var(--radius-md);background:#c0392b;color:#fff;font-size:13px;font-weight:600;cursor:pointer;font-family:var(--font);}
+.mb-clear-confirm:hover{background:#a93226;border-color:#a93226;}
+
 .mb-strip{
   display:flex;gap:5px;overflow-x:auto;padding:8px 10px;
   border-top:1px solid var(--border);
@@ -940,7 +961,10 @@ textarea::placeholder,input[type=text]::placeholder{color:var(--dimmer)}
     <div class="mb-progress"><div class="mb-progress-fill" id="mb-prog-fill" style="width:0%"></div></div>
     <div style="display:flex;align-items:center;justify-content:space-between;padding:0 2px;margin-bottom:1.25rem;">
       <span style="font-size:11px;color:var(--dimmer)" id="mb-total-label">0 of 30 images added</span>
-      <span style="font-size:11px;color:var(--green-text);display:none" id="mb-complete-badge">✓ Mood board complete</span>
+      <div style="display:flex;align-items:center;gap:10px;">
+        <span style="font-size:11px;color:var(--green-text);display:none" id="mb-complete-badge">✓ Mood board complete</span>
+        <button onclick="openClearMoodBoard()" id="mb-clear-btn" style="display:none;background:none;border:none;font-size:11px;color:var(--dimmer);cursor:pointer;padding:0;font-family:var(--font);text-decoration:underline;text-underline-offset:2px;" title="Clear all images">Clear all</button>
+      </div>
     </div>
 
     <!-- MOSAIC GALLERY -->
@@ -1333,6 +1357,19 @@ textarea::placeholder,input[type=text]::placeholder{color:var(--dimmer)}
 
 
 </div></div></div>
+
+<!-- Clear Mood Board Confirm Dialog -->
+<div id="mb-clear-dialog">
+  <div class="mb-clear-box">
+    <div class="mb-clear-icon">🗑️</div>
+    <div class="mb-clear-title">Clear your mood board?</div>
+    <div class="mb-clear-sub">This will permanently remove all images from all three zones. This can't be undone.</div>
+    <div class="mb-clear-btns">
+      <button class="mb-clear-cancel" onclick="closeClearMoodBoard()">Cancel</button>
+      <button class="mb-clear-confirm" onclick="confirmClearMoodBoard()">Yes, clear it</button>
+    </div>
+  </div>
+</div>
 
 <script>
 var TABS=['Intro','Creator Analysis','Mood Board','Color Palette','Typography','Your Perspective'];
@@ -1778,7 +1815,21 @@ function mbRenderStrip() {
 function mbUpdateProgress() {
   var t=mbTotal(); var pct=Math.round((t/30)*100);
   var fill=document.getElementById('mb-prog-fill'); var label=document.getElementById('mb-total-label'); var badge=document.getElementById('mb-complete-badge');
+  var clearBtn=document.getElementById('mb-clear-btn');
   if(fill)fill.style.width=pct+'%'; if(label)label.textContent=t+' of 30 images added'; if(badge)badge.style.display=(t>=30)?'inline':'none';
+  if(clearBtn)clearBtn.style.display=(t>0)?'inline':'none';
+}
+
+function openClearMoodBoard() {
+  var d=document.getElementById('mb-clear-dialog'); if(d)d.classList.add('open');
+}
+function closeClearMoodBoard() {
+  var d=document.getElementById('mb-clear-dialog'); if(d)d.classList.remove('open');
+}
+function confirmClearMoodBoard() {
+  MB_CATS.forEach(function(c){ mbImages[c]=[]; mbRenderPanel(c); });
+  mbSave();
+  closeClearMoodBoard();
 }
 
 function mbRemove(cat,idx) { mbImages[cat].splice(idx,1); mbRenderPanel(cat); mbSave(); }
