@@ -787,9 +787,11 @@ textarea::placeholder,input[type=text]::placeholder{color:var(--dimmer)}
 .font-id-text strong{color:var(--text);}
 .font-id-img-preview{width:100%;max-height:180px;object-fit:cover;border-radius:var(--radius-md);border:1px solid var(--border);display:none;margin-bottom:12px;}
 .fi-results{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-md);padding:1rem;margin-top:12px;display:none;}
-.font-italic-btn{padding:0 10px;height:38px;background:var(--card);border:1px solid var(--border2);border-radius:var(--radius-md);font-style:italic;font-weight:700;font-size:14px;color:var(--dim);cursor:pointer;transition:all .15s;flex-shrink:0;line-height:1;}
-.font-italic-btn:hover{border-color:var(--orange);color:var(--orange);}
-.font-italic-btn.on{background:var(--orange-tint);border-color:var(--orange-border);color:var(--orange);}
+.font-style-btn{padding:0 10px;height:38px;background:var(--card);border:1px solid var(--border2);border-radius:var(--radius-md);font-size:14px;color:var(--dim);cursor:pointer;transition:all .15s;flex-shrink:0;line-height:1;}
+.font-style-btn:hover{border-color:var(--orange);color:var(--orange);}
+.font-style-btn.on{background:var(--orange-tint);border-color:var(--orange-border);color:var(--orange);}
+.font-italic-btn{font-style:italic;font-weight:700;}
+.font-bold-btn{font-weight:900;}
 .fi-result-item{border:1px solid var(--border);border-radius:var(--radius-lg);padding:16px;margin-bottom:10px;background:var(--card);}
 .fi-result-item:last-child{margin-bottom:0;}
 .fi-preview{min-height:56px;padding:12px 14px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-md);margin-bottom:10px;display:flex;flex-direction:column;gap:4px;}
@@ -1253,9 +1255,11 @@ textarea::placeholder,input[type=text]::placeholder{color:var(--dimmer)}
         <input type="text" id="font-primary" placeholder="e.g. Bebas Neue, Playfair Display, Montserrat..." style="margin-bottom:0" oninput="gfSuggest('font-primary','gf-suggest-1');updateFontPreview('primary')">
         <div id="gf-suggest-1" class="gf-suggest-list" style="display:none"></div>
       </div>
-      <button id="font-primary-italic-btn" class="font-italic-btn" onclick="toggleFontItalic('primary')" title="Toggle italic style">I</button>
+      <button id="font-primary-italic-btn" class="font-style-btn font-italic-btn" onclick="toggleFontItalic('primary')" title="Italic">I</button>
+      <button id="font-primary-bold-btn" class="font-style-btn font-bold-btn" onclick="toggleFontBold('primary')" title="Bold">B</button>
     </div>
     <input type="text" id="font-primary-italic" value="" style="display:none">
+    <input type="text" id="font-primary-bold" value="" style="display:none">
     <div id="font-preview-primary" style="display:none;border:1px solid var(--border);border-radius:var(--radius-md);padding:1rem 1.25rem;margin-bottom:.75rem;background:var(--card)">
       <div id="font-preview-primary-name" style="font-size:9.5px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--orange);margin-bottom:.5rem"></div>
       <div id="font-preview-primary-headline" style="font-size:26px;line-height:1.15;color:var(--text);margin-bottom:.35rem">Your Brand Headline</div>
@@ -1272,9 +1276,11 @@ textarea::placeholder,input[type=text]::placeholder{color:var(--dimmer)}
         <input type="text" id="font-secondary" placeholder="e.g. Inter, DM Sans, Source Sans Pro..." style="margin-bottom:0" oninput="gfSuggest('font-secondary','gf-suggest-2');updateFontPreview('secondary')">
         <div id="gf-suggest-2" class="gf-suggest-list" style="display:none"></div>
       </div>
-      <button id="font-secondary-italic-btn" class="font-italic-btn" onclick="toggleFontItalic('secondary')" title="Toggle italic style">I</button>
+      <button id="font-secondary-italic-btn" class="font-style-btn font-italic-btn" onclick="toggleFontItalic('secondary')" title="Italic">I</button>
+      <button id="font-secondary-bold-btn" class="font-style-btn font-bold-btn" onclick="toggleFontBold('secondary')" title="Bold">B</button>
     </div>
     <input type="text" id="font-secondary-italic" value="" style="display:none">
+    <input type="text" id="font-secondary-bold" value="" style="display:none">
     <div id="font-preview-secondary" style="display:none;border:1px solid var(--border);border-radius:var(--radius-md);padding:1rem 1.25rem;margin-bottom:.75rem;background:var(--card)">
       <div id="font-preview-secondary-name" style="font-size:9.5px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--orange);margin-bottom:.5rem"></div>
       <div id="font-preview-secondary-body" style="font-size:14px;line-height:1.75;color:var(--dim);margin-bottom:.35rem">This is how your body copy and captions will look. Clean, readable, and consistent across every piece of content you create.</div>
@@ -1400,6 +1406,14 @@ textarea::placeholder,input[type=text]::placeholder{color:var(--dimmer)}
     <div class="elem-desc">This is the most important part of this entire module. Take everything you've defined and write a 2–3 paragraph narrative that describes your Visual World. This is not a list — it's a story about the world your brand lives in.</div>
     <div class="qh" style="margin-top:.5rem">Write in present tense. Write as if your Visual World already exists. <strong style="color:var(--text)">Example:</strong> "My brand lives in a calm, minimal studio bathed in warm natural light. It feels like a quiet morning — contemplative, intentional, unhurried..."</div>
     <div class="q">Your Visual World Narrative</div>
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;">
+      <span style="font-size:11px;color:var(--dim)">Write it yourself, or let AI draft it from your answers above.</span>
+      <button id="vwSynthBtn" class="btn p" style="font-size:11.5px;padding:6px 13px;gap:5px" onclick="vwSynthesize()">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+        Generate with AI
+      </button>
+    </div>
+    <div id="vwSynthStatus" style="display:none;font-size:11.5px;color:var(--dim);margin-bottom:6px;display:flex;align-items:center;gap:6px"><span class="fi-spin"></span>Synthesizing your Visual World...</div>
     <textarea rows="8" id="vwNarrative" placeholder="My brand lives in...&#10;&#10;My content is primarily...&#10;&#10;This world reinforces my message that..."></textarea>
   </div>
 
@@ -2949,9 +2963,11 @@ setTimeout(function(){ var l=document.getElementById('mbLink'); if(l&&l.value) u
 setTimeout(function(){
   // Restore italic toggle button visual state from saved data
   ['primary','secondary'].forEach(function(w){
-    var hidden = document.getElementById('font-'+w+'-italic');
-    var btn = document.getElementById('font-'+w+'-italic-btn');
-    if (hidden && btn) btn.classList.toggle('on', hidden.value === '1');
+    ['italic','bold'].forEach(function(style){
+      var hidden = document.getElementById('font-'+w+'-'+style);
+      var btn = document.getElementById('font-'+w+'-'+style+'-btn');
+      if (hidden && btn) btn.classList.toggle('on', hidden.value === '1');
+    });
   });
   updateFontPreview('primary'); updateFontPreview('secondary');
 }, 150);
@@ -3206,8 +3222,16 @@ function toggleFontItalic(which) {
   if (!btn) return;
   var isOn = btn.classList.toggle('on');
   if (hidden) hidden.value = isOn ? '1' : '';
-  updateFontPreview(which);
-  saveData();
+  updateFontPreview(which); saveData();
+}
+
+function toggleFontBold(which) {
+  var btn = document.getElementById('font-'+which+'-bold-btn');
+  var hidden = document.getElementById('font-'+which+'-bold');
+  if (!btn) return;
+  var isOn = btn.classList.toggle('on');
+  if (hidden) hidden.value = isOn ? '1' : '';
+  updateFontPreview(which); saveData();
 }
 
 function updateFontPreview(which) {
@@ -3216,6 +3240,7 @@ function updateFontPreview(which) {
   if (!input) return;
   var fontName = input.value.trim();
   var isItalic = (document.getElementById('font-'+which+'-italic')||{}).value === '1';
+  var isBold = (document.getElementById('font-'+which+'-bold')||{}).value === '1';
   var previewWrap = document.getElementById('font-preview-' + which);
   if (!previewWrap) return;
   if (!fontName) { previewWrap.style.display = 'none'; return; }
@@ -3232,10 +3257,10 @@ function updateFontPreview(which) {
   if (nameEl) nameEl.textContent = fontName + (which === 'primary' ? ' — Primary Font' : ' — Body Font');
   if (which === 'primary') {
     var hl = document.getElementById('font-preview-primary-headline');
-    if (hl) { hl.style.fontFamily = '"'+fontName+'", sans-serif'; hl.style.fontStyle = isItalic ? 'italic' : 'normal'; }
+    if (hl) { hl.style.fontFamily = "'"+fontName+"', sans-serif"; hl.style.fontStyle = isItalic ? 'italic' : 'normal'; hl.style.fontWeight = isBold ? '700' : '400'; }
   } else {
     var bl = document.getElementById('font-preview-secondary-body');
-    if (bl) { bl.style.fontFamily = '"'+fontName+'", sans-serif'; bl.style.fontStyle = isItalic ? 'italic' : 'normal'; }
+    if (bl) { bl.style.fontFamily = "'"+fontName+"', sans-serif"; bl.style.fontStyle = isItalic ? 'italic' : 'normal'; bl.style.fontWeight = isBold ? '700' : '400'; }
   }
   previewWrap.style.display = 'block';
 }
@@ -3357,7 +3382,8 @@ async function typIdentifyFonts() {
       fonts.forEach(function(f) {
         var fname = f.googleFontName || f.name;
         var isItalic = !!f.isItalic;
-        var previewStyle = 'font-family:"'+fname+'",serif;'+(isItalic?'font-style:italic;':'');
+        // Use single quotes inside CSS to avoid breaking the HTML style attribute
+        var previewStyle = "font-family:'"+fname+"',serif;"+(isItalic?'font-style:italic;':'')+(f.isBold?'font-weight:700;':'font-weight:400;');
         var gfUrl = 'https://fonts.google.com/specimen/'+fname.replace(/\s+/g,'+');
         html += '<div class="fi-result-item">';
         // Live font preview
@@ -3365,7 +3391,10 @@ async function typIdentifyFonts() {
         html += '<div class="fi-preview-lg" style="'+previewStyle+'">Aa Bb Cc Dd Ee Ff</div>';
         html += '<div class="fi-preview-sm" style="'+previewStyle+'">The quick brown fox jumps over the lazy dog</div>';
         html += '</div>';
-        html += '<div class="fi-font-name">'+fname+(isItalic?' <span style="font-style:italic;font-weight:400;color:var(--dim);font-size:11px">italic</span>':'')+'</div>';
+        var badges='';
+        if(isItalic) badges+=' <span style="font-style:italic;font-weight:400;color:var(--dim);font-size:11px">italic</span>';
+        if(f.isBold) badges+=' <span style="font-weight:700;color:var(--dim);font-size:11px">bold</span>';
+        html += '<div class="fi-font-name">'+fname+badges+'</div>';
         html += '<div class="fi-font-desc">'+f.description+'</div>';
         html += '<div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap">';
         html += '<button class="fi-btn primary" onclick="typFillFont(\''+fname+'\',\'font-primary\','+isItalic+')">Use as Primary</button>';
@@ -3383,16 +3412,83 @@ async function typIdentifyFonts() {
   document.getElementById('fontIdBtn').disabled = false;
 }
 
-function typFillFont(fontName, inputId, isItalic) {
+/* ═══════════════════════════════════════════════════════
+   VISUAL WORLD NARRATIVE SYNTHESIZER
+══════════════════════════════════════════════════════════ */
+async function vwSynthesize() {
+  var btn = document.getElementById('vwSynthBtn');
+  var status = document.getElementById('vwSynthStatus');
+  var textarea = document.getElementById('vwNarrative');
+  if (!btn || !textarea) return;
+
+  btn.disabled = true; btn.textContent = 'Generating...';
+  if (status) { status.style.display = 'flex'; }
+
+  // Gather all filled-in data
+  var parts = [];
+  var loc = gv('e1-location'); if (loc) parts.push('Setting/Location: ' + loc);
+  var vibe = gs('e1vibe'); if (vibe) parts.push('Environment vibe: ' + vibe);
+  var mood = gs('e2mood'); if (mood) parts.push('Primary mood: ' + mood);
+  var light = gs('e2light') || gs('mblight'); if (light) parts.push('Lighting: ' + light);
+  var timeOfDay = gv('e2-time') || gv('mbTime'); if (timeOfDay) parts.push('Time of day: ' + timeOfDay);
+  var grade = gs('e3grade'); if (grade) parts.push('Color grade: ' + grade);
+  var palName = gv('paletteName'); if (palName) parts.push('Color palette name: ' + palName);
+  var colP = gv('col-primary'); if (colP) parts.push('Primary color: ' + colP);
+  var colS = gv('col-secondary'); if (colS) parts.push('Secondary color: ' + colS);
+  var colA = gv('col-accent'); if (colA) parts.push('Accent color: ' + colA);
+  var colN = gv('col-neutral'); if (colN) parts.push('Neutral base: ' + colN);
+  var fontP = gv('font-primary'); if (fontP) parts.push('Primary font: ' + fontP + ((document.getElementById('font-primary-italic')||{}).value==='1'?' (italic)':'') + ((document.getElementById('font-primary-bold')||{}).value==='1'?' (bold)':''));
+  var fontS = gv('font-secondary'); if (fontS) parts.push('Body font: ' + fontS);
+  var moodStmt = gv('e2-statement') || gv('mbStatement'); if (moodStmt) parts.push('Mood statement: ' + moodStmt);
+
+  if (parts.length < 2) {
+    if (status) status.style.display = 'none';
+    btn.disabled = false; btn.innerHTML = '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg> Generate with AI';
+    alert('Fill in more of your Visual World details first — mood, lighting, colors, fonts — then generate.');
+    return;
+  }
+
+  try {
+    var res = await fetch(SUPABASE_URL + '/functions/v1/claude-proxy', {
+      method: 'POST',
+      headers: {'Content-Type':'application/json','Authorization':'Bearer '+SUPABASE_ANON},
+      body: JSON.stringify({
+        maxTokens: 400,
+        prompt: 'Write a single, vivid paragraph (4–6 sentences) describing this creator\'s Visual World — the aesthetic, mood, and feeling of their brand. Write in first person, present tense, as if the world already exists. Make it feel like a story, not a list. Do NOT use bullet points or headers.\n\nHere is their Visual World data:\n' + parts.join('\n') + '\n\nRespond with only the paragraph. No intro, no explanation.'
+      })
+    });
+    var data = await res.json();
+    if (data.error) throw new Error(data.error);
+    var text = (data.text || '').trim();
+    if (text) {
+      textarea.value = text;
+      textarea.dispatchEvent(new Event('input', {bubbles:true}));
+      saveData();
+      textarea.style.borderColor = 'var(--green-text)';
+      setTimeout(function(){ textarea.style.borderColor = ''; }, 2500);
+    }
+  } catch(e) {
+    alert('Error generating narrative: ' + e.message);
+  }
+
+  if (status) status.style.display = 'none';
+  btn.disabled = false;
+  btn.innerHTML = '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg> Generate with AI';
+}
+
+function typFillFont(fontName, inputId, isItalic, isBold) {
   var el = document.getElementById(inputId);
   if (!el) return;
   el.value = fontName;
-  // Set italic state
   var which = inputId === 'font-primary' ? 'primary' : 'secondary';
   var italicBtn = document.getElementById('font-'+which+'-italic-btn');
   var italicHidden = document.getElementById('font-'+which+'-italic');
+  var boldBtn = document.getElementById('font-'+which+'-bold-btn');
+  var boldHidden = document.getElementById('font-'+which+'-bold');
   if (italicBtn) italicBtn.classList.toggle('on', !!isItalic);
   if (italicHidden) italicHidden.value = isItalic ? '1' : '';
+  if (boldBtn) boldBtn.classList.toggle('on', !!isBold);
+  if (boldHidden) boldHidden.value = isBold ? '1' : '';
   el.dispatchEvent(new Event('input', {bubbles:true}));
   el.dispatchEvent(new Event('change', {bubbles:true}));
   saveData();
