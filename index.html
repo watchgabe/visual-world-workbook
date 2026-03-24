@@ -166,6 +166,22 @@ body::before{
 .sec-btn.current .sec-indicator{background:var(--orange)}
 .sec-btn:not(.done):not(.current) .sec-indicator{background:var(--dimmer);opacity:.4}
 
+/* ─── USER CARD ─── */
+.sb-user{
+  padding:.75rem 1.25rem;border-top:1px solid var(--border);
+  display:flex;align-items:center;gap:10px;flex-shrink:0;
+}
+.sb-user-avatar{
+  width:32px;height:32px;border-radius:50%;
+  background:var(--orange-tint);border:1px solid var(--orange-border);
+  display:flex;align-items:center;justify-content:center;
+  font-size:13px;font-weight:700;color:var(--orange);flex-shrink:0;
+}
+.sb-user-info{flex:1;min-width:0;}
+.sb-user-label{font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--orange);margin-bottom:1px;}
+.sb-user-name{font-size:12px;font-weight:600;color:var(--text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.sb-user-sub{font-size:10px;color:var(--dimmer);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+
 /* ─── SIDEBAR FOOTER ─── */
 .sb-foot{
   padding:1rem 1.25rem;border-top:1px solid var(--border);
@@ -313,6 +329,14 @@ body.light .icon-moon{display:none}body.light .icon-sun{display:block}
       <div class="sb-divider"></div>
     </div>
     <nav id="sbnav"></nav>
+    <div class="sb-user" id="sb-user" style="display:none">
+      <div class="sb-user-avatar" id="sb-user-avatar">?</div>
+      <div class="sb-user-info">
+        <div class="sb-user-label">Welcome back</div>
+        <div class="sb-user-name" id="sb-user-name"></div>
+        <div class="sb-user-sub" id="sb-user-sub"></div>
+      </div>
+    </div>
     <div class="sb-foot">
       <div class="sb-prog">
         <div class="prog-bar"><div class="prog-fill" id="prog-fill" style="width:0%"></div></div>
@@ -475,9 +499,28 @@ async function submitIdentity() {
     localStorage.setItem('vww-user-handle', handle);
     var modal = document.getElementById('identity-modal');
     if (modal) modal.style.display = 'none';
+    updateIdentityDisplay();
   } catch(e) {
     if (errEl) { errEl.textContent = 'Connection error. Please try again.'; errEl.style.display = 'block'; }
     if (btn) { btn.disabled = false; btn.textContent = 'Continue →'; }
+  }
+}
+
+function updateIdentityDisplay() {
+  var el      = document.getElementById('sb-user');
+  var avEl    = document.getElementById('sb-user-avatar');
+  var nameEl  = document.getElementById('sb-user-name');
+  var subEl   = document.getElementById('sb-user-sub');
+  if (!el) return;
+  if (USER_NAME) {
+    el.style.display = 'flex';
+    if (avEl)   avEl.textContent  = USER_NAME.charAt(0).toUpperCase();
+    if (nameEl) nameEl.textContent = USER_NAME;
+    if (subEl)  subEl.textContent  = USER_HANDLE
+      ? '@' + USER_HANDLE.replace(/^@/, '')
+      : USER_EMAIL;
+  } else {
+    el.style.display = 'none';
   }
 }
 
@@ -814,6 +857,7 @@ function init() {
   expandedModules[lastModule] = true;
   renderSidebar();
   initIdentity();
+  updateIdentityDisplay();
   loadModule(lastModule, lastSection);
 }
 
