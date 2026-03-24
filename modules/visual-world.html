@@ -430,7 +430,7 @@ textarea::placeholder,input[type=text]::placeholder{color:var(--dimmer)}
 .mb-tab:hover{border-color:var(--border2);color:var(--dim)}
 .mb-tab.on{background:var(--orange-tint);color:var(--orange-dark);border-color:var(--orange-border)}
 .mb-tab.full{background:var(--green-bg);color:var(--green-text);border-color:var(--green-border)}
-.mb-panels{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:10px;}
+.mb-panels{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px;}
 @media(max-width:600px){.mb-panels{grid-template-columns:1fr;}}
 .mb-panel{background:var(--bg);border:1px solid var(--border);border-radius:var(--radius-lg);overflow:hidden;}
 .mb-panel-head{
@@ -918,40 +918,61 @@ textarea::placeholder,input[type=text]::placeholder{color:var(--dimmer)}
   <p class="intro">Your mood board is the visual DNA of your brand. Not a Pinterest board of things you think look cool — a curated collection of images that, when placed together, tell one clear story about the world your brand lives in. The mood board comes before the color palette, before the typography, before any design decisions. All of those decisions should flow from the mood you create here.</p>
 
   <h2>Your Mood Board Gallery</h2>
-  <p style="font-size:13.5px;color:var(--dim);line-height:1.7;margin-bottom:1.25rem">Drop images into each zone — <strong style="color:var(--text)">10 from your platform</strong> (the best content you've seen that stopped your scroll), <strong style="color:var(--text)">10 from your industry</strong> (competitors, adjacent creators, and brands in your space — what does premium look like here?), and <strong style="color:var(--text)">10 from outside</strong> (fashion, architecture, film, photography — this is where your visual world gets interesting). Upload as many as you like. They carry through to your final style guide.</p>
+  <p style="font-size:13.5px;color:var(--dim);line-height:1.7;margin-bottom:.85rem">Think of this as your creative cheat sheet — a snapshot of how your content should look, feel, and sound. Keep it close whenever you're filming, editing, or designing to stay sharp and on-brand. Drag and drop your references into each zone to build a clear vision you can return to anytime.</p>
+  <div class="ins" style="margin-bottom:1.25rem">
+    <p style="font-size:12.5px;color:var(--dim);line-height:1.75;margin:0"><strong style="color:var(--text)">Tips:</strong> Collect visuals that truly reflect your vibe. Focus on things you can realistically achieve with your environment, gear, and skillset. Pay attention to color, tone, framing, and texture. Pull from creators who inspire you, ads that grab your attention, or reels you can't stop rewatching. Stay selective — 10–15 strong references beat 100 random saves. Refresh it regularly as your style grows.</p>
+  </div>
 
-  <!-- DROP ZONES -->
+  <!-- TIP BOX -->
+  <div style="background:var(--orange-tint);border:1px solid var(--orange-border);border-radius:var(--radius-lg);padding:1rem 1.25rem;margin-bottom:1.25rem;display:flex;gap:12px;align-items:flex-start">
+    <span style="font-size:16px;flex-shrink:0;margin-top:1px">💡</span>
+    <div style="font-size:13px;color:var(--text);line-height:1.7">
+      <strong>Pro tip:</strong> Curate your inspiration directly in Instagram — when you save a post, add it to a Collection so it's easy to find later. When you're ready to build your mood board, screenshot the images from your collection and drag them into the zones below. If you prefer Pinterest, paste your board link below the upload zones and we'll pull it in automatically.
+    </div>
+  </div>
+
+  <!-- DROP ZONES — 2x2 grid -->
   <div class="mb-gallery" id="mbGallery">
     <div class="mb-panels">
-      <div class="mb-panel" id="mbp-platform">
+      <div class="mb-panel" id="mbp-colorgrading">
         <div class="mb-panel-head">
           <div>
-            <span class="mb-panel-label">Platform</span>
-            <div style="font-size:10px;color:var(--dimmer);margin-top:1px">Best content on your platform · 10 suggested</div>
+            <span class="mb-panel-label">Color Grading</span>
+            <div style="font-size:10px;color:var(--dimmer);margin-top:1px">Frames from films, ads, or creators whose colors inspire you</div>
           </div>
-          <span class="mb-count" id="mb-cnt-platform">0</span>
+          <span class="mb-count" id="mb-cnt-colorgrading">0</span>
         </div>
-        <div id="mbz-platform"></div>
+        <div id="mbz-colorgrading"></div>
       </div>
-      <div class="mb-panel" id="mbp-industry">
+      <div class="mb-panel" id="mbp-fonts">
         <div class="mb-panel-head">
           <div>
-            <span class="mb-panel-label">Industry</span>
-            <div style="font-size:10px;color:var(--dimmer);margin-top:1px">Creators &amp; brands in your space · 10 suggested</div>
+            <span class="mb-panel-label">Fonts</span>
+            <div style="font-size:10px;color:var(--dimmer);margin-top:1px">Screenshots of typography you love — from anywhere</div>
           </div>
-          <span class="mb-count" id="mb-cnt-industry">0</span>
+          <span class="mb-count" id="mb-cnt-fonts">0</span>
         </div>
-        <div id="mbz-industry"></div>
+        <div id="mbz-fonts"></div>
       </div>
-      <div class="mb-panel" id="mbp-outside">
+      <div class="mb-panel" id="mbp-shots">
         <div class="mb-panel-head">
           <div>
-            <span class="mb-panel-label">Outside</span>
-            <div style="font-size:10px;color:var(--dimmer);margin-top:1px">Fashion, film, architecture · 10 suggested</div>
+            <span class="mb-panel-label">Composition &amp; Shots</span>
+            <div style="font-size:10px;color:var(--dimmer);margin-top:1px">Shot angles, transitions, framing, effects</div>
           </div>
-          <span class="mb-count" id="mb-cnt-outside">0</span>
+          <span class="mb-count" id="mb-cnt-shots">0</span>
         </div>
-        <div id="mbz-outside"></div>
+        <div id="mbz-shots"></div>
+      </div>
+      <div class="mb-panel" id="mbp-colors">
+        <div class="mb-panel-head">
+          <div>
+            <span class="mb-panel-label">Colors</span>
+            <div style="font-size:10px;color:var(--dimmer);margin-top:1px">Palettes, swatches, and combinations that resonate</div>
+          </div>
+          <span class="mb-count" id="mb-cnt-colors">0</span>
+        </div>
+        <div id="mbz-colors"></div>
       </div>
     </div>
 
@@ -966,9 +987,10 @@ textarea::placeholder,input[type=text]::placeholder{color:var(--dimmer)}
         <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--orange)">Your Mood Board</div>
         <div class="mb-filters" id="mb-filters">
           <button class="mb-filter active" data-filter="all" onclick="mbSetFilter('all')">All</button>
-          <button class="mb-filter" data-filter="platform" onclick="mbSetFilter('platform')">Platform <span id="mff-platform">0</span></button>
-          <button class="mb-filter" data-filter="industry" onclick="mbSetFilter('industry')">Industry <span id="mff-industry">0</span></button>
-          <button class="mb-filter" data-filter="outside" onclick="mbSetFilter('outside')">Outside <span id="mff-outside">0</span></button>
+          <button class="mb-filter" data-filter="colorgrading" onclick="mbSetFilter('colorgrading')">Color Grading <span id="mff-colorgrading">0</span></button>
+          <button class="mb-filter" data-filter="fonts" onclick="mbSetFilter('fonts')">Fonts <span id="mff-fonts">0</span></button>
+          <button class="mb-filter" data-filter="shots" onclick="mbSetFilter('shots')">Shots <span id="mff-shots">0</span></button>
+          <button class="mb-filter" data-filter="colors" onclick="mbSetFilter('colors')">Colors <span id="mff-colors">0</span></button>
         </div>
       </div>
       <div id="mb-mosaic"></div>
@@ -1503,9 +1525,9 @@ var cur = 0;
 var checks = {};
 
 /* ── MOOD BOARD ── */
-var MB_KEY = 'vww-mb-v1';
-var mbImages = {platform:[], industry:[], outside:[]};
-var MB_CATS = ['platform','industry','outside'];
+var MB_KEY = 'vww-mb-v2';
+var mbImages = {colorgrading:[], fonts:[], shots:[], colors:[]};
+var MB_CATS = ['colorgrading','fonts','shots','colors'];
 
 /* ── SHOT SVGs ── */
 var SHOT_SVGS = {
@@ -1784,7 +1806,7 @@ function mbLoad() {
   try { var r=localStorage.getItem(MB_KEY); if(r){ var d=JSON.parse(r); MB_CATS.forEach(function(c){ if(d[c]&&Array.isArray(d[c]))mbImages[c]=d[c]; }); } } catch(e){}
 }
 
-function mbTotal() { return mbImages.platform.length+mbImages.industry.length+mbImages.outside.length; }
+function mbTotal() { return MB_CATS.reduce(function(s,c){return s+mbImages[c].length;},0); }
 
 function mbRenderPanel(cat) {
   var imgs=mbImages[cat]; var zone=document.getElementById('mbz-'+cat); var cnt=document.getElementById('mb-cnt-'+cat);
@@ -2455,7 +2477,7 @@ function _buildGuide_removed_placeholder() {
 
   /* mood board gallery */
   var mbSec=el('vg-mb-section');
-  var catLabels={platform:'Platform',industry:'Industry',outside:'Outside'};
+  var catLabels={colorgrading:'Color Grading',fonts:'Fonts',shots:'Composition & Shots',colors:'Colors'};
   var anyMbImages=false;
   MB_CATS.forEach(function(cat){
     var imgs=mbImages[cat].slice(0,10); var wrap=el('vg-mb-'+cat+'-wrap'); if(!wrap)return;
