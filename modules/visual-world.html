@@ -1060,6 +1060,63 @@ textarea::placeholder,input[type=text]::placeholder{color:var(--dimmer)}
   <h1>Define Your Color Palette</h1>
   <p class="intro">Color is emotion. Before someone reads a single word of your content, before they hear your voice — they feel your color palette. Your colors communicate who you are, who you're for, and what you stand for before you say anything.</p>
 
+  <h2>Extract Colors From a Photo</h2>
+  <p style="font-size:13.5px;color:var(--dim);line-height:1.7;margin-bottom:.85rem">Drop a photo that captures the mood you want — AI will extract multiple palette options. Pick the one that feels right.</p>
+
+  <div class="font-id-zone" id="palPhotoZone"
+    onclick="document.getElementById('palPhotoInput').click()"
+    ondragover="event.preventDefault();this.classList.add('dragover')"
+    ondragleave="this.classList.remove('dragover')"
+    ondrop="palHandleDrop(event)">
+    <input type="file" id="palPhotoInput" accept="image/*" style="display:none" onchange="palHandleFile(this.files[0])">
+    <img id="palPhotoPreview" class="font-id-img-preview">
+    <div id="palPhotoPrompt">
+      <div class="font-id-icon">🎨</div>
+      <div class="font-id-text"><strong>Drop a photo here</strong> or click to upload<br><span style="font-size:11px;color:var(--dimmer)">Mood board images, brand inspo, photography you love</span></div>
+    </div>
+  </div>
+  <button id="palExtractBtn" class="btn p" style="display:none;margin-bottom:1rem;width:100%;padding:11px" onclick="palExtractColors()">
+    Extract Color Palettes →
+  </button>
+  <div id="palExtractResults" style="margin-bottom:1.25rem"></div>
+
+  <h2>Your Color Palette</h2>
+  <div class="ec">
+    <div class="elbl">The Color Palette Framework</div>
+    <div class="qh">Enter hex codes (e.g. #F0601B) or color names. The swatches will update live.</div>
+
+    <div style="background:var(--orange-tint);border:1px solid var(--orange-border);border-radius:var(--radius-md);padding:10px 13px;margin-bottom:14px;">
+      <div style="font-size:10.5px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--orange);margin-bottom:4px;">A safe place to start</div>
+      <div style="font-size:12.5px;color:var(--dim);line-height:1.65;">Pick 1–2 vibrant colors and fill the rest of your palette with neutrals. Neutrals give your brand room to breathe — and make those accent colors hit harder. Most premium brands are 80% neutral, 20% bold.</div>
+    </div>
+
+    <div class="q">Primary Color — your dominant brand color</div>
+    <div class="color-row">
+      <div class="color-swatch" id="sw-primary" onclick="cpOpen('sw-primary','col-primary')"></div>
+      <input type="text" id="col-primary" placeholder="#hex or color name — e.g. #F0601B" style="margin-bottom:0">
+    </div>
+    <div class="q">Secondary Color — your supporting color</div>
+    <div class="color-row">
+      <div class="color-swatch" id="sw-secondary" onclick="cpOpen('sw-secondary','col-secondary')"></div>
+      <input type="text" id="col-secondary" placeholder="#hex or color name — e.g. #1A1A1A" style="margin-bottom:0">
+    </div>
+
+    <div class="q">Accent Color — used sparingly, for emphasis</div>
+    <div class="color-row">
+      <div class="color-swatch" id="sw-accent" onclick="cpOpen('sw-accent','col-accent')"></div>
+      <input type="text" id="col-accent" placeholder="#hex or color name — e.g. #FFD700" style="margin-bottom:0">
+    </div>
+
+    <div class="q">Neutral Base — your background canvas</div>
+    <div class="color-row">
+      <div class="color-swatch" id="sw-neutral" onclick="cpOpen('sw-neutral','col-neutral')"></div>
+      <input type="text" id="col-neutral" placeholder="#hex or color name — e.g. #F7F6F4" style="margin-bottom:0">
+    </div>
+
+    <div class="q" style="margin-top:12px">Give your palette a name that captures the mood</div>
+    <input type="text" id="paletteName" placeholder='e.g. "Warm Minimal" · "Dark Cinematic" · "Cool Authority" · "Golden Hour"'>
+  </div>
+
   <h2>Color Psychology Primer</h2>
   <div style="display:flex;flex-direction:column;gap:6px;margin-bottom:1.5rem">
     <div style="display:flex;border:1px solid var(--border);border-radius:var(--radius-md);overflow:hidden">
@@ -1102,58 +1159,6 @@ textarea::placeholder,input[type=text]::placeholder{color:var(--dimmer)}
         <div style="display:flex;gap:8px;flex-wrap:wrap"><span style="font-size:11.5px;color:var(--dim)">Authenticity</span><span style="color:var(--border2)">·</span><span style="font-size:11.5px;color:var(--dim)">Warmth</span><span style="color:var(--border2)">·</span><span style="font-size:11.5px;color:var(--dim)">Nostalgia</span><span style="color:var(--border2)">·</span><span style="font-size:11.5px;color:var(--dim)">Lifestyle</span></div>
       </div>
     </div>
-  </div>
-
-  <h2>Extract Colors From a Photo</h2>
-  <p style="font-size:13.5px;color:var(--dim);line-height:1.7;margin-bottom:.85rem">Drop a photo that captures the mood you want — AI will extract multiple palette options. Pick the one that feels right.</p>
-
-  <div class="font-id-zone" id="palPhotoZone"
-    onclick="document.getElementById('palPhotoInput').click()"
-    ondragover="event.preventDefault();this.classList.add('dragover')"
-    ondragleave="this.classList.remove('dragover')"
-    ondrop="palHandleDrop(event)">
-    <input type="file" id="palPhotoInput" accept="image/*" style="display:none" onchange="palHandleFile(this.files[0])">
-    <img id="palPhotoPreview" class="font-id-img-preview">
-    <div id="palPhotoPrompt">
-      <div class="font-id-icon">🎨</div>
-      <div class="font-id-text"><strong>Drop a photo here</strong> or click to upload<br><span style="font-size:11px;color:var(--dimmer)">Mood board images, brand inspo, photography you love</span></div>
-    </div>
-  </div>
-  <button id="palExtractBtn" class="btn p" style="display:none;margin-bottom:1rem;width:100%;padding:11px" onclick="palExtractColors()">
-    Extract Color Palettes →
-  </button>
-  <div id="palExtractResults" style="margin-bottom:1.25rem"></div>
-
-  <h2>Your Color Palette</h2>
-  <div class="ec">
-    <div class="elbl">The Color Palette Framework</div>
-    <div class="qh">Enter hex codes (e.g. #F0601B) or color names. The swatches will update live.</div>
-
-    <div class="q">Primary Color — your dominant brand color</div>
-    <div class="color-row">
-      <div class="color-swatch" id="sw-primary" onclick="cpOpen('sw-primary','col-primary')"></div>
-      <input type="text" id="col-primary" placeholder="#hex or color name — e.g. #F0601B" style="margin-bottom:0">
-    </div>
-    <div class="q">Secondary Color — your supporting color</div>
-    <div class="color-row">
-      <div class="color-swatch" id="sw-secondary" onclick="cpOpen('sw-secondary','col-secondary')"></div>
-      <input type="text" id="col-secondary" placeholder="#hex or color name — e.g. #1A1A1A" style="margin-bottom:0">
-    </div>
-
-    <div class="q">Accent Color — used sparingly, for emphasis</div>
-    <div class="color-row">
-      <div class="color-swatch" id="sw-accent" onclick="cpOpen('sw-accent','col-accent')"></div>
-      <input type="text" id="col-accent" placeholder="#hex or color name — e.g. #FFD700" style="margin-bottom:0">
-    </div>
-
-    <div class="q">Neutral Base — your background canvas</div>
-    <div class="color-row">
-      <div class="color-swatch" id="sw-neutral" onclick="cpOpen('sw-neutral','col-neutral')"></div>
-      <input type="text" id="col-neutral" placeholder="#hex or color name — e.g. #F7F6F4" style="margin-bottom:0">
-    </div>
-
-    <div class="q" style="margin-top:12px">Give your palette a name that captures the mood</div>
-    <input type="text" id="paletteName" placeholder='e.g. "Warm Minimal" · "Dark Cinematic" · "Cool Authority" · "Golden Hour"'>
   </div>
 
   <div class="nr"><button class="btn" id="b3b">← Back</button><span class="si">3/6</span><button class="btn p" id="b3n">Save & Continue →</button></div>
