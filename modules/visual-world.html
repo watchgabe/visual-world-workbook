@@ -2615,6 +2615,8 @@ function updatePinterestEmbed() {
   var wrap = document.getElementById('pinterest-embed-wrap');
   var container = document.getElementById('pinterest-embed-container');
   if (!wrap || !container) return;
+  // Normalize URL — add https:// if missing
+  if (url && !url.match(/^https?:\/\//)) url = 'https://' + url;
   if (url && (url.includes('pinterest') || url.includes('http'))) {
     wrap.style.display = 'block';
     container.innerHTML = '<div style="padding:1.5rem;text-align:center">' +
