@@ -465,6 +465,9 @@ textarea::placeholder,input[type=text]::placeholder{color:var(--dimmer)}
   color:var(--dimmer);font-size:16px;transition:all .15s;
 }
 .mb-add:hover{border-color:var(--orange);color:var(--orange);}
+/* ─── MOSAIC GALLERY ─── */
+#mb-mosaic img{width:100%;display:block;border-radius:4px;margin-bottom:5px;break-inside:avoid;}
+
 .mb-strip{
   display:flex;gap:5px;overflow-x:auto;padding:8px 10px;
   border-top:1px solid var(--border);
@@ -884,10 +887,30 @@ textarea::placeholder,input[type=text]::placeholder{color:var(--dimmer)}
   <h1>Creator Mood Board</h1>
   <p class="intro">Your mood board is the visual DNA of your brand. Not a Pinterest board of things you think look cool — a curated collection of images that, when placed together, tell one clear story about the world your brand lives in. The mood board comes before the color palette, before the typography, before any design decisions. All of those decisions should flow from the mood you create here.</p>
 
-  <!-- MOOD BOARD GALLERY FIRST -->
   <h2>Your Mood Board Gallery</h2>
+
+  <!-- 10-10-10 RULE CARDS -->
+  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:1.25rem">
+    <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-md);padding:1rem">
+      <div style="font-family:var(--font-num);font-size:32px;font-weight:900;color:var(--orange);line-height:1;margin-bottom:6px">10</div>
+      <div style="font-size:12px;font-weight:600;color:var(--text);margin-bottom:4px">Platform</div>
+      <div style="font-size:11.5px;color:var(--dimmer);line-height:1.5">The best visual content you've seen on your platform. Content that stopped your scroll.</div>
+    </div>
+    <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-md);padding:1rem">
+      <div style="font-family:var(--font-num);font-size:32px;font-weight:900;color:var(--orange);line-height:1;margin-bottom:6px">10</div>
+      <div style="font-size:12px;font-weight:600;color:var(--text);margin-bottom:4px">Industry</div>
+      <div style="font-size:11.5px;color:var(--dimmer);line-height:1.5">Competitors, adjacent creators, brands in your space. What does premium look like here?</div>
+    </div>
+    <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-md);padding:1rem">
+      <div style="font-family:var(--font-num);font-size:32px;font-weight:900;color:var(--orange);line-height:1;margin-bottom:6px">10</div>
+      <div style="font-size:12px;font-weight:600;color:var(--text);margin-bottom:4px">Outside</div>
+      <div style="font-size:11.5px;color:var(--dimmer);line-height:1.5">Fashion, architecture, film, photography. This is where your visual world gets interesting.</div>
+    </div>
+  </div>
+
   <p style="font-size:13.5px;color:var(--dim);line-height:1.7;margin-bottom:1.25rem">Drop images directly into each zone below — <strong style="color:var(--text)">10 from your platform, 10 from your industry, 10 from outside</strong>. They carry through to your final style guide.</p>
 
+  <!-- DROP ZONES -->
   <div class="mb-gallery" id="mbGallery">
     <div class="mb-panels">
       <div class="mb-panel" id="mbp-platform">
@@ -913,56 +936,30 @@ textarea::placeholder,input[type=text]::placeholder{color:var(--dimmer)}
       </div>
     </div>
     <div class="mb-progress"><div class="mb-progress-fill" id="mb-prog-fill" style="width:0%"></div></div>
-    <div style="display:flex;align-items:center;justify-content:space-between;padding:0 2px;margin-bottom:6px;">
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:0 2px;margin-bottom:1.25rem;">
       <span style="font-size:11px;color:var(--dimmer)" id="mb-total-label">0 of 30 images added</span>
       <span style="font-size:11px;color:var(--green-text);display:none" id="mb-complete-badge">✓ Mood board complete</span>
     </div>
-    <div class="mb-strip" id="mb-strip">
-      <span class="mb-strip-empty">Your images will appear here once added</span>
+
+    <!-- MOSAIC GALLERY -->
+    <div id="mb-mosaic-wrap" style="display:none;margin-bottom:1.5rem">
+      <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--orange);margin-bottom:.75rem">Your Mood Board</div>
+      <div id="mb-mosaic" style="columns:4 100px;gap:5px;"></div>
     </div>
   </div>
 
-  <!-- 10-10-10 RULE -->
-  <h2 style="margin-top:1.75rem">The 10-10-10 Rule</h2>
-  <p style="font-size:13.5px;color:var(--dim);line-height:1.7;margin-bottom:1rem">Your mood board should have <strong style="color:var(--text)">30 images</strong> from three specific sources — each zone unlocks a different layer of your visual identity.</p>
-  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:1.5rem">
-    <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-md);padding:1rem">
-      <div style="font-family:var(--font-num);font-size:32px;font-weight:900;color:var(--orange);line-height:1;margin-bottom:6px">10</div>
-      <div style="font-size:12px;font-weight:600;color:var(--text);margin-bottom:4px">Platform</div>
-      <div style="font-size:11.5px;color:var(--dimmer);line-height:1.5">The best visual content you've seen on your platform. Content that stopped your scroll.</div>
-    </div>
-    <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-md);padding:1rem">
-      <div style="font-family:var(--font-num);font-size:32px;font-weight:900;color:var(--orange);line-height:1;margin-bottom:6px">10</div>
-      <div style="font-size:12px;font-weight:600;color:var(--text);margin-bottom:4px">Industry</div>
-      <div style="font-size:11.5px;color:var(--dimmer);line-height:1.5">Competitors, adjacent creators, brands in your space. What does premium look like here?</div>
-    </div>
-    <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-md);padding:1rem">
-      <div style="font-family:var(--font-num);font-size:32px;font-weight:900;color:var(--orange);line-height:1;margin-bottom:6px">10</div>
-      <div style="font-size:12px;font-weight:600;color:var(--text);margin-bottom:4px">Outside</div>
-      <div style="font-size:11.5px;color:var(--dimmer);line-height:1.5">Fashion, architecture, film, photography. This is where your visual world gets interesting.</div>
-    </div>
-  </div>
-
-  <!-- OR LINK PINTEREST -->
+  <!-- LINK EXISTING BOARD -->
   <div style="border:1px dashed var(--border2);border-radius:var(--radius-lg);padding:1.25rem;margin-bottom:1.5rem">
-    <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--orange);margin-bottom:8px">Or Link Your Existing Board</div>
-    <p style="font-size:13px;color:var(--dim);line-height:1.6;margin-bottom:.85rem">Already have a mood board on Pinterest? Paste the link below to keep it accessible while you work.</p>
-    <div class="og3" id="g-mbtool" style="margin-bottom:.85rem">
-      <button class="opt" data-g="mbtool">Pinterest</button>
-      <button class="opt" data-g="mbtool">Milanote</button>
-      <button class="opt" data-g="mbtool">Are.na</button>
-      <button class="opt" data-g="mbtool">Cosmos</button>
-      <button class="opt" data-g="mbtool">Notion</button>
-      <button class="opt" data-g="mbtool">Other</button>
-    </div>
-    <input type="text" id="mbLink" placeholder="Paste your board URL here..." oninput="updatePinterestEmbed()" style="margin-bottom:0">
+    <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--orange);margin-bottom:6px">Link Your Existing Board</div>
+    <p style="font-size:13px;color:var(--dim);line-height:1.6;margin-bottom:.75rem">Already building your mood board somewhere? Paste your board URL below — e.g. <span style="color:var(--dimmer);font-family:monospace;font-size:12px">www.pinterest.com/yourname/yourboard</span></p>
+    <input type="text" id="mbLink" placeholder="www.pinterest.com/yourname/yourboard" oninput="updatePinterestEmbed()" style="margin-bottom:0">
     <div id="pinterest-embed-wrap" style="display:none;margin-top:10px">
       <div id="pinterest-embed-container" style="border-radius:var(--radius-md);overflow:hidden;border:1px solid var(--border);background:var(--surface)"></div>
     </div>
   </div>
 
-  <!-- STEP 3: IDENTIFY PATTERNS -->
-  <h2>Step 3 — Identify Patterns</h2>
+  <!-- IDENTIFY PATTERNS -->
+  <h2>Identify Patterns</h2>
   <div class="ec">
     <div class="elbl">Mood Board Analysis</div>
     <div class="q">What colors appear most frequently?</div>
@@ -989,28 +986,6 @@ textarea::placeholder,input[type=text]::placeholder{color:var(--dimmer)}
     <input type="text" id="mbTime" placeholder="e.g. Golden hour, overcast morning, 2am city...">
     <div class="q">If your mood board were a place, where would it be?</div>
     <input type="text" id="mbPlace" placeholder="e.g. A minimalist Tokyo apartment, a coastal studio...">
-  </div>
-
-  <!-- STEP 4: AI VISUAL ANALYSIS -->
-  <h2>Step 4 — AI Visual Analysis</h2>
-  <div class="ec">
-    <div class="elbl">AI — Analyze My Mood Board</div>
-    <div class="qh">Answer the questions above (or upload a few of your mood board images below), then click Analyze. The AI will read your visual world and suggest refinements.</div>
-
-    <div style="border:1px dashed var(--border2);border-radius:var(--radius-md);padding:1rem;margin-bottom:.85rem;cursor:pointer;text-align:center;transition:all .2s"
-      id="mbAnalyzeZone"
-      onclick="document.getElementById('mbAnalyzeInput').click()"
-      ondragover="event.preventDefault();this.style.borderColor='var(--orange)'"
-      ondragleave="this.style.borderColor=''"
-      ondrop="mbHandleAnalyzeDrop(event)">
-      <input type="file" id="mbAnalyzeInput" accept="image/*" multiple style="display:none" onchange="mbHandleAnalyzeFiles(this.files)">
-      <div style="font-size:12.5px;color:var(--dimmer)">Drop mood board images here (optional) or click to upload</div>
-      <div id="mbAnalyzeImgRow" style="display:flex;gap:6px;flex-wrap:wrap;justify-content:center;margin-top:8px"></div>
-    </div>
-
-    <button class="btn-ai" id="mbAnalyzeBtn" onclick="analyzeMoodBoard()">✦ Analyze My Visual World</button>
-    <div class="ai-status" id="mbAnalyzeStatus"></div>
-    <div class="ai-result" id="mbAnalyzeResult"></div>
   </div>
 
   <h2>Your Mood Board Statement</h2>
@@ -1794,10 +1769,14 @@ function mbRenderPanel(cat) {
 }
 
 function mbRenderStrip() {
-  var strip=document.getElementById('mb-strip'); if(!strip) return;
+  var mosaic=document.getElementById('mb-mosaic');
+  var mosaicWrap=document.getElementById('mb-mosaic-wrap');
   var all=[]; MB_CATS.forEach(function(c){mbImages[c].forEach(function(s){all.push(s);});});
-  if(!all.length){strip.innerHTML='<span class="mb-strip-empty">Your images will appear here once added</span>';return;}
-  strip.innerHTML=all.map(function(s){return '<div class="mb-strip-thumb"><img src="'+s+'" loading="lazy"></div>';}).join('');
+  if(mosaic){
+    if(!all.length){ if(mosaicWrap)mosaicWrap.style.display='none'; return; }
+    if(mosaicWrap)mosaicWrap.style.display='block';
+    mosaic.innerHTML=all.map(function(s){return '<img src="'+s+'" loading="lazy">';}).join('');
+  }
 }
 
 function mbUpdateProgress() {
