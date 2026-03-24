@@ -904,7 +904,7 @@ function showResult(id,text){var e=document.getElementById(id);if(!e)return;e.te
 async function generateBrandJourney(){
   var btn=document.getElementById('bjBtn');btn.disabled=true;
   setStatus('bjStatus','loading','<span class="ai-spinner"></span>Synthesizing your Brand Journey...');
-  document.getElementById('bjResult').classList.remove('show');
+  var _bjr=document.getElementById('bjResult');if(_bjr)_bjr.classList.remove('show');
   try{
     var r=await callClaude('You are a personal brand strategist. Write ONE sentence using EXACTLY this format: "I want to [desired outcome] by being known for [known for] through [actions] starting with [learning]."\n\nFill in the brackets using their exact words below. Output ONLY the single sentence. No headers, no explanation, no asterisks, no markdown, no quotation marks around the sentence.\n\nDesired Outcome: '+gv('q1outcome')+'\nKnown For: '+gv('q2known')+'\nActions: '+gv('q3do')+'\nLearn: '+gv('q4learn'));
     var clean=r.replace(/#{1,6}\s*/g,'').replace(/\*{1,3}/g,'').replace(/^[""]|[""]$/g,'').trim();
