@@ -228,6 +228,7 @@ textarea::placeholder,input[type=text]::placeholder{color:var(--dimmer)}
   .two-col{grid-template-columns:1fr;}
   .ikigai-grid{grid-template-columns:1fr;}
   .roadmap{grid-template-columns:1fr;}
+  .pillar-sub{grid-template-columns:1fr;}
   .og{grid-template-columns:1fr 1fr;} /* keep opt buttons 2-col */
   /* Values: number+name on row 1, description spans full width on row 2 */
   .val-row{grid-template-columns:28px 1fr!important;}
@@ -662,11 +663,21 @@ textarea::placeholder,input[type=text]::placeholder{color:var(--dimmer)}
   </div>
   <div class="pillar-card">
     <div class="pillar-head"><div class="pillar-badge">4</div><input type="text" class="pillar-name" id="pillar4name" placeholder="Pillar name (optional)..."><span class="pillar-opt-lbl">Optional</span></div>
-    <div class="pillar-sub"><div><span class="psub-lbl">Sub-topics</span><textarea id="pillar4sub" placeholder="..."></textarea></div><div><span class="psub-lbl">How this serves your avatar</span><textarea id="pillar4avatar" placeholder="..."></textarea></div></div>
+    <div class="pillar-sub">
+      <div><span class="psub-lbl">Sub-topics (3&#8211;5 angles)</span><textarea id="pillar4sub" placeholder="Specific angles within this pillar..."></textarea></div>
+      <div><span class="psub-lbl">How this serves your avatar</span><textarea id="pillar4avatar" placeholder="The problem this pillar solves..."></textarea></div>
+      <div><span class="psub-lbl">How this connects to your offer</span><textarea id="pillar4offer" placeholder="The natural bridge to what you sell..."></textarea></div>
+      <div><span class="psub-lbl">50+ content ideas here?</span><div class="og" id="g-p4test" style="margin-top:4px"><button class="opt" data-g="p4test">Yes, easily</button><button class="opt" data-g="p4test">Maybe 20&#8211;30</button></div></div>
+    </div>
   </div>
   <div class="pillar-card">
     <div class="pillar-head"><div class="pillar-badge">5</div><input type="text" class="pillar-name" id="pillar5name" placeholder="Pillar name (optional)..."><span class="pillar-opt-lbl">Optional</span></div>
-    <div class="pillar-sub"><div><span class="psub-lbl">Sub-topics</span><textarea id="pillar5sub" placeholder="..."></textarea></div><div><span class="psub-lbl">How this serves your avatar</span><textarea id="pillar5avatar" placeholder="..."></textarea></div></div>
+    <div class="pillar-sub">
+      <div><span class="psub-lbl">Sub-topics (3&#8211;5 angles)</span><textarea id="pillar5sub" placeholder="Specific angles within this pillar..."></textarea></div>
+      <div><span class="psub-lbl">How this serves your avatar</span><textarea id="pillar5avatar" placeholder="The problem this pillar solves..."></textarea></div>
+      <div><span class="psub-lbl">How this connects to your offer</span><textarea id="pillar5offer" placeholder="The natural bridge to what you sell..."></textarea></div>
+      <div><span class="psub-lbl">50+ content ideas here?</span><div class="og" id="g-p5test" style="margin-top:4px"><button class="opt" data-g="p5test">Yes, easily</button><button class="opt" data-g="p5test">Maybe 20&#8211;30</button></div></div>
+    </div>
   </div>
   <div class="nr"><button class="btn" onclick="go(4)">&#8592; Back</button><span class="si">5/7</span><button class="btn p" onclick="go(6)">Save &amp; Continue &#8594;</button></div>
 </div>
