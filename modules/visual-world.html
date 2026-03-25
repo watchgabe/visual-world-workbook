@@ -1410,7 +1410,7 @@ textarea::placeholder,input[type=text]::placeholder{color:var(--dimmer)}
     <textarea rows="8" id="vwNarrative" placeholder="My brand lives in...&#10;&#10;My content is primarily...&#10;&#10;This world reinforces my message that..."></textarea>
   </div>
 
-  <div class="nr"><button class="btn" id="b5b">← Back</button><span class="si">5/5</span></div>
+  <div class="nr"><button class="btn" id="b5b">← Back</button><span class="si">5/5</span><button class="btn p" onclick="if(sectionComplete(5))done.add(5);saveData();window.parent.postMessage({type:'navigate-module',to:'content'},'*')">Finish Module &#8594;</button></div>
 </div>
 
 

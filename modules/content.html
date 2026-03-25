@@ -857,19 +857,19 @@ summary .ig-acc-input::placeholder{color:var(--dimmer)}
     </div>
     <div style="display:flex;gap:12px;align-items:flex-start;padding:12px 14px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-md)">
       <div style="font-family:var(--font-num);font-size:28px;font-weight:900;color:var(--orange);line-height:1;flex-shrink:0;opacity:.45;min-width:32px">04</div>
-      <div><div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--orange);margin-bottom:3px">Camera body — entry</div><div style="font-size:13px;color:var(--dim);line-height:1.65">Once audio and lighting are handled, an interchangeable-lens camera is your next move. The Sony ZV-E10 is the best entry point — excellent autofocus, flip screen for solo filming, and it gets out of your way. Pair it with the Viltrox 9mm to start.</div></div>
+      <div><div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--orange);margin-bottom:3px">Camera body</div><div style="font-size:13px;color:var(--dim);line-height:1.65">Once audio and lighting are handled, an interchangeable-lens camera is your next move. The <strong style="color:var(--text)">Sony ZV-E10</strong> is the most accessible entry point — excellent autofocus, flip screen, and it gets out of your way. If budget allows, go straight to the <strong style="color:var(--text)">Sony A6700</strong> — AI-assisted autofocus, better low-light, and more headroom to grow into.</div></div>
     </div>
     <div style="display:flex;gap:12px;align-items:flex-start;padding:12px 14px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-md)">
       <div style="font-family:var(--font-num);font-size:28px;font-weight:900;color:var(--orange);line-height:1;flex-shrink:0;opacity:.45;min-width:32px">05</div>
-      <div><div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--orange);margin-bottom:3px">Better glass</div><div style="font-size:13px;color:var(--dim);line-height:1.65">A better lens will outperform a more expensive camera body every time. The Sigma 10-18mm f/2.8 is the sharpest ultra-wide for Sony APS-C — covers talking head, lifestyle, B-roll, and everything in between. After that, add the 18-50mm for close-up and storytelling shots.</div></div>
+      <div><div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--orange);margin-bottom:3px">Better glass + ND filter</div><div style="font-size:13px;color:var(--dim);line-height:1.65">A better lens outperforms a more expensive camera body every time. The Sigma 10-18mm f/2.8 is the sharpest ultra-wide for Sony APS-C — covers talking head, lifestyle, and B-roll. Add the 18-50mm for close-up and storytelling shots. Also add a <strong style="color:var(--text)">variable ND filter</strong> here — it lets you maintain cinematic shutter speed (2× your frame rate) in bright outdoor light. Essential if you ever shoot outside.</div></div>
     </div>
     <div style="display:flex;gap:12px;align-items:flex-start;padding:12px 14px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-md)">
       <div style="font-family:var(--font-num);font-size:28px;font-weight:900;color:var(--orange);line-height:1;flex-shrink:0;opacity:.45;min-width:32px">06</div>
-      <div><div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--orange);margin-bottom:3px">Step up the body</div><div style="font-size:13px;color:var(--dim);line-height:1.65">The Sony A6700 is the step-up with AI-assisted autofocus, better low-light performance, and higher specs. By the time you&#8217;re ready for this, you&#8217;ll already be producing polished content and you&#8217;ll actually feel the difference.</div></div>
+      <div><div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--orange);margin-bottom:3px">Step up the body</div><div style="font-size:13px;color:var(--dim);line-height:1.65">If you started on the ZV-E10, the Sony A6700 is the natural step-up — AI-assisted autofocus, better low-light, and noticeably more professional output. By the time you&#8217;re ready for this, you&#8217;ll already be producing polished content and you&#8217;ll actually feel the difference in your workflow.</div></div>
     </div>
     <div style="display:flex;gap:12px;align-items:flex-start;padding:12px 14px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-md)">
       <div style="font-family:var(--font-num);font-size:28px;font-weight:900;color:var(--orange);line-height:1;flex-shrink:0;opacity:.45;min-width:32px">07</div>
-      <div><div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--orange);margin-bottom:3px">Finishing touches</div><div style="font-size:13px;color:var(--dim);line-height:1.65">A variable ND filter for outdoor shooting, a solid travel tripod, and Adobe Premiere Pro for a professional editing workflow. These are the details that separate a polished setup from an amateur one — but they&#8217;re only worth it after the fundamentals are locked in.</div></div>
+      <div><div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--orange);margin-bottom:3px">Finishing touches</div><div style="font-size:13px;color:var(--dim);line-height:1.65">A solid travel tripod for stable wide and establishing shots, Adobe Premiere Pro for a professional editing workflow, and a quality monitor for accurate color grading. These are the details that separate a polished setup from an amateur one — but they&#8217;re only worth it after the fundamentals are locked in.</div></div>
     </div>
   </div>
 
@@ -1848,6 +1848,13 @@ function analyzeGear(){
 
 initOpts();
 wire();
+// Finish Module → navigate to Launch
+(function(){
+  var _b3n=document.getElementById('b3n');
+  if(_b3n) _b3n.addEventListener('click',function(){
+    window.parent.postMessage({type:'navigate-module',to:'launch'},'*');
+  });
+})();
 loadData();
 go(cur);
 wireSave();

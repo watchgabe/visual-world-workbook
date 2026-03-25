@@ -180,6 +180,8 @@ textarea::placeholder,input[type=text]::placeholder{color:var(--dimmer)}
   #sidebar{display:none}
   #main{margin-left:0;display:block}
   #wb{padding:1.25rem 1.25rem 5rem}
+  .og{grid-template-columns:1fr!important}
+  .goals-grid{grid-template-columns:1fr!important}
 }
 @media(min-width:900px){
   .topbar,.tabs{display:none}
@@ -635,6 +637,7 @@ textarea::placeholder,input[type=text]::placeholder{color:var(--dimmer)}
   <div class="nr">
     <button class="btn" onclick="go(5)">&#8592; Back</button>
     <span class="si">6/6</span>
+    <button class="btn p" onclick="done[6]=true;saveData();window.parent.postMessage({type:'navigate-module',to:'playbook'},'*')">View Your Playbook &#8594;</button>
   </div>
 </div>
 

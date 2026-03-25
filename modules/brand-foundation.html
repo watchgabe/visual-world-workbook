@@ -731,7 +731,7 @@ textarea::placeholder,input[type=text]::placeholder{color:var(--dimmer)}
   <div class="q">Brand Vision Statement</div>
   <textarea rows="3" id="brandVision" placeholder="Write your brand vision statement here..."></textarea>
 
-  <div class="nr"><button class="btn" onclick="go(6)">&#8592; Back</button><span class="si">7/7</span></div>
+  <div class="nr"><button class="btn" onclick="go(6)">&#8592; Back</button><span class="si">7/7</span><button class="btn p" onclick="done[7]=true;saveData();window.parent.postMessage({type:'navigate-module',to:'visual-world'},'*')">Finish Module &#8594;</button></div>
 </div>
 
 
