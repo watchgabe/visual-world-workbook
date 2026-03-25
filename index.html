@@ -261,6 +261,48 @@ body.light .icon-moon{display:none}body.light .icon-sun{display:block}
 .id-error{font-size:12px;color:#e05555;margin-bottom:.8rem;padding:8px 10px;background:rgba(220,50,50,.08);border-radius:var(--radius-md);display:none;}
 .id-note{font-size:11px;color:var(--dimmer);margin-top:1rem;text-align:center;line-height:1.5}
 
+/* ─── ACCOUNT PANEL ─── */
+#account-panel{position:fixed;inset:0;z-index:99999;background:rgba(0,0,0,0.88);backdrop-filter:blur(4px);display:none;align-items:flex-start;justify-content:center;padding:1.5rem 1rem;overflow-y:auto;}
+#account-panel.open{display:flex;}
+.ap-box{background:var(--surface);border:1px solid var(--border2);border-radius:var(--radius-lg);width:100%;max-width:420px;margin:auto;}
+.ap-header{display:flex;align-items:center;justify-content:space-between;padding:1.1rem 1.4rem;border-bottom:1px solid var(--border);position:sticky;top:0;background:var(--surface);border-radius:var(--radius-lg) var(--radius-lg) 0 0;z-index:1;}
+.ap-header-brand{font-size:9px;font-weight:700;color:var(--orange);letter-spacing:.14em;text-transform:uppercase;margin-bottom:2px;}
+.ap-header-title{font-size:16px;font-weight:700;color:var(--text);letter-spacing:-.2px;}
+.ap-close{background:none;border:none;cursor:pointer;color:var(--dimmer);font-size:16px;padding:4px 6px;line-height:1;border-radius:var(--radius-md);transition:color .15s;}
+.ap-close:hover{color:var(--text);}
+.ap-body{padding:1.4rem;}
+.ap-section{margin-bottom:1.4rem;}
+.ap-sec-lbl{font-size:9px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--dimmer);margin-bottom:.75rem;}
+.ap-field{margin-bottom:.7rem;}
+.ap-field label{font-size:10.5px;font-weight:600;color:var(--dim);display:block;margin-bottom:4px;text-transform:uppercase;letter-spacing:.05em;}
+.ap-field input{width:100%;border:1px solid var(--border);border-radius:var(--radius-md);padding:9px 12px;font-size:13px;font-family:var(--font);color:var(--text);background:var(--bg);transition:border-color .15s;box-sizing:border-box;}
+.ap-field input:focus{outline:none;border-color:var(--orange);box-shadow:0 0 0 3px rgba(240,96,27,.08);}
+.ap-save-btn{width:100%;background:var(--orange);color:#fff;border:none;border-radius:var(--radius-md);padding:10px;font-size:13px;font-weight:600;cursor:pointer;font-family:var(--font);transition:background .15s;margin-top:.35rem;}
+.ap-save-btn:hover{background:var(--orange-hover);}
+.ap-success-msg{font-size:12px;color:var(--green-text);margin-top:.6rem;display:none;text-align:center;}
+.ap-divider{height:1px;background:var(--border);margin:0 0 1.4rem;}
+.ap-mod-row{display:flex;align-items:center;justify-content:space-between;padding:.35rem 0;}
+.ap-mod-name{font-size:12px;color:var(--dim);}
+.ap-mod-clr{background:none;border:none;font-size:11px;color:var(--dimmer);cursor:pointer;font-family:var(--font);text-decoration:underline;padding:0;transition:color .15s;}
+.ap-mod-clr:hover{color:#e05555;}
+.ap-danger-btn{width:100%;border:1px solid rgba(220,50,50,.3);background:rgba(220,50,50,.06);color:#e05555;border-radius:var(--radius-md);padding:9px;font-size:13px;font-weight:600;cursor:pointer;font-family:var(--font);transition:all .15s;margin-top:.65rem;}
+.ap-danger-btn:hover{background:rgba(220,50,50,.14);border-color:rgba(220,50,50,.5);}
+.ap-ghost-btn{width:100%;border:1px solid var(--border2);background:none;color:var(--dim);border-radius:var(--radius-md);padding:9px;font-size:13px;font-weight:500;cursor:pointer;font-family:var(--font);transition:all .15s;}
+.ap-ghost-btn:hover{border-color:var(--dimmer);color:var(--text);}
+.ap-upsell{background:var(--card);border:1px solid var(--border2);border-radius:var(--radius-lg);padding:1.1rem 1.25rem;margin-bottom:1.4rem;}
+.ap-upsell-eyebrow{font-size:9px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--orange);margin-bottom:.45rem;}
+.ap-upsell-title{font-size:15px;font-weight:700;color:var(--text);margin-bottom:.35rem;letter-spacing:-.2px;}
+.ap-upsell-body{font-size:12px;color:var(--dim);line-height:1.65;margin-bottom:.85rem;}
+.ap-upsell-cta{display:inline-block;background:var(--orange);color:#fff;border-radius:var(--radius-md);padding:8px 16px;font-size:12px;font-weight:600;text-decoration:none;transition:background .15s;font-family:var(--font);}
+.ap-upsell-cta:hover{background:var(--orange-hover);}
+.ap-confirm-box{display:none;margin-top:.75rem;padding:.85rem;background:rgba(220,50,50,.07);border:1px solid rgba(220,50,50,.2);border-radius:var(--radius-md);}
+.ap-confirm-box p{font-size:12px;color:#e05555;font-weight:600;margin:0 0 .6rem;}
+.ap-confirm-actions{display:flex;gap:.5rem;}
+.ap-confirm-actions .ap-danger-btn,.ap-confirm-actions .ap-ghost-btn{margin:0;flex:1;}
+/* Make sidebar user-info row feel clickable */
+.sb-user-info{cursor:pointer;}
+.sb-user-info:hover .sb-user-name{color:var(--orange);}
+
 /* ─── MOBILE STYLES ─── */
 @media (max-width: 768px) {
   body { overflow: hidden; }
@@ -348,7 +390,7 @@ body.light .icon-moon{display:none}body.light .icon-sun{display:block}
         <div class="av-cam"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg></div>
       </div>
       <input type="file" id="sb-avatar-input" accept="image/*" onchange="handleAvatarUpload(event)">
-      <div class="sb-user-info">
+      <div class="sb-user-info" onclick="openAccountPanel()" title="Account settings">
         <div class="sb-user-name" id="sb-user-name"></div>
         <div class="sb-user-sub" id="sb-user-sub"></div>
       </div>
@@ -365,6 +407,64 @@ body.light .icon-moon{display:none}body.light .icon-sun{display:block}
       </button>
     </div>
   </aside>
+
+  <!-- ACCOUNT PANEL -->
+  <div id="account-panel" onclick="if(event.target===this)closeAccountPanel()">
+    <div class="ap-box">
+      <div class="ap-header">
+        <div>
+          <div class="ap-header-brand">FSCreative™</div>
+          <div class="ap-header-title">Your Account</div>
+        </div>
+        <button class="ap-close" onclick="closeAccountPanel()" aria-label="Close">✕</button>
+      </div>
+      <div class="ap-body">
+
+        <!-- Profile -->
+        <div class="ap-section">
+          <div class="ap-sec-lbl">Profile</div>
+          <div class="ap-field"><label>Name</label><input type="text" id="ap-name" placeholder="Your name"></div>
+          <div class="ap-field"><label>Email</label><input type="email" id="ap-email" placeholder="your@email.com"></div>
+          <div class="ap-field"><label>Instagram Handle</label><input type="text" id="ap-handle" placeholder="@yourhandle"></div>
+          <button class="ap-save-btn" onclick="saveAccountProfile()">Save Changes</button>
+          <div class="ap-success-msg" id="ap-save-success">✓ Profile updated</div>
+        </div>
+
+        <div class="ap-divider"></div>
+
+        <!-- Progress -->
+        <div class="ap-section">
+          <div class="ap-sec-lbl">Module Progress</div>
+          <div class="ap-mod-row"><span class="ap-mod-name">01 — Brand Foundation</span><button class="ap-mod-clr" onclick="clearModule('brand-foundation','cfww-v2')">Clear</button></div>
+          <div class="ap-mod-row"><span class="ap-mod-name">02 — Visual World</span><button class="ap-mod-clr" onclick="clearModule('visual-world','vww-v1')">Clear</button></div>
+          <div class="ap-mod-row"><span class="ap-mod-name">03 — Create Content</span><button class="ap-mod-clr" onclick="clearModule('content','ccb-v1')">Clear</button></div>
+          <div class="ap-mod-row"><span class="ap-mod-name">04 — Launch</span><button class="ap-mod-clr" onclick="clearModule('launch','launch-v1')">Clear</button></div>
+          <button class="ap-danger-btn" id="ap-clr-all-btn" onclick="showClearConfirm()">Clear All Progress</button>
+          <div class="ap-confirm-box" id="ap-clear-confirm">
+            <p>This will erase all your answers. Are you sure?</p>
+            <div class="ap-confirm-actions">
+              <button class="ap-danger-btn" onclick="confirmClearAll()">Yes, Clear Everything</button>
+              <button class="ap-ghost-btn" onclick="hideClearConfirm()">Cancel</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="ap-divider"></div>
+
+        <!-- Upsell -->
+        <div class="ap-upsell">
+          <div class="ap-upsell-eyebrow">Take It Further</div>
+          <div class="ap-upsell-title">Ready to build faster?</div>
+          <div class="ap-upsell-body">Work with Gabe 1:1 to turn your playbook into a full launch — content calendar, offer stack, and go-to-market plan built specifically for your brand.</div>
+          <a href="https://fscreative.live" target="_blank" class="ap-upsell-cta">Book a Strategy Call →</a>
+        </div>
+
+        <!-- Sign Out -->
+        <button class="ap-ghost-btn" onclick="signOutAccount()">Sign Out</button>
+
+      </div>
+    </div>
+  </div>
 
   <!-- MAIN -->
   <div id="main">
@@ -908,6 +1008,91 @@ function toggleTheme() {
 function initTheme() {
   var saved = localStorage.getItem('blp-theme');
   if (saved === 'light') document.body.classList.add('light');
+}
+
+/* ═══════════════════════════════════════════════════════
+   ACCOUNT PANEL
+══════════════════════════════════════════════════════════ */
+function openAccountPanel() {
+  var panel = document.getElementById('account-panel');
+  if (!panel) return;
+  var n = document.getElementById('ap-name');
+  var e = document.getElementById('ap-email');
+  var h = document.getElementById('ap-handle');
+  if (n) n.value = USER_NAME || '';
+  if (e) e.value = USER_EMAIL || '';
+  if (h) h.value = USER_HANDLE ? ('@' + USER_HANDLE.replace(/^@/, '')) : '';
+  var succ = document.getElementById('ap-save-success');
+  if (succ) succ.style.display = 'none';
+  hideClearConfirm();
+  panel.classList.add('open');
+}
+
+function closeAccountPanel() {
+  var panel = document.getElementById('account-panel');
+  if (panel) panel.classList.remove('open');
+}
+
+function saveAccountProfile() {
+  var name   = (document.getElementById('ap-name').value   || '').trim();
+  var email  = (document.getElementById('ap-email').value  || '').trim().toLowerCase();
+  var handle = (document.getElementById('ap-handle').value || '').trim().replace(/^@/, '');
+  if (!name || !email || email.indexOf('@') < 0) {
+    alert('Please enter a valid name and email.');
+    return;
+  }
+  USER_NAME = name; USER_EMAIL = email; USER_HANDLE = handle;
+  localStorage.setItem('vww-user-name',   name);
+  localStorage.setItem('vww-user-email',  email);
+  localStorage.setItem('vww-user-handle', handle);
+  updateIdentityDisplay();
+  var succ = document.getElementById('ap-save-success');
+  if (succ) { succ.style.display = 'block'; setTimeout(function(){ succ.style.display='none'; }, 2500); }
+  // Sync to Supabase
+  try {
+    fetch(SUPABASE_URL + '/rest/v1/vww_users', {
+      method: 'POST', headers: sbHeaders(),
+      body: JSON.stringify({email: email, name: name, last_seen: new Date().toISOString()})
+    });
+  } catch(e) {}
+}
+
+function clearModule(moduleId, saveKey) {
+  if (!confirm('Clear all answers for this module? This cannot be undone.')) return;
+  localStorage.removeItem(saveKey);
+  moduleStates[moduleId] = {cur: 0, done: []};
+  renderSidebar();
+  if (activeModule === moduleId) loadModule(moduleId, 0);
+  closeAccountPanel();
+}
+
+function showClearConfirm() {
+  document.getElementById('ap-clr-all-btn').style.display  = 'none';
+  document.getElementById('ap-clear-confirm').style.display = 'block';
+}
+function hideClearConfirm() {
+  var btn  = document.getElementById('ap-clr-all-btn');
+  var conf = document.getElementById('ap-clear-confirm');
+  if (btn)  btn.style.display  = '';
+  if (conf) conf.style.display = 'none';
+}
+
+function confirmClearAll() {
+  ['cfww-v2','vww-v1','ccb-v1','launch-v1'].forEach(function(k){ localStorage.removeItem(k); });
+  MODULES.forEach(function(m){ moduleStates[m.id] = {cur:0, done:[]}; });
+  renderSidebar();
+  if (activeModule) loadModule(activeModule, 0);
+  closeAccountPanel();
+}
+
+function signOutAccount() {
+  if (!confirm('Sign out? Your progress is saved locally and will be here when you sign back in.')) return;
+  USER_EMAIL = ''; USER_NAME = ''; USER_HANDLE = '';
+  ['vww-user-email','vww-user-name','vww-user-handle','vww-user-avatar'].forEach(function(k){ localStorage.removeItem(k); });
+  closeAccountPanel();
+  updateIdentityDisplay();
+  var modal = document.getElementById('identity-modal');
+  if (modal) modal.style.display = 'flex';
 }
 
 /* ═══════════════════════════════════════════════════════
