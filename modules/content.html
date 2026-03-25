@@ -1283,6 +1283,26 @@ var done=new Set();
 var cur=0;
 
 var SECTION_MAP=[0,1,2,4,7,11,8,10,6,5,3];
+function sectionComplete(logicalIdx) {
+  if (logicalIdx === 0) return true;
+  var sid = (typeof SECTION_MAP !== 'undefined' && SECTION_MAP[logicalIdx] !== undefined)
+    ? SECTION_MAP[logicalIdx] : logicalIdx;
+  var sec = document.getElementById('s' + sid);
+  if (!sec) return false;
+  var fields = Array.prototype.slice.call(
+    sec.querySelectorAll('textarea, input[type="text"], input[type="url"], input[type="email"]')
+  ).filter(function(f) {
+    var p = f.parentElement;
+    while (p && p !== sec) {
+      if (p.style && p.style.display === 'none') return false;
+      p = p.parentElement;
+    }
+    return !f.disabled && !f.readOnly;
+  });
+  if (fields.length === 0) return true;
+  return fields.every(function(f) { return f.value && f.value.trim().length > 0; });
+}
+
 function go(n){
   if(n<0||n>=SECTION_MAP.length)n=0;
   document.querySelectorAll('.sc').forEach(function(s){s.classList.remove('show');});
@@ -1297,7 +1317,7 @@ function go(n){
   ccNotifyShell();
 }
 
-function finish(from,to){done.add(from);saveData();go(to);}
+function finish(from,to){ if(sectionComplete(from)) done.add(from); saveData();go(to);}
 
 function render(){
   var pct=Math.round((done.size/10)*100);
