@@ -255,11 +255,15 @@ var LABELS = {
   mbLink:'Pinterest Board',mbColors:'Mood Board Colors',mbMood:'Mood Word',mbMovie:'Reference Film',mbTime:'Time of Day',mbPlace:'Setting',
   signatureShot:'Signature Shot',mbStatement:'Mood Board Statement',
   /* Content */
-  contentNiche:'Content Niche',contentVoice:'Content Voice',contentWhy:'Content Why',contentMission:'Content Mission',
-  batchDay:'Batch Day',batchTime:'Batch Time',batchFreq:'Batch Frequency',
-  contentPillar1:'Content Pillar 1',contentPillar2:'Content Pillar 2',contentPillar3:'Content Pillar 3',
-  hookFormula1:'Hook Formula 1',hookFormula2:'Hook Formula 2',hookFormula3:'Hook Formula 3',
-  storyHook:'Story Hook',storyConflict:'Story Conflict',storyResolution:'Story Resolution',
+  nextStep:'Next Step / CTA',painProblem:'Pain Problem',uniqueSol:'Unique Solution',credibility:'Credibility Statement',
+  weekHours:'Hours Per Week',energize:'What Energizes You',drain:'What Drains You',cadence:'Content Cadence',
+  sauron:'Focus Platform',filmDay:'Film Day',batchCount:'Batch Count',filmSetup:'Film Setup',batchCommit:'Batch Commitment',
+  storyI:'Story — Intro Hook',storyH1:'Story — Setup',storyP:'Story — Problem',storyJ:'Story — Journey',storyL:'Story — Lesson',storyC:'Story — CTA',
+  ofree:'Offer — Free Content',olead:'Offer — Lead Magnet',olow:'Offer — Low-ticket',omid:'Offer — Mid-ticket',ohigh:'Offer — High-ticket',
+  conv:'Conversion Mechanism',ctastrat:'CTA Strategy',
+  mbColor1:'Brand Color 1',mbColor2:'Brand Color 2',mbColor3:'Brand Color 3',
+  mbNarrative:'Brand Aesthetic Narrative',mbObjects:'Brand Props & Objects',mbRef:'Brand References',
+  ig_pillar1:'Content Pillar 1',ig_pillar2:'Content Pillar 2',ig_pillar3:'Content Pillar 3',ig_pillar4:'Content Pillar 4',ig_pillar5:'Content Pillar 5',
   /* Launch */
   bioHandle:'Handle',bioName:'Bio Name',bioWho:'Bio — Who You Help',bioWhat:'Bio — What You Do',
   bioFor:'Bio — What It\'s For',bioCTA:'Bio CTA',bioResult:'Generated Bio',
@@ -276,11 +280,45 @@ var LABELS = {
 /* Fields to always skip */
 var SKIP_KEYS = {cur:1,done:1,auditVals:1,checks:1,opts:1,inputs:1,'launch-v1':1,'vww-v1':1,'ccb-v1':1,'launch-data':1};
 
+/* ── Content module field detection ── */
+/* These IDs are ONLY in content.html — everything else in inputs belongs to VW */
+var CC_EXACT = {
+  nextStep:1,painProblem:1,uniqueSol:1,credibility:1,
+  weekHours:1,energize:1,drain:1,cadence:1,sauron:1,
+  filmDay:1,batchCount:1,filmSetup:1,batchCommit:1,
+  storyI:1,storyH1:1,storyP:1,storyJ:1,storyL:1,storyC:1,
+  ofree:1,olead:1,olow:1,omid:1,ohigh:1,conv:1,ctastrat:1,
+  mbColor1:1,mbColor2:1,mbColor3:1,mbNarrative:1,mbObjects:1,mbRef:1
+};
+function isCCKey(k){
+  return !!(CC_EXACT[k] || /^(ig_|ca[123][a-z])/.test(k));
+}
+
+/* ── Dynamic label for ig_ hierarchy ── */
+var IDEA_LETTERS = ['A','B','C','D'];
+function igLabel(k){
+  var m;
+  /* ig_pillarN */
+  m=k.match(/^ig_pillar(\d)$/); if(m) return 'Content Pillar '+m[1];
+  /* ig_pNiMaL — angle */
+  m=k.match(/^ig_p(\d)i(\d)a(\d)$/); if(m) return 'Pillar '+m[1]+' · Idea '+IDEA_LETTERS[m[2]-1]+' · Angle '+m[3];
+  /* ig_pNiM — idea */
+  m=k.match(/^ig_p(\d)i(\d)$/); if(m) return 'Pillar '+m[1]+' — Idea '+IDEA_LETTERS[m[2]-1];
+  return k;
+}
+/* ca label */
+function caLabel(k){
+  var m=k.match(/^ca([123])(name|why|take|diff)$/);
+  if(!m) return prettyKey(k);
+  var map={name:'Name',why:'Why Study',take:'Key Takeaway',diff:'How I\'m Different'};
+  return 'Competitor '+m[1]+' — '+(map[m[2]]||m[2]);
+}
+
 /* opt_ prefix label cleanup */
 function optLabel(k){
   var g=k.replace('opt_','');
-  var map={genre:'Brand Genre',style:'Brand Style',vibe:'Vibe',format:'Format',audience:'Audience',era:'Era',energy:'Energy'};
-  return 'Style: '+(map[g]||g.charAt(0).toUpperCase()+g.slice(1));
+  var map={genre:'Brand Genre',style:'Brand Style',vibe:'Vibe',format:'Format',audience:'Audience',era:'Era',energy:'Energy',mbvibe:'Mood Board Vibe'};
+  return (map[g]||g.charAt(0).toUpperCase()+g.slice(1));
 }
 
 function sbH() {
@@ -517,16 +555,15 @@ async function renderDetail(idx, user, md, cfd) {
   }
 
   /* ── Module sections ── */
-  var modules = [
-    {num:'01', title:'Brand Foundation',    data:cfd,              isCF:true},
-    {num:'02', title:'Visual World',         data:md&&md.inputs,   isCF:false, opts:md&&md.opts},
-    {num:'03', title:'Create Your Content',  data:md&&md.inputs,   isCF:false, extraOpts:md&&md.opts},
-    {num:'04', title:'Launch',               data:md&&md['launch-v1'], isCF:false}
-  ];
+  var inputsObj = md && md.inputs ? md.inputs : null;
+  var optsObj   = md && md.opts   ? md.opts   : null;
 
-  /* For VW vs CC separation: VW fields contain visual keywords, CC contain content keywords */
-  var VW_KEYS = /^(col-|font-|e1-|e2-|e3-|e4-|mb|palette|signature)/;
-  var CC_KEYS = /^(content|batch|hook|story)/;
+  var modules = [
+    {num:'01', title:'Brand Foundation',   data:cfd,      isCF:true,  moduleOpts:null},
+    {num:'02', title:'Visual World',       data:inputsObj,isCF:false, moduleOpts:optsObj, filterFn:function(k){return !isCCKey(k);}},
+    {num:'03', title:'Create Your Content',data:inputsObj,isCF:false, moduleOpts:optsObj, filterFn:function(k){return isCCKey(k);}},
+    {num:'04', title:'Launch',             data:md&&md['launch-v1'], isCF:false, moduleOpts:null}
+  ];
 
   modules.forEach(function(mod) {
     var obj = mod.data;
@@ -536,13 +573,25 @@ async function renderDetail(idx, user, md, cfd) {
     var textFields = [];
     var optFields  = [];
 
+    /* opts from the opts sub-object (VW/CC) — scoped per module */
+    if (mod.moduleOpts) {
+      Object.keys(mod.moduleOpts).forEach(function(g){
+        var v = mod.moduleOpts[g];
+        if (!v || typeof v !== 'string' || !v.trim()) return;
+        /* Assign opt to the correct module */
+        var isCC = isCCKey('opt_'+g) || CC_EXACT['opt_'+g] || g==='mbvibe';
+        if (mod.num==='02' && isCC) return;
+        if (mod.num==='03' && !isCC) return;
+        optFields.push({k:'opt_'+g, v:v.trim()});
+      });
+    }
+
     Object.keys(obj).forEach(function(k) {
       /* Skip meta keys */
       if (SKIP_KEYS[k]) return;
       if (mod.isCF && (k==='cur'||k==='done'||k==='auditVals'||k.indexOf('chk_')===0)) return;
-      /* For VW vs CC: filter by key pattern */
-      if (mod.num==='02' && CC_KEYS.test(k)) return; /* skip CC keys in VW section */
-      if (mod.num==='03' && VW_KEYS.test(k)) return; /* skip VW keys in CC section */
+      /* Module filter for VW vs CC */
+      if (mod.filterFn && !mod.filterFn(k)) return;
 
       var v = obj[k];
       if (!v) return;
@@ -568,7 +617,7 @@ async function renderDetail(idx, user, md, cfd) {
     if (optFields.length) {
       html += '<div class="opts-row">';
       optFields.forEach(function(f){
-        var lbl = optLabel(f.k);
+        var lbl = optLabel(f.k.replace('opt_',''));
         html += '<span class="opt-chip">'+esc(lbl)+': '+esc(f.v)+'</span>';
       });
       html += '</div>';
@@ -578,7 +627,11 @@ async function renderDetail(idx, user, md, cfd) {
     if (textFields.length) {
       html += '<div class="ans-grid">';
       textFields.forEach(function(f){
-        var label = LABELS[f.k] || prettyKey(f.k);
+        var label;
+        if (LABELS[f.k]) label = LABELS[f.k];
+        else if (/^ig_/.test(f.k)) label = igLabel(f.k);
+        else if (/^ca[123]/.test(f.k)) label = caLabel(f.k);
+        else label = prettyKey(f.k);
         html += '<div class="ans-card"><div class="ans-key">'+esc(label)+'</div><div class="ans-val">'+esc(f.v)+'</div></div>';
       });
       html += '</div>';
