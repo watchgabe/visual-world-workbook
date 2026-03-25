@@ -678,7 +678,7 @@ function updateProgress(){
 
 function go(n){
   if(n<0||n>=SECTION_MAP.length)n=0;
-  if(cur>0&&cur<6)done[cur]=true;
+  if(cur>=0&&cur<6)done[cur]=true;
   cur=n;
   document.querySelectorAll('.sc').forEach(function(s){s.classList.remove('show');});
   var sid=SECTION_MAP[n];

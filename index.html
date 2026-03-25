@@ -57,6 +57,7 @@ body::before{
   background:var(--surface);border-bottom:1px solid var(--border);
   align-items:center;padding:0 1rem;gap:12px;
   z-index:200;
+  padding-top:6px;
 }
 .mob-burger{
   background:none;border:none;cursor:pointer;
@@ -140,6 +141,7 @@ body::before{
 .mod-header.active .mod-sub{display:block}
 .mod-right{display:flex;align-items:center;gap:6px;flex-shrink:0;margin-left:8px;}
 .mod-badge{font-size:10px;color:var(--dimmer);font-weight:500;white-space:nowrap}
+.mod-badge-done{display:flex;align-items:center;color:var(--green-text);}
 .mod-chevron{font-size:10px;color:var(--dimmer);transition:transform .2s;line-height:1}
 .mod-chevron.open{transform:rotate(180deg)}
 .mod-lock{font-size:13px;line-height:1}
@@ -679,7 +681,10 @@ function renderSidebar() {
 
     var headerClass = 'mod-header' + (isActive ? ' active' : '');
     var chevronClass = 'mod-chevron' + (isExpanded ? ' open' : '');
-    var badge = doneCount + '/' + totalSections;
+    var isAllDone = (doneCount >= totalSections && totalSections > 0);
+    var badge = isAllDone
+      ? '<span class="mod-badge-done"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>'
+      : '<span class="mod-badge">' + doneCount + '/' + totalSections + '</span>';
 
     html += '<div class="mod-group">';
     html += '<button class="' + headerClass + '" onclick="toggleModule(\'' + mod.id + '\')" aria-expanded="' + isExpanded + '">';
@@ -689,7 +694,7 @@ function renderSidebar() {
     html += '<div class="mod-sub">' + mod.subtitle + '</div>';
     html += '</div>';
     html += '<div class="mod-right">';
-    html += '<span class="mod-badge">' + badge + '</span>';
+    html += badge;
     html += '<span class="' + chevronClass + '">▼</span>';
     html += '</div>';
     html += '</button>';
