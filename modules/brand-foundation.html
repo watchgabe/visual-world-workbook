@@ -133,6 +133,9 @@ textarea::placeholder,input[type=text]::placeholder{color:var(--dimmer)}
 .value-row{border:1px solid var(--border);border-radius:var(--radius-md);padding:.9rem 1rem;margin-bottom:7px;background:var(--surface);display:grid;grid-template-columns:auto 1fr;gap:1rem;align-items:start;}
 .value-row-num{font-family:var(--font-num);font-size:32px;font-weight:900;color:var(--orange);opacity:.3;line-height:1;padding-top:2px;}
 .value-row input{margin-bottom:6px;}.value-row textarea{margin-bottom:0;font-size:12.5px;min-height:60px;}
+/* Named-values rows (number + name input + description input) */
+.val-row{display:grid;grid-template-columns:28px 1fr 2fr;gap:10px;align-items:center;background:var(--card);border:1px solid var(--border);border-radius:var(--radius-md);padding:10px 14px;}
+.val-row input{margin:0;}
 .pillar-card{border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.1rem;margin-bottom:.75rem;background:var(--surface);}
 .pillar-head{display:flex;align-items:center;gap:10px;margin-bottom:.85rem;}
 .pillar-badge{width:28px;height:28px;border-radius:50%;background:var(--orange-tint);border:1px solid var(--orange-border);display:flex;align-items:center;justify-content:center;font-family:var(--font-num);font-size:14px;font-weight:900;color:var(--orange-dark);flex-shrink:0;}
@@ -225,6 +228,10 @@ textarea::placeholder,input[type=text]::placeholder{color:var(--dimmer)}
   .two-col{grid-template-columns:1fr;}
   .ikigai-grid{grid-template-columns:1fr;}
   .roadmap{grid-template-columns:1fr;}
+  .og{grid-template-columns:1fr 1fr;} /* keep opt buttons 2-col */
+  /* Values: number+name on row 1, description spans full width on row 2 */
+  .val-row{grid-template-columns:28px 1fr!important;}
+  .val-row input:last-child{grid-column:1/-1;}
 }
 @media print{
   body::before,#sidebar,.topbar,.tabs,.nr,.theme-btn{display:none!important}
@@ -552,32 +559,32 @@ textarea::placeholder,input[type=text]::placeholder{color:var(--dimmer)}
 
   <h2>Your Values <span style="font-size:10px;font-weight:400;color:var(--dimmer);text-transform:none;letter-spacing:0">(aim for 6)</span></h2>
   <div style="display:flex;flex-direction:column;gap:6px;margin-bottom:1.5rem">
-    <div style="display:grid;grid-template-columns:28px 1fr 2fr;gap:10px;align-items:center;background:var(--card);border:1px solid var(--border);border-radius:var(--radius-md);padding:10px 14px">
+    <div class="val-row">
       <div style="font-family:var(--font-num);font-size:1.3rem;font-weight:900;color:var(--orange);line-height:1">1</div>
       <input type="text" id="val1name" placeholder="Value name" style="margin:0">
       <input type="text" id="val1practice" placeholder="short description of what it means to you..." style="margin:0">
     </div>
-    <div style="display:grid;grid-template-columns:28px 1fr 2fr;gap:10px;align-items:center;background:var(--card);border:1px solid var(--border);border-radius:var(--radius-md);padding:10px 14px">
+    <div class="val-row">
       <div style="font-family:var(--font-num);font-size:1.3rem;font-weight:900;color:var(--orange);line-height:1">2</div>
       <input type="text" id="val2name" placeholder="Value name" style="margin:0">
       <input type="text" id="val2practice" placeholder="short description of what it means to you..." style="margin:0">
     </div>
-    <div style="display:grid;grid-template-columns:28px 1fr 2fr;gap:10px;align-items:center;background:var(--card);border:1px solid var(--border);border-radius:var(--radius-md);padding:10px 14px">
+    <div class="val-row">
       <div style="font-family:var(--font-num);font-size:1.3rem;font-weight:900;color:var(--orange);line-height:1">3</div>
       <input type="text" id="val3name" placeholder="Value name" style="margin:0">
       <input type="text" id="val3practice" placeholder="short description of what it means to you..." style="margin:0">
     </div>
-    <div style="display:grid;grid-template-columns:28px 1fr 2fr;gap:10px;align-items:center;background:var(--card);border:1px solid var(--border);border-radius:var(--radius-md);padding:10px 14px">
+    <div class="val-row">
       <div style="font-family:var(--font-num);font-size:1.3rem;font-weight:900;color:var(--orange);line-height:1">4</div>
       <input type="text" id="val4name" placeholder="Value name" style="margin:0">
       <input type="text" id="val4practice" placeholder="short description of what it means to you..." style="margin:0">
     </div>
-    <div style="display:grid;grid-template-columns:28px 1fr 2fr;gap:10px;align-items:center;background:var(--card);border:1px solid var(--border);border-radius:var(--radius-md);padding:10px 14px">
+    <div class="val-row">
       <div style="font-family:var(--font-num);font-size:1.3rem;font-weight:900;color:var(--orange);line-height:1">5</div>
       <input type="text" id="val5name" placeholder="Value name" style="margin:0">
       <input type="text" id="val5practice" placeholder="short description of what it means to you..." style="margin:0">
     </div>
-    <div style="display:grid;grid-template-columns:28px 1fr 2fr;gap:10px;align-items:center;background:var(--card);border:1px solid var(--border);border-radius:var(--radius-md);padding:10px 14px">
+    <div class="val-row">
       <div style="font-family:var(--font-num);font-size:1.3rem;font-weight:900;color:var(--orange);line-height:1">6</div>
       <input type="text" id="val6name" placeholder="Value name" style="margin:0">
       <input type="text" id="val6practice" placeholder="short description of what it means to you..." style="margin:0">
