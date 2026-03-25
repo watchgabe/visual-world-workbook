@@ -428,15 +428,13 @@ textarea::placeholder,input[type=text]::placeholder{color:var(--dimmer)}
   <div class="ec">
     <div class="elbl">Your Username</div>
     <div class="q" style="margin-top:0">My handle (across platforms)</div>
-    <input type="text" id="bioUsername" placeholder="e.g. @yourname or @yourbrandname">
-    <div class="q">If my name is taken, my alternative</div>
-    <input type="text" id="bioUsernameAlt" placeholder="e.g. @yourname.brand or @yournameofficial">
+    <input type="text" id="bioUsername" placeholder="e.g. @yourname, @yourbrandname or @yournameofficial">
   </div>
 
   <h2>#3 &#8212; Tagline (Name Field)</h2>
   <div class="teach">
     <p>The old approach was just your name in the name field. The new approach is your name followed by your occupation, a niche keyword, or a 1&#8211;2 word answer that clearly communicates what you do. This field is <strong>searchable</strong> &#8212; treat it like a headline, not a label.</p>
-    <p>Example: <em>Ava | Content Marketing | Social Media Management</em></p>
+    <p>Example: <em>Gabe | Cinematics | Personal Branding</em></p>
   </div>
   <div class="ec">
     <div class="elbl">Your Tagline (Instagram / TikTok Name Field)</div>
@@ -482,35 +480,6 @@ textarea::placeholder,input[type=text]::placeholder{color:var(--dimmer)}
       <div class="bio-preview-platform">Bio Preview</div>
       <div class="bio-preview-text" id="bioPreviewText">Your bio will appear here as you type...</div>
     </div>
-  </div>
-
-  <div class="ec">
-    <div class="elbl">AI &#8212; Generate My Bio</div>
-    <div class="qh">Fill in your brand details above, then click Generate. The AI will write a polished 4-line bio optimized for your avatar.</div>
-    <button class="btn-ai" id="bioBtn" onclick="generateBio()">&#10022; Generate My Bio</button>
-    <div class="ai-status" id="bioStatus"></div>
-    <div class="ai-result" id="bioResult"></div>
-  </div>
-
-  <h2>Platform-Specific Bios</h2>
-  <div class="ec">
-    <div class="elbl">Instagram</div>
-    <div class="q" style="margin-top:0">Full bio (copy from your 4 lines above, formatted)</div>
-    <textarea rows="4" id="igBio" placeholder="Your 4-line Instagram bio..."></textarea>
-  </div>
-  <div class="ec">
-    <div class="elbl">LinkedIn</div>
-    <div class="q" style="margin-top:0">Headline (220 characters &#8212; name field equivalent)</div>
-    <input type="text" id="liHeadline" placeholder="Your Name | What You Do | Who You Help">
-    <div class="q">About section opening line</div>
-    <input type="text" id="liAbout" placeholder="The hook that makes them keep reading...">
-  </div>
-  <div class="ec">
-    <div class="elbl">TikTok / YouTube</div>
-    <div class="q" style="margin-top:0">TikTok bio (80 characters)</div>
-    <input type="text" id="ttBio" placeholder="What you do + who you help. One clear line.">
-    <div class="q">YouTube channel description (first 100 characters show in search)</div>
-    <textarea rows="2" id="ytDesc" placeholder="Lead with your positioning statement. Include keywords."></textarea>
   </div>
 
   <div class="nr"><button class="btn" onclick="go(0)">&#8592; Back</button><span class="si">1/6</span><button class="btn p" onclick="go(2)">Save &amp; Continue &#8594;</button></div>
