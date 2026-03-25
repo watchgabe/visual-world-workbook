@@ -18,7 +18,7 @@ html{scroll-behavior:smooth}
 }
 body{background:var(--bg);color:var(--text);font-family:var(--font);font-size:14px;line-height:1.6;-webkit-font-smoothing:antialiased;min-height:100vh;}
 
-/* ── AUTH SCREEN ── */
+/* ── AUTH ── */
 #auth-screen{display:flex;align-items:center;justify-content:center;min-height:100vh;padding:1rem;}
 .auth-box{background:var(--surface);border:1px solid var(--border2);border-radius:var(--radius-lg);padding:2rem;width:100%;max-width:360px;}
 .auth-brand{font-size:10px;font-weight:700;color:var(--orange);letter-spacing:.12em;text-transform:uppercase;margin-bottom:1rem;}
@@ -30,71 +30,78 @@ body{background:var(--bg);color:var(--text);font-family:var(--font);font-size:14
 .auth-btn:hover{background:var(--orange-hover);}
 .auth-error{font-size:12px;color:#e05555;margin-bottom:.8rem;display:none;}
 
-/* ── MAIN DASHBOARD ── */
+/* ── DASHBOARD ── */
 #dashboard{display:none;min-height:100vh;}
 .dash-header{background:var(--surface);border-bottom:1px solid var(--border);padding:1rem 2rem;display:flex;align-items:center;justify-content:space-between;}
 .dash-brand{font-size:11px;font-weight:700;color:var(--orange);letter-spacing:.1em;text-transform:uppercase;}
 .dash-title{font-size:13px;color:var(--dim);margin-top:2px;}
 .dash-logout{font-size:12px;color:var(--dimmer);cursor:pointer;background:none;border:1px solid var(--border);padding:5px 10px;border-radius:var(--radius-md);font-family:var(--font);}
 .dash-logout:hover{color:var(--text);border-color:var(--border2);}
+.dash-body{padding:2rem;max-width:1200px;margin:0 auto;}
 
-.dash-body{padding:2rem;max-width:1100px;margin:0 auto;}
-
-/* ── STAT CARDS ── */
+/* ── STATS ── */
 .stat-row{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:2rem;}
 .stat-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-md);padding:1rem 1.2rem;}
-.stat-num{font-family:'Barlow Condensed',sans-serif;font-size:36px;font-weight:900;line-height:1;color:var(--text);}
-.stat-lbl{font-size:11px;color:var(--dimmer);margin-top:4px;text-transform:uppercase;letter-spacing:.06em;font-weight:500;}
+.stat-num{font-family:'Barlow Condensed',sans-serif;font-size:40px;font-weight:900;line-height:1;color:var(--text);}
+.stat-lbl{font-size:10.5px;color:var(--dimmer);margin-top:4px;text-transform:uppercase;letter-spacing:.06em;font-weight:500;}
 
 /* ── TABLE ── */
 .section-title{font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:var(--dimmer);margin-bottom:.8rem;}
 .user-table{width:100%;border-collapse:collapse;}
 .user-table th{font-size:10.5px;font-weight:600;text-transform:uppercase;letter-spacing:.07em;color:var(--dimmer);text-align:left;padding:8px 12px;border-bottom:1px solid var(--border);}
 .user-table td{padding:10px 12px;border-bottom:1px solid var(--border);vertical-align:middle;font-size:13px;}
-.user-table tr:hover td{background:var(--surface);}
-.user-table tr.expandable{cursor:pointer;}
+.user-row{cursor:pointer;transition:background .1s;}
+.user-row:hover td{background:var(--surface);}
+.user-row.expanded td{background:var(--surface);}
 
 /* ── AVATAR ── */
 .u-avatar{width:32px;height:32px;border-radius:50%;background:var(--orange-tint);border:1px solid var(--orange-border);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:var(--orange-dark);flex-shrink:0;}
-
-/* ── USER INFO ── */
-.u-name{font-weight:500;color:var(--text);}
-.u-email{font-size:11.5px;color:var(--dimmer);}
+.u-name{font-weight:600;color:var(--text);}
+.u-email{font-size:11.5px;color:var(--dimmer);margin-top:1px;}
 
 /* ── PROGRESS ── */
-.u-prog-bar{height:4px;background:var(--border);border-radius:2px;width:80px;display:inline-block;vertical-align:middle;margin-right:6px;}
+.u-prog-bar{height:4px;background:var(--border);border-radius:2px;width:70px;display:inline-block;vertical-align:middle;margin-right:6px;}
 .u-prog-fill{height:100%;border-radius:2px;background:var(--orange);}
-.u-prog-fill.done{background:var(--green-text);}
+.u-prog-fill.full{background:var(--green-text);}
 
-/* ── SECTION BADGES ── */
-.badge-row{display:flex;gap:3px;flex-wrap:wrap;}
-.badge{display:inline-block;font-size:9.5px;padding:2px 6px;border-radius:10px;font-weight:600;border:1px solid var(--border);color:var(--dimmer);white-space:nowrap;}
-.badge.done{background:var(--green-bg);color:var(--green-text);border-color:var(--green-border);}
+/* ── MODULE BADGES ── */
+.mod-badges{display:flex;gap:3px;flex-wrap:wrap;}
+.mbadge{display:inline-flex;align-items:center;gap:3px;font-size:9px;padding:2px 7px;border-radius:10px;font-weight:600;border:1px solid var(--border);color:var(--dimmer);white-space:nowrap;}
+.mbadge.has{background:var(--green-bg);color:var(--green-text);border-color:var(--green-border);}
 
-/* ── LAST SEEN ── */
-.u-seen{font-size:11.5px;color:var(--dimmer);}
+/* ── CHEVRON ── */
+.expand-chevron{color:var(--dimmer);transition:transform .2s;display:inline-block;}
+.user-row.expanded .expand-chevron{transform:rotate(180deg);}
 
-/* ── EXPAND ROW ── */
-.expand-row{display:none;}
-.expand-row.open{display:table-row;}
-.expand-cell{padding:1rem 1.5rem 1.5rem!important;background:var(--card)!important;}
-.answer-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:10px;}
-.answer-item{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-md);padding:.75rem 1rem;}
-.answer-key{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.07em;color:var(--orange);margin-bottom:4px;}
-.answer-val{font-size:12.5px;color:var(--dim);line-height:1.55;word-break:break-word;}
-.no-data{font-size:12.5px;color:var(--dimmer);font-style:italic;}
+/* ── DETAIL ROW ── */
+.detail-row{display:none;}
+.detail-row.open{display:table-row;}
+.detail-cell{padding:0!important;border-bottom:2px solid var(--orange-border)!important;background:var(--card)!important;}
+.detail-inner{padding:1.5rem 2rem;}
 
-/* ── LOADING ── */
+/* ── MODULE SECTION ── */
+.mod-section{margin-bottom:1.5rem;}
+.mod-section:last-child{margin-bottom:0;}
+.mod-sec-head{display:flex;align-items:center;gap:10px;margin-bottom:.85rem;}
+.mod-sec-num{font-family:'Barlow Condensed',sans-serif;font-size:22px;font-weight:900;color:var(--orange);opacity:.5;line-height:1;}
+.mod-sec-title{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--orange);}
+.mod-sec-rule{flex:1;height:1px;background:var(--border);}
+
+/* ── ANSWER CARDS ── */
+.ans-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:8px;}
+.ans-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-md);padding:.7rem .9rem;}
+.ans-key{font-size:9.5px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--dimmer);margin-bottom:3px;}
+.ans-val{font-size:12.5px;color:var(--text);line-height:1.55;word-break:break-word;white-space:pre-wrap;}
+.no-data{font-size:12px;color:var(--dimmer);font-style:italic;padding:.5rem 0;}
+
+/* ── MISC ── */
 #loading{text-align:center;padding:3rem;color:var(--dimmer);font-size:13px;}
 .spinner{display:inline-block;width:20px;height:20px;border:2px solid var(--border2);border-top-color:var(--orange);border-radius:50%;animation:spin .7s linear infinite;margin-bottom:.5rem;}
 @keyframes spin{to{transform:rotate(360deg)}}
-
-/* ── EMPTY ── */
 .empty{text-align:center;padding:3rem;color:var(--dimmer);font-size:13px;}
-
-/* ── REFRESH ── */
 .refresh-btn{font-size:11px;color:var(--dimmer);cursor:pointer;background:none;border:1px solid var(--border);padding:4px 10px;border-radius:var(--radius-md);font-family:var(--font);margin-left:auto;display:block;margin-bottom:1rem;}
 .refresh-btn:hover{color:var(--text);}
+.u-seen{font-size:11.5px;color:var(--dimmer);}
 </style>
 </head>
 <body>
@@ -116,29 +123,17 @@ body{background:var(--bg);color:var(--text);font-family:var(--font);font-size:14
   <div class="dash-header">
     <div>
       <div class="dash-brand">FSCreative™ — Admin</div>
-      <div class="dash-title">Visual World Workbook — User Progress</div>
+      <div class="dash-title">Brand Launch Playbook — User Progress</div>
     </div>
     <button class="dash-logout" onclick="logout()">Sign Out</button>
   </div>
 
   <div class="dash-body">
-
-    <!-- API KEY SETUP -->
-    <div id="api-key-bar" style="background:#161616;border:1px solid #2a2a2a;border-radius:8px;padding:.85rem 1.1rem;margin-bottom:1.25rem;display:flex;align-items:center;gap:12px;flex-wrap:wrap;">
-      <div style="flex:1;min-width:0">
-        <div style="font-size:9.5px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#F0601B;margin-bottom:3px;">Anthropic API Key</div>
-        <div style="font-size:12px;color:#a0a0a0;" id="api-key-status">Used for Creator Analysis AI features. Stored in this browser only.</div>
-      </div>
-      <input type="password" id="api-key-input" placeholder="sk-ant-api03-..." autocomplete="off"
-        style="width:260px;border:1px solid #2a2a2a;border-radius:6px;padding:7px 10px;font-size:12px;font-family:inherit;color:#fff;background:#0a0a0a;outline:none;">
-      <button onclick="saveApiKey()" style="background:#F0601B;color:#fff;border:none;border-radius:6px;padding:7px 14px;font-size:12px;font-weight:600;cursor:pointer;white-space:nowrap;">Save Key</button>
-    </div>
-
     <div class="stat-row" id="stat-row">
       <div class="stat-card"><div class="stat-num" id="s-total">—</div><div class="stat-lbl">Total Users</div></div>
       <div class="stat-card"><div class="stat-num" id="s-active">—</div><div class="stat-lbl">Started</div></div>
-      <div class="stat-card"><div class="stat-num" id="s-complete">—</div><div class="stat-lbl">Completed All 6</div></div>
-      <div class="stat-card"><div class="stat-num" id="s-avg">—</div><div class="stat-lbl">Avg. Sections Done</div></div>
+      <div class="stat-card"><div class="stat-num" id="s-modules">—</div><div class="stat-lbl">Avg. Modules Touched</div></div>
+      <div class="stat-card"><div class="stat-num" id="s-last">—</div><div class="stat-lbl">Active Last 7 Days</div></div>
     </div>
 
     <div class="section-title">All Users</div>
@@ -149,12 +144,12 @@ body{background:var(--bg);color:var(--text);font-family:var(--font);font-size:14
       <table class="user-table">
         <thead>
           <tr>
-            <th></th>
+            <th style="width:40px"></th>
             <th>Name</th>
             <th>Email</th>
-            <th>Progress</th>
-            <th>Sections</th>
+            <th>Modules</th>
             <th>Last Seen</th>
+            <th style="width:30px"></th>
           </tr>
         </thead>
         <tbody id="user-tbody"></tbody>
@@ -167,31 +162,70 @@ body{background:var(--bg);color:var(--text);font-family:var(--font);font-size:14
 <script>
 var SUPABASE_URL  = 'https://ljddfhzrjvxpedvfebli.supabase.co';
 var SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxqZGRmaHpyanZ4cGVkdmZlYmxpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM5NTEzNjMsImV4cCI6MjA4OTUyNzM2M30.GqZMRvBlZyN4rmr9MrfxLcLSB04d7s59ZPfEw-dQwks';
-
-/* ── Change this password ── */
 var ADMIN_PASSWORD = 'fscreative2025';
 
-var SECTION_NAMES = ['Welcome','Creator Analysis','Mood Board','Color & Type','Shot System','Visual World'];
-
-var INPUT_LABELS = {
-  'brandName':'Brand Name','niche':'Niche','targetAudience':'Target Audience',
-  'valueStatement':'Value Statement','differentiation':'Differentiation',
-  'e1-location':'Setting Location','e1-statement':'Setting Statement',
-  'e2-statement':'Mood Statement','e2-time':'Time of Day',
+/* ── Human-readable labels for every field ID ── */
+var LABELS = {
+  /* Brand Foundation */
+  q1outcome:'Desired Outcome',q1why:'Why It Matters',q2known:'Known For',q3do:'What I Need To Do',q4learn:'What I Need To Learn',
+  brandJourneyStmt:'Brand Journey Statement',brandVision:'Brand Vision Statement',
+  av1Age:'Avatar 1 — Age',av1Gender:'Avatar 1 — Gender',av1Occupation:'Avatar 1 — Occupation',av1Income:'Avatar 1 — Income',
+  av1Situation:'Avatar 1 — Situation',av1Who:'Avatar 1 — Who They Are',av1Look:'Avatar 1 — What They Look Like',
+  av1Struggle:'Avatar 1 — Biggest Struggle',av1Tried:'Avatar 1 — What They've Tried',av1Desired:'Avatar 1 — Desired Outcome',
+  av1Fears:'Avatar 1 — Fears & Objections',av1Transform:'Avatar 1 — Transformation',av1Quote:'Avatar 1 — Quote',
+  av2Age:'Avatar 2 — Age',av2Gender:'Avatar 2 — Gender',av2Occupation:'Avatar 2 — Occupation',av2Income:'Avatar 2 — Income',
+  av2Situation:'Avatar 2 — Situation',av2Who:'Avatar 2 — Who They Are',av2Look:'Avatar 2 — What They Look Like',
+  av2Struggle:'Avatar 2 — Biggest Struggle',av2Tried:'Avatar 2 — What They've Tried',av2Desired:'Avatar 2 — Desired Outcome',
+  av2Fears:'Avatar 2 — Fears & Objections',av2Transform:'Avatar 2 — Transformation',av2Quote:'Avatar 2 — Quote',
+  ikigaiLove:'What I Love',ikigaiGood:'What I'm Good At',ikigaiPaid:'What I Get Paid For',ikigaiWorld:'What the World Needs',
+  missionAvatar:'Mission — Avatar',missionOutcome:'Mission — Outcome',missionMethod:'Mission — Method',missionWhy:'Mission — Deeper Why',missionPreview:'Mission Statement',
+  val1name:'Value 1 Name',val1desc:'Value 1 Description',val2name:'Value 2 Name',val2desc:'Value 2 Description',
+  val3name:'Value 3 Name',val3desc:'Value 3 Description',val4name:'Value 4 Name',val4desc:'Value 4 Description',
+  val5name:'Value 5 Name',val5desc:'Value 5 Description',val6name:'Value 6 Name',val6desc:'Value 6 Description',
+  pillar1:'Pillar 1',pillar1offer:'Pillar 1 — Offer Connection',pillar2:'Pillar 2',pillar2offer:'Pillar 2 — Offer Connection',
+  pillar3:'Pillar 3',pillar3offer:'Pillar 3 — Offer Connection',pillar4:'Pillar 4',pillar4offer:'Pillar 4 — Offer Connection',
+  pillar5:'Pillar 5',pillar5offer:'Pillar 5 — Offer Connection',
+  storyBefore:'Origin — Before',storyTrigger:'Origin — Trigger',storyHero:'Origin — Hero Moment',storyStruggle:'Origin — Struggle',
+  storyBreakthrough:'Origin — Breakthrough',storyTransformation:'Origin — Transformation',storyNow:'Origin — Now',storyTeach:'Origin — What I Teach',
+  /* Visual World */
   'col-primary':'Primary Color','col-secondary':'Secondary Color','col-accent':'Accent Color','col-neutral':'Neutral Color',
-  'paletteName':'Palette Name','font-primary':'Primary Font','font-secondary':'Secondary Font','typographyRules':'Type Rules',
-  'e4-wardrobe':'Wardrobe','e5-primary':'Primary Shot','signatureShot':'Signature Shot',
-  'e6-statement':'Approach Statement','vwNarrative':'Visual World Narrative',
-  'mbStatement':'Mood Board Statement','mbTime':'Mood Board Time',
-  'mbLink':'Pinterest Board'
+  paletteName:'Palette Name','font-primary':'Primary Font','font-secondary':'Secondary Font',typographyRules:'Typography Rules',
+  'e1-location':'Setting Location','e1-statement':'Setting Statement','e2-statement':'Mood Statement','e2-time':'Time of Day',
+  'e2-emotion':'Emotion','e4-wardrobe':'Wardrobe','e4-never':'Never Show List',signatureShot:'Signature Shot',
+  mbStatement:'Mood Board Statement',mbTime:'Mood Board Time of Day',mbLink:'Pinterest Board',
+  /* Content */
+  contentNiche:'Content Niche',contentVoice:'Content Voice',contentWhy:'Content Why',contentMission:'Content Mission',
+  batchDay:'Batch Day',batchTime:'Batch Time',batchFreq:'Batch Frequency',
+  contentPillar1:'Content Pillar 1',contentPillar2:'Content Pillar 2',contentPillar3:'Content Pillar 3',
+  hookFormula1:'Hook Formula 1',hookFormula2:'Hook Formula 2',hookFormula3:'Hook Formula 3',
+  storyHook:'Story Hook',storyConflict:'Story Conflict',storyResolution:'Story Resolution',
+  /* Launch */
+  bioHandle:'Bio Handle',bioName:'Bio Name',bioWho:'Bio — Who You Help',bioWhat:'Bio — What You Do',
+  bioFor:'Bio — What It's For',bioCTA:'Bio CTA',bioResult:'Generated Bio',
+  funnelAwareness:'Funnel — Awareness',funnelInterest:'Funnel — Interest',funnelDecision:'Funnel — Decision',funnelConversion:'Funnel — Conversion',
+  funnelBroken:'Funnel — What's Broken',
+  lmTopic:'Lead Magnet Topic',lmFormat:'Lead Magnet Format',lmTitle:'Lead Magnet Title',lmHook:'Lead Magnet Hook',lmOutline:'Lead Magnet Outline',
+  mcTrigger:'ManyChat Trigger Word',mcMessage:'ManyChat DM Message',
+  newsletterName:'Newsletter Name',newsletterWelcome:'Welcome Email',newsletterFreq:'Email Frequency',
+  launchHook1:'Launch Hook 1',launchHook2:'Launch Hook 2',launchHook3:'Launch Hook 3',
+  goal90Content:'90-Day Content Goal',goal90Audience:'90-Day Audience Goal',goal90Revenue:'90-Day Revenue Goal',
+  reviewDate:'90-Day Review Date',accountabilityPartner:'Accountability Partner'
 };
 
-function sbHeaders() {
-  return {
-    'apikey': SUPABASE_ANON,
-    'Authorization': 'Bearer ' + SUPABASE_ANON,
-    'Content-Type': 'application/json'
-  };
+/* Modules and which fields belong to each (for grouping in detail view) */
+var MODULE_DEFS = [
+  {id:'cf',  num:'01', title:'Brand Foundation', table:'vww_progress_cf', flat:true,
+   fields:['q1outcome','q1why','q2known','q3do','q4learn','brandJourneyStmt','av1Age','av1Occupation','av1Gender','av1Income','av1Situation','av1Who','av1Look','av1Struggle','av1Tried','av1Desired','av1Fears','av1Transform','av1Quote','av2Age','av2Occupation','av2Gender','av2Income','av2Situation','av2Who','av2Look','av2Struggle','av2Tried','av2Desired','av2Fears','av2Transform','av2Quote','ikigaiLove','ikigaiGood','ikigaiPaid','ikigaiWorld','missionAvatar','missionOutcome','missionMethod','missionWhy','missionPreview','val1name','val1desc','val2name','val2desc','val3name','val3desc','val4name','val4desc','val5name','val5desc','val6name','val6desc','pillar1','pillar1offer','pillar2','pillar2offer','pillar3','pillar3offer','pillar4','pillar4offer','pillar5','pillar5offer','storyBefore','storyTrigger','storyHero','storyStruggle','storyBreakthrough','storyTransformation','storyNow','storyTeach','brandVision']},
+  {id:'vw',  num:'02', title:'Visual World', table:'vww_progress', nested:'inputs',
+   fields:['col-primary','col-secondary','col-accent','col-neutral','paletteName','font-primary','font-secondary','typographyRules','e1-location','e1-statement','e2-statement','e2-time','e2-emotion','e4-wardrobe','e4-never','signatureShot','mbStatement','mbTime','mbLink']},
+  {id:'cc',  num:'03', title:'Create Your Content', table:'vww_progress', nested:'inputs',
+   fields:['contentNiche','contentVoice','contentWhy','contentMission','batchDay','batchTime','batchFreq','hookFormula1','hookFormula2','hookFormula3','storyHook','storyConflict','storyResolution']},
+  {id:'la',  num:'04', title:'Launch', table:'vww_progress', key:'launch-v1', flat:true,
+   fields:['bioHandle','bioName','bioWho','bioWhat','bioFor','bioCTA','bioResult','funnelAwareness','funnelInterest','funnelDecision','funnelConversion','funnelBroken','lmTopic','lmFormat','lmTitle','lmHook','lmOutline','mcTrigger','mcMessage','newsletterName','newsletterWelcome','newsletterFreq','goal90Content','goal90Audience','goal90Revenue','reviewDate','accountabilityPartner']}
+];
+
+function sbH() {
+  return {'apikey':SUPABASE_ANON,'Authorization':'Bearer '+SUPABASE_ANON,'Content-Type':'application/json'};
 }
 
 function checkAuth() {
@@ -201,7 +235,6 @@ function checkAuth() {
     document.getElementById('auth-screen').style.display = 'none';
     document.getElementById('dashboard').style.display = 'block';
     loadDashboard();
-    initApiKeyBar();
   } else {
     err.style.display = 'block';
     document.getElementById('auth-pass').value = '';
@@ -215,63 +248,53 @@ function logout() {
   document.getElementById('auth-pass').value = '';
 }
 
-function saveApiKey() {
-  var key = (document.getElementById('api-key-input').value || '').trim();
-  if (!key) return;
-  localStorage.setItem('fsc-anthropic-key', key);
-  document.getElementById('api-key-input').value = '';
-  var status = document.getElementById('api-key-status');
-  status.textContent = '✓ Key saved — Creator Analysis is now active in this browser.';
-  status.style.color = '#5DCAA5';
-  setTimeout(function(){ status.textContent = 'Used for Creator Analysis AI features. Stored in this browser only.'; status.style.color = ''; }, 3000);
-}
-
-function initApiKeyBar() {
-  var existing = localStorage.getItem('fsc-anthropic-key');
-  if (existing) {
-    var status = document.getElementById('api-key-status');
-    status.textContent = '✓ Key active — last 8 chars: ...' + existing.slice(-8);
-    status.style.color = '#5DCAA5';
-    document.getElementById('api-key-input').placeholder = 'Paste new key to update...';
-  }
-}
-
 async function loadDashboard() {
   document.getElementById('loading').style.display = 'block';
   document.getElementById('user-list').style.display = 'none';
   document.getElementById('user-empty').style.display = 'none';
 
   try {
-    var [usersResp, progressResp] = await Promise.all([
-      fetch(SUPABASE_URL + '/rest/v1/vww_users?select=*&order=last_seen.desc', {headers: sbHeaders()}),
-      fetch(SUPABASE_URL + '/rest/v1/vww_progress?select=email,data,updated_at', {headers: sbHeaders()})
+    var [usersR, mainR, cfR] = await Promise.all([
+      fetch(SUPABASE_URL+'/rest/v1/vww_users?select=*&order=last_seen.desc', {headers:sbH()}),
+      fetch(SUPABASE_URL+'/rest/v1/vww_progress?select=email,data,updated_at', {headers:sbH()}),
+      fetch(SUPABASE_URL+'/rest/v1/vww_progress_cf?select=email,data,updated_at', {headers:sbH()})
     ]);
-    var users    = await usersResp.json();
-    var progress = await progressResp.json();
+    var users   = await usersR.json();
+    var mainProg = await mainR.json();
+    var cfProg   = await cfR.json();
 
-    var progMap = {};
-    progress.forEach(function(p){ progMap[p.email] = p; });
+    /* Build per-email maps */
+    var mainMap={}, cfMap={};
+    if (Array.isArray(mainProg)) mainProg.forEach(function(p){ mainMap[p.email]=p; });
+    if (Array.isArray(cfProg))   cfProg.forEach(function(p){ cfMap[p.email]=p; });
 
-    /* stats */
-    var total    = users.length;
-    var started  = users.filter(function(u){ return progMap[u.email]; }).length;
-    var complete = users.filter(function(u){
-      var p = progMap[u.email];
-      return p && p.data && p.data.done && p.data.done.length >= 6;
-    }).length;
-    var avgDone = started ? (users.reduce(function(sum,u){
-      var p = progMap[u.email];
-      return sum + (p&&p.data&&p.data.done ? p.data.done.length : 0);
-    }, 0) / started).toFixed(1) : '0';
+    if (!Array.isArray(users)) users = [];
 
-    document.getElementById('s-total').textContent    = total;
-    document.getElementById('s-active').textContent   = started;
-    document.getElementById('s-complete').textContent = complete;
-    document.getElementById('s-avg').textContent      = avgDone;
+    /* Stats */
+    var total = users.length;
+    var started = users.filter(function(u){ return mainMap[u.email]||cfMap[u.email]; }).length;
+    var week = Date.now() - 7*24*60*60*1000;
+    var active7 = users.filter(function(u){ return u.last_seen && new Date(u.last_seen).getTime()>week; }).length;
+
+    /* Count avg modules touched */
+    var totalMods = 0;
+    users.forEach(function(u){
+      var c=0;
+      if(cfMap[u.email]) c++;
+      var md = mainMap[u.email]&&mainMap[u.email].data;
+      if(md&&md.inputs&&Object.keys(md.inputs).some(function(k){return md.inputs[k];})) c++;
+      if(md&&md['launch-v1']&&Object.keys(md['launch-v1']).some(function(k){return md['launch-v1'][k];})) c++;
+      totalMods += c;
+    });
+
+    document.getElementById('s-total').textContent  = total;
+    document.getElementById('s-active').textContent = started;
+    document.getElementById('s-modules').textContent = started ? (totalMods/started).toFixed(1) : '0';
+    document.getElementById('s-last').textContent   = active7;
 
     if (!total) {
-      document.getElementById('loading').style.display = 'none';
-      document.getElementById('user-empty').style.display = 'block';
+      document.getElementById('loading').style.display='none';
+      document.getElementById('user-empty').style.display='block';
       return;
     }
 
@@ -279,69 +302,147 @@ async function loadDashboard() {
     tbody.innerHTML = '';
 
     users.forEach(function(user, idx) {
-      var prog = progMap[user.email];
-      var data = prog && prog.data ? prog.data : null;
-      var doneSections = data && data.done ? data.done.map(Number) : [];
-      var pct = Math.round((doneSections.length / 6) * 100);
-      var initials = (user.name || user.email).charAt(0).toUpperCase();
+      var main = mainMap[user.email];
+      var cf   = cfMap[user.email];
+      var md   = main && main.data ? main.data : null;
+      var cfd  = cf   && cf.data   ? cf.data   : null;
+
+      /* Which modules have data */
+      var hasCF = !!(cfd && Object.keys(cfd).some(function(k){ return k!=='cur'&&k!=='done'&&cfd[k]&&typeof cfd[k]==='string'&&cfd[k].trim(); }));
+      var hasVW = !!(md && md.inputs && Object.keys(md.inputs).some(function(k){ return md.inputs[k]; }));
+      var hasCC = hasVW; /* same table — best guess from inputs */
+      var hasLA = !!(md && md['launch-v1'] && Object.keys(md['launch-v1']).some(function(k){ var v=md['launch-v1'][k]; return typeof v==='string'&&v.trim(); }));
+
+      var initials = (user.name||user.email||'?').charAt(0).toUpperCase();
       var lastSeen = user.last_seen ? relTime(user.last_seen) : '—';
 
-      /* main row */
+      var modBadges = [
+        {label:'01 Foundation', has:hasCF},
+        {label:'02 Visuals', has:hasVW},
+        {label:'04 Launch', has:hasLA}
+      ].map(function(b){
+        return '<span class="mbadge'+(b.has?' has':'')+'">'+b.label+'</span>';
+      }).join('');
+
+      /* Main row */
       var tr = document.createElement('tr');
-      tr.className = 'expandable';
+      tr.className = 'user-row';
       tr.setAttribute('data-idx', idx);
-      tr.onclick = function(){ toggleExpand(idx); };
+      tr.onclick = function(){ toggleDetail(idx, user, md, cfd); };
       tr.innerHTML = [
         '<td><div class="u-avatar">'+esc(initials)+'</div></td>',
-        '<td><div class="u-name">'+esc(user.name||'')+'</div></td>',
+        '<td><div class="u-name">'+esc(user.name||'—')+'</div><div class="u-email">'+esc(user.handle?'@'+user.handle:'')+'</div></td>',
         '<td><div class="u-email">'+esc(user.email)+'</div></td>',
-        '<td><span class="u-prog-bar"><span class="u-prog-fill'+(pct===100?' done':'')+'" style="width:'+pct+'%"></span></span><span style="font-size:11.5px;color:var(--dimmer)">'+doneSections.length+'/6</span></td>',
-        '<td><div class="badge-row">'+SECTION_NAMES.map(function(n,i){ return '<span class="badge'+(doneSections.indexOf(i)>-1?' done':'')+'">'+(i+1)+'</span>'; }).join('')+'</div></td>',
-        '<td class="u-seen">'+lastSeen+'</td>'
+        '<td><div class="mod-badges">'+modBadges+'</div></td>',
+        '<td class="u-seen">'+lastSeen+'</td>',
+        '<td style="text-align:center"><span class="expand-chevron">▾</span></td>'
       ].join('');
       tbody.appendChild(tr);
 
-      /* expand row */
-      var extr = document.createElement('tr');
-      extr.className = 'expand-row';
-      extr.id = 'expand-'+idx;
-      var exTd = document.createElement('td');
-      exTd.className = 'expand-cell';
-      exTd.colSpan = 6;
-
-      if (data && data.inputs && Object.keys(data.inputs).length) {
-        var items = Object.keys(data.inputs)
-          .filter(function(k){ return data.inputs[k] && data.inputs[k].trim(); })
-          .map(function(k){
-            var label = INPUT_LABELS[k] || k;
-            return '<div class="answer-item"><div class="answer-key">'+esc(label)+'</div><div class="answer-val">'+esc(data.inputs[k])+'</div></div>';
-          }).join('');
-        if (data.opts && Object.keys(data.opts).length) {
-          items += Object.keys(data.opts).map(function(g){
-            return '<div class="answer-item"><div class="answer-key">'+esc(g)+'</div><div class="answer-val">'+esc(data.opts[g])+'</div></div>';
-          }).join('');
-        }
-        exTd.innerHTML = '<div class="answer-grid">'+items+'</div>';
-      } else {
-        exTd.innerHTML = '<div class="no-data">No answers saved yet.</div>';
-      }
-      extr.appendChild(exTd);
-      tbody.appendChild(extr);
+      /* Detail row (hidden by default) */
+      var dtr = document.createElement('tr');
+      dtr.className = 'detail-row';
+      dtr.id = 'detail-'+idx;
+      var dtd = document.createElement('td');
+      dtd.className = 'detail-cell';
+      dtd.colSpan = 6;
+      dtd.innerHTML = '<div class="detail-inner" id="detail-inner-'+idx+'"><div style="font-size:12px;color:var(--dimmer)">Click to load answers...</div></div>';
+      dtr.appendChild(dtd);
+      tbody.appendChild(dtr);
     });
 
-    document.getElementById('loading').style.display = 'none';
-    document.getElementById('user-list').style.display = 'block';
+    /* Store data for detail rendering */
+    window._adminUsers = users;
+    window._adminMain  = mainMap;
+    window._adminCf    = cfMap;
+
+    document.getElementById('loading').style.display='none';
+    document.getElementById('user-list').style.display='block';
 
   } catch(e) {
-    document.getElementById('loading').innerHTML = '<div style="color:#e05555">Failed to load: '+e.message+'</div>';
+    document.getElementById('loading').innerHTML = '<div style="color:#e05555;font-size:13px">Failed to load: '+e.message+'</div>';
     console.error(e);
   }
 }
 
-function toggleExpand(idx) {
-  var row = document.getElementById('expand-'+idx);
-  if (!row) return;
-  row.classList.toggle('open');
+function toggleDetail(idx, user, md, cfd) {
+  var dtr = document.getElementById('detail-'+idx);
+  var tr  = document.querySelector('[data-idx="'+idx+'"]');
+  if (!dtr) return;
+  var isOpen = dtr.classList.contains('open');
+  /* Close all */
+  document.querySelectorAll('.detail-row.open').forEach(function(r){ r.classList.remove('open'); });
+  document.querySelectorAll('.user-row.expanded').forEach(function(r){ r.classList.remove('expanded'); });
+  if (!isOpen) {
+    dtr.classList.add('open');
+    tr.classList.add('expanded');
+    renderDetail(idx, user, md, cfd);
+  }
+}
+
+function renderDetail(idx, user, md, cfd) {
+  var inner = document.getElementById('detail-inner-'+idx);
+  if (!inner) return;
+  var html = '';
+
+  /* ── MODULE SECTIONS ── */
+  MODULE_DEFS.forEach(function(mod) {
+    var fields = [];
+
+    if (mod.id === 'cf' && cfd) {
+      /* Flat brand-foundation data */
+      mod.fields.forEach(function(k) {
+        var v = cfd[k];
+        if (v && typeof v==='string' && v.trim()) fields.push({k:k, v:v.trim()});
+      });
+      /* Also catch any unknown filled fields */
+      Object.keys(cfd).forEach(function(k){
+        if(mod.fields.indexOf(k)===-1 && k!=='cur'&&k!=='done'&&k!=='auditVals'){
+          var v=cfd[k]; if(v&&typeof v==='string'&&v.trim()) fields.push({k:k,v:v.trim()});
+        }
+      });
+    } else if (mod.id === 'vw' && md && md.inputs) {
+      mod.fields.forEach(function(k) {
+        var v = md.inputs[k];
+        if (v && typeof v==='string' && v.trim()) fields.push({k:k, v:v.trim()});
+      });
+    } else if (mod.id === 'cc' && md && md.inputs) {
+      /* Content fields — any input not already shown in VW */
+      var vwFields = MODULE_DEFS[1].fields;
+      Object.keys(md.inputs).forEach(function(k){
+        if(vwFields.indexOf(k)===-1){
+          var v=md.inputs[k]; if(v&&typeof v==='string'&&v.trim()) fields.push({k:k,v:v.trim()});
+        }
+      });
+      /* Also show selected opts */
+      if(md.opts) Object.keys(md.opts).forEach(function(k){
+        var v=md.opts[k]; if(v&&typeof v==='string'&&v.trim()) fields.push({k:k,v:v.trim()});
+      });
+    } else if (mod.id === 'la' && md && md['launch-v1']) {
+      var ld = md['launch-v1'];
+      mod.fields.forEach(function(k){
+        var v=ld[k]; if(v&&typeof v==='string'&&v.trim()) fields.push({k:k,v:v.trim()});
+      });
+      /* Also catch opt_ fields */
+      Object.keys(ld).forEach(function(k){
+        if(k.indexOf('opt_')===0){var v=ld[k];if(v&&v.trim())fields.push({k:k,v:v.trim()});}
+      });
+    }
+
+    if (fields.length === 0) return; /* skip empty modules */
+
+    html += '<div class="mod-section">';
+    html += '<div class="mod-sec-head"><div class="mod-sec-num">'+mod.num+'</div><div class="mod-sec-title">'+mod.title+'</div><div class="mod-sec-rule"></div></div>';
+    html += '<div class="ans-grid">';
+    fields.forEach(function(f){
+      var label = LABELS[f.k] || f.k.replace(/_/g,' ').replace(/([A-Z])/g,' $1').trim();
+      html += '<div class="ans-card"><div class="ans-key">'+esc(label)+'</div><div class="ans-val">'+esc(f.v)+'</div></div>';
+    });
+    html += '</div></div>';
+  });
+
+  if (!html) html = '<div class="no-data">No answers saved yet.</div>';
+  inner.innerHTML = html;
 }
 
 function relTime(iso) {
