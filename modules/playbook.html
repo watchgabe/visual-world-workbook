@@ -44,12 +44,14 @@ body::before{content:'';position:fixed;inset:0;z-index:9999;pointer-events:none;
 body.light .icon-moon{display:none}body.light .icon-sun{display:block}
 
 /* ── PLAYBOOK SPECIFIC STYLES ── */
-.pb-cover{text-align:center;padding:3rem 0 2.5rem;margin-bottom:2rem;border-bottom:2px solid var(--orange);position:relative;}
-.pb-cover::before{content:'';position:absolute;bottom:-2px;left:0;width:60px;height:2px;background:var(--bg);}
+.pb-cover{text-align:center;padding:3rem 0 2rem;margin-bottom:0;}
 .pb-eyebrow{font-size:10px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--orange);margin-bottom:1rem;}
-.pb-title{font-family:var(--font-num);font-size:64px;font-weight:900;line-height:1;letter-spacing:-1px;color:var(--text);margin-bottom:.75rem;}
-.pb-name{font-size:18px;color:var(--dim);font-weight:400;margin-bottom:6px;}
-.pb-date{font-size:12px;color:var(--dimmer);}
+.pb-title{font-family:var(--font-num);font-size:clamp(44px,6vw,68px);font-weight:900;line-height:1;letter-spacing:-1px;color:var(--text);white-space:nowrap;margin-bottom:.85rem;}
+.pb-name{font-size:20px;color:var(--text);font-weight:600;margin-bottom:4px;}
+.pb-handle{font-size:13px;color:var(--orange);letter-spacing:.04em;margin-bottom:.6rem;}
+.pb-bio{font-size:13px;color:var(--dim);max-width:480px;margin:0 auto .75rem;line-height:1.65;}
+.pb-date{font-size:11px;color:var(--dimmer);}
+.pb-rule{height:2px;background:var(--orange);margin:1.75rem 0 2.25rem;width:calc(100vw - 228px);margin-left:calc(max(0px,(100vw - 228px - 700px) / -2) - 2rem);}
 
 .pb-chapter{margin-bottom:3rem;}
 .pb-ch-header{display:flex;align-items:center;gap:16px;margin-bottom:1.5rem;padding-bottom:1rem;border-bottom:1px solid var(--border);}
@@ -65,7 +67,7 @@ body.light .icon-moon{display:none}body.light .icon-sun{display:block}
 .pb-value{font-size:13px;color:var(--text);line-height:1.6;}
 .pb-value.empty{color:var(--dimmer);font-style:italic;}
 .pb-highlight.empty{background:var(--surface);border-color:var(--border);}
-.pb-highlight.empty .pb-label{color:var(--dimmer);}
+.pb-highlight.empty .pb-label{color:var(--orange);}
 .pb-highlight.empty .pb-value{color:var(--dimmer);font-style:italic;font-size:13px;font-weight:400;}
 
 .pb-highlight{background:var(--orange-tint);border:1px solid var(--orange-border);border-radius:var(--radius-lg);padding:1.1rem 1.4rem;margin-bottom:1rem;}
@@ -204,12 +206,17 @@ function buildPlaybook() {
   var html = '';
 
   /* ── COVER ── */
+  var handle = val(la.bioUsername) || val(la.username) || val(cf.brandHandle) || '';
+  var bio = val(cf.q2known) || '';
   html += '<div class="pb-cover">';
-  html += '<div class="pb-eyebrow">FSCreative\u2122 \u2014 The Brand Launch Playbook\u2122</div>';
-  html += '<div class="pb-title">YOUR<br>PLAYBOOK</div>';
+  html += '<div class="pb-eyebrow">FS Creative</div>';
+  html += '<div class="pb-title">YOUR PLAYBOOK</div>';
   html += '<div class="pb-name">' + escHtml(userName) + '</div>';
+  if (handle) html += '<div class="pb-handle">' + escHtml(handle) + '</div>';
+  if (bio) html += '<div class="pb-bio">' + escHtml(bio) + '</div>';
   html += '<div class="pb-date">Generated ' + today + '</div>';
   html += '</div>';
+  html += '<div class="pb-rule"></div>';
 
   /* ── CHAPTER 01: BRAND FOUNDATION ── */
   var cfEmpty = !cf || Object.keys(cf).length === 0;
@@ -303,11 +310,6 @@ function buildPlaybook() {
     });
     swatchHtml += '</div>';
     if (hasColors) vwContent += swatchHtml;
-    vwContent += grid([
-      field('Primary Font', vw['font-primary'], 'e.g. Helvetica Neue'),
-      field('Secondary Font', vw['font-secondary'], 'e.g. Barlow Condensed')
-    ]);
-    vwContent += highlight('Typography Rules', vw.typographyRules, 'Complete the Typography workshop to define your font system.');
     /* Mood & Setting */
     vwContent += '<div style="margin:.75rem 0 .4rem"><div class="pb-label">Mood &amp; Setting</div></div>';
     vwContent += grid([
@@ -330,16 +332,9 @@ function buildPlaybook() {
     ]);
     vwContent += gridFull([field('Never On Camera', vw['e4-never'], 'e.g. Cluttered backgrounds, bright logos, distracting patterns')]);
     /* Content Approach */
-    vwContent += '<div style="margin:.75rem 0 .4rem"><div class="pb-label">Content Approach</div></div>';
     vwContent += grid([
       field('Content Format', vwOpts.e6format, 'e.g. Long-form YouTube + short-form Reels'),
       field('Energy', vwOpts.e6energy, 'e.g. Calm, authoritative, direct')
-    ]);
-    vwContent += grid([
-      field('Educational %', vw['e6-edu'], 'e.g. 60%'),
-      field('Value %', vw['e6-value'], 'e.g. 20%'),
-      field('Lifestyle %', vw['e6-life'], 'e.g. 15%'),
-      field('Social Proof %', vw['e6-proof'], 'e.g. 5%')
     ]);
     vwContent += highlight('Content Approach Statement', vw['e6-statement'], 'Complete the Content Approach workshop to define your content style.');
     vwContent += grid([
