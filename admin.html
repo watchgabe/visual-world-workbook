@@ -13,6 +13,7 @@ html{scroll-behavior:smooth}
   --text:#ffffff;--dim:#a0a0a0;--dimmer:#555555;
   --orange:#F0601B;--orange-hover:#ff6d28;--orange-tint:rgba(240,96,27,0.1);--orange-border:rgba(240,96,27,0.28);--orange-dark:#ff8050;
   --green-bg:rgba(61,184,100,0.1);--green-text:#5DCAA5;--green-border:rgba(93,202,165,0.3);
+  --blue-bg:rgba(59,130,246,0.1);--blue-text:#60a5fa;--blue-border:rgba(59,130,246,0.3);
   --radius-lg:10px;--radius-md:6px;
   --font:'Helvetica Neue',Helvetica,Arial,sans-serif;
 }
@@ -39,6 +40,16 @@ body{background:var(--bg);color:var(--text);font-family:var(--font);font-size:14
 .dash-logout:hover{color:var(--text);border-color:var(--border2);}
 .dash-body{padding:2rem;max-width:1200px;margin:0 auto;}
 
+/* ── CONFIG STRIP ── */
+.config-strip{background:var(--surface);border:1px solid var(--border2);border-radius:var(--radius-md);padding:1rem 1.25rem;margin-bottom:1.5rem;display:flex;flex-wrap:wrap;gap:12px;align-items:flex-end;}
+.config-group{flex:1;min-width:200px;}
+.config-label{font-size:9.5px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--orange);margin-bottom:5px;}
+.config-sub{font-size:11px;color:var(--dimmer);margin-bottom:6px;}
+.config-input{width:100%;border:1px solid var(--border);border-radius:var(--radius-md);padding:7px 10px;font-size:13px;font-family:var(--font);color:var(--text);background:var(--bg);}
+.config-input:focus{outline:none;border-color:var(--orange);}
+.config-save{background:var(--orange);color:#fff;border:none;border-radius:var(--radius-md);padding:7px 14px;font-size:12px;font-weight:600;cursor:pointer;font-family:var(--font);white-space:nowrap;align-self:flex-end;}
+.config-save:hover{background:var(--orange-hover);}
+
 /* ── STATS ── */
 .stat-row{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:2rem;}
 .stat-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-md);padding:1rem 1.2rem;}
@@ -55,7 +66,8 @@ body{background:var(--bg);color:var(--text);font-family:var(--font);font-size:14
 .user-row.expanded td{background:var(--surface);}
 
 /* ── AVATAR ── */
-.u-avatar{width:32px;height:32px;border-radius:50%;background:var(--orange-tint);border:1px solid var(--orange-border);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:var(--orange-dark);flex-shrink:0;}
+.u-avatar{width:32px;height:32px;border-radius:50%;background:var(--orange-tint);border:1px solid var(--orange-border);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:var(--orange-dark);flex-shrink:0;overflow:hidden;}
+.u-avatar img{width:100%;height:100%;object-fit:cover;border-radius:50%;}
 .u-name{font-weight:600;color:var(--text);}
 .u-email{font-size:11.5px;color:var(--dimmer);margin-top:1px;}
 
@@ -79,6 +91,18 @@ body{background:var(--bg);color:var(--text);font-family:var(--font);font-size:14
 .detail-cell{padding:0!important;border-bottom:2px solid var(--orange-border)!important;background:var(--card)!important;}
 .detail-inner{padding:1.5rem 2rem;}
 
+/* ── CIRCLE CARD ── */
+.circle-card{background:var(--surface);border:1px solid var(--blue-border);border-radius:var(--radius-md);padding:1rem 1.2rem;margin-bottom:1.5rem;display:flex;align-items:center;gap:1rem;flex-wrap:wrap;}
+.circle-avatar{width:44px;height:44px;border-radius:50%;background:var(--blue-bg);border:1px solid var(--blue-border);flex-shrink:0;overflow:hidden;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:700;color:var(--blue-text);}
+.circle-avatar img{width:100%;height:100%;object-fit:cover;}
+.circle-info{flex:1;min-width:0;}
+.circle-name{font-size:14px;font-weight:700;color:var(--text);}
+.circle-meta{font-size:11.5px;color:var(--dimmer);margin-top:2px;}
+.circle-badge{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;background:var(--blue-bg);color:var(--blue-text);border:1px solid var(--blue-border);padding:2px 8px;border-radius:10px;margin-left:6px;}
+.circle-link{font-size:12px;color:var(--blue-text);text-decoration:none;border:1px solid var(--blue-border);padding:5px 12px;border-radius:var(--radius-md);}
+.circle-link:hover{background:var(--blue-bg);}
+.circle-not-found{font-size:12px;color:var(--dimmer);font-style:italic;}
+
 /* ── MODULE SECTION ── */
 .mod-section{margin-bottom:1.5rem;}
 .mod-section:last-child{margin-bottom:0;}
@@ -86,13 +110,18 @@ body{background:var(--bg);color:var(--text);font-family:var(--font);font-size:14
 .mod-sec-num{font-family:'Barlow Condensed',sans-serif;font-size:22px;font-weight:900;color:var(--orange);opacity:.5;line-height:1;}
 .mod-sec-title{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--orange);}
 .mod-sec-rule{flex:1;height:1px;background:var(--border);}
+.mod-sec-count{font-size:10px;color:var(--dimmer);}
 
 /* ── ANSWER CARDS ── */
-.ans-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:8px;}
+.ans-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:8px;}
 .ans-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-md);padding:.7rem .9rem;}
 .ans-key{font-size:9.5px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--dimmer);margin-bottom:3px;}
 .ans-val{font-size:12.5px;color:var(--text);line-height:1.55;word-break:break-word;white-space:pre-wrap;}
 .no-data{font-size:12px;color:var(--dimmer);font-style:italic;padding:.5rem 0;}
+
+/* ── OPTS SECTION ── */
+.opts-row{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:.75rem;}
+.opt-chip{font-size:11.5px;background:var(--orange-tint);border:1px solid var(--orange-border);color:var(--orange-dark);padding:3px 10px;border-radius:20px;}
 
 /* ── MISC ── */
 #loading{text-align:center;padding:3rem;color:var(--dimmer);font-size:13px;}
@@ -102,6 +131,7 @@ body{background:var(--bg);color:var(--text);font-family:var(--font);font-size:14
 .refresh-btn{font-size:11px;color:var(--dimmer);cursor:pointer;background:none;border:1px solid var(--border);padding:4px 10px;border-radius:var(--radius-md);font-family:var(--font);margin-left:auto;display:block;margin-bottom:1rem;}
 .refresh-btn:hover{color:var(--text);}
 .u-seen{font-size:11.5px;color:var(--dimmer);}
+.tbl-wrap{overflow-x:auto;}
 </style>
 </head>
 <body>
@@ -129,10 +159,27 @@ body{background:var(--bg);color:var(--text);font-family:var(--font);font-size:14
   </div>
 
   <div class="dash-body">
+
+    <!-- Config -->
+    <div class="config-strip">
+      <div class="config-group">
+        <div class="config-label">Circle API Key</div>
+        <div class="config-sub">Stored in this browser only. Used to link users to their Circle profiles.</div>
+        <input type="password" id="circle-key-input" class="config-input" placeholder="circle_api_...">
+      </div>
+      <div class="config-group" style="max-width:200px">
+        <div class="config-label">Circle Community ID</div>
+        <div class="config-sub">Found in your Circle admin URL.</div>
+        <input type="text" id="circle-cid-input" class="config-input" placeholder="12345">
+      </div>
+      <button class="config-save" onclick="saveCircleConfig()">Save</button>
+    </div>
+
+    <!-- Stats -->
     <div class="stat-row" id="stat-row">
       <div class="stat-card"><div class="stat-num" id="s-total">—</div><div class="stat-lbl">Total Users</div></div>
       <div class="stat-card"><div class="stat-num" id="s-active">—</div><div class="stat-lbl">Started</div></div>
-      <div class="stat-card"><div class="stat-num" id="s-modules">—</div><div class="stat-lbl">Avg. Modules Touched</div></div>
+      <div class="stat-card"><div class="stat-num" id="s-complete">—</div><div class="stat-lbl">Completed All 4</div></div>
       <div class="stat-card"><div class="stat-num" id="s-last">—</div><div class="stat-lbl">Active Last 7 Days</div></div>
     </div>
 
@@ -141,6 +188,7 @@ body{background:var(--bg);color:var(--text);font-family:var(--font);font-size:14
 
     <div id="loading"><div class="spinner"></div><br>Loading users...</div>
     <div id="user-list" style="display:none">
+      <div class="tbl-wrap">
       <table class="user-table">
         <thead>
           <tr>
@@ -154,6 +202,7 @@ body{background:var(--bg);color:var(--text);font-family:var(--font);font-size:14
         </thead>
         <tbody id="user-tbody"></tbody>
       </table>
+      </div>
     </div>
     <div id="user-empty" class="empty" style="display:none">No users yet.</div>
   </div>
@@ -164,35 +213,47 @@ var SUPABASE_URL  = 'https://ljddfhzrjvxpedvfebli.supabase.co';
 var SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxqZGRmaHpyanZ4cGVkdmZlYmxpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM5NTEzNjMsImV4cCI6MjA4OTUyNzM2M30.GqZMRvBlZyN4rmr9MrfxLcLSB04d7s59ZPfEw-dQwks';
 var ADMIN_PASSWORD = 'fscreative2025';
 
-/* ── Human-readable labels for every field ID ── */
+/* ── Human-readable labels ── */
 var LABELS = {
   /* Brand Foundation */
   q1outcome:'Desired Outcome',q1why:'Why It Matters',q2known:'Known For',q3do:'What I Need To Do',q4learn:'What I Need To Learn',
   brandJourneyStmt:'Brand Journey Statement',brandVision:'Brand Vision Statement',
   av1Age:'Avatar 1 — Age',av1Gender:'Avatar 1 — Gender',av1Occupation:'Avatar 1 — Occupation',av1Income:'Avatar 1 — Income',
   av1Situation:'Avatar 1 — Situation',av1Who:'Avatar 1 — Who They Are',av1Look:'Avatar 1 — What They Look Like',
-  av1Struggle:'Avatar 1 — Biggest Struggle',av1Tried:'Avatar 1 — What They've Tried',av1Desired:'Avatar 1 — Desired Outcome',
+  av1Story:'Avatar 1 — Story',av1Goals:'Avatar 1 — Goals',av1Passions:'Avatar 1 — Passions',
+  av1Struggle:'Avatar 1 — Biggest Struggle',av1Tried:'Avatar 1 — What They\'ve Tried',av1Desired:'Avatar 1 — Desired Outcome',
   av1Fears:'Avatar 1 — Fears & Objections',av1Transform:'Avatar 1 — Transformation',av1Quote:'Avatar 1 — Quote',
+  av1Statement:'Avatar 1 — Generated Statement',av1Platforms:'Avatar 1 — Platforms',av1Connection:'Avatar 1 — Connection',
   av2Age:'Avatar 2 — Age',av2Gender:'Avatar 2 — Gender',av2Occupation:'Avatar 2 — Occupation',av2Income:'Avatar 2 — Income',
   av2Situation:'Avatar 2 — Situation',av2Who:'Avatar 2 — Who They Are',av2Look:'Avatar 2 — What They Look Like',
-  av2Struggle:'Avatar 2 — Biggest Struggle',av2Tried:'Avatar 2 — What They've Tried',av2Desired:'Avatar 2 — Desired Outcome',
+  av2Story:'Avatar 2 — Story',av2Goals:'Avatar 2 — Goals',av2Passions:'Avatar 2 — Passions',
+  av2Struggle:'Avatar 2 — Biggest Struggle',av2Tried:'Avatar 2 — What They\'ve Tried',av2Desired:'Avatar 2 — Desired Outcome',
   av2Fears:'Avatar 2 — Fears & Objections',av2Transform:'Avatar 2 — Transformation',av2Quote:'Avatar 2 — Quote',
-  ikigaiLove:'What I Love',ikigaiGood:'What I'm Good At',ikigaiPaid:'What I Get Paid For',ikigaiWorld:'What the World Needs',
-  missionAvatar:'Mission — Avatar',missionOutcome:'Mission — Outcome',missionMethod:'Mission — Method',missionWhy:'Mission — Deeper Why',missionPreview:'Mission Statement',
-  val1name:'Value 1 Name',val1desc:'Value 1 Description',val2name:'Value 2 Name',val2desc:'Value 2 Description',
-  val3name:'Value 3 Name',val3desc:'Value 3 Description',val4name:'Value 4 Name',val4desc:'Value 4 Description',
-  val5name:'Value 5 Name',val5desc:'Value 5 Description',val6name:'Value 6 Name',val6desc:'Value 6 Description',
-  pillar1:'Pillar 1',pillar1offer:'Pillar 1 — Offer Connection',pillar2:'Pillar 2',pillar2offer:'Pillar 2 — Offer Connection',
-  pillar3:'Pillar 3',pillar3offer:'Pillar 3 — Offer Connection',pillar4:'Pillar 4',pillar4offer:'Pillar 4 — Offer Connection',
-  pillar5:'Pillar 5',pillar5offer:'Pillar 5 — Offer Connection',
+  av2Statement:'Avatar 2 — Generated Statement',av2Platforms:'Avatar 2 — Platforms',av2Connection:'Avatar 2 — Connection',
+  ikigaiLove:'What I Love',ikigaiGood:'What I\'m Good At',ikigaiPaid:'What I Get Paid For',ikigaiWorld:'What the World Needs',
+  ikigaiCenter:'Ikigai Center',
+  missionAvatar:'Mission — Avatar',missionOutcome:'Mission — Outcome',missionMethod:'Mission — Method',missionWhy:'Mission — Deeper Why',
+  val1name:'Value 1',val1practice:'Value 1 — Description',val2name:'Value 2',val2practice:'Value 2 — Description',
+  val3name:'Value 3',val3practice:'Value 3 — Description',val4name:'Value 4',val4practice:'Value 4 — Description',
+  val5name:'Value 5',val5practice:'Value 5 — Description',val6name:'Value 6',val6practice:'Value 6 — Description',
+  pillar1name:'Pillar 1',pillar1sub:'Pillar 1 — Sub-topics',pillar1avatar:'Pillar 1 — Serves Avatar',pillar1offer:'Pillar 1 — Offer Connection',
+  pillar2name:'Pillar 2',pillar2sub:'Pillar 2 — Sub-topics',pillar2avatar:'Pillar 2 — Serves Avatar',pillar2offer:'Pillar 2 — Offer Connection',
+  pillar3name:'Pillar 3',pillar3sub:'Pillar 3 — Sub-topics',pillar3avatar:'Pillar 3 — Serves Avatar',pillar3offer:'Pillar 3 — Offer Connection',
+  pillar4name:'Pillar 4',pillar4sub:'Pillar 4 — Sub-topics',pillar4avatar:'Pillar 4 — Serves Avatar',pillar4offer:'Pillar 4 — Offer Connection',
+  pillar5name:'Pillar 5',pillar5sub:'Pillar 5 — Sub-topics',pillar5avatar:'Pillar 5 — Serves Avatar',pillar5offer:'Pillar 5 — Offer Connection',
+  pillarDiscover1:'Pillar Brainstorm',pillarDiscover2:'Avatar Problems',pillarDiscover3:'Topics → Offer',
   storyBefore:'Origin — Before',storyTrigger:'Origin — Trigger',storyHero:'Origin — Hero Moment',storyStruggle:'Origin — Struggle',
   storyBreakthrough:'Origin — Breakthrough',storyTransformation:'Origin — Transformation',storyNow:'Origin — Now',storyTeach:'Origin — What I Teach',
   /* Visual World */
   'col-primary':'Primary Color','col-secondary':'Secondary Color','col-accent':'Accent Color','col-neutral':'Neutral Color',
-  paletteName:'Palette Name','font-primary':'Primary Font','font-secondary':'Secondary Font',typographyRules:'Typography Rules',
-  'e1-location':'Setting Location','e1-statement':'Setting Statement','e2-statement':'Mood Statement','e2-time':'Time of Day',
-  'e2-emotion':'Emotion','e4-wardrobe':'Wardrobe','e4-never':'Never Show List',signatureShot:'Signature Shot',
-  mbStatement:'Mood Board Statement',mbTime:'Mood Board Time of Day',mbLink:'Pinterest Board',
+  paletteName:'Palette Name','font-primary':'Primary Font','font-secondary':'Secondary Font',
+  'font-primary-italic':'Primary Font — Italic','font-primary-bold':'Primary Font — Bold',
+  'font-secondary-italic':'Secondary Font — Italic','font-secondary-bold':'Secondary Font — Bold',
+  'e1-location':'Setting — Location','e1-communicate':'Setting — Communicates','e1-statement':'Setting — Statement',
+  'e2-statement':'Mood Statement','e2-time':'Time of Day','e2-emotion':'Emotion',
+  'e4-objects':'Props & Objects','e4-wardrobe':'Wardrobe','e4-never':'Never Show',
+  mbLink:'Pinterest Board',mbColors:'Mood Board Colors',mbMood:'Mood Word',mbMovie:'Reference Film',mbTime:'Time of Day',mbPlace:'Setting',
+  signatureShot:'Signature Shot',mbStatement:'Mood Board Statement',
   /* Content */
   contentNiche:'Content Niche',contentVoice:'Content Voice',contentWhy:'Content Why',contentMission:'Content Mission',
   batchDay:'Batch Day',batchTime:'Batch Time',batchFreq:'Batch Frequency',
@@ -200,32 +261,64 @@ var LABELS = {
   hookFormula1:'Hook Formula 1',hookFormula2:'Hook Formula 2',hookFormula3:'Hook Formula 3',
   storyHook:'Story Hook',storyConflict:'Story Conflict',storyResolution:'Story Resolution',
   /* Launch */
-  bioHandle:'Bio Handle',bioName:'Bio Name',bioWho:'Bio — Who You Help',bioWhat:'Bio — What You Do',
-  bioFor:'Bio — What It's For',bioCTA:'Bio CTA',bioResult:'Generated Bio',
+  bioHandle:'Handle',bioName:'Bio Name',bioWho:'Bio — Who You Help',bioWhat:'Bio — What You Do',
+  bioFor:'Bio — What It\'s For',bioCTA:'Bio CTA',bioResult:'Generated Bio',
   funnelAwareness:'Funnel — Awareness',funnelInterest:'Funnel — Interest',funnelDecision:'Funnel — Decision',funnelConversion:'Funnel — Conversion',
-  funnelBroken:'Funnel — What's Broken',
+  funnelBroken:'Funnel — What\'s Broken',
   lmTopic:'Lead Magnet Topic',lmFormat:'Lead Magnet Format',lmTitle:'Lead Magnet Title',lmHook:'Lead Magnet Hook',lmOutline:'Lead Magnet Outline',
-  mcTrigger:'ManyChat Trigger Word',mcMessage:'ManyChat DM Message',
+  mcTrigger:'ManyChat Trigger',mcMessage:'ManyChat DM Message',
   newsletterName:'Newsletter Name',newsletterWelcome:'Welcome Email',newsletterFreq:'Email Frequency',
   launchHook1:'Launch Hook 1',launchHook2:'Launch Hook 2',launchHook3:'Launch Hook 3',
   goal90Content:'90-Day Content Goal',goal90Audience:'90-Day Audience Goal',goal90Revenue:'90-Day Revenue Goal',
   reviewDate:'90-Day Review Date',accountabilityPartner:'Accountability Partner'
 };
 
-/* Modules and which fields belong to each (for grouping in detail view) */
-var MODULE_DEFS = [
-  {id:'cf',  num:'01', title:'Brand Foundation', table:'vww_progress_cf', flat:true,
-   fields:['q1outcome','q1why','q2known','q3do','q4learn','brandJourneyStmt','av1Age','av1Occupation','av1Gender','av1Income','av1Situation','av1Who','av1Look','av1Struggle','av1Tried','av1Desired','av1Fears','av1Transform','av1Quote','av2Age','av2Occupation','av2Gender','av2Income','av2Situation','av2Who','av2Look','av2Struggle','av2Tried','av2Desired','av2Fears','av2Transform','av2Quote','ikigaiLove','ikigaiGood','ikigaiPaid','ikigaiWorld','missionAvatar','missionOutcome','missionMethod','missionWhy','missionPreview','val1name','val1desc','val2name','val2desc','val3name','val3desc','val4name','val4desc','val5name','val5desc','val6name','val6desc','pillar1','pillar1offer','pillar2','pillar2offer','pillar3','pillar3offer','pillar4','pillar4offer','pillar5','pillar5offer','storyBefore','storyTrigger','storyHero','storyStruggle','storyBreakthrough','storyTransformation','storyNow','storyTeach','brandVision']},
-  {id:'vw',  num:'02', title:'Visual World', table:'vww_progress', nested:'inputs',
-   fields:['col-primary','col-secondary','col-accent','col-neutral','paletteName','font-primary','font-secondary','typographyRules','e1-location','e1-statement','e2-statement','e2-time','e2-emotion','e4-wardrobe','e4-never','signatureShot','mbStatement','mbTime','mbLink']},
-  {id:'cc',  num:'03', title:'Create Your Content', table:'vww_progress', nested:'inputs',
-   fields:['contentNiche','contentVoice','contentWhy','contentMission','batchDay','batchTime','batchFreq','hookFormula1','hookFormula2','hookFormula3','storyHook','storyConflict','storyResolution']},
-  {id:'la',  num:'04', title:'Launch', table:'vww_progress', key:'launch-v1', flat:true,
-   fields:['bioHandle','bioName','bioWho','bioWhat','bioFor','bioCTA','bioResult','funnelAwareness','funnelInterest','funnelDecision','funnelConversion','funnelBroken','lmTopic','lmFormat','lmTitle','lmHook','lmOutline','mcTrigger','mcMessage','newsletterName','newsletterWelcome','newsletterFreq','goal90Content','goal90Audience','goal90Revenue','reviewDate','accountabilityPartner']}
-];
+/* Fields to always skip */
+var SKIP_KEYS = {cur:1,done:1,auditVals:1,checks:1,opts:1,inputs:1,'launch-v1':1,'vww-v1':1,'ccb-v1':1,'launch-data':1};
+
+/* opt_ prefix label cleanup */
+function optLabel(k){
+  var g=k.replace('opt_','');
+  var map={genre:'Brand Genre',style:'Brand Style',vibe:'Vibe',format:'Format',audience:'Audience',era:'Era',energy:'Energy'};
+  return 'Style: '+(map[g]||g.charAt(0).toUpperCase()+g.slice(1));
+}
 
 function sbH() {
   return {'apikey':SUPABASE_ANON,'Authorization':'Bearer '+SUPABASE_ANON,'Content-Type':'application/json'};
+}
+
+/* ── Circle Config ── */
+function saveCircleConfig(){
+  var key=document.getElementById('circle-key-input').value.trim();
+  var cid=document.getElementById('circle-cid-input').value.trim();
+  if(key) localStorage.setItem('admin-circle-key',key);
+  if(cid) localStorage.setItem('admin-circle-cid',cid);
+  var btn=document.querySelector('.config-save');
+  btn.textContent='Saved ✓';setTimeout(function(){btn.textContent='Save';},1500);
+}
+
+function loadCircleConfig(){
+  var key=localStorage.getItem('admin-circle-key')||'';
+  var cid=localStorage.getItem('admin-circle-cid')||'';
+  if(key) document.getElementById('circle-key-input').value=key;
+  if(cid) document.getElementById('circle-cid-input').value=cid;
+}
+
+async function fetchCircleMember(email){
+  var key=localStorage.getItem('admin-circle-key')||document.getElementById('circle-key-input').value.trim();
+  var cid=localStorage.getItem('admin-circle-cid')||document.getElementById('circle-cid-input').value.trim();
+  if(!key||!cid) return null;
+  try{
+    var resp=await fetch('https://app.circle.so/api/v1/community_members?email='+encodeURIComponent(email)+'&community_id='+cid,{
+      headers:{'Authorization':'Token '+key,'Content-Type':'application/json'}
+    });
+    if(!resp.ok) return null;
+    var data=await resp.json();
+    /* Circle returns array or object */
+    if(Array.isArray(data)&&data.length>0) return data[0];
+    if(data&&data.id) return data;
+    return null;
+  }catch(e){return null;}
 }
 
 function checkAuth() {
@@ -234,6 +327,7 @@ function checkAuth() {
   if (pass === ADMIN_PASSWORD) {
     document.getElementById('auth-screen').style.display = 'none';
     document.getElementById('dashboard').style.display = 'block';
+    loadCircleConfig();
     loadDashboard();
   } else {
     err.style.display = 'block';
@@ -259,38 +353,40 @@ async function loadDashboard() {
       fetch(SUPABASE_URL+'/rest/v1/vww_progress?select=email,data,updated_at', {headers:sbH()}),
       fetch(SUPABASE_URL+'/rest/v1/vww_progress_cf?select=email,data,updated_at', {headers:sbH()})
     ]);
-    var users   = await usersR.json();
+    var users    = await usersR.json();
     var mainProg = await mainR.json();
     var cfProg   = await cfR.json();
 
+    if(!Array.isArray(users))   users=[];
+    if(!Array.isArray(mainProg)) mainProg=[];
+    if(!Array.isArray(cfProg))  cfProg=[];
+
     /* Build per-email maps */
     var mainMap={}, cfMap={};
-    if (Array.isArray(mainProg)) mainProg.forEach(function(p){ mainMap[p.email]=p; });
-    if (Array.isArray(cfProg))   cfProg.forEach(function(p){ cfMap[p.email]=p; });
-
-    if (!Array.isArray(users)) users = [];
+    mainProg.forEach(function(p){ if(p.email) mainMap[p.email.toLowerCase()]=p; });
+    cfProg.forEach(function(p){   if(p.email) cfMap[p.email.toLowerCase()]=p;   });
 
     /* Stats */
     var total = users.length;
-    var started = users.filter(function(u){ return mainMap[u.email]||cfMap[u.email]; }).length;
-    var week = Date.now() - 7*24*60*60*1000;
-    var active7 = users.filter(function(u){ return u.last_seen && new Date(u.last_seen).getTime()>week; }).length;
+    var week  = Date.now() - 7*24*60*60*1000;
+    var active7 = users.filter(function(u){ return u.last_seen&&new Date(u.last_seen).getTime()>week; }).length;
 
-    /* Count avg modules touched */
-    var totalMods = 0;
+    var started=0, completed=0;
     users.forEach(function(u){
-      var c=0;
-      if(cfMap[u.email]) c++;
-      var md = mainMap[u.email]&&mainMap[u.email].data;
-      if(md&&md.inputs&&Object.keys(md.inputs).some(function(k){return md.inputs[k];})) c++;
-      if(md&&md['launch-v1']&&Object.keys(md['launch-v1']).some(function(k){return md['launch-v1'][k];})) c++;
-      totalMods += c;
+      var em=(u.email||'').toLowerCase();
+      var cfd=cfMap[em]&&cfMap[em].data;
+      var md=mainMap[em]&&mainMap[em].data;
+      var hasCF=hasAnyData(cfd,true);
+      var hasVW=md&&hasAnyData(md.inputs,false);
+      var hasLA=md&&hasAnyData(md['launch-v1'],false);
+      if(hasCF||hasVW||hasLA) started++;
+      if(hasCF&&hasVW&&hasLA) completed++;
     });
 
-    document.getElementById('s-total').textContent  = total;
-    document.getElementById('s-active').textContent = started;
-    document.getElementById('s-modules').textContent = started ? (totalMods/started).toFixed(1) : '0';
-    document.getElementById('s-last').textContent   = active7;
+    document.getElementById('s-total').textContent   = total;
+    document.getElementById('s-active').textContent  = started;
+    document.getElementById('s-complete').textContent = completed;
+    document.getElementById('s-last').textContent    = active7;
 
     if (!total) {
       document.getElementById('loading').style.display='none';
@@ -302,24 +398,23 @@ async function loadDashboard() {
     tbody.innerHTML = '';
 
     users.forEach(function(user, idx) {
-      var main = mainMap[user.email];
-      var cf   = cfMap[user.email];
-      var md   = main && main.data ? main.data : null;
-      var cfd  = cf   && cf.data   ? cf.data   : null;
+      var em  = (user.email||'').toLowerCase();
+      var main = mainMap[em];
+      var cf   = cfMap[em];
+      var md   = main&&main.data ? main.data : null;
+      var cfd  = cf&&cf.data     ? cf.data   : null;
 
-      /* Which modules have data */
-      var hasCF = !!(cfd && Object.keys(cfd).some(function(k){ return k!=='cur'&&k!=='done'&&cfd[k]&&typeof cfd[k]==='string'&&cfd[k].trim(); }));
-      var hasVW = !!(md && md.inputs && Object.keys(md.inputs).some(function(k){ return md.inputs[k]; }));
-      var hasCC = hasVW; /* same table — best guess from inputs */
-      var hasLA = !!(md && md['launch-v1'] && Object.keys(md['launch-v1']).some(function(k){ var v=md['launch-v1'][k]; return typeof v==='string'&&v.trim(); }));
+      var hasCF = hasAnyData(cfd, true);
+      var hasVW = !!(md && hasAnyData(md.inputs, false));
+      var hasLA = !!(md && hasAnyData(md['launch-v1'], false));
 
       var initials = (user.name||user.email||'?').charAt(0).toUpperCase();
       var lastSeen = user.last_seen ? relTime(user.last_seen) : '—';
 
       var modBadges = [
         {label:'01 Foundation', has:hasCF},
-        {label:'02 Visuals', has:hasVW},
-        {label:'04 Launch', has:hasLA}
+        {label:'02 Visuals',    has:hasVW},
+        {label:'04 Launch',     has:hasLA}
       ].map(function(b){
         return '<span class="mbadge'+(b.has?' has':'')+'">'+b.label+'</span>';
       }).join('');
@@ -328,41 +423,47 @@ async function loadDashboard() {
       var tr = document.createElement('tr');
       tr.className = 'user-row';
       tr.setAttribute('data-idx', idx);
-      tr.onclick = function(){ toggleDetail(idx, user, md, cfd); };
+      tr.onclick = (function(i,u,m,c){ return function(){ toggleDetail(i,u,m,c); }; })(idx,user,md,cfd);
       tr.innerHTML = [
         '<td><div class="u-avatar">'+esc(initials)+'</div></td>',
         '<td><div class="u-name">'+esc(user.name||'—')+'</div><div class="u-email">'+esc(user.handle?'@'+user.handle:'')+'</div></td>',
-        '<td><div class="u-email">'+esc(user.email)+'</div></td>',
+        '<td><div class="u-email">'+esc(user.email||'—')+'</div></td>',
         '<td><div class="mod-badges">'+modBadges+'</div></td>',
         '<td class="u-seen">'+lastSeen+'</td>',
         '<td style="text-align:center"><span class="expand-chevron">▾</span></td>'
       ].join('');
       tbody.appendChild(tr);
 
-      /* Detail row (hidden by default) */
+      /* Detail row */
       var dtr = document.createElement('tr');
       dtr.className = 'detail-row';
       dtr.id = 'detail-'+idx;
       var dtd = document.createElement('td');
       dtd.className = 'detail-cell';
       dtd.colSpan = 6;
-      dtd.innerHTML = '<div class="detail-inner" id="detail-inner-'+idx+'"><div style="font-size:12px;color:var(--dimmer)">Click to load answers...</div></div>';
+      dtd.innerHTML = '<div class="detail-inner" id="detail-inner-'+idx+'"><div style="font-size:12px;color:var(--dimmer);padding:.5rem 0">Loading...</div></div>';
       dtr.appendChild(dtd);
       tbody.appendChild(dtr);
     });
-
-    /* Store data for detail rendering */
-    window._adminUsers = users;
-    window._adminMain  = mainMap;
-    window._adminCf    = cfMap;
 
     document.getElementById('loading').style.display='none';
     document.getElementById('user-list').style.display='block';
 
   } catch(e) {
-    document.getElementById('loading').innerHTML = '<div style="color:#e05555;font-size:13px">Failed to load: '+e.message+'</div>';
+    document.getElementById('loading').innerHTML = '<div style="color:#e05555;font-size:13px">Failed to load: '+esc(e.message)+'</div>';
     console.error(e);
   }
+}
+
+/* Does an object have any non-empty string fields? */
+function hasAnyData(obj, isCF) {
+  if (!obj || typeof obj !== 'object') return false;
+  return Object.keys(obj).some(function(k){
+    if (SKIP_KEYS[k]) return false;
+    if (isCF && (k==='cur'||k==='done'||k==='auditVals'||k.indexOf('chk_')===0)) return false;
+    var v = obj[k];
+    return v && typeof v === 'string' && v.trim();
+  });
 }
 
 function toggleDetail(idx, user, md, cfd) {
@@ -370,7 +471,6 @@ function toggleDetail(idx, user, md, cfd) {
   var tr  = document.querySelector('[data-idx="'+idx+'"]');
   if (!dtr) return;
   var isOpen = dtr.classList.contains('open');
-  /* Close all */
   document.querySelectorAll('.detail-row.open').forEach(function(r){ r.classList.remove('open'); });
   document.querySelectorAll('.user-row.expanded').forEach(function(r){ r.classList.remove('expanded'); });
   if (!isOpen) {
@@ -380,69 +480,121 @@ function toggleDetail(idx, user, md, cfd) {
   }
 }
 
-function renderDetail(idx, user, md, cfd) {
+async function renderDetail(idx, user, md, cfd) {
   var inner = document.getElementById('detail-inner-'+idx);
   if (!inner) return;
+  inner.innerHTML = '<div style="font-size:12px;color:var(--dimmer)">Loading...</div>';
+
   var html = '';
 
-  /* ── MODULE SECTIONS ── */
-  MODULE_DEFS.forEach(function(mod) {
-    var fields = [];
+  /* ── Circle lookup ── */
+  var circleHtml = '';
+  var circleKey = localStorage.getItem('admin-circle-key')||document.getElementById('circle-key-input').value.trim();
+  if (circleKey && user.email) {
+    var cm = await fetchCircleMember(user.email);
+    if (cm) {
+      var cmAvatar = cm.avatar_url || cm.community_member&&cm.community_member.avatar_url || '';
+      var cmName   = cm.name || cm.community_member&&cm.community_member.name || user.name || '';
+      var cmRole   = cm.role || cm.community_member&&cm.community_member.role || '';
+      var cmJoined = cm.created_at ? new Date(cm.created_at).toLocaleDateString() : '';
+      var cmActive = cm.last_seen_at ? relTime(cm.last_seen_at) : '';
+      var cmUrl    = cm.public_uid ? 'https://community.fscreative.live/members/'+cm.public_uid : '';
 
-    if (mod.id === 'cf' && cfd) {
-      /* Flat brand-foundation data */
-      mod.fields.forEach(function(k) {
-        var v = cfd[k];
-        if (v && typeof v==='string' && v.trim()) fields.push({k:k, v:v.trim()});
-      });
-      /* Also catch any unknown filled fields */
-      Object.keys(cfd).forEach(function(k){
-        if(mod.fields.indexOf(k)===-1 && k!=='cur'&&k!=='done'&&k!=='auditVals'){
-          var v=cfd[k]; if(v&&typeof v==='string'&&v.trim()) fields.push({k:k,v:v.trim()});
-        }
-      });
-    } else if (mod.id === 'vw' && md && md.inputs) {
-      mod.fields.forEach(function(k) {
-        var v = md.inputs[k];
-        if (v && typeof v==='string' && v.trim()) fields.push({k:k, v:v.trim()});
-      });
-    } else if (mod.id === 'cc' && md && md.inputs) {
-      /* Content fields — any input not already shown in VW */
-      var vwFields = MODULE_DEFS[1].fields;
-      Object.keys(md.inputs).forEach(function(k){
-        if(vwFields.indexOf(k)===-1){
-          var v=md.inputs[k]; if(v&&typeof v==='string'&&v.trim()) fields.push({k:k,v:v.trim()});
-        }
-      });
-      /* Also show selected opts */
-      if(md.opts) Object.keys(md.opts).forEach(function(k){
-        var v=md.opts[k]; if(v&&typeof v==='string'&&v.trim()) fields.push({k:k,v:v.trim()});
-      });
-    } else if (mod.id === 'la' && md && md['launch-v1']) {
-      var ld = md['launch-v1'];
-      mod.fields.forEach(function(k){
-        var v=ld[k]; if(v&&typeof v==='string'&&v.trim()) fields.push({k:k,v:v.trim()});
-      });
-      /* Also catch opt_ fields */
-      Object.keys(ld).forEach(function(k){
-        if(k.indexOf('opt_')===0){var v=ld[k];if(v&&v.trim())fields.push({k:k,v:v.trim()});}
-      });
+      circleHtml = '<div class="circle-card">';
+      if(cmAvatar) circleHtml += '<div class="circle-avatar"><img src="'+esc(cmAvatar)+'" alt="avatar"></div>';
+      else circleHtml += '<div class="circle-avatar">'+esc((cmName||'?').charAt(0).toUpperCase())+'</div>';
+      circleHtml += '<div class="circle-info"><div class="circle-name">'+esc(cmName)+'<span class="circle-badge">Circle Member</span></div>';
+      circleHtml += '<div class="circle-meta">';
+      if(cmRole) circleHtml += 'Role: '+esc(cmRole)+'&ensp;·&ensp;';
+      if(cmJoined) circleHtml += 'Joined: '+esc(cmJoined)+'&ensp;·&ensp;';
+      if(cmActive) circleHtml += 'Last active: '+esc(cmActive);
+      circleHtml += '</div></div>';
+      if(cmUrl) circleHtml += '<a class="circle-link" href="'+esc(cmUrl)+'" target="_blank">View in Circle →</a>';
+      circleHtml += '</div>';
+    } else {
+      circleHtml = '<div style="font-size:11.5px;color:var(--dimmer);margin-bottom:1rem;font-style:italic">Not found in Circle community.</div>';
     }
+  }
 
-    if (fields.length === 0) return; /* skip empty modules */
+  /* ── Module sections ── */
+  var modules = [
+    {num:'01', title:'Brand Foundation',    data:cfd,              isCF:true},
+    {num:'02', title:'Visual World',         data:md&&md.inputs,   isCF:false, opts:md&&md.opts},
+    {num:'03', title:'Create Your Content',  data:md&&md.inputs,   isCF:false, extraOpts:md&&md.opts},
+    {num:'04', title:'Launch',               data:md&&md['launch-v1'], isCF:false}
+  ];
+
+  /* For VW vs CC separation: VW fields contain visual keywords, CC contain content keywords */
+  var VW_KEYS = /^(col-|font-|e1-|e2-|e3-|e4-|mb|palette|signature)/;
+  var CC_KEYS = /^(content|batch|hook|story)/;
+
+  modules.forEach(function(mod) {
+    var obj = mod.data;
+    if (!obj || typeof obj !== 'object') return;
+
+    /* Collect text fields */
+    var textFields = [];
+    var optFields  = [];
+
+    Object.keys(obj).forEach(function(k) {
+      /* Skip meta keys */
+      if (SKIP_KEYS[k]) return;
+      if (mod.isCF && (k==='cur'||k==='done'||k==='auditVals'||k.indexOf('chk_')===0)) return;
+      /* For VW vs CC: filter by key pattern */
+      if (mod.num==='02' && CC_KEYS.test(k)) return; /* skip CC keys in VW section */
+      if (mod.num==='03' && VW_KEYS.test(k)) return; /* skip VW keys in CC section */
+
+      var v = obj[k];
+      if (!v) return;
+
+      if (k.indexOf('opt_')===0) {
+        if (typeof v==='string'&&v.trim()) optFields.push({k:k,v:v.trim()});
+      } else if (typeof v==='string' && v.trim()) {
+        textFields.push({k:k, v:v.trim()});
+      }
+    });
+
+    if (textFields.length===0 && optFields.length===0) return;
 
     html += '<div class="mod-section">';
-    html += '<div class="mod-sec-head"><div class="mod-sec-num">'+mod.num+'</div><div class="mod-sec-title">'+mod.title+'</div><div class="mod-sec-rule"></div></div>';
-    html += '<div class="ans-grid">';
-    fields.forEach(function(f){
-      var label = LABELS[f.k] || f.k.replace(/_/g,' ').replace(/([A-Z])/g,' $1').trim();
-      html += '<div class="ans-card"><div class="ans-key">'+esc(label)+'</div><div class="ans-val">'+esc(f.v)+'</div></div>';
-    });
-    html += '</div></div>';
+    html += '<div class="mod-sec-head">';
+    html += '<div class="mod-sec-num">'+mod.num+'</div>';
+    html += '<div class="mod-sec-title">'+mod.title+'</div>';
+    html += '<div class="mod-sec-rule"></div>';
+    html += '<div class="mod-sec-count">'+( textFields.length+optFields.length)+' field'+(textFields.length+optFields.length!==1?'s':'')+'</div>';
+    html += '</div>';
+
+    /* Selections (opts) */
+    if (optFields.length) {
+      html += '<div class="opts-row">';
+      optFields.forEach(function(f){
+        var lbl = optLabel(f.k);
+        html += '<span class="opt-chip">'+esc(lbl)+': '+esc(f.v)+'</span>';
+      });
+      html += '</div>';
+    }
+
+    /* Text answers grid */
+    if (textFields.length) {
+      html += '<div class="ans-grid">';
+      textFields.forEach(function(f){
+        var label = LABELS[f.k] || prettyKey(f.k);
+        html += '<div class="ans-card"><div class="ans-key">'+esc(label)+'</div><div class="ans-val">'+esc(f.v)+'</div></div>';
+      });
+      html += '</div>';
+    }
+
+    html += '</div>';
   });
 
-  if (!html) html = '<div class="no-data">No answers saved yet.</div>';
-  inner.innerHTML = html;
+  if (!html) html = '<div class="no-data">No answers saved yet for this user.</div>';
+
+  inner.innerHTML = circleHtml + html;
+}
+
+function prettyKey(k){
+  return k.replace(/[-_]/g,' ').replace(/([A-Z])/g,' $1').trim()
+           .split(' ').map(function(w){return w.charAt(0).toUpperCase()+w.slice(1);}).join(' ');
 }
 
 function relTime(iso) {
