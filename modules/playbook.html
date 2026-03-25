@@ -56,8 +56,8 @@ body.light .icon-moon{display:none}body.light .icon-sun{display:block}
 .pb-meta-val.empty{color:var(--dimmer);font-weight:400;font-style:italic;}
 
 /* ── SECTION NAV ROW ── */
-.pb-nav-row{display:grid;grid-template-columns:repeat(4,1fr);column-gap:1rem;margin-bottom:3rem;}
-/* border-top on each nav link = 4 separate segments above; border-bottom = 4 below */
+.pb-nav-row{display:grid;grid-template-columns:repeat(4,1fr);column-gap:1rem;margin-top:1.25rem;margin-bottom:3rem;}
+/* border-top = segmented top line; border-bottom = segmented bottom line */
 .pb-nav-link{display:flex;align-items:center;justify-content:space-between;padding:.65rem 0;font-size:9px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--dim);text-decoration:none;transition:color .15s;border-top:1.5px solid var(--dimmer);border-bottom:1.5px solid var(--dimmer);}
 .pb-nav-link:hover{color:var(--text);}
 .pb-nav-arr{color:var(--orange);font-size:11px;flex-shrink:0;margin-left:4px;}
@@ -107,6 +107,13 @@ body.light .icon-moon{display:none}body.light .icon-sun{display:block}
   #sidebar{display:none}
   #main{margin-left:0;display:block}
   #wb{padding:1.25rem 1.25rem 5rem}
+
+  /* Nav stacks to 2×2 on mobile, matching Ashford style */
+  .pb-nav-row{grid-template-columns:1fr 1fr;column-gap:.75rem;margin-top:1rem;}
+  /* Row 2 items: remove border-top so the border-bottom of row 1 acts as the shared divider */
+  .pb-nav-link:nth-child(3),.pb-nav-link:nth-child(4){border-top:none;}
+  /* Slightly larger nav text on mobile for readability */
+  .pb-nav-link{font-size:10px;padding:.75rem 0;}
 }
 @media(min-width:900px){
   .topbar{display:none}
