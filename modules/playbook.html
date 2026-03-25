@@ -49,17 +49,15 @@ body.light .icon-moon{display:none}body.light .icon-sun{display:block}
 .pb-title{font-family:var(--font-num);font-size:clamp(72px,13vw,140px);font-weight:900;line-height:.95;letter-spacing:-2px;color:var(--text);margin-bottom:2.5rem;}
 
 /* ── METADATA ROW (Ashford-style) ── */
-.pb-meta-row{display:grid;grid-template-columns:repeat(4,1fr);border-top:1px solid var(--border2);border-bottom:1px solid var(--border2);}
-.pb-meta-cell{padding:.65rem 1rem .65rem 0;border-right:1px solid var(--border2);}
-.pb-meta-cell:last-child{border-right:none;padding-right:0;}
+.pb-meta-row{display:grid;grid-template-columns:repeat(3,1fr);border-bottom:1px solid var(--border2);}
+.pb-meta-cell{padding:.65rem 1.5rem .65rem 0;}
 .pb-meta-lbl{font-size:8px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--dimmer);margin-bottom:3px;}
 .pb-meta-val{font-size:12px;font-weight:700;color:var(--text);line-height:1.3;}
 .pb-meta-val.empty{color:var(--dimmer);font-weight:400;font-style:italic;}
 
 /* ── SECTION NAV ROW ── */
-.pb-nav-row{display:grid;grid-template-columns:repeat(4,1fr);border-bottom:1px solid var(--border2);margin-bottom:3rem;}
-.pb-nav-link{display:flex;align-items:center;justify-content:space-between;padding:.7rem 1rem .7rem 0;border-right:1px solid var(--border2);font-size:9.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--dim);text-decoration:none;transition:color .15s;}
-.pb-nav-link:last-child{border-right:none;padding-right:0;}
+.pb-nav-row{display:grid;grid-template-columns:repeat(3,1fr);margin-bottom:3rem;}
+.pb-nav-link{display:flex;align-items:center;justify-content:space-between;padding:.7rem 1.5rem .7rem 0;font-size:9.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--dim);text-decoration:none;transition:color .15s;}
 .pb-nav-link:hover{color:var(--text);}
 .pb-nav-arr{color:var(--orange);font-size:12px;flex-shrink:0;}
 
@@ -216,11 +214,29 @@ function buildPlaybook() {
   var html = '';
 
   /* ── COVER ── */
-  var handle = val(la.bioUsername) || val(la.username) || val(cf.brandHandle) || '';
-  var platform = val(cc.sauron) || val(cf['opt_primary']) || '';
-  var knownFor = val(cf.q2known) || '';
-  // Truncate known-for to ~40 chars for the meta cell
-  var knownForShort = knownFor.length > 42 ? knownFor.slice(0,40).trim() + '\u2026' : knownFor;
+  // Handle: bio entry takes priority; sign-up handle as fallback
+  var bioHandle = val(la.bioUsername) || val(la.username) || '';
+  var signupHandle = val(localStorage.getItem('vww-user-handle'))
+    || val(localStorage.getItem('vww-user-instagram'))
+    || val(cf.brandHandle) || '';
+  var handle = bioHandle || signupHandle;
+
+  // Overview: 1–2 sentence description from brand journey or constructed from known-for + outcome
+  function buildOverview() {
+    var journey = val(cf.brandJourneyStmt);
+    if (journey) {
+      // Take first 1–2 sentences (split on '. ' or '.\n')
+      var sentences = journey.match(/[^.!?]+[.!?]+/g) || [];
+      if (sentences.length >= 2) return sentences[0].trim() + ' ' + sentences[1].trim();
+      if (sentences.length === 1) return sentences[0].trim();
+      return journey;
+    }
+    var known = val(cf.q2known);
+    var outcome = val(cf.q1outcome);
+    if (known && outcome) return known + ', working toward ' + outcome.charAt(0).toLowerCase() + outcome.slice(1);
+    return known || outcome || '';
+  }
+  var overview = buildOverview();
 
   function metaCell(lbl, v, ph) {
     var empty = !v;
@@ -236,12 +252,10 @@ function buildPlaybook() {
   html += '<div class="pb-meta-row">';
   html += metaCell('Creator', userName, 'Your Name');
   html += metaCell('Handle', handle, 'Not set');
-  html += metaCell('Platform', platform, 'Not set');
-  html += metaCell('Known For', knownForShort, 'Complete Brand Foundation');
+  html += metaCell('Overview', overview, 'Complete Brand Foundation to generate your overview');
   html += '</div>';
   html += '<div class="pb-nav-row">';
-  html += navLink('#ch01', 'Brand Foundation');
-  html += navLink('#ch02', 'Visual World');
+  html += navLink('#ch01', 'Overview');
   html += navLink('#ch03', 'Create Content');
   html += navLink('#ch04', 'Launch');
   html += '</div>';
