@@ -729,15 +729,18 @@ function renderSidebar() {
 ══════════════════════════════════════════════════════════ */
 function renderProgress() {
   var unlocked = MODULES.filter(function(m){ return !m.locked; });
-  var completed = unlocked.filter(function(mod) {
+  var totalSecs = 0, doneSecs = 0;
+  unlocked.forEach(function(mod) {
+    totalSecs += mod.sections.length;
     var state = moduleStates[mod.id] || {done: []};
-    return state.done.length >= mod.sections.length && mod.sections.length > 0;
+    // cap at section count so stale data can't exceed 100%
+    doneSecs += Math.min(state.done.length, mod.sections.length);
   });
-  var pct = unlocked.length > 0 ? Math.round((completed.length / unlocked.length) * 100) : 0;
+  var pct = totalSecs > 0 ? Math.round((doneSecs / totalSecs) * 100) : 0;
   var fill = document.getElementById('prog-fill');
   var label = document.getElementById('prog-label');
   if (fill) fill.style.width = pct + '%';
-  if (label) label.textContent = completed.length + ' of ' + unlocked.length + ' modules';
+  if (label) label.textContent = pct + '% complete';
 }
 
 /* ═══════════════════════════════════════════════════════

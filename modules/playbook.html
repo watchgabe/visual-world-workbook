@@ -48,18 +48,19 @@ body.light .icon-moon{display:none}body.light .icon-sun{display:block}
 .pb-eyebrow{font-size:9px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--orange);margin-bottom:.75rem;}
 .pb-title{font-family:var(--font-num);font-size:clamp(72px,13vw,140px);font-weight:900;line-height:.95;letter-spacing:-2px;color:var(--text);margin-bottom:2.5rem;}
 
-/* ── METADATA ROW (Ashford-style) ── */
-.pb-meta-row{display:grid;grid-template-columns:repeat(4,1fr);border-bottom:1px solid var(--border2);column-gap:1.25rem;}
-.pb-meta-cell{padding:.75rem 0;}
-.pb-meta-lbl{font-size:8px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--dimmer);margin-bottom:4px;}
+/* ── METADATA ROW (Ashford-style 2×2) ── */
+.pb-meta-row{display:grid;grid-template-columns:1fr 1fr;column-gap:2rem;}
+.pb-meta-cell{padding:.65rem 0;}
+.pb-meta-lbl{font-size:8px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--dimmer);margin-bottom:3px;}
 .pb-meta-val{font-size:12px;font-weight:700;color:var(--text);line-height:1.4;word-wrap:break-word;}
 .pb-meta-val.empty{color:var(--dimmer);font-weight:400;font-style:italic;}
 
 /* ── SECTION NAV ROW ── */
-.pb-nav-row{display:grid;grid-template-columns:repeat(4,1fr);column-gap:1.25rem;margin-bottom:3rem;}
-.pb-nav-link{display:flex;align-items:center;justify-content:space-between;padding:.65rem 0;font-size:9.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--dim);text-decoration:none;transition:color .15s;border-bottom:1px solid var(--border2);}
+.pb-nav-row{display:grid;grid-template-columns:repeat(4,1fr);column-gap:1rem;margin-bottom:3rem;}
+/* border-top on each nav link = 4 separate segments above; border-bottom = 4 below */
+.pb-nav-link{display:flex;align-items:center;justify-content:space-between;padding:.65rem 0;font-size:9px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--dim);text-decoration:none;transition:color .15s;border-top:1.5px solid var(--dimmer);border-bottom:1.5px solid var(--dimmer);}
 .pb-nav-link:hover{color:var(--text);}
-.pb-nav-arr{color:var(--orange);font-size:12px;flex-shrink:0;}
+.pb-nav-arr{color:var(--orange);font-size:11px;flex-shrink:0;margin-left:4px;}
 
 .pb-chapter{margin-bottom:3rem;}
 .pb-ch-header{display:flex;align-items:center;gap:16px;margin-bottom:1.5rem;padding-bottom:1rem;border-bottom:1px solid var(--border);}
@@ -242,12 +243,12 @@ function buildPlaybook() {
   html += metaCell('Creator', userName, 'Your Name');
   html += metaCell('Handle', handle, 'Not set');
   html += metaCell('Known For', knownFor, 'Complete Brand Foundation');
-  html += metaCell('90-Day Goal', goal90, 'Complete Launch module to set your goal');
+  html += metaCell('90-Day Goal', goal90, 'Complete Launch module');
   html += '</div>';
   html += '<div class="pb-nav-row">';
-  html += navLink('#ch01', 'Brand Foundation');
-  html += navLink('#ch02', 'Visual World');
-  html += navLink('#ch03', 'Create Content');
+  html += navLink('#ch01', 'Foundation');
+  html += navLink('#ch02', 'Visuals');
+  html += navLink('#ch03', 'Content');
   html += navLink('#ch04', 'Launch');
   html += '</div>';
   html += '</div>';
