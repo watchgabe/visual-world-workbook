@@ -1463,10 +1463,18 @@ function syncToSupabase(payload) {
   setSyncDot('syncing');
   syncTimer = setTimeout(async function() {
     try {
+      /* Fetch existing record so we can merge (not overwrite) other modules' data */
+      var existRows = await (await fetch(
+        SUPABASE_URL + '/rest/v1/vww_progress?email=eq.' + encodeURIComponent(USER_EMAIL) + '&select=data',
+        {headers: sbHeaders()}
+      )).json();
+      var existing = (Array.isArray(existRows) && existRows[0] && existRows[0].data) ? existRows[0].data : {};
+      /* Save VW payload under its own key — never touch cc or launch-v1 */
+      var merged = Object.assign({}, existing, {vw: payload});
       await fetch(SUPABASE_URL + '/rest/v1/vww_progress', {
         method: 'POST',
         headers: sbHeaders(),
-        body: JSON.stringify({email: USER_EMAIL, data: payload, updated_at: new Date().toISOString()})
+        body: JSON.stringify({email: USER_EMAIL, data: merged, updated_at: new Date().toISOString()})
       });
       setSyncDot('saved');
     } catch(e) { console.warn('Cloud sync failed:', e); setSyncDot(''); }
@@ -1490,7 +1498,8 @@ async function loadFromSupabase() {
     if (!resp.ok) return;
     var rows = await resp.json();
     if (!rows.length || !rows[0].data) return;
-    var data = rows[0].data;
+    /* Read from vw sub-key if present (new format), fall back to root for old records */
+    var data = (rows[0].data.vw) ? rows[0].data.vw : rows[0].data;
     /* apply inputs */
     if (data.inputs) Object.keys(data.inputs).forEach(function(id){ var e=document.getElementById(id); if(e&&data.inputs[id])e.value=data.inputs[id]; });
     /* apply option selections */

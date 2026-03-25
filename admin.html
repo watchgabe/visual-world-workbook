@@ -414,11 +414,14 @@ async function loadDashboard() {
       var em=(u.email||'').toLowerCase();
       var cfd=cfMap[em]&&cfMap[em].data;
       var md=mainMap[em]&&mainMap[em].data;
+      var vwD=(md&&md.vw)?md.vw:md;
+      var ccD=(md&&md.cc)?md.cc:md;
       var hasCF=hasAnyData(cfd,true);
-      var hasVW=md&&hasAnyData(md.inputs,false);
-      var hasLA=md&&hasAnyData(md['launch-v1'],false);
-      if(hasCF||hasVW||hasLA) started++;
-      if(hasCF&&hasVW&&hasLA) completed++;
+      var hasVW=!!(vwD&&hasAnyData(vwD.inputs,false));
+      var hasCC=!!(ccD&&hasAnyData(ccD.inputs,false));
+      var hasLA=!!(md&&hasAnyData(md['launch-v1'],false));
+      if(hasCF||hasVW||hasCC||hasLA) started++;
+      if(hasCF&&hasVW&&hasCC&&hasLA) completed++;
     });
 
     document.getElementById('s-total').textContent   = total;
@@ -442,8 +445,12 @@ async function loadDashboard() {
       var md   = main&&main.data ? main.data : null;
       var cfd  = cf&&cf.data     ? cf.data   : null;
 
+      /* Support new per-module sub-keys (vw/cc) AND old flat format */
+      var vwData = (md && md.vw) ? md.vw : md;
+      var ccData = (md && md.cc) ? md.cc : md;
       var hasCF = hasAnyData(cfd, true);
-      var hasVW = !!(md && hasAnyData(md.inputs, false));
+      var hasVW = !!(vwData && hasAnyData(vwData.inputs, false));
+      var hasCC = !!(ccData && hasAnyData(ccData.inputs, false));
       var hasLA = !!(md && hasAnyData(md['launch-v1'], false));
 
       var initials = (user.name||user.email||'?').charAt(0).toUpperCase();
@@ -452,6 +459,7 @@ async function loadDashboard() {
       var modBadges = [
         {label:'01 Foundation', has:hasCF},
         {label:'02 Visuals',    has:hasVW},
+        {label:'03 Content',    has:hasCC},
         {label:'04 Launch',     has:hasLA}
       ].map(function(b){
         return '<span class="mbadge'+(b.has?' has':'')+'">'+b.label+'</span>';
@@ -555,14 +563,25 @@ async function renderDetail(idx, user, md, cfd) {
   }
 
   /* ── Module sections ── */
-  var inputsObj = md && md.inputs ? md.inputs : null;
-  var optsObj   = md && md.opts   ? md.opts   : null;
+  /* Support new per-module sub-keys (vw/cc) AND old flat inputs format */
+  var vwD  = (md && md.vw) ? md.vw : md;
+  var ccD  = (md && md.cc) ? md.cc : md;
+  var newFmt = !!(md && (md.vw || md.cc)); /* true if new sub-key format */
+
+  var vwInputs = vwD && vwD.inputs ? vwD.inputs : null;
+  var ccInputs = ccD && ccD.inputs ? ccD.inputs : null;
+  var vwOpts   = vwD && vwD.opts   ? vwD.opts   : null;
+  var ccOpts   = ccD && ccD.opts   ? ccD.opts   : null;
+
+  /* In old flat format both VW and CC share inputs — split by key type */
+  var vwFilter = newFmt ? null : function(k){ return !isCCKey(k); };
+  var ccFilter = newFmt ? null : function(k){ return isCCKey(k); };
 
   var modules = [
-    {num:'01', title:'Brand Foundation',   data:cfd,      isCF:true,  moduleOpts:null},
-    {num:'02', title:'Visual World',       data:inputsObj,isCF:false, moduleOpts:optsObj, filterFn:function(k){return !isCCKey(k);}},
-    {num:'03', title:'Create Your Content',data:inputsObj,isCF:false, moduleOpts:optsObj, filterFn:function(k){return isCCKey(k);}},
-    {num:'04', title:'Launch',             data:md&&md['launch-v1'], isCF:false, moduleOpts:null}
+    {num:'01', title:'Brand Foundation',   data:cfd,      isCF:true,  moduleOpts:null,   filterFn:null},
+    {num:'02', title:'Visual World',       data:vwInputs, isCF:false, moduleOpts:vwOpts, filterFn:vwFilter},
+    {num:'03', title:'Create Your Content',data:ccInputs, isCF:false, moduleOpts:ccOpts, filterFn:ccFilter},
+    {num:'04', title:'Launch',             data:md&&md['launch-v1'], isCF:false, moduleOpts:null, filterFn:null}
   ];
 
   modules.forEach(function(mod) {
