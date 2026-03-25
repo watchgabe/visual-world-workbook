@@ -382,6 +382,21 @@ textarea::placeholder,input[type=text]::placeholder{color:var(--dimmer)}
   line-height:1.5;min-height:36px;border:1px solid var(--border);
 }
 
+/* ─── PLAYBOOK SECTIONS ─── */
+.pb-sec{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.25rem;margin-bottom:1rem}
+.pb-sec-hdr{display:flex;align-items:center;gap:10px;margin-bottom:.9rem;padding-bottom:.6rem;border-bottom:1px solid var(--border)}
+.pb-sec-num{font-family:var(--font-num);font-size:24px;font-weight:900;color:var(--orange);opacity:.45;line-height:1;flex-shrink:0;min-width:32px}
+.pb-sec-title{font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--text)}
+.pb-acc{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);margin-bottom:.85rem;overflow:hidden}
+.pb-acc>summary{display:flex;align-items:center;gap:12px;padding:1rem 1.25rem;cursor:pointer;list-style:none;user-select:none}
+.pb-acc>summary::after{content:'＋';font-size:14px;color:var(--dimmer);margin-left:auto;flex-shrink:0}
+.pb-acc[open]>summary::after{content:'－'}
+.pb-acc-icon{font-size:15px;color:var(--orange);opacity:.7;flex-shrink:0}
+.pb-acc-title{font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--text)}
+.pb-acc-body{padding:.25rem 1.25rem 1.25rem}
+.pb-ca-card{background:var(--bg);border:1px solid var(--border);border-radius:var(--radius-md);padding:1rem;margin-bottom:.75rem}
+.pb-ca-num{font-family:var(--font-num);font-size:20px;font-weight:900;color:var(--orange);opacity:.4;line-height:1;margin-bottom:.5rem}
+
 /* ─── UPSELL BLOCK ─── */
 .ups{
   background:var(--orange-tint);border-radius:var(--radius-lg);
@@ -1149,16 +1164,95 @@ summary .ig-acc-input::placeholder{color:var(--dimmer)}
 <div class="sc" id="s9">
   <div class="pl">Part 6 — Your Blueprint</div>
   <h1>Your personalized playbook</h1>
-  <p class="intro">You've done the work. Here's everything you built — your complete content strategy, visual identity, and monetization plan in one place. Return to this whenever you need to recalibrate.</p>
+  <p class="intro">You've done the work. Here's everything you built — your complete content strategy, sustainable system, and monetization plan in one place. Return here whenever you need to recalibrate.</p>
   <div id="pbScore"></div>
   <div id="pbSugg"></div>
   <div id="pbContent"></div>
   <div class="div"></div>
+
+  <!-- ─── MOOD BOARD ─── -->
+  <details class="pb-acc">
+    <summary><span class="pb-acc-icon">&#9672;</span><span class="pb-acc-title">Mood Board &amp; Visual Identity</span></summary>
+    <div class="pb-acc-body">
+      <p style="font-size:13px;color:var(--dim);line-height:1.7;margin:0 0 1rem">Define the visual world you're creating — colors, feeling, references. Everything that makes your brand immediately recognizable before anyone hears you speak.</p>
+      <div class="q">Color palette</div>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:1rem">
+        <div>
+          <div style="font-size:10px;font-weight:700;color:var(--dimmer);text-transform:uppercase;letter-spacing:.08em;margin-bottom:4px">Primary</div>
+          <input type="text" id="mbColor1" placeholder="e.g. #1a1a1a — deep black">
+        </div>
+        <div>
+          <div style="font-size:10px;font-weight:700;color:var(--dimmer);text-transform:uppercase;letter-spacing:.08em;margin-bottom:4px">Accent</div>
+          <input type="text" id="mbColor2" placeholder="e.g. #f1601b — burnt orange">
+        </div>
+        <div>
+          <div style="font-size:10px;font-weight:700;color:var(--dimmer);text-transform:uppercase;letter-spacing:.08em;margin-bottom:4px">Neutral</div>
+          <input type="text" id="mbColor3" placeholder="e.g. #e8e4df — warm white">
+        </div>
+      </div>
+      <div class="q">Visual feeling</div>
+      <div class="og" id="g-mbvibe" style="margin-bottom:1rem"><button class="opt" data-g="mbvibe">Dark &amp; Cinematic</button><button class="opt" data-g="mbvibe">Bright &amp; Clean</button><button class="opt" data-g="mbvibe">Warm &amp; Organic</button><button class="opt" data-g="mbvibe">Cool &amp; Professional</button><button class="opt" data-g="mbvibe">Raw &amp; Documentary</button></div>
+      <div class="q">Visual world narrative</div>
+      <div class="qh">The feeling your content creates before anyone hears you speak.</div>
+      <textarea rows="2" id="mbNarrative" placeholder="e.g. Premium and cinematic, but human — the aesthetic of an expensive production with the intimacy of a one-on-one conversation..."></textarea>
+      <div class="q">Recurring props &amp; objects</div>
+      <input type="text" id="mbObjects" placeholder="e.g. Coffee, notebooks, camera gear, clean minimal desk setup...">
+      <div class="q">Visual references</div>
+      <div class="qh">Creators, films, brands, or photographers whose visual world inspires yours.</div>
+      <input type="text" id="mbRef" placeholder="e.g. Peter McKinnon, A24 films, Apple product photography, @visualathletes...">
+    </div>
+  </details>
+
+  <!-- ─── CREATOR ANALYSIS ─── -->
+  <details class="pb-acc">
+    <summary><span class="pb-acc-icon">&#9711;</span><span class="pb-acc-title">Creator Analysis</span></summary>
+    <div class="pb-acc-body">
+      <p style="font-size:13px;color:var(--dim);line-height:1.7;margin:0 0 1rem">Study the creators doing what you want to do. Don't copy — extract the principles, then find your own angle on each one.</p>
+
+      <div class="pb-ca-card">
+        <div class="pb-ca-num">01</div>
+        <div class="q" style="margin-top:0">Creator name / channel</div>
+        <input type="text" id="ca1name" placeholder="e.g. Peter McKinnon">
+        <div class="q">What they do exceptionally well</div>
+        <textarea rows="2" id="ca1why" placeholder="Cinematic YouTube production, aspirational B-roll, premium personal brand positioning..."></textarea>
+        <div class="q">What I take from them</div>
+        <input type="text" id="ca1take" placeholder="e.g. Shot variety — switching setups every 60–90 seconds holds attention">
+        <div class="q">What I do differently</div>
+        <input type="text" id="ca1diff" placeholder="e.g. More structured education — I teach frameworks, not just document life">
+      </div>
+
+      <div class="pb-ca-card">
+        <div class="pb-ca-num">02</div>
+        <div class="q" style="margin-top:0">Creator name / channel</div>
+        <input type="text" id="ca2name" placeholder="e.g. Alex Hormozi">
+        <div class="q">What they do exceptionally well</div>
+        <textarea rows="2" id="ca2why" placeholder="High-density educational content, ruthless positioning, clear frameworks..."></textarea>
+        <div class="q">What I take from them</div>
+        <input type="text" id="ca2take" placeholder="e.g. The hook — lead with the most valuable insight, not the build-up">
+        <div class="q">What I do differently</div>
+        <input type="text" id="ca2diff" placeholder="e.g. My content is more visual and aspirational — I pair education with cinematic production">
+      </div>
+
+      <div class="pb-ca-card">
+        <div class="pb-ca-num">03</div>
+        <div class="q" style="margin-top:0">Creator name / channel</div>
+        <input type="text" id="ca3name" placeholder="e.g. Ali Abdaal">
+        <div class="q">What they do exceptionally well</div>
+        <textarea rows="2" id="ca3why" placeholder="Relatable storytelling, evidence-based advice, premium editing that feels personal not corporate..."></textarea>
+        <div class="q">What I take from them</div>
+        <input type="text" id="ca3take" placeholder="e.g. Story structure — opening with a personal moment before any advice">
+        <div class="q">What I do differently</div>
+        <input type="text" id="ca3diff" placeholder="e.g. Tighter niche — everything I create connects back to one specific outcome for one specific person">
+      </div>
+    </div>
+  </details>
+
+  <div class="div"></div>
   <h2>Your 30-day content elevation plan</h2>
-  <div class="wc"><div class="wl">Week 1 — Foundation</div><p>Complete all foundation exercises. Define your content goal, ideal viewer, and platform strategy. Write your content formula for every piece you create this week. Commit to your cadence and don't adjust it until week 4.</p></div>
-  <div class="wc"><div class="wl">Week 2 — Visual Identity</div><p>Complete all visual identity exercises. Define your visual world narrative. Build your shot system blueprint. Set up your filming space. Establish your color palette and typography. Film a test video with your new visual standards and review it critically.</p></div>
-  <div class="wc"><div class="wl">Week 3 — Content Creation</div><p>Complete all content creation exercises. Write your hook library (10 hooks minimum). Plan your first 30 pieces of content across all formats. Film your first 5 pieces using your new visual standards and shot system.</p></div>
-  <div class="wc"><div class="wl">Week 4 — System & Launch</div><p>Complete all system exercises. Set up your batching schedule. Map your complete content waterfall. Build your monetization funnel. Launch your elevated content. Review performance at end of week — what worked, what didn't, what to adjust.</p></div>
+  <div class="wc"><div class="wl">Week 1 — Foundation</div><p>Complete all foundation exercises. Define your content goal, platform strategy, and non-negotiable cadence. Write your content formula. Commit to your schedule and don't adjust it until week 4.</p></div>
+  <div class="wc"><div class="wl">Week 2 — System Setup</div><p>Set up your batching schedule. Map your complete content waterfall. Define your visual identity and filming setup. Batch your first week of content using the new system. Aim to stay at least one week ahead.</p></div>
+  <div class="wc"><div class="wl">Week 3 — Content Creation</div><p>Write your hook library (10 hooks minimum). Finalize your storytelling framework. Plan your first 30 pieces across all formats. Film your first batch using your new visual standards and review critically.</p></div>
+  <div class="wc"><div class="wl">Week 4 — Launch &amp; Calibrate</div><p>Go live with your elevated content. Build your monetization funnel. Engage in the first hour of every post. Review at end of week 4 — what worked, what didn't, what to adjust. Then run the system again.</p></div>
   <div class="ins" style="margin-top:1.5rem"><p>Building a premium personal brand is not about being perfect. It's about showing up intentionally. Consistently. With a clear point of view and a genuine desire to help the people you serve. The creators who win are the most consistent. You have everything you need. Now go build it.</p></div>
   <div class="ups">
     <h2>Ready to install your brand in 30 days?</h2>
@@ -1488,41 +1582,99 @@ function buildPlaybook(){
   }
   document.getElementById('pbSugg').innerHTML=suggHtml;
 
-  var items=[
-    {l:'Content goal',v:gs('goal')},{l:'Ideal viewer',v:gv('viewer')},
-    {l:'Desired next step',v:gv('nextStep')},{l:'Painful problem',v:gv('painProblem')},
-    {l:'Unique solution',v:gv('uniqueSol')},{l:'Contextual credibility',v:gv('credibility')},
-    {l:'Weekly hours',v:gv('weekHours')},{l:'What energizes me',v:gv('energize')},
-    {l:'What drains me',v:gv('drain')},{l:'Content cadence',v:gv('cadence')},
-    {l:'Primary platform',v:gs('primary')},{l:'Secondary platform',v:gs('secondary')},
-    {l:'My current focus',v:gv('sauron')},{l:'Visual environment',v:gs('env')},
-    {l:'Audience feeling',v:gs('feel')},{l:'Lighting approach',v:gs('light')},
-    {l:'Color palette',v:[gv('col1'),gv('col2'),gv('col3')].filter(Boolean).join(' / ')},
-    {l:'Recurring objects',v:gv('objects')},{l:'Visual textures',v:gs('tex')},
-    {l:'Visual world narrative',v:gv('vnarr')},
-    {l:'Color grade',v:gs('grade')},{l:'Visual reference',v:gv('vref')},
-    {l:'Signature framing',v:gs('frame')},{l:'Signature angle',v:gs('angle')},
-    {l:'B-roll categories',v:gv('broll')},{l:'Gear I have now',v:gv('gearNow')},
-    {l:'Editing software',v:gs('edit')},
-    {l:'Hook 1',v:[gv('h1a'),gv('h1b'),gv('h1c')].filter(Boolean).join(' → ')},
-    {l:'Hook 2',v:[gv('h2a'),gv('h2b'),gv('h2c')].filter(Boolean).join(' → ')},
-    {l:'Hook 3',v:[gv('h3a'),gv('h3b'),gv('h3c')].filter(Boolean).join(' → ')},
-    {l:'Story idea',v:gv('storyI')},
-    {l:'Short-form format',v:gs('sf')},{l:'Short-form ideas',v:gv('sfideas')},
-    {l:'Long-form video 1',v:gv('lf1')},{l:'Long-form video 2',v:gv('lf2')},{l:'Long-form video 3',v:gv('lf3')},
-    {l:'Carousel style',v:gv('cstyle')},{l:'Carousel ideas',v:gv('cideas')},
-    {l:'Pillar content',v:gv('pillar')},{l:'Waterfall distribution',v:gv('waterfall')},
-    {l:'70/20/10 split',v:gv('split')},
-    {l:'Film/Edit/Publish days',v:[gv('fday'),gv('eday'),gv('pday')].filter(Boolean).join(' / ')},
-    {l:'Maker hours',v:gv('maker')},{l:'Manager hours',v:gv('manager')},
-    {l:'Lead magnet',v:gv('olead')},{l:'Low-ticket offer',v:gv('olow')},
-    {l:'Mid-ticket offer',v:gv('omid')},{l:'High-ticket offer',v:gv('ohigh')},
-    {l:'Conversion mechanism',v:gv('conv')},{l:'CTA strategy',v:gv('ctastrat')}
-  ];
+  function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g,'<br>');}
+
+  function row(lbl,val,ph){
+    var empty=!val;
+    return '<div class="sum"><div class="slb">'+lbl+'</div><div class="svl"'+(empty?' style="color:var(--dimmer)"':'')+'>'+esc(empty?ph:val)+'</div></div>';
+  }
+
+  function sec(num,title,body){
+    return '<div class="pb-sec"><div class="pb-sec-hdr"><div class="pb-sec-num">'+num+'</div><div class="pb-sec-title">'+title+'</div></div>'+body+'</div>';
+  }
+
   var html='';
-  items.forEach(function(item){if(item.v)html+='<div class="sum"><div class="slb">'+item.l+'</div><div class="svl">'+item.v+'</div></div>';});
-  if(html)html='<div class="div"></div><h2 style="margin-top:0">Your Answers</h2>'+html;
-  else html='<p style="color:var(--dimmer);font-size:13px;padding:.5rem 0">Complete the exercises in Parts 1–5 to populate your playbook here.</p>';
+
+  // 01 — CONTENT STRATEGY
+  html+=sec('01','Content Strategy',
+    row('Content goal',gs('goal'),'Define your primary goal in the Strategy workshop')+
+    row('Desired next step after consuming your content',gv('nextStep'),'What do you want viewers to do — book a call, download something, buy?')+
+    row('Painful problem you solve',gv('painProblem'),'The specific problem that keeps your audience up at night')+
+    row('Your unique solution',gv('uniqueSol'),'How you solve it differently than everyone else in the space')+
+    row('Contextual credibility',gv('credibility'),'Your direct experience with this exact problem — not general credentials')
+  );
+
+  // 02 — PLATFORM & SUSTAINABILITY
+  html+=sec('02','Platform & Sustainability',
+    row('Weekly hours for content',gv('weekHours'),'Your realistic capacity for the next 12–18 months — answer without optimism')+
+    row('What gives you energy',gv('energize'),'The parts of content creation that fuel you — protect and expand these')+
+    row('What drains you',gv('drain'),'Every item here needs to be minimized, batched, delegated, or eliminated')+
+    row('Content cadence',gv('cadence'),'Your non-negotiable posting schedule — what you can sustain on your worst week')+
+    row('Primary platform',gs('primary'),'Where your best thinking and energy go')+
+    row('Secondary platform',gs('secondary'),'Repurposed content only — no original creation here')+
+    row('Current focus',gv('sauron'),'The single platform getting your full undivided energy right now')
+  );
+
+  // 03 — BATCHING SYSTEM
+  html+=sec('03','Batching System',
+    row('Batch day & time',gv('filmDay'),'Your locked-in creation block each week')+
+    row('Content per session',gv('batchCount'),'What you produce in a single batch — your minimum standard')+
+    row('Pre-batch setup checklist',gv('filmSetup'),'Everything ready before you hit record — no setup time lost')+
+    row('Your commitment',gv('batchCommit'),'The standard you hold yourself to — written down, non-negotiable')
+  );
+
+  // 04 — STORYTELLING
+  html+=sec('04','Storytelling',
+    row('Story idea',gv('storyI'),'The core story you\'re building this content around')+
+    row('Hook',gv('storyH1'),'How you open and grab attention in the first 3 seconds')+
+    row('Problem',gv('storyP'),'The tension that pulls viewers into the narrative')+
+    row('Journey',gv('storyJ'),'The struggle, the messy middle, the transformation')+
+    row('Lesson',gv('storyL'),'The one thing they walk away knowing or doing differently')+
+    row('CTA',gv('storyC'),'What you want them to do right after they finish watching')
+  );
+
+  // 05 — TRUST & MONETIZATION
+  html+=sec('05','Trust & Monetization',
+    row('Free content',gv('ofree'),'Your ongoing free value — social, YouTube, email')+
+    row('Lead magnet',gv('olead'),'High-value free offer that captures the email and delivers a quick win')+
+    row('Low-ticket offer ($10–$100)',gv('olow'),'Entry-point paid offer — removes the barrier, proves the value')+
+    row('Mid-ticket offer ($500–$5K)',gv('omid'),'Core transformation — your main offer for committed buyers')+
+    row('High-ticket offer ($10K+)',gv('ohigh'),'Premium done-with-you or done-for-you — your top tier')+
+    row('Conversion mechanism',gv('conv'),'How you move people from audience to buyer — the bridge')+
+    row('CTA strategy by funnel stage',gv('ctastrat'),'Awareness → Trust → Conversion — what you say at each stage')
+  );
+
+  // 06 — CONTENT PILLARS & IDEAS
+  var pillHtml='';
+  for(var p=1;p<=5;p++){
+    var pname=gv('ig_pillar'+p);
+    var ideasHtml='';
+    for(var ii=1;ii<=4;ii++){
+      var idea=gv('ig_p'+p+'i'+ii);
+      if(idea){
+        var anglesList=[];
+        for(var a=1;a<=4;a++){var ang=gv('ig_p'+p+'i'+ii+'a'+a);if(ang)anglesList.push(ang);}
+        ideasHtml+='<div style="background:var(--bg);border:1px solid var(--border);border-radius:var(--radius-md);padding:8px 10px;margin-bottom:5px">';
+        ideasHtml+='<div style="font-size:10px;font-weight:700;color:var(--orange);text-transform:uppercase;letter-spacing:.06em;margin-bottom:3px">'+['A','B','C','D'][ii-1]+'</div>';
+        ideasHtml+='<div style="font-size:13px;color:var(--text)">'+esc(idea)+'</div>';
+        if(anglesList.length){
+          ideasHtml+='<div style="margin-top:5px;font-size:11.5px;color:var(--dim);line-height:1.75;padding-left:.65rem;border-left:2px solid var(--border)">';
+          anglesList.forEach(function(ang){ideasHtml+='&#8594; '+esc(ang)+'<br>';});
+          ideasHtml+='</div>';
+        }
+        ideasHtml+='</div>';
+      }
+    }
+    if(pname||ideasHtml){
+      pillHtml+='<div style="margin-bottom:1.1rem">';
+      pillHtml+='<div style="font-size:10px;font-weight:700;color:var(--orange);text-transform:uppercase;letter-spacing:.09em;margin-bottom:.5rem">Pillar '+p+(pname?' &mdash; '+esc(pname):'')+'</div>';
+      pillHtml+=ideasHtml||'<div class="svl" style="color:var(--dimmer)">No ideas added for this pillar yet — go to Idea Generation</div>';
+      pillHtml+='</div>';
+    }
+  }
+  if(!pillHtml)pillHtml='<div class="svl" style="color:var(--dimmer)">Complete the Idea Generation workshop to populate your content pillars here</div>';
+  html+=sec('06','Content Pillars & Ideas',pillHtml);
+
   document.getElementById('pbContent').innerHTML=html;
 }
 
