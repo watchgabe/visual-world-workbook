@@ -417,6 +417,10 @@ textarea::placeholder,input[type=text]::placeholder{color:var(--dimmer)}
 summary .ig-acc-input{flex:1;background:transparent!important;border:none!important;outline:none!important;box-shadow:none!important;font-family:var(--font);font-size:13.5px;font-weight:500;color:var(--text);padding:0!important;margin:0!important;cursor:text;min-width:0}
 summary .ig-acc-input::placeholder{color:var(--dimmer)}
 .ig-acc-count{font-size:10px;color:var(--dimmer);flex-shrink:0;margin-left:auto;margin-right:4px}
+.ig-gen-btn{width:100%;font-size:11px;font-weight:600;padding:6px 10px;margin-top:3px;border:1px dashed var(--border);border-radius:var(--radius-md);background:transparent;color:var(--dimmer);cursor:pointer;transition:border-color .15s,color .15s;text-align:center}
+.ig-gen-btn:hover{border-color:var(--orange);color:var(--orange)}
+.ig-gen-box{display:none;border:1px solid var(--orange-border);background:var(--orange-tint);border-radius:8px;padding:10px 12px;margin-top:6px}
+.ig-gen-box input{margin-bottom:6px!important}
 .ig-ai-psel{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:8px}
 .ig-ai-psel button{flex:1;min-width:0;font-size:11px;font-weight:600;padding:5px 6px;border-radius:7px;border:1px solid var(--border);background:var(--surface);color:var(--dim);cursor:pointer;text-overflow:ellipsis;overflow:hidden;white-space:nowrap;transition:border-color .15s,color .15s}
 .ig-ai-psel button.sel{border-color:var(--orange);color:var(--orange);background:var(--orange-tint)}
@@ -887,6 +891,13 @@ summary .ig-acc-input::placeholder{color:var(--dimmer)}
       <details class="ig-iacc"><summary><span class="ig-i-lbl">B</span><input type="text" id="ig_p1i2" class="ig-acc-input" placeholder="Idea B&#8230;" onclick="event.stopPropagation()" oninput="saveData()"><span class="ig-acc-count">4 angles</span></summary><div class="ig-iacc-body"><input type="text" id="ig_p1i2a1" placeholder="Angle 1&#8230;"><input type="text" id="ig_p1i2a2" placeholder="Angle 2&#8230;"><input type="text" id="ig_p1i2a3" placeholder="Angle 3&#8230;"><input type="text" id="ig_p1i2a4" placeholder="Angle 4&#8230;"></div></details>
       <details class="ig-iacc"><summary><span class="ig-i-lbl">C</span><input type="text" id="ig_p1i3" class="ig-acc-input" placeholder="Idea C&#8230;" onclick="event.stopPropagation()" oninput="saveData()"><span class="ig-acc-count">4 angles</span></summary><div class="ig-iacc-body"><input type="text" id="ig_p1i3a1" placeholder="Angle 1&#8230;"><input type="text" id="ig_p1i3a2" placeholder="Angle 2&#8230;"><input type="text" id="ig_p1i3a3" placeholder="Angle 3&#8230;"><input type="text" id="ig_p1i3a4" placeholder="Angle 4&#8230;"></div></details>
       <details class="ig-iacc"><summary><span class="ig-i-lbl">D</span><input type="text" id="ig_p1i4" class="ig-acc-input" placeholder="Idea D&#8230;" onclick="event.stopPropagation()" oninput="saveData()"><span class="ig-acc-count">4 angles</span></summary><div class="ig-iacc-body"><input type="text" id="ig_p1i4a1" placeholder="Angle 1&#8230;"><input type="text" id="ig_p1i4a2" placeholder="Angle 2&#8230;"><input type="text" id="ig_p1i4a3" placeholder="Angle 3&#8230;"><input type="text" id="ig_p1i4a4" placeholder="Angle 4&#8230;"></div></details>
+      <button class="ig-gen-btn" onclick="igToggleGenBox(1)">&#10022; Generate ideas with AI</button>
+      <div class="ig-gen-box" id="igGenBox1">
+        <input type="text" id="igGenTopic1" placeholder="Topic to generate ideas for&#8230;">
+        <button class="btn p" onclick="igGenInline(1)" id="igGenBtn1" style="width:100%;font-size:12px;padding:7px;margin-bottom:6px">Generate 10 Ideas &#8594;</button>
+        <div id="igGenStatus1" style="display:none;font-size:11px;color:var(--dim);padding:3px 0;line-height:1.5"></div>
+        <div id="igGenResults1"></div>
+      </div>
     </div>
   </details>
 
@@ -898,6 +909,13 @@ summary .ig-acc-input::placeholder{color:var(--dimmer)}
       <details class="ig-iacc"><summary><span class="ig-i-lbl">B</span><input type="text" id="ig_p2i2" class="ig-acc-input" placeholder="Idea B&#8230;" onclick="event.stopPropagation()" oninput="saveData()"><span class="ig-acc-count">4 angles</span></summary><div class="ig-iacc-body"><input type="text" id="ig_p2i2a1" placeholder="Angle 1&#8230;"><input type="text" id="ig_p2i2a2" placeholder="Angle 2&#8230;"><input type="text" id="ig_p2i2a3" placeholder="Angle 3&#8230;"><input type="text" id="ig_p2i2a4" placeholder="Angle 4&#8230;"></div></details>
       <details class="ig-iacc"><summary><span class="ig-i-lbl">C</span><input type="text" id="ig_p2i3" class="ig-acc-input" placeholder="Idea C&#8230;" onclick="event.stopPropagation()" oninput="saveData()"><span class="ig-acc-count">4 angles</span></summary><div class="ig-iacc-body"><input type="text" id="ig_p2i3a1" placeholder="Angle 1&#8230;"><input type="text" id="ig_p2i3a2" placeholder="Angle 2&#8230;"><input type="text" id="ig_p2i3a3" placeholder="Angle 3&#8230;"><input type="text" id="ig_p2i3a4" placeholder="Angle 4&#8230;"></div></details>
       <details class="ig-iacc"><summary><span class="ig-i-lbl">D</span><input type="text" id="ig_p2i4" class="ig-acc-input" placeholder="Idea D&#8230;" onclick="event.stopPropagation()" oninput="saveData()"><span class="ig-acc-count">4 angles</span></summary><div class="ig-iacc-body"><input type="text" id="ig_p2i4a1" placeholder="Angle 1&#8230;"><input type="text" id="ig_p2i4a2" placeholder="Angle 2&#8230;"><input type="text" id="ig_p2i4a3" placeholder="Angle 3&#8230;"><input type="text" id="ig_p2i4a4" placeholder="Angle 4&#8230;"></div></details>
+      <button class="ig-gen-btn" onclick="igToggleGenBox(2)">&#10022; Generate ideas with AI</button>
+      <div class="ig-gen-box" id="igGenBox2">
+        <input type="text" id="igGenTopic2" placeholder="Topic to generate ideas for&#8230;">
+        <button class="btn p" onclick="igGenInline(2)" id="igGenBtn2" style="width:100%;font-size:12px;padding:7px;margin-bottom:6px">Generate 10 Ideas &#8594;</button>
+        <div id="igGenStatus2" style="display:none;font-size:11px;color:var(--dim);padding:3px 0;line-height:1.5"></div>
+        <div id="igGenResults2"></div>
+      </div>
     </div>
   </details>
 
@@ -909,6 +927,13 @@ summary .ig-acc-input::placeholder{color:var(--dimmer)}
       <details class="ig-iacc"><summary><span class="ig-i-lbl">B</span><input type="text" id="ig_p3i2" class="ig-acc-input" placeholder="Idea B&#8230;" onclick="event.stopPropagation()" oninput="saveData()"><span class="ig-acc-count">4 angles</span></summary><div class="ig-iacc-body"><input type="text" id="ig_p3i2a1" placeholder="Angle 1&#8230;"><input type="text" id="ig_p3i2a2" placeholder="Angle 2&#8230;"><input type="text" id="ig_p3i2a3" placeholder="Angle 3&#8230;"><input type="text" id="ig_p3i2a4" placeholder="Angle 4&#8230;"></div></details>
       <details class="ig-iacc"><summary><span class="ig-i-lbl">C</span><input type="text" id="ig_p3i3" class="ig-acc-input" placeholder="Idea C&#8230;" onclick="event.stopPropagation()" oninput="saveData()"><span class="ig-acc-count">4 angles</span></summary><div class="ig-iacc-body"><input type="text" id="ig_p3i3a1" placeholder="Angle 1&#8230;"><input type="text" id="ig_p3i3a2" placeholder="Angle 2&#8230;"><input type="text" id="ig_p3i3a3" placeholder="Angle 3&#8230;"><input type="text" id="ig_p3i3a4" placeholder="Angle 4&#8230;"></div></details>
       <details class="ig-iacc"><summary><span class="ig-i-lbl">D</span><input type="text" id="ig_p3i4" class="ig-acc-input" placeholder="Idea D&#8230;" onclick="event.stopPropagation()" oninput="saveData()"><span class="ig-acc-count">4 angles</span></summary><div class="ig-iacc-body"><input type="text" id="ig_p3i4a1" placeholder="Angle 1&#8230;"><input type="text" id="ig_p3i4a2" placeholder="Angle 2&#8230;"><input type="text" id="ig_p3i4a3" placeholder="Angle 3&#8230;"><input type="text" id="ig_p3i4a4" placeholder="Angle 4&#8230;"></div></details>
+      <button class="ig-gen-btn" onclick="igToggleGenBox(3)">&#10022; Generate ideas with AI</button>
+      <div class="ig-gen-box" id="igGenBox3">
+        <input type="text" id="igGenTopic3" placeholder="Topic to generate ideas for&#8230;">
+        <button class="btn p" onclick="igGenInline(3)" id="igGenBtn3" style="width:100%;font-size:12px;padding:7px;margin-bottom:6px">Generate 10 Ideas &#8594;</button>
+        <div id="igGenStatus3" style="display:none;font-size:11px;color:var(--dim);padding:3px 0;line-height:1.5"></div>
+        <div id="igGenResults3"></div>
+      </div>
     </div>
   </details>
 
@@ -920,6 +945,13 @@ summary .ig-acc-input::placeholder{color:var(--dimmer)}
       <details class="ig-iacc"><summary><span class="ig-i-lbl">B</span><input type="text" id="ig_p4i2" class="ig-acc-input" placeholder="Idea B&#8230;" onclick="event.stopPropagation()" oninput="saveData()"><span class="ig-acc-count">4 angles</span></summary><div class="ig-iacc-body"><input type="text" id="ig_p4i2a1" placeholder="Angle 1&#8230;"><input type="text" id="ig_p4i2a2" placeholder="Angle 2&#8230;"><input type="text" id="ig_p4i2a3" placeholder="Angle 3&#8230;"><input type="text" id="ig_p4i2a4" placeholder="Angle 4&#8230;"></div></details>
       <details class="ig-iacc"><summary><span class="ig-i-lbl">C</span><input type="text" id="ig_p4i3" class="ig-acc-input" placeholder="Idea C&#8230;" onclick="event.stopPropagation()" oninput="saveData()"><span class="ig-acc-count">4 angles</span></summary><div class="ig-iacc-body"><input type="text" id="ig_p4i3a1" placeholder="Angle 1&#8230;"><input type="text" id="ig_p4i3a2" placeholder="Angle 2&#8230;"><input type="text" id="ig_p4i3a3" placeholder="Angle 3&#8230;"><input type="text" id="ig_p4i3a4" placeholder="Angle 4&#8230;"></div></details>
       <details class="ig-iacc"><summary><span class="ig-i-lbl">D</span><input type="text" id="ig_p4i4" class="ig-acc-input" placeholder="Idea D&#8230;" onclick="event.stopPropagation()" oninput="saveData()"><span class="ig-acc-count">4 angles</span></summary><div class="ig-iacc-body"><input type="text" id="ig_p4i4a1" placeholder="Angle 1&#8230;"><input type="text" id="ig_p4i4a2" placeholder="Angle 2&#8230;"><input type="text" id="ig_p4i4a3" placeholder="Angle 3&#8230;"><input type="text" id="ig_p4i4a4" placeholder="Angle 4&#8230;"></div></details>
+      <button class="ig-gen-btn" onclick="igToggleGenBox(4)">&#10022; Generate ideas with AI</button>
+      <div class="ig-gen-box" id="igGenBox4">
+        <input type="text" id="igGenTopic4" placeholder="Topic to generate ideas for&#8230;">
+        <button class="btn p" onclick="igGenInline(4)" id="igGenBtn4" style="width:100%;font-size:12px;padding:7px;margin-bottom:6px">Generate 10 Ideas &#8594;</button>
+        <div id="igGenStatus4" style="display:none;font-size:11px;color:var(--dim);padding:3px 0;line-height:1.5"></div>
+        <div id="igGenResults4"></div>
+      </div>
     </div>
   </details>
 
@@ -931,6 +963,13 @@ summary .ig-acc-input::placeholder{color:var(--dimmer)}
       <details class="ig-iacc"><summary><span class="ig-i-lbl">B</span><input type="text" id="ig_p5i2" class="ig-acc-input" placeholder="Idea B&#8230;" onclick="event.stopPropagation()" oninput="saveData()"><span class="ig-acc-count">4 angles</span></summary><div class="ig-iacc-body"><input type="text" id="ig_p5i2a1" placeholder="Angle 1&#8230;"><input type="text" id="ig_p5i2a2" placeholder="Angle 2&#8230;"><input type="text" id="ig_p5i2a3" placeholder="Angle 3&#8230;"><input type="text" id="ig_p5i2a4" placeholder="Angle 4&#8230;"></div></details>
       <details class="ig-iacc"><summary><span class="ig-i-lbl">C</span><input type="text" id="ig_p5i3" class="ig-acc-input" placeholder="Idea C&#8230;" onclick="event.stopPropagation()" oninput="saveData()"><span class="ig-acc-count">4 angles</span></summary><div class="ig-iacc-body"><input type="text" id="ig_p5i3a1" placeholder="Angle 1&#8230;"><input type="text" id="ig_p5i3a2" placeholder="Angle 2&#8230;"><input type="text" id="ig_p5i3a3" placeholder="Angle 3&#8230;"><input type="text" id="ig_p5i3a4" placeholder="Angle 4&#8230;"></div></details>
       <details class="ig-iacc"><summary><span class="ig-i-lbl">D</span><input type="text" id="ig_p5i4" class="ig-acc-input" placeholder="Idea D&#8230;" onclick="event.stopPropagation()" oninput="saveData()"><span class="ig-acc-count">4 angles</span></summary><div class="ig-iacc-body"><input type="text" id="ig_p5i4a1" placeholder="Angle 1&#8230;"><input type="text" id="ig_p5i4a2" placeholder="Angle 2&#8230;"><input type="text" id="ig_p5i4a3" placeholder="Angle 3&#8230;"><input type="text" id="ig_p5i4a4" placeholder="Angle 4&#8230;"></div></details>
+      <button class="ig-gen-btn" onclick="igToggleGenBox(5)">&#10022; Generate ideas with AI</button>
+      <div class="ig-gen-box" id="igGenBox5">
+        <input type="text" id="igGenTopic5" placeholder="Topic to generate ideas for&#8230;">
+        <button class="btn p" onclick="igGenInline(5)" id="igGenBtn5" style="width:100%;font-size:12px;padding:7px;margin-bottom:6px">Generate 10 Ideas &#8594;</button>
+        <div id="igGenStatus5" style="display:none;font-size:11px;color:var(--dim);padding:3px 0;line-height:1.5"></div>
+        <div id="igGenResults5"></div>
+      </div>
     </div>
   </details>
 
@@ -1528,7 +1567,7 @@ function igPullPillars(){
       if(status){status.innerHTML='<strong style="color:var(--orange)">Brand Foundation not found.</strong> Enter your pillars below, or complete the Brand Foundation module first for auto-fill.';status.style.display='';}
       return;
     }
-    var d=JSON.parse(raw);var inp=d.inputs||{};var found=0;
+    var d=JSON.parse(raw);var inp=d.inputs||d;var found=0;
     for(var i=1;i<=5;i++){
       var v=inp['pillar'+i+'name']||'';
       var el=document.getElementById('ig_pillar'+i);
@@ -1583,6 +1622,72 @@ function igAddToList(idx){
 }
 
 function igAddTop2(){igAddToList(0);igAddToList(1);}
+
+function igToggleGenBox(p){
+  var box=document.getElementById('igGenBox'+p);
+  if(!box)return;
+  var open=box.style.display==='block';
+  box.style.display=open?'none':'block';
+  if(!open){
+    var pname=(document.getElementById('ig_pillar'+p)||{}).value||'';
+    var ti=document.getElementById('igGenTopic'+p);
+    if(ti&&!ti.value&&pname)ti.value=pname;
+    if(ti){ti.focus();ti.select();}
+    igSetTargetPillar(p);
+  }
+}
+
+async function igGenInline(p){
+  var ti=document.getElementById('igGenTopic'+p);
+  var topic=ti?ti.value.trim():'';
+  if(!topic){alert('Enter a topic first.');return;}
+  var btn=document.getElementById('igGenBtn'+p);
+  var status=document.getElementById('igGenStatus'+p);
+  var results=document.getElementById('igGenResults'+p);
+  if(btn){btn.disabled=true;btn.textContent='Generating\u2026';}
+  if(status){status.style.display='';status.textContent='AI is generating ideas\u2026';}
+  if(results)results.innerHTML='';
+  try{
+    var pillars=[];
+    for(var i=1;i<=5;i++){var pv=(document.getElementById('ig_pillar'+i)||{}).value;if(pv&&pv.trim())pillars.push(pv.trim());}
+    var ctx=pillars.length?' Brand pillars: '+pillars.join(', ')+'.':'';
+    var prompt='You are a social media content strategist.'+ctx+' Generate EXACTLY 10 specific, compelling content ideas for this topic: "'+topic+'". Each idea should be a punchy title or hook under 12 words \u2014 the kind that stops a scroll. Output ONLY a numbered list 1 through 10, one idea per line, no headers, no explanations.';
+    var res=await fetch('https://ljddfhzrjvxpedvfebli.supabase.co/functions/v1/claude-proxy',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxqZGRmaHpyanZ4cGVkdmZlYmxpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM5NTEzNjMsImV4cCI6MjA4OTUyNzM2M30.GqZMRvBlZyN4rmr9MrfxLcLSB04d7s59ZPfEw-dQwks'},body:JSON.stringify({prompt:prompt,maxTokens:600})});
+    var data=await res.json();
+    if(data.error)throw new Error(data.error);
+    var text=data.text||'';
+    var lines=text.split('\n').filter(function(l){return /^\d+[\.\)]/.test(l.trim());}).map(function(l){return l.replace(/^\d+[\.\)]\s*/,'').trim();});
+    if(!lines.length)lines=text.split('\n').filter(function(l){return l.trim().length>8;}).slice(0,10);
+    window['_igInLines'+p]=lines;
+    if(results){
+      var html='<div style="font-size:11px;color:var(--dim);margin-bottom:6px">Click <strong>+ Add</strong> to drop into the next empty slot:</div>';
+      lines.forEach(function(line,idx){
+        html+='<div class="ig-ai-idea"><span class="ig-ai-idea-text">'+line+'</span><button class="ig-ai-add" onclick="igAddInline('+p+','+idx+')">+ Add</button></div>';
+      });
+      results.innerHTML=html;
+    }
+    if(status)status.style.display='none';
+  }catch(e){
+    if(status){status.innerHTML='<span style="color:#e53e3e">Error: '+e.message+'</span>';status.style.display='';}
+  }
+  if(btn){btn.disabled=false;btn.textContent='Generate 10 Ideas \u2192';}
+}
+
+function igAddInline(p,idx){
+  var text=window['_igInLines'+p]&&window['_igInLines'+p][idx]||'';
+  if(!text)return;
+  for(var i=1;i<=4;i++){
+    var el=document.getElementById('ig_p'+p+'i'+i);
+    if(el&&!el.value.trim()){
+      el.value=text;saveData();
+      var _e=el;_e.style.background='rgba(241,96,27,.15)';
+      setTimeout(function(){_e.style.background='';},800);
+      return;
+    }
+  }
+  var pname=(document.getElementById('ig_pillar'+p)||{}).value||('Pillar '+p);
+  alert(pname+' already has 4 ideas. Clear a slot first.');
+}
 
 async function igGenerateIdeas(){
   var topic=(document.getElementById('igAITopic')||{}).value||'';
