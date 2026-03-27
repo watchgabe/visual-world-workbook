@@ -342,20 +342,21 @@ function loadCircleConfig(){
   if(cid) document.getElementById('circle-cid-input').value=cid;
 }
 
+var _EDGE_BASE='https://ljddfhzrjvxpedvfebli.supabase.co/functions/v1';
+var _EDGE_ANON='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxqZGRmaHpyanZ4cGVkdmZlYmxpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDc2MDc2MzgsImV4cCI6MjA2MzE4MzYzOH0.qJR_LtPu7qH0QNPmv1lnkk6U2p5EJm7RVInH7T5mDsU';
+
 async function fetchCircleMember(email){
-  var key=localStorage.getItem('admin-circle-key')||document.getElementById('circle-key-input').value.trim();
   var cid=localStorage.getItem('admin-circle-cid')||document.getElementById('circle-cid-input').value.trim();
-  if(!key||!cid) return null;
+  if(!cid) return null;
   try{
-    var resp=await fetch('https://app.circle.so/api/v1/community_members?email='+encodeURIComponent(email)+'&community_id='+cid,{
-      headers:{'Authorization':'Token '+key,'Content-Type':'application/json'}
+    var resp=await fetch(_EDGE_BASE+'/circle-proxy',{
+      method:'POST',
+      headers:{'Content-Type':'application/json','apikey':_EDGE_ANON,'Authorization':'Bearer '+_EDGE_ANON},
+      body:JSON.stringify({action:'get_member',email:email,community_id:cid})
     });
     if(!resp.ok) return null;
     var data=await resp.json();
-    /* Circle returns array or object */
-    if(Array.isArray(data)&&data.length>0) return data[0];
-    if(data&&data.id) return data;
-    return null;
+    return data.member||null;
   }catch(e){return null;}
 }
 

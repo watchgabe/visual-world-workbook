@@ -637,7 +637,7 @@ textarea::placeholder,input[type=text]::placeholder{color:var(--dimmer)}
   <div class="nr">
     <button class="btn" onclick="go(5)">&#8592; Back</button>
     <span class="si">6/6</span>
-    <button class="btn p" onclick="done[6]=true;saveData();window.parent.postMessage({type:'navigate-module',to:'playbook'},'*')">View Your Playbook &#8594;</button>
+    <button class="btn p" onclick="done[6]=true;saveData();laNotifyCircleComplete();window.parent.postMessage({type:'navigate-module',to:'playbook'},'*')">View Your Playbook &#8594;</button>
   </div>
 </div>
 
@@ -898,6 +898,18 @@ setTimeout(function(){
   var doneArr=Object.keys(done).filter(function(k){return done[k];}).map(Number);
   window.parent.postMessage({type:'ready',cur:cur,done:doneArr},'*');
 },300);
+
+/* ── Circle module completion sync ── */
+function laNotifyCircleComplete(){
+  var email=localStorage.getItem('vww-user-email');
+  if(!email)return;
+  var cid=localStorage.getItem('admin-circle-cid')||'301190';
+  fetch('https://ljddfhzrjvxpedvfebli.supabase.co/functions/v1/circle-proxy',{
+    method:'POST',
+    headers:{'Content-Type':'application/json','apikey':'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxqZGRmaHpyanZ4cGVkdmZlYmxpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDc2MDc2MzgsImV4cCI6MjA2MzE4MzYzOH0.qJR_LtPu7qH0QNPmv1lnkk6U2p5EJm7RVInH7T5mDsU','Authorization':'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxqZGRmaHpyanZ4cGVkdmZlYmxpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDc2MDc2MzgsImV4cCI6MjA2MzE4MzYzOH0.qJR_LtPu7qH0QNPmv1lnkk6U2p5EJm7RVInH7T5mDsU'},
+    body:JSON.stringify({action:'module_complete',email:email,module_key:'launch-v1',community_id:cid})
+  }).catch(function(){});
+}
 </script>
 </body>
 </html>

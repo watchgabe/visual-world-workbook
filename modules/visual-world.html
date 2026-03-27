@@ -1398,7 +1398,7 @@ textarea::placeholder,input[type=text]::placeholder{color:var(--dimmer)}
   </div>
 
 
-  <div class="nr"><button class="btn" id="b5b">← Back</button><span class="si">5/5</span><button class="btn p" onclick="if(sectionComplete(5))done.add(5);saveData();window.parent.postMessage({type:'navigate-module',to:'content'},'*')">Finish Module &#8594;</button></div>
+  <div class="nr"><button class="btn" id="b5b">← Back</button><span class="si">5/5</span><button class="btn p" onclick="if(sectionComplete(5))done.add(5);saveData();vwNotifyCircleComplete();window.parent.postMessage({type:'navigate-module',to:'content'},'*')">Finish Module &#8594;</button></div>
 </div>
 
 
@@ -3050,6 +3050,18 @@ setTimeout(function(){
     window.parent.postMessage({type:'ready',cur:cur,done:doneArr},'*');
   }
 },300);
+
+/* ── Circle module completion sync ── */
+function vwNotifyCircleComplete(){
+  var email=localStorage.getItem('vww-user-email');
+  if(!email)return;
+  var cid=localStorage.getItem('admin-circle-cid')||'301190';
+  fetch('https://ljddfhzrjvxpedvfebli.supabase.co/functions/v1/circle-proxy',{
+    method:'POST',
+    headers:{'Content-Type':'application/json','apikey':'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxqZGRmaHpyanZ4cGVkdmZlYmxpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDc2MDc2MzgsImV4cCI6MjA2MzE4MzYzOH0.qJR_LtPu7qH0QNPmv1lnkk6U2p5EJm7RVInH7T5mDsU','Authorization':'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxqZGRmaHpyanZ4cGVkdmZlYmxpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDc2MDc2MzgsImV4cCI6MjA2MzE4MzYzOH0.qJR_LtPu7qH0QNPmv1lnkk6U2p5EJm7RVInH7T5mDsU'},
+    body:JSON.stringify({action:'module_complete',email:email,module_key:'vw',community_id:cid})
+  }).catch(function(){});
+}
 
 /* ═══════════════════════════════════════════════════════
    TYPOGRAPHY WORKSHOP

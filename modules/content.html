@@ -1850,9 +1850,20 @@ function analyzeGear(){
 initOpts();
 wire();
 // Finish Module → navigate to Launch
+function ccNotifyCircleComplete(){
+  var email=localStorage.getItem('vww-user-email');
+  if(!email)return;
+  var cid=localStorage.getItem('admin-circle-cid')||'301190';
+  fetch('https://ljddfhzrjvxpedvfebli.supabase.co/functions/v1/circle-proxy',{
+    method:'POST',
+    headers:{'Content-Type':'application/json','apikey':'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxqZGRmaHpyanZ4cGVkdmZlYmxpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDc2MDc2MzgsImV4cCI6MjA2MzE4MzYzOH0.qJR_LtPu7qH0QNPmv1lnkk6U2p5EJm7RVInH7T5mDsU','Authorization':'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxqZGRmaHpyanZ4cGVkdmZlYmxpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDc2MDc2MzgsImV4cCI6MjA2MzE4MzYzOH0.qJR_LtPu7qH0QNPmv1lnkk6U2p5EJm7RVInH7T5mDsU'},
+    body:JSON.stringify({action:'module_complete',email:email,module_key:'cc',community_id:cid})
+  }).catch(function(){});
+}
 (function(){
   var _b3n=document.getElementById('b3n');
   if(_b3n) _b3n.addEventListener('click',function(){
+    ccNotifyCircleComplete();
     window.parent.postMessage({type:'navigate-module',to:'launch'},'*');
   });
 })();

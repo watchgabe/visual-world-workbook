@@ -4,7 +4,7 @@
     {
       "name": "Visual World Workbook",
       "runtimeExecutable": "node",
-      "runtimeArgs": ["/tmp/vww_serve.js"],
+      "runtimeArgs": [".claude/serve.js"],
       "port": 8083
     }
   ]
