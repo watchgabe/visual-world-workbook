@@ -1935,6 +1935,19 @@ function ccSyncSupabase(data){
     }catch(e){}
   },2000);
 }
+
+(async function ccLoadFromCloud(){
+  var email=localStorage.getItem('vww-user-email');
+  if(!email)return;
+  if(localStorage.getItem(SAVE_KEY))return;
+  try{
+    var hdrs={'Content-Type':'application/json','apikey':_CC_ANON,'Authorization':'Bearer '+_CC_ANON};
+    var rows=await(await fetch(_CC_BASE+'/rest/v1/vww_progress?email=eq.'+encodeURIComponent(email)+'&select=data',{headers:hdrs})).json();
+    if(!Array.isArray(rows)||!rows[0]||!rows[0].data||!rows[0].data.cc)return;
+    localStorage.setItem(SAVE_KEY,JSON.stringify(rows[0].data.cc));
+    loadData();go(cur);
+  }catch(e){}
+})();
 </script>
 <script async src="https://www.instagram.com/embed.js"></script>
 </body>
