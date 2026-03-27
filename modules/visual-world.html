@@ -2095,11 +2095,13 @@ function mbBindDrop(cat) {
     dz.addEventListener('dragleave',function(){dz.classList.remove('over');});
     dz.addEventListener('drop',function(e){e.preventDefault();e.stopPropagation();dz.classList.remove('over');mbDropFiles(cat,Array.from(e.dataTransfer.files));});
   }
+  /* Always bind panel-level drop so the header area and "add more" state also work */
   var panel=document.getElementById('mbp-'+cat);
-  if(panel&&!dz&&!panel._mbBound){
+  if(panel&&!panel._mbBound){
     panel._mbBound=true;
-    panel.addEventListener('dragover',function(e){e.preventDefault();});
-    panel.addEventListener('drop',function(e){e.stopPropagation();e.preventDefault();mbDropFiles(cat,Array.from(e.dataTransfer.files));});
+    panel.addEventListener('dragover',function(e){e.preventDefault();panel.style.outline='2px solid var(--orange)';});
+    panel.addEventListener('dragleave',function(e){if(!panel.contains(e.relatedTarget))panel.style.outline='';});
+    panel.addEventListener('drop',function(e){e.stopPropagation();e.preventDefault();panel.style.outline='';mbDropFiles(cat,Array.from(e.dataTransfer.files));});
   }
 }
 
@@ -2990,6 +2992,10 @@ go(cur);
 wireSave();
 if (cur === 2) initMoodBoard();
 initIdentity();
+
+/* ── DRAG GUARD: prevent browser from opening dropped files outside of zones ── */
+document.addEventListener('dragover', function(e){ e.preventDefault(); });
+document.addEventListener('drop', function(e){ e.preventDefault(); });
 
 /* ── IFRAME / COURSE SHELL BRIDGE ── */
 var VW_IN_FRAME = (window.self !== window.top);
