@@ -1108,8 +1108,11 @@ function esc(s){return(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace
 buildNav();initOpts();wireSave();loadData();initChecklists();go(cur);
 
 /* ── LOAD CF DATA FROM SUPABASE ON START ── */
+/* Only runs if localStorage is empty (cloud restore for new device/browser) */
 (async function cfLoadFromCloud() {
   if (!CF_USER_EMAIL) return;
+  /* Skip if localStorage already has fresh data */
+  if (localStorage.getItem(KEY)) return;
   try {
     var rows = await (await fetch(
       SUPABASE_URL + '/rest/v1/vww_progress?email=eq.' + encodeURIComponent(CF_USER_EMAIL) + '&select=data',
@@ -1117,7 +1120,7 @@ buildNav();initOpts();wireSave();loadData();initChecklists();go(cur);
     )).json();
     if (!Array.isArray(rows) || !rows[0] || !rows[0].data || !rows[0].data.cf) return;
     var d = rows[0].data.cf;
-    /* Restore fields */
+    /* Restore fields into DOM */
     Object.keys(d).forEach(function(k) {
       if (k === 'cur' || k === 'done' || k === 'auditVals') return;
       if (k.indexOf('opt_') === 0) {
@@ -1133,10 +1136,12 @@ buildNav();initOpts();wireSave();loadData();initChecklists();go(cur);
       var el = document.getElementById(k);
       if (el && (el.tagName==='TEXTAREA'||el.type==='text') && d[k]) el.value = d[k];
     });
-    if (d.done) done = d.done;
+    if (d.done) { done = d.done; updateProgress(); }
     if (d.auditVals) { auditVals = d.auditVals; updateAuditScores(); }
-    if (typeof d.cur === 'number') { cur = d.cur; go(cur); }
+    /* Cache to localStorage so subsequent loads use it instantly */
     localStorage.setItem(KEY, JSON.stringify(d));
+    buildNav();
+    updateMissionPreview();
   } catch(e) { console.warn('CF cloud load failed:', e); }
 })();
 
