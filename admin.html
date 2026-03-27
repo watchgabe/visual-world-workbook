@@ -386,23 +386,19 @@ async function loadDashboard() {
   document.getElementById('user-empty').style.display = 'none';
 
   try {
-    var [usersR, mainR, cfR] = await Promise.all([
+    var [usersR, mainR] = await Promise.all([
       fetch(SUPABASE_URL+'/rest/v1/vww_users?select=*&order=last_seen.desc', {headers:sbH()}),
-      fetch(SUPABASE_URL+'/rest/v1/vww_progress?select=email,data,updated_at', {headers:sbH()}),
-      fetch(SUPABASE_URL+'/rest/v1/vww_progress_cf?select=email,data,updated_at', {headers:sbH()})
+      fetch(SUPABASE_URL+'/rest/v1/vww_progress?select=email,data,updated_at', {headers:sbH()})
     ]);
     var users    = await usersR.json();
     var mainProg = await mainR.json();
-    var cfProg   = await cfR.json();
 
-    if(!Array.isArray(users))   users=[];
+    if(!Array.isArray(users))    users=[];
     if(!Array.isArray(mainProg)) mainProg=[];
-    if(!Array.isArray(cfProg))  cfProg=[];
 
-    /* Build per-email maps */
-    var mainMap={}, cfMap={};
+    /* Build per-email map — cf data now lives in vww_progress.data.cf */
+    var mainMap={};
     mainProg.forEach(function(p){ if(p.email) mainMap[p.email.toLowerCase()]=p; });
-    cfProg.forEach(function(p){   if(p.email) cfMap[p.email.toLowerCase()]=p;   });
 
     /* Stats */
     var total = users.length;
@@ -412,7 +408,7 @@ async function loadDashboard() {
     var started=0, completed=0;
     users.forEach(function(u){
       var em=(u.email||'').toLowerCase();
-      var cfd=cfMap[em]&&cfMap[em].data;
+      var cfd=md&&md.cf?md.cf:null;
       var md=mainMap[em]&&mainMap[em].data;
       var vwD=(md&&md.vw)?md.vw:md;
       var ccD=(md&&md.cc)?md.cc:md;
@@ -441,9 +437,8 @@ async function loadDashboard() {
     users.forEach(function(user, idx) {
       var em  = (user.email||'').toLowerCase();
       var main = mainMap[em];
-      var cf   = cfMap[em];
       var md   = main&&main.data ? main.data : null;
-      var cfd  = cf&&cf.data     ? cf.data   : null;
+      var cfd  = md&&md.cf ? md.cf : null;
 
       /* Support new per-module sub-keys (vw/cc) AND old flat format */
       var vwData = (md && md.vw) ? md.vw : md;
