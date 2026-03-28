@@ -118,16 +118,22 @@ body::before{
 /* ─── MODULE HEADER ─── */
 .mod-header{
   display:flex;align-items:center;
-  padding:10px 1.1rem 10px 1rem;
-  cursor:pointer;border:none;background:none;
-  width:100%;text-align:left;font-family:var(--font);
   border-left:2px solid transparent;
   transition:background .15s,border-color .15s;
 }
 .mod-header:hover{background:var(--card)}
 .mod-header.active{background:var(--orange-tint);border-left-color:var(--orange);}
-.mod-header.locked{cursor:default;opacity:.65}
-.mod-header.locked:hover{background:none}
+.mod-header.locked{opacity:.65;pointer-events:none;}
+.mod-main-btn{
+  display:flex;align-items:center;flex:1;min-width:0;
+  padding:10px 0 10px 1rem;
+  border:none;background:none;text-align:left;font-family:var(--font);
+  cursor:pointer;
+}
+.mod-chevron-btn{
+  border:none;background:none;cursor:pointer;font-family:var(--font);
+  padding:10px .9rem 10px .5rem;display:flex;align-items:center;flex-shrink:0;
+}
 
 .mod-num{
   font-family:var(--font-num);font-size:22px;font-weight:900;
@@ -883,36 +889,46 @@ function renderSidebar() {
     if (totalSections === 1) {
       var directClass = 'mod-header' + (isActive ? ' active' : '');
       html += '<div class="mod-group">';
-      html += '<button class="' + directClass + '" onclick="loadModule(\'' + mod.id + '\',0)">';
+      html += '<div class="' + directClass + '">';
+      html += '<button class="mod-main-btn" onclick="loadModule(\'' + mod.id + '\',0)">';
       html += '<div class="mod-num">' + mod.num + '</div>';
       html += '<div class="mod-info"><div class="mod-title">' + mod.title + '</div><div class="mod-sub">' + mod.subtitle + '</div></div>';
       html += '</button>';
+      html += '</div>';
       html += '</div>';
       return;
     }
 
     var headerClass = 'mod-header' + (isActive ? ' active' : '');
     var chevronClass = 'mod-chevron' + (isExpanded ? ' open' : '');
-    var isAllDone = (doneCount >= totalSections && totalSections > 0);
-    var modPct = totalSections > 0 ? Math.round((doneCount / totalSections) * 100) : 0;
+    /* Exclude 'Intro' (section 0) from visible count — it's the module landing page */
+    var firstIsIntro = (mod.sections[0] === 'Intro');
+    var countTotal = firstIsIntro ? totalSections - 1 : totalSections;
+    var countDone  = firstIsIntro
+      ? state.done.filter(function(x){ return x > 0; }).length
+      : state.done.length;
+    var modPct = countTotal > 0 ? Math.round((countDone / countTotal) * 100) : 0;
     var badge = '<span class="mod-ring-wrap">' + modRingSVG(modPct) + '<span class="mod-ring-pct">' + modPct + '%</span></span>';
 
     html += '<div class="mod-group">';
-    html += '<button class="' + headerClass + '" onclick="toggleModule(\'' + mod.id + '\')" aria-expanded="' + isExpanded + '">';
+    html += '<div class="' + headerClass + '">';
+    html += '<button class="mod-main-btn" onclick="loadModule(\'' + mod.id + '\',0)">';
     html += '<div class="mod-num">' + mod.num + '</div>';
     html += '<div class="mod-info">';
     html += '<div class="mod-title">' + mod.title + '</div>';
     html += '<div class="mod-sub">' + mod.subtitle + '</div>';
     html += '</div>';
-    html += '<div class="mod-right">';
     html += badge;
-    html += '<span class="' + chevronClass + '">▼</span>';
-    html += '</div>';
     html += '</button>';
+    html += '<button class="mod-chevron-btn" onclick="expandToggle(\'' + mod.id + '\')" aria-expanded="' + isExpanded + '">';
+    html += '<span class="' + chevronClass + '">▼</span>';
+    html += '</button>';
+    html += '</div>';
 
     if (isExpanded) {
       html += '<div class="sec-list open">';
       mod.sections.forEach(function(sec, i) {
+        if (firstIsIntro && i === 0) return; // Intro is the module header — skip in list
         var isCurrent = isActive && state.cur === i;
         var isDone = state.done.indexOf(i) >= 0;
         var cls = 'sec-btn';
@@ -963,13 +979,18 @@ function renderProgress() {
 function toggleModule(moduleId) {
   var mod = MODULES.find(function(m){ return m.id === moduleId; });
   if (!mod || mod.locked) return;
-
   if (activeModule !== moduleId) {
     loadModule(moduleId, 0);
   } else {
     expandedModules[moduleId] = !expandedModules[moduleId];
     renderSidebar();
   }
+}
+
+/* Only expand/collapse the section list — doesn't load the module */
+function expandToggle(moduleId) {
+  expandedModules[moduleId] = !expandedModules[moduleId];
+  renderSidebar();
 }
 
 /* ═══════════════════════════════════════════════════════
