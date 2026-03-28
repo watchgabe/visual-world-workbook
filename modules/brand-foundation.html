@@ -750,6 +750,7 @@ var SUPABASE_URL  = 'https://ljddfhzrjvxpedvfebli.supabase.co';
 var SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxqZGRmaHpyanZ4cGVkdmZlYmxpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM5NTEzNjMsImV4cCI6MjA4OTUyNzM2M30.GqZMRvBlZyN4rmr9MrfxLcLSB04d7s59ZPfEw-dQwks';
 var CF_USER_EMAIL = localStorage.getItem('vww-user-email') || '';
 var cfSyncTimer;
+var _cfCachedExisting = {};
 
 function cfSbHeaders() {
   return {'apikey':SUPABASE_ANON,'Authorization':'Bearer '+SUPABASE_ANON,'Content-Type':'application/json','Prefer':'resolution=merge-duplicates'};
@@ -763,6 +764,7 @@ async function _cfDoSync(payload) {
       {headers: cfSbHeaders()}
     )).json();
     var existing = (Array.isArray(existRows) && existRows[0] && existRows[0].data) ? existRows[0].data : {};
+    _cfCachedExisting = existing;
     var merged = Object.assign({}, existing, {cf: payload});
     await fetch(SUPABASE_URL + '/rest/v1/vww_progress', {
       method: 'POST', headers: cfSbHeaders(),
@@ -773,8 +775,22 @@ async function _cfDoSync(payload) {
 
 function cfSyncToSupabase(payload) {
   clearTimeout(cfSyncTimer);
-  cfSyncTimer = setTimeout(function(){ _cfDoSync(payload); }, 2000);
+  cfSyncTimer = setTimeout(function(){ _cfDoSync(payload); }, 800);
 }
+
+window.addEventListener('beforeunload', function() {
+  clearTimeout(cfSyncTimer);
+  if (!CF_USER_EMAIL) return;
+  var raw = localStorage.getItem(KEY);
+  if (!raw) return;
+  var payload; try { payload = JSON.parse(raw); } catch(e) { return; }
+  var merged = Object.assign({}, _cfCachedExisting, {cf: payload});
+  fetch(SUPABASE_URL + '/rest/v1/vww_progress', {
+    method: 'POST', headers: cfSbHeaders(),
+    body: JSON.stringify({email: CF_USER_EMAIL, data: merged, updated_at: new Date().toISOString()}),
+    keepalive: true
+  });
+});
 
 /* Called by Finish Module button — flushes sync immediately before navigating */
 async function cfFinishModule() {
@@ -1123,14 +1139,15 @@ buildNav();initOpts();wireSave();loadData();initChecklists();go(cur);
 /* Only runs if localStorage is empty (cloud restore for new device/browser) */
 (async function cfLoadFromCloud() {
   if (!CF_USER_EMAIL) return;
-  /* Skip if localStorage already has fresh data */
-  if (localStorage.getItem(KEY)) return;
+  var hasLocal = !!localStorage.getItem(KEY);
   try {
     var rows = await (await fetch(
       SUPABASE_URL + '/rest/v1/vww_progress?email=eq.' + encodeURIComponent(CF_USER_EMAIL) + '&select=data',
       {headers: cfSbHeaders()}
     )).json();
-    if (!Array.isArray(rows) || !rows[0] || !rows[0].data || !rows[0].data.cf) return;
+    if (!Array.isArray(rows) || !rows[0] || !rows[0].data) return;
+    _cfCachedExisting = rows[0].data;
+    if (hasLocal || !rows[0].data.cf) return;
     var d = rows[0].data.cf;
     /* Restore fields into DOM */
     Object.keys(d).forEach(function(k) {

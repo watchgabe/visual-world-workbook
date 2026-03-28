@@ -759,7 +759,7 @@ function saveData(){
     var dot=document.getElementById('saveDot');
     if(dot){dot.classList.add('saved');setTimeout(function(){dot.classList.remove('saved');},1500);}
   }catch(e){}
-  clearTimeout(laSyncTimer);laSyncTimer=setTimeout(laSyncToSupabase,2000);
+  clearTimeout(laSyncTimer);laSyncTimer=setTimeout(laSyncToSupabase,800);
 }
 
 /* Called by Finish Module button — flushes sync immediately before navigating */
@@ -846,6 +846,7 @@ function setReviewDate(){
 buildNav();initOpts();wireSave();loadData();initChecklists();go(cur);
 
 var laSyncTimer;
+var _laCachedExisting={};
 var _LA_ANON='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxqZGRmaHpyanZ4cGVkdmZlYmxpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM5NTEzNjMsImV4cCI6MjA4OTUyNzM2M30.GqZMRvBlZyN4rmr9MrfxLcLSB04d7s59ZPfEw-dQwks';
 var _LA_BASE='https://ljddfhzrjvxpedvfebli.supabase.co';
 function laHdrs(){return{'Content-Type':'application/json','apikey':_LA_ANON,'Authorization':'Bearer '+_LA_ANON,'Prefer':'resolution=merge-duplicates'};}
@@ -855,20 +856,34 @@ async function laSyncToSupabase(){
   try{
     var existRows=await(await fetch(_LA_BASE+'/rest/v1/vww_progress?email=eq.'+encodeURIComponent(email)+'&select=data',{headers:laHdrs()})).json();
     var existing=(Array.isArray(existRows)&&existRows[0]&&existRows[0].data)?existRows[0].data:{};
+    _laCachedExisting=existing;
     var allData=JSON.parse(localStorage.getItem(KEY)||'{}');
     var merged=Object.assign({},existing,{'launch-v1':allData});
     await fetch(_LA_BASE+'/rest/v1/vww_progress',{method:'POST',headers:laHdrs(),body:JSON.stringify({email:email,data:merged,updated_at:new Date().toISOString()})});
   }catch(e){}
 }
 
+window.addEventListener('beforeunload',function(){
+  clearTimeout(laSyncTimer);
+  var email=localStorage.getItem('vww-user-email');
+  if(!email)return;
+  var raw=localStorage.getItem(KEY);
+  if(!raw)return;
+  var payload;try{payload=JSON.parse(raw);}catch(e){return;}
+  var merged=Object.assign({},_laCachedExisting,{'launch-v1':payload});
+  fetch(_LA_BASE+'/rest/v1/vww_progress',{method:'POST',headers:laHdrs(),body:JSON.stringify({email:email,data:merged,updated_at:new Date().toISOString()}),keepalive:true});
+});
+
 (async function laLoadFromCloud(){
   var email=localStorage.getItem('vww-user-email');
   if(!email)return;
-  if(localStorage.getItem(KEY))return;
+  var hasLocal=!!localStorage.getItem(KEY);
   try{
     var hdrs={'Content-Type':'application/json','apikey':_LA_ANON,'Authorization':'Bearer '+_LA_ANON};
     var rows=await(await fetch(_LA_BASE+'/rest/v1/vww_progress?email=eq.'+encodeURIComponent(email)+'&select=data',{headers:hdrs})).json();
-    if(!Array.isArray(rows)||!rows[0]||!rows[0].data||!rows[0].data['launch-v1'])return;
+    if(!Array.isArray(rows)||!rows[0]||!rows[0].data)return;
+    _laCachedExisting=rows[0].data;
+    if(hasLocal||!rows[0].data['launch-v1'])return;
     localStorage.setItem(KEY,JSON.stringify(rows[0].data['launch-v1']));
     loadData();updateProgress();buildNav();go(cur);
   }catch(e){}
