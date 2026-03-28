@@ -144,6 +144,10 @@ body::before{
 .mod-badge-done{display:flex;align-items:center;color:var(--green-text);}
 .mod-chevron{font-size:10px;color:var(--dimmer);transition:transform .2s;line-height:1}
 .mod-chevron.open{transform:rotate(180deg)}
+/* ─── PROGRESS RINGS ─── */
+.mod-ring-wrap{display:flex;align-items:center;gap:5px;flex-shrink:0;}
+.mod-ring-pct{font-size:9.5px;font-weight:600;color:var(--dimmer);white-space:nowrap;min-width:24px;text-align:right;}
+.sec-ring{flex-shrink:0;display:block;}
 .mod-lock{font-size:13px;line-height:1}
 
 /* ─── LOCKED SUBTITLE ─── */
@@ -166,7 +170,7 @@ body::before{
 .sec-indicator{width:6px;height:6px;border-radius:50%;flex-shrink:0}
 .sec-btn.current .sec-indicator{background:var(--orange)}
 .sec-btn:not(.done):not(.current) .sec-indicator{background:var(--dimmer);opacity:.4}
-.sec-check{flex-shrink:0;color:var(--green-text);display:flex;align-items:center;}
+.sec-check{flex-shrink:0;color:var(--green-text);display:flex;align-items:center;display:none;}
 
 /* ─── USER CARD ─── */
 .sb-user{
@@ -823,6 +827,34 @@ function isMobile() {
 /* ═══════════════════════════════════════════════════════
    SIDEBAR RENDER
 ══════════════════════════════════════════════════════════ */
+/* Small SVG ring for module headers showing % complete */
+function modRingSVG(pct) {
+  var r = 7, size = 18, circ = +(2 * Math.PI * r).toFixed(1); // ≈44.0
+  var offset = +(circ * (1 - pct / 100)).toFixed(1);
+  var color = pct >= 100 ? 'var(--green-text)' : 'var(--orange)';
+  return '<svg width="' + size + '" height="' + size + '" viewBox="0 0 ' + size + ' ' + size + '" style="flex-shrink:0;transform:rotate(-90deg)">'
+    + '<circle cx="9" cy="9" r="' + r + '" fill="none" stroke="var(--border)" stroke-width="2"/>'
+    + '<circle cx="9" cy="9" r="' + r + '" fill="none" stroke="' + color + '" stroke-width="2"'
+    + ' stroke-dasharray="' + circ + '" stroke-dashoffset="' + offset + '" stroke-linecap="round"/>'
+    + '</svg>';
+}
+
+/* Small SVG ring for individual section rows */
+function secRingSVG(state) {
+  var r = 5, circ = +(2 * Math.PI * r).toFixed(1); // ≈31.4
+  var ring = '';
+  if (state === 'done') {
+    ring = '<circle cx="7" cy="7" r="5" fill="none" stroke="var(--green-text)" stroke-width="1.5" stroke-dasharray="' + circ + '" stroke-dashoffset="0" transform="rotate(-90 7 7)"/>'
+      + '<polyline points="4.5,7.2 6.3,9 9.5,5" fill="none" stroke="var(--green-text)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>';
+  } else if (state === 'current') {
+    ring = '<circle cx="7" cy="7" r="5" fill="none" stroke="var(--orange)" stroke-width="1.5" opacity="0.25"/>'
+      + '<circle cx="7" cy="7" r="5" fill="none" stroke="var(--orange)" stroke-width="1.5" stroke-dasharray="' + circ + '" stroke-dashoffset="' + (circ * 0.35).toFixed(1) + '" transform="rotate(-90 7 7)" stroke-linecap="round"/>';
+  } else {
+    ring = '<circle cx="7" cy="7" r="5" fill="none" stroke="var(--dimmer)" stroke-width="1.5" opacity="0.35"/>';
+  }
+  return '<svg class="sec-ring" width="14" height="14" viewBox="0 0 14 14">' + ring + '</svg>';
+}
+
 function renderSidebar() {
   var nav = document.getElementById('sbnav');
   if (!nav) return;
@@ -862,9 +894,8 @@ function renderSidebar() {
     var headerClass = 'mod-header' + (isActive ? ' active' : '');
     var chevronClass = 'mod-chevron' + (isExpanded ? ' open' : '');
     var isAllDone = (doneCount >= totalSections && totalSections > 0);
-    var badge = isAllDone
-      ? '<span class="mod-badge-done"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>'
-      : '<span class="mod-badge">' + doneCount + '/' + totalSections + '</span>';
+    var modPct = totalSections > 0 ? Math.round((doneCount / totalSections) * 100) : 0;
+    var badge = '<span class="mod-ring-wrap">' + modRingSVG(modPct) + '<span class="mod-ring-pct">' + modPct + '%</span></span>';
 
     html += '<div class="mod-group">';
     html += '<button class="' + headerClass + '" onclick="toggleModule(\'' + mod.id + '\')" aria-expanded="' + isExpanded + '">';
@@ -887,10 +918,9 @@ function renderSidebar() {
         var cls = 'sec-btn';
         if (isCurrent) cls += ' current';
         else if (isDone) cls += ' done';
+        var ringState = isDone ? 'done' : (isCurrent ? 'current' : 'none');
         html += '<button class="' + cls + '" onclick="navigateSection(\'' + mod.id + '\',' + i + ')">';
-        html += isDone
-          ? '<span class="sec-check"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>'
-          : '<span class="sec-indicator"></span>';
+        html += secRingSVG(ringState);
         html += '<span>' + sec + '</span>';
         html += '</button>';
       });
