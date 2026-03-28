@@ -781,6 +781,7 @@ function cfSyncToSupabase(payload) {
 window.addEventListener('beforeunload', function() {
   clearTimeout(cfSyncTimer);
   if (!CF_USER_EMAIL) return;
+  if (!Object.keys(_cfCachedExisting).length) return; // skip if cloud load hasn't completed yet
   var raw = localStorage.getItem(KEY);
   if (!raw) return;
   var payload; try { payload = JSON.parse(raw); } catch(e) { return; }

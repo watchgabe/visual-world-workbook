@@ -867,6 +867,7 @@ window.addEventListener('beforeunload',function(){
   clearTimeout(laSyncTimer);
   var email=localStorage.getItem('vww-user-email');
   if(!email)return;
+  if(!Object.keys(_laCachedExisting).length)return; // skip if cloud load hasn't completed yet
   var raw=localStorage.getItem(KEY);
   if(!raw)return;
   var payload;try{payload=JSON.parse(raw);}catch(e){return;}

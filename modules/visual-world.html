@@ -1487,6 +1487,7 @@ function syncToSupabase(payload) {
 window.addEventListener('beforeunload', function() {
   clearTimeout(syncTimer);
   if (!USER_EMAIL) return;
+  if (!Object.keys(_vwCachedExisting).length) return; // skip if cloud load hasn't completed yet
   var raw = localStorage.getItem(SAVE_KEY);
   if (!raw) return;
   var payload; try { payload = JSON.parse(raw); } catch(e) { return; }
@@ -1512,6 +1513,7 @@ async function vwFinishModule() {
 
 async function loadFromSupabase() {
   if (!USER_EMAIL) return;
+  var hasLocal = !!localStorage.getItem(SAVE_KEY);
   try {
     /* ping last_seen without waiting */
     fetch(SUPABASE_URL + '/rest/v1/vww_users', {
@@ -1519,7 +1521,7 @@ async function loadFromSupabase() {
       headers: sbHeaders(),
       body: JSON.stringify({email: USER_EMAIL, name: USER_NAME, last_seen: new Date().toISOString()})
     });
-    /* fetch saved progress */
+    /* fetch saved progress — always fetch to cache existing for beforeunload merge */
     var resp = await fetch(
       SUPABASE_URL + '/rest/v1/vww_progress?email=eq.' + encodeURIComponent(USER_EMAIL) + '&select=data',
       {headers: sbHeaders()}
@@ -1528,7 +1530,9 @@ async function loadFromSupabase() {
     var rows = await resp.json();
     if (!rows.length || !rows[0].data) return;
     _vwCachedExisting = rows[0].data;
-    /* Read from vw sub-key if present (new format), fall back to root for old records */
+    /* If localStorage already has data, use it (it's more up-to-date than Supabase) */
+    if (hasLocal) { loadData(); go(cur); render(); updateSwatches(); return; }
+    /* No local data — restore from Supabase */
     var data = (rows[0].data.vw) ? rows[0].data.vw : rows[0].data;
     /* apply inputs */
     if (data.inputs) Object.keys(data.inputs).forEach(function(id){ var e=document.getElementById(id); if(e&&data.inputs[id])e.value=data.inputs[id]; });
