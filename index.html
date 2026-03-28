@@ -302,6 +302,11 @@ body.light .icon-moon{display:none}body.light .icon-sun{display:block}
 .ap-confirm-box p{font-size:12px;color:#e05555;font-weight:600;margin:0 0 .6rem;}
 .ap-confirm-actions{display:flex;gap:.5rem;}
 .ap-confirm-actions .ap-danger-btn,.ap-confirm-actions .ap-ghost-btn{margin:0;flex:1;}
+.ap-playbook-row{display:flex;align-items:baseline;gap:8px;margin-bottom:.6rem;}
+.ap-playbook-pct{font-size:22px;font-weight:700;color:var(--orange);letter-spacing:-.5px;}
+.ap-playbook-sublabel{font-size:11px;color:var(--dimmer);}
+.ap-playbook-bar{height:4px;background:var(--border);border-radius:2px;overflow:hidden;}
+.ap-playbook-fill{height:100%;background:var(--orange);border-radius:2px;transition:width .4s ease;}
 /* Make sidebar user-info row feel clickable */
 .sb-user-info{cursor:pointer;}
 .sb-user-info:hover .sb-user-name{color:var(--orange);}
@@ -406,7 +411,6 @@ body.light .icon-moon{display:none}body.light .icon-sun{display:block}
     <div class="sb-foot">
       <div class="sb-prog">
         <div class="prog-bar"><div class="prog-fill" id="prog-fill" style="width:0%"></div></div>
-        <div class="prog-label" id="prog-label">0 of 4 modules</div>
       </div>
       <div class="save-dot" id="save-dot" title="Progress saved"></div>
       <button class="theme-btn" onclick="toggleTheme()" aria-label="Toggle theme">
@@ -440,7 +444,19 @@ body.light .icon-moon{display:none}body.light .icon-sun{display:block}
 
         <div class="ap-divider"></div>
 
-        <!-- Progress -->
+        <!-- Playbook Progress -->
+        <div class="ap-section">
+          <div class="ap-sec-lbl">Playbook Progress</div>
+          <div class="ap-playbook-row">
+            <span class="ap-playbook-pct" id="ap-playbook-pct">0%</span>
+            <span class="ap-playbook-sublabel">complete across all modules</span>
+          </div>
+          <div class="ap-playbook-bar"><div class="ap-playbook-fill" id="ap-playbook-fill" style="width:0%"></div></div>
+        </div>
+
+        <div class="ap-divider"></div>
+
+        <!-- Module Progress -->
         <div class="ap-section">
           <div class="ap-sec-lbl">Module Progress</div>
           <div class="ap-mod-row"><span class="ap-mod-name">01 — Brand Foundation</span><span class="ap-mod-right"><span class="ap-mod-pct" id="ap-pct-brand-foundation"></span><button class="ap-mod-clr" onclick="clearModule('brand-foundation','cfww-v2')">Clear</button></span></div>
@@ -681,10 +697,28 @@ function handleAvatarUpload(e) {
   if (!file) return;
   var reader = new FileReader();
   reader.onload = function(ev) {
-    localStorage.setItem('vww-user-avatar', ev.target.result);
+    var dataUrl = ev.target.result;
+    localStorage.setItem('vww-user-avatar', dataUrl);
     updateIdentityDisplay();
+    syncAvatarToCloud(dataUrl);
   };
   reader.readAsDataURL(file);
+}
+
+async function syncAvatarToCloud(dataUrl) {
+  if (!USER_EMAIL) return;
+  try {
+    var rows = await (await fetch(
+      SUPABASE_URL + '/rest/v1/vww_progress?email=eq.' + encodeURIComponent(USER_EMAIL) + '&select=data',
+      {headers: sbHeaders()}
+    )).json();
+    var existing = (Array.isArray(rows) && rows[0] && rows[0].data) ? rows[0].data : {};
+    var merged = Object.assign({}, existing, {avatar: dataUrl});
+    await fetch(SUPABASE_URL + '/rest/v1/vww_progress', {
+      method: 'POST', headers: sbHeaders(),
+      body: JSON.stringify({email: USER_EMAIL, data: merged, updated_at: new Date().toISOString()})
+    });
+  } catch(e) { console.warn('Avatar sync failed:', e); }
 }
 
 function pingUser() {
@@ -725,6 +759,11 @@ async function loadProgressFromCloud() {
       initModuleStates();
       renderSidebar();
       renderProgress();
+    }
+    // Seed avatar if not already stored locally
+    if (d.avatar && !localStorage.getItem('vww-user-avatar')) {
+      localStorage.setItem('vww-user-avatar', d.avatar);
+      updateIdentityDisplay();
     }
   } catch(e) {}
 }
@@ -881,9 +920,11 @@ function renderProgress() {
   });
   var pct = totalSecs > 0 ? Math.round((doneSecs / totalSecs) * 100) : 0;
   var fill = document.getElementById('prog-fill');
-  var label = document.getElementById('prog-label');
   if (fill) fill.style.width = pct + '%';
-  if (label) label.textContent = pct + '% complete';
+  var apPct  = document.getElementById('ap-playbook-pct');
+  var apFill = document.getElementById('ap-playbook-fill');
+  if (apPct)  apPct.textContent      = pct + '%';
+  if (apFill) apFill.style.width     = pct + '%';
 }
 
 /* ═══════════════════════════════════════════════════════
