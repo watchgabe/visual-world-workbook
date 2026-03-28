@@ -591,7 +591,7 @@ function sbHeaders() {
    IDENTITY MODAL
 ══════════════════════════════════════════════════════════ */
 function initIdentity() {
-  if (USER_EMAIL) { pingUser(); return; }
+  if (USER_EMAIL) { pingUser(); loadProgressFromCloud(); return; }
   var modal = document.getElementById('identity-modal');
   if (modal) modal.style.display = 'flex';
 }
@@ -624,6 +624,7 @@ async function submitIdentity() {
     var modal = document.getElementById('identity-modal');
     if (modal) modal.style.display = 'none';
     updateIdentityDisplay();
+    loadProgressFromCloud();
   } catch(e) {
     if (errEl) { errEl.textContent = 'Connection error. Please try again.'; errEl.style.display = 'block'; }
     if (btn) { btn.disabled = false; btn.textContent = 'Continue →'; }
@@ -693,6 +694,39 @@ function pingUser() {
     headers: sbHeaders(),
     body: JSON.stringify({email: USER_EMAIL, name: USER_NAME, last_seen: new Date().toISOString()})
   }).catch(function(){});
+}
+
+/* Fetch cloud progress and seed localStorage — runs on every load so the
+   sidebar shows correct percentages even on a fresh browser with no localStorage */
+async function loadProgressFromCloud() {
+  if (!USER_EMAIL) return;
+  try {
+    var rows = await (await fetch(
+      SUPABASE_URL + '/rest/v1/vww_progress?email=eq.' + encodeURIComponent(USER_EMAIL) + '&select=data',
+      {headers: sbHeaders()}
+    )).json();
+    if (!Array.isArray(rows) || !rows[0] || !rows[0].data) return;
+    var d = rows[0].data;
+    var map = [
+      ['cfww-v2',   d.cf],
+      ['vww-v1',    d.vw],
+      ['ccb-v1',    d.cc],
+      ['launch-v1', d['launch-v1']]
+    ];
+    var updated = false;
+    map.forEach(function(pair) {
+      var key = pair[0], val = pair[1];
+      if (val && !localStorage.getItem(key)) {
+        localStorage.setItem(key, JSON.stringify(val));
+        updated = true;
+      }
+    });
+    if (updated) {
+      initModuleStates();
+      renderSidebar();
+      renderProgress();
+    }
+  } catch(e) {}
 }
 
 /* ═══════════════════════════════════════════════════════
