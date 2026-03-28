@@ -409,8 +409,8 @@ async function loadDashboard() {
     var started=0, completed=0;
     users.forEach(function(u){
       var em=(u.email||'').toLowerCase();
-      var cfd=md&&md.cf?md.cf:null;
       var md=mainMap[em]&&mainMap[em].data;
+      var cfd=md&&md.cf?md.cf:null;
       var vwD=(md&&md.vw)?md.vw:md;
       var ccD=(md&&md.cc)?md.cc:md;
       var hasCF=hasAnyData(cfd,true);

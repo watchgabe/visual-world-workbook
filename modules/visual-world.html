@@ -1398,7 +1398,7 @@ textarea::placeholder,input[type=text]::placeholder{color:var(--dimmer)}
   </div>
 
 
-  <div class="nr"><button class="btn" id="b5b">← Back</button><span class="si">5/5</span><button class="btn p" onclick="if(sectionComplete(5))done.add(5);saveData();vwNotifyCircleComplete();window.parent.postMessage({type:'navigate-module',to:'content'},'*')">Finish Module &#8594;</button></div>
+  <div class="nr"><button class="btn" id="b5b">← Back</button><span class="si">5/5</span><button class="btn p" onclick="vwFinishModule()">Finish Module &#8594;</button></div>
 </div>
 
 
@@ -1457,28 +1457,41 @@ function setSyncDot(state) {
   if (state === 'saved')   { dot.classList.add('saved'); clearTimeout(saveTimer); saveTimer=setTimeout(function(){dot.classList.remove('saved');},2200); }
 }
 
+async function _vwDoSync(payload) {
+  if (!USER_EMAIL) return;
+  try {
+    var existRows = await (await fetch(
+      SUPABASE_URL + '/rest/v1/vww_progress?email=eq.' + encodeURIComponent(USER_EMAIL) + '&select=data',
+      {headers: sbHeaders()}
+    )).json();
+    var existing = (Array.isArray(existRows) && existRows[0] && existRows[0].data) ? existRows[0].data : {};
+    var merged = Object.assign({}, existing, {vw: payload});
+    await fetch(SUPABASE_URL + '/rest/v1/vww_progress', {
+      method: 'POST',
+      headers: sbHeaders(),
+      body: JSON.stringify({email: USER_EMAIL, data: merged, updated_at: new Date().toISOString()})
+    });
+    setSyncDot('saved');
+  } catch(e) { console.warn('Cloud sync failed:', e); setSyncDot(''); }
+}
+
 function syncToSupabase(payload) {
   if (!USER_EMAIL) return;
   clearTimeout(syncTimer);
   setSyncDot('syncing');
-  syncTimer = setTimeout(async function() {
-    try {
-      /* Fetch existing record so we can merge (not overwrite) other modules' data */
-      var existRows = await (await fetch(
-        SUPABASE_URL + '/rest/v1/vww_progress?email=eq.' + encodeURIComponent(USER_EMAIL) + '&select=data',
-        {headers: sbHeaders()}
-      )).json();
-      var existing = (Array.isArray(existRows) && existRows[0] && existRows[0].data) ? existRows[0].data : {};
-      /* Save VW payload under its own key — never touch cc or launch-v1 */
-      var merged = Object.assign({}, existing, {vw: payload});
-      await fetch(SUPABASE_URL + '/rest/v1/vww_progress', {
-        method: 'POST',
-        headers: sbHeaders(),
-        body: JSON.stringify({email: USER_EMAIL, data: merged, updated_at: new Date().toISOString()})
-      });
-      setSyncDot('saved');
-    } catch(e) { console.warn('Cloud sync failed:', e); setSyncDot(''); }
-  }, 2000);
+  syncTimer = setTimeout(function(){ _vwDoSync(payload); }, 2000);
+}
+
+/* Called by Finish Module button — flushes sync immediately before navigating */
+async function vwFinishModule() {
+  if (sectionComplete(5)) done.add(5);
+  saveData();
+  clearTimeout(syncTimer);
+  var raw = localStorage.getItem(SAVE_KEY);
+  var payload = raw ? JSON.parse(raw) : {};
+  await _vwDoSync(payload);
+  vwNotifyCircleComplete();
+  window.parent.postMessage({type:'navigate-module',to:'content'},'*');
 }
 
 async function loadFromSupabase() {

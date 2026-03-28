@@ -637,7 +637,7 @@ textarea::placeholder,input[type=text]::placeholder{color:var(--dimmer)}
   <div class="nr">
     <button class="btn" onclick="go(5)">&#8592; Back</button>
     <span class="si">6/6</span>
-    <button class="btn p" onclick="done[6]=true;saveData();laNotifyCircleComplete();window.parent.postMessage({type:'navigate-module',to:'playbook'},'*')">View Your Playbook &#8594;</button>
+    <button class="btn p" onclick="laFinishModule()">View Your Playbook &#8594;</button>
   </div>
 </div>
 
@@ -760,6 +760,16 @@ function saveData(){
     if(dot){dot.classList.add('saved');setTimeout(function(){dot.classList.remove('saved');},1500);}
   }catch(e){}
   clearTimeout(laSyncTimer);laSyncTimer=setTimeout(laSyncToSupabase,2000);
+}
+
+/* Called by Finish Module button — flushes sync immediately before navigating */
+async function laFinishModule(){
+  done[6]=true;
+  saveData();
+  clearTimeout(laSyncTimer);
+  await laSyncToSupabase();
+  laNotifyCircleComplete();
+  window.parent.postMessage({type:'navigate-module',to:'playbook'},'*');
 }
 
 function loadData(){

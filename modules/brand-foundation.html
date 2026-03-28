@@ -735,7 +735,7 @@ textarea::placeholder,input[type=text]::placeholder{color:var(--dimmer)}
   <div class="q">Brand Vision Statement</div>
   <textarea rows="3" id="brandVision" placeholder="Write your brand vision statement here..."></textarea>
 
-  <div class="nr"><button class="btn" onclick="go(6)">&#8592; Back</button><span class="si">7/7</span><button class="btn p" onclick="done[7]=true;saveData();cfNotifyCircleComplete();window.parent.postMessage({type:'navigate-module',to:'visual-world'},'*')">Finish Module &#8594;</button></div>
+  <div class="nr"><button class="btn" onclick="go(6)">&#8592; Back</button><span class="si">7/7</span><button class="btn p" onclick="cfFinishModule()">Finish Module &#8594;</button></div>
 </div>
 
 
@@ -755,24 +755,36 @@ function cfSbHeaders() {
   return {'apikey':SUPABASE_ANON,'Authorization':'Bearer '+SUPABASE_ANON,'Content-Type':'application/json','Prefer':'resolution=merge-duplicates'};
 }
 
-function cfSyncToSupabase(payload) {
+async function _cfDoSync(payload) {
   if (!CF_USER_EMAIL) return;
+  try {
+    var existRows = await (await fetch(
+      SUPABASE_URL + '/rest/v1/vww_progress?email=eq.' + encodeURIComponent(CF_USER_EMAIL) + '&select=data',
+      {headers: cfSbHeaders()}
+    )).json();
+    var existing = (Array.isArray(existRows) && existRows[0] && existRows[0].data) ? existRows[0].data : {};
+    var merged = Object.assign({}, existing, {cf: payload});
+    await fetch(SUPABASE_URL + '/rest/v1/vww_progress', {
+      method: 'POST', headers: cfSbHeaders(),
+      body: JSON.stringify({email: CF_USER_EMAIL, data: merged, updated_at: new Date().toISOString()})
+    });
+  } catch(e) { console.warn('CF sync failed:', e); }
+}
+
+function cfSyncToSupabase(payload) {
   clearTimeout(cfSyncTimer);
-  cfSyncTimer = setTimeout(async function() {
-    try {
-      /* Fetch existing vww_progress record so we only update the cf key */
-      var existRows = await (await fetch(
-        SUPABASE_URL + '/rest/v1/vww_progress?email=eq.' + encodeURIComponent(CF_USER_EMAIL) + '&select=data',
-        {headers: cfSbHeaders()}
-      )).json();
-      var existing = (Array.isArray(existRows) && existRows[0] && existRows[0].data) ? existRows[0].data : {};
-      var merged = Object.assign({}, existing, {cf: payload});
-      await fetch(SUPABASE_URL + '/rest/v1/vww_progress', {
-        method: 'POST', headers: cfSbHeaders(),
-        body: JSON.stringify({email: CF_USER_EMAIL, data: merged, updated_at: new Date().toISOString()})
-      });
-    } catch(e) { console.warn('CF sync failed:', e); }
-  }, 2000);
+  cfSyncTimer = setTimeout(function(){ _cfDoSync(payload); }, 2000);
+}
+
+/* Called by Finish Module button — flushes sync immediately before navigating */
+async function cfFinishModule() {
+  done[7] = true;
+  saveData();
+  clearTimeout(cfSyncTimer);
+  var raw = localStorage.getItem(KEY);
+  await _cfDoSync(raw ? JSON.parse(raw) : {});
+  cfNotifyCircleComplete();
+  window.parent.postMessage({type:'navigate-module',to:'visual-world'},'*');
 }
 var cur=0;
 var done={};
@@ -1139,8 +1151,11 @@ buildNav();initOpts();wireSave();loadData();initChecklists();go(cur);
     if (d.done) { done = d.done; updateProgress(); }
     if (d.auditVals) { auditVals = d.auditVals; updateAuditScores(); }
     /* Cache to localStorage so subsequent loads use it instantly */
+    if (typeof d.cur === 'number') cur = d.cur;
     localStorage.setItem(KEY, JSON.stringify(d));
     buildNav();
+    updateProgress();
+    go(cur);
     updateMissionPreview();
   } catch(e) { console.warn('CF cloud load failed:', e); }
 })();
