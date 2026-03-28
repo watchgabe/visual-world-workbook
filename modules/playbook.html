@@ -174,18 +174,15 @@ function val(v, fallback) {
   if (!v || v === '' || v === null || v === undefined) return fallback || '';
   return String(v).trim();
 }
-function field(label, value, ph) {
+function field(label, value) {
   var v = val(value);
-  var isEmpty = !v;
-  var display = isEmpty ? (ph || 'Not completed yet') : escHtml(v);
-  return '<div class="pb-field"><div class="pb-label">' + label + '</div><div class="pb-value' + (isEmpty?' empty':'') + '">' + display + '</div></div>';
+  if (!v) return '';
+  return '<div class="pb-field"><div class="pb-label">' + label + '</div><div class="pb-value">' + escHtml(v) + '</div></div>';
 }
-function highlight(label, value, ph) {
+function highlight(label, value) {
   var v = val(value);
-  var isEmpty = !v;
-  var display = isEmpty ? (ph || null) : escHtml(v);
-  if (!display) return '';
-  return '<div class="pb-highlight' + (isEmpty?' empty':'') + '"><div class="pb-label">' + label + '</div><div class="pb-value' + (isEmpty?' empty':'') + '">' + display + '</div></div>';
+  if (!v) return '';
+  return '<div class="pb-highlight"><div class="pb-label">' + label + '</div><div class="pb-value">' + escHtml(v) + '</div></div>';
 }
 function escHtml(s) {
   return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g,'<br>');
@@ -196,8 +193,21 @@ function chapter(num, label, title, content) {
 function emptyChapter(msg) {
   return '<div class="pb-empty-chapter"><div class="pb-empty-text">' + msg + '</div></div>';
 }
-function grid(fields) { return '<div class="pb-grid">' + fields.join('') + '</div>'; }
-function gridFull(fields) { return '<div class="pb-grid full">' + fields.join('') + '</div>'; }
+function grid(fields, style) {
+  var filled = fields.filter(Boolean).join('');
+  if (!filled) return '';
+  return '<div class="pb-grid"' + (style ? ' style="'+style+'"' : '') + '>' + filled + '</div>';
+}
+function gridFull(fields) {
+  var filled = fields.filter(Boolean).join('');
+  if (!filled) return '';
+  return '<div class="pb-grid full">' + filled + '</div>';
+}
+/* Only renders label + content when content is non-empty */
+function withLabel(lbl, content) {
+  if (!content) return '';
+  return '<div style="margin:.75rem 0 .4rem"><div class="pb-label">'+lbl+'</div></div>' + content;
+}
 
 /* ── LOAD DATA ── */
 function loadKey(key) {
@@ -269,26 +279,26 @@ function buildPlaybook() {
   if (cfEmpty) {
     cfContent = emptyChapter('Complete Module 01 \u2014 Brand Foundation to see your answers here.');
   } else {
-    cfContent += highlight('Brand Journey Statement', cf.brandJourneyStmt, 'Complete Workshop 1 — Brand Journey to generate your statement.');
+    cfContent += highlight('Brand Journey Statement', cf.brandJourneyStmt);
     cfContent += grid([
-      field('Desired Outcome', cf.q1outcome, 'e.g. Sign 5 high-ticket clients/month at $5K each within 12 months'),
-      field('Known For', cf.q2known, 'e.g. Helping creators build premium personal brands that attract high-quality clients')
+      field('Desired Outcome', cf.q1outcome),
+      field('Known For', cf.q2known)
     ]);
     cfContent += grid([
-      field('Actions', cf.q3do, 'e.g. Post 3–5x/week, document process, share client results publicly'),
-      field('Learning Priority', cf.q4learn, 'e.g. Writing scroll-stopping hooks, showing up on camera with confidence')
+      field('Actions', cf.q3do),
+      field('Learning Priority', cf.q4learn)
     ]);
-    cfContent += highlight('Core Mission', cf.coreMission, 'Complete Workshop 3 — Core Mission to define your purpose statement.');
-    cfContent += highlight('Ikigai', cf.ikigaiCenter, 'Complete Workshop 3 — Ikigai to find the intersection of passion, skill, and market demand.');
-    cfContent += highlight('Avatar Statement', cf.avatarStatement, 'Complete Workshop 2 — Avatar to generate your ideal customer profile.');
+    cfContent += highlight('Core Mission', cf.coreMission);
+    cfContent += highlight('Ikigai', cf.ikigaiCenter);
+    cfContent += highlight('Avatar Statement', cf.avatarStatement);
     var demoCombined = [val(cf.av1Age), val(cf.av1Occupation)].filter(Boolean).join(' \u00b7 ');
     cfContent += grid([
-      field('Demographics', demoCombined, 'e.g. 25–35 · Freelance Designer / Agency Owner'),
-      field('Struggle', cf.av1Struggle, 'e.g. Creating content for months with zero clients to show for it')
+      field('Demographics', demoCombined),
+      field('Struggle', cf.av1Struggle)
     ]);
     cfContent += grid([
-      field('Desired Outcome', cf.av1Desired, 'e.g. Replace 9-to-5 income with inbound clients from content alone'),
-      field('Where They Hang Out', cf.av1Platforms, 'e.g. Instagram, YouTube, LinkedIn')
+      field('Desired Outcome', cf.av1Desired),
+      field('Where They Hang Out', cf.av1Platforms)
     ]);
     /* Values */
     var hasVals = false;
@@ -320,12 +330,12 @@ function buildPlaybook() {
     }
     pillarsHtml += '</div>';
     if (hasPillars) cfContent += '<div style="margin:.75rem 0 .4rem"><div class="pb-label">Content Pillars</div></div>' + pillarsHtml;
-    cfContent += highlight('Origin Story', cf.originStory, 'Complete Workshop 6 — Origin Story to write your full brand story.');
+    cfContent += highlight('Origin Story', cf.originStory);
     cfContent += grid([
-      field('3-Year Vision', cf.vision3yr, 'e.g. 50K audience, $30K/month revenue, known for premium brand building'),
-      field('Impact', cf.visionImpact, 'e.g. Help 1,000 creators go full-time from their content')
+      field('3-Year Vision', cf.vision3yr),
+      field('Impact', cf.visionImpact)
     ]);
-    cfContent += highlight('Brand Vision', cf.brandVision, 'Complete Workshop 7 — Brand Vision to define where your brand is going.');
+    cfContent += highlight('Brand Vision', cf.brandVision);
   }
   html += chapter('01', 'Module 01', 'Brand Foundation', cfContent);
 
@@ -335,8 +345,8 @@ function buildPlaybook() {
   if (vwEmpty) {
     vwContent = emptyChapter('Complete Module 02 \u2014 Define Your Visual World to see your answers here.');
   } else {
-    vwContent += highlight('Visual World Narrative', vw.vwNarrative, 'Complete Module 02 — Define Your Visual World to generate your narrative.');
-    vwContent += highlight('Mood Board Statement', vw.mbStatement, 'Complete the Mood Board workshop to define the visual feeling of your brand.');
+    vwContent += highlight('Visual World Narrative', vw.vwNarrative);
+    vwContent += highlight('Mood Board Statement', vw.mbStatement);
     /* Color palette */
     var colors = [
       {label:'Primary', val:vw['col-primary'], emo:vw['col-primary-emotion']},
@@ -356,35 +366,26 @@ function buildPlaybook() {
     swatchHtml += '</div>';
     if (hasColors) vwContent += swatchHtml;
     /* Mood & Setting */
-    vwContent += '<div style="margin:.75rem 0 .4rem"><div class="pb-label">Mood &amp; Setting</div></div>';
-    vwContent += '<div class="pb-grid" style="grid-template-columns:1fr 1fr 1fr">' + [
-      field('Setting', vw['e1-location'], 'e.g. Home studio / coffee shop'),
-      field('Environment', vwOpts.e1vibe, 'e.g. Dark & minimal'),
-      field('Primary Mood', vwOpts.e2mood, 'e.g. Premium, cinematic, calm')
-    ].join('') + '</div>';
-    vwContent += '<div class="pb-grid" style="grid-template-columns:1fr 1fr 1fr">' + [
-      field('Lighting', vwOpts.e2light, 'e.g. Key light + soft window'),
-      field('Time of Day', vw['e2-time'], 'e.g. Morning, golden hour'),
-      field('Color Grade', vwOpts.e3grade, 'e.g. Warm desaturated, film-like')
-    ].join('') + '</div>';
-    vwContent += highlight('Setting Statement', vw['e1-statement'], 'Complete the Setting workshop to write your environment statement.');
-    vwContent += highlight('Mood Statement', vw['e2-statement'], 'Complete the Mood workshop to write your visual mood statement.');
+    var moodSettingContent =
+      grid([field('Setting', vw['e1-location']), field('Environment', vwOpts.e1vibe), field('Primary Mood', vwOpts.e2mood)], 'grid-template-columns:1fr 1fr 1fr') +
+      grid([field('Lighting', vwOpts.e2light), field('Time of Day', vw['e2-time']), field('Color Grade', vwOpts.e3grade)], 'grid-template-columns:1fr 1fr 1fr') +
+      highlight('Setting Statement', vw['e1-statement']) +
+      highlight('Mood Statement', vw['e2-statement']);
+    vwContent += withLabel('Mood &amp; Setting', moodSettingContent);
     /* Design Details */
-    vwContent += '<div style="margin:.75rem 0 .4rem"><div class="pb-label">Design Details</div></div>';
-    vwContent += grid([
-      field('Signature Objects', vw['e4-objects'], 'e.g. Camera, coffee, open notebook, clean desk'),
-      field('Wardrobe', vw['e4-wardrobe'], 'e.g. Neutral tones — black, white, grey, earth')
-    ]);
-    vwContent += gridFull([field('Never On Camera', vw['e4-never'], 'e.g. Cluttered backgrounds, bright logos, distracting patterns')]);
+    var designContent =
+      grid([field('Signature Objects', vw['e4-objects']), field('Wardrobe', vw['e4-wardrobe'])]) +
+      gridFull([field('Never On Camera', vw['e4-never'])]);
+    vwContent += withLabel('Design Details', designContent);
     /* Content Approach */
     vwContent += grid([
-      field('Content Format', vwOpts.e6format, 'e.g. Long-form YouTube + short-form Reels'),
-      field('Energy', vwOpts.e6energy, 'e.g. Calm, authoritative, direct')
+      field('Content Format', vwOpts.e6format),
+      field('Energy', vwOpts.e6energy)
     ]);
-    vwContent += highlight('Content Approach Statement', vw['e6-statement'], 'Complete the Content Approach workshop to define your content style.');
+    vwContent += highlight('Content Approach Statement', vw['e6-statement']);
     vwContent += grid([
-      field('What Makes You Different', vw.synDiff, 'e.g. Cinematic quality + business education — nobody else does both'),
-      field('What You Own', vw.synOwn, 'e.g. The look of a $10K shoot achievable on a phone')
+      field('What Makes You Different', vw.synDiff),
+      field('What You Own', vw.synOwn)
     ]);
   }
   html += chapter('02', 'Module 02', 'Your Visual World', vwContent);
@@ -395,14 +396,14 @@ function buildPlaybook() {
   if (ccEmpty) {
     ccContent = emptyChapter('Complete Module 03 \u2014 Create Your Content to see your answers here.');
   } else {
-    ccContent += highlight('The Painful Problem', cc.painProblem, 'Complete the Strategy workshop to define the exact problem you solve.');
-    ccContent += highlight('My Unique Solution', cc.uniqueSol, 'Complete the Strategy workshop to define how you solve it differently.');
-    ccContent += highlight('My Contextual Credibility', cc.credibility, 'Complete the Strategy workshop to define why they should believe you.');
-    ccContent += '<div class="pb-grid" style="grid-template-columns:1fr 1fr 1fr">' + [
-      field('Primary Platform', cc.sauron, 'e.g. Instagram'),
-      field('Weekly Hours', cc.weekHours, 'e.g. 6 hours/week'),
-      field('Content Cadence', cc.cadence, 'e.g. 3 reels/week + 1 long-form/month')
-    ].join('') + '</div>';
+    ccContent += highlight('The Painful Problem', cc.painProblem);
+    ccContent += highlight('My Unique Solution', cc.uniqueSol);
+    ccContent += highlight('My Contextual Credibility', cc.credibility);
+    ccContent += grid([
+      field('Primary Platform', cc.sauron),
+      field('Weekly Hours', cc.weekHours),
+      field('Content Cadence', cc.cadence)
+    ], 'grid-template-columns:1fr 1fr 1fr');
     /* Content topics */
     var topicFields = [];
     for (var ti = 1; ti <= 3; ti++) {
@@ -414,36 +415,29 @@ function buildPlaybook() {
     }
     if (topicFields.length) ccContent += gridFull(topicFields);
     /* Story framework */
-    if (val(cc.storyI) || val(cc.storyH1) || val(cc.storyP)) {
-      ccContent += '<div style="margin:.75rem 0 .4rem"><div class="pb-label">Story Framework</div></div>';
-      ccContent += grid([
-        field('Identity (I Am)', cc.storyI, 'e.g. Why most creators never make money from content'),
-        field('Hook', cc.storyH1, 'e.g. Most creators spend hours on content that gets zero engagement — but it\'s not their fault'),
-        field('Problem', cc.storyP, 'e.g. They\'re optimizing for views instead of trust'),
-        field('Journey', cc.storyJ, 'e.g. I spent 3 years posting before I figured out what was actually broken')
-      ]);
-      ccContent += grid([
-        field('Lesson', cc.storyL, 'e.g. Trust converts. Virality doesn\'t.'),
-        field('CTA', cc.storyC, 'e.g. Follow for the system I wish I had on day one')
-      ]);
-    }
+    var storyContent = grid([
+      field('Identity (I Am)', cc.storyI),
+      field('Hook', cc.storyH1),
+      field('Problem', cc.storyP),
+      field('Journey', cc.storyJ)
+    ]) + grid([
+      field('Lesson', cc.storyL),
+      field('CTA', cc.storyC)
+    ]);
+    ccContent += withLabel('Story Framework', storyContent);
     /* Offer ladder */
-    if (val(cc.ofree) || val(cc.olead) || val(cc.olow)) {
-      ccContent += '<div style="margin:.75rem 0 .4rem"><div class="pb-label">Offer Ladder</div></div>';
-      ccContent += grid([
-        field('Free Content', cc.ofree),
-        field('Lead Magnet', cc.olead),
-        field('Low-Ticket', cc.olow),
-        field('Mid-Ticket', cc.omid),
-        field('High-Ticket', cc.ohigh)
-      ]);
-    }
-    if (val(cc.conv) || val(cc.ctastrat)) {
-      ccContent += grid([
-        field('Conversion Strategy', cc.conv),
-        field('CTA Strategy', cc.ctastrat)
-      ]);
-    }
+    var offerContent = grid([
+      field('Free Content', cc.ofree),
+      field('Lead Magnet', cc.olead),
+      field('Low-Ticket', cc.olow),
+      field('Mid-Ticket', cc.omid),
+      field('High-Ticket', cc.ohigh)
+    ]);
+    ccContent += withLabel('Offer Ladder', offerContent);
+    ccContent += grid([
+      field('Conversion Strategy', cc.conv),
+      field('CTA Strategy', cc.ctastrat)
+    ]);
   }
   html += chapter('03', 'Module 03', 'Create Your Content', ccContent);
 
@@ -454,99 +448,51 @@ function buildPlaybook() {
     laContent = emptyChapter('Complete Module 04 \u2014 Launch to see your answers here.');
   } else {
     /* Bio */
-    laContent += '<div style="margin:.75rem 0 .4rem"><div class="pb-label">Bio</div></div>';
-    laContent += grid([
-      field('Username', la.bioUsername || la.bioUsernameAlt),
-      field('Link in Bio', la.igLink)
-    ]);
     var bioFull = val(la.igBio) || [val(la.bioLine1),val(la.bioLine2),val(la.bioLine3),val(la.bioLine4)].filter(Boolean).join('\n');
-    laContent += highlight('Instagram Bio', bioFull);
-    laContent += grid([
-      field('LinkedIn Headline', la.liHeadline),
-      field('TikTok Bio', la.ttBio)
-    ]);
+    var bioContent =
+      grid([field('Username', la.bioUsername || la.bioUsernameAlt), field('Link in Bio', la.igLink)]) +
+      highlight('Instagram Bio', bioFull) +
+      grid([field('LinkedIn Headline', la.liHeadline), field('TikTok Bio', la.ttBio)]);
+    laContent += withLabel('Bio', bioContent);
     /* Funnel */
-    laContent += '<div style="margin:.75rem 0 .4rem"><div class="pb-label">Your Funnel</div></div>';
-    laContent += grid([
-      field('Content Platforms', la.funnelPlatforms),
-      field('Email Platform', la.funnelEmailPlatform)
-    ]);
     var offerPrice = [val(la.funnelOffer), val(la.funnelPrice)].filter(Boolean).join(' \u2014 ');
-    laContent += grid([
-      field('Primary CTA', la.funnelCTA),
-      field('Core Offer + Price', offerPrice || la.funnelOffer)
-    ]);
+    var funnelContent =
+      grid([field('Content Platforms', la.funnelPlatforms), field('Email Platform', la.funnelEmailPlatform)]) +
+      grid([field('Primary CTA', la.funnelCTA), field('Core Offer + Price', offerPrice || la.funnelOffer)]);
+    laContent += withLabel('Your Funnel', funnelContent);
     /* ManyChat & Newsletter */
-    laContent += '<div style="margin:.75rem 0 .4rem"><div class="pb-label">ManyChat &amp; Newsletter</div></div>';
-    laContent += grid([
-      field('Trigger Keyword', la.mcKeyword),
-      field('Newsletter Name', la.nlName)
-    ]);
     var nlFormatFreq = [val(laOpts.nlFormat), val(laOpts.nlFreq), val(la.nlDay)].filter(Boolean).join(' \u00b7 ');
-    laContent += grid([
-      field('Format + Frequency', nlFormatFreq),
-      field('Value Promise', la.nlValuePromise)
-    ]);
+    var mcContent =
+      grid([field('Trigger Keyword', la.mcKeyword), field('Newsletter Name', la.nlName)]) +
+      grid([field('Format + Frequency', nlFormatFreq), field('Value Promise', la.nlValuePromise)]);
+    laContent += withLabel('ManyChat &amp; Newsletter', mcContent);
     /* Lead Magnet */
-    laContent += '<div style="margin:.75rem 0 .4rem"><div class="pb-label">Lead Magnet</div></div>';
-    laContent += highlight('Lead Magnet Name', la.lmName);
     var lmFormatDelivery = [val(laOpts.lmFormat), val(laOpts.lmDelivery)].filter(Boolean).join(' \u00b7 ');
-    laContent += grid([
-      field('The One Big Win', la.lmBigWin),
-      field('Format + Delivery', lmFormatDelivery)
-    ]);
-    laContent += gridFull([field('CTA', la.lmCTA)]);
+    var lmContent =
+      highlight('Lead Magnet Name', la.lmName) +
+      grid([field('The One Big Win', la.lmBigWin), field('Format + Delivery', lmFormatDelivery)]) +
+      gridFull([field('CTA', la.lmCTA)]);
+    laContent += withLabel('Lead Magnet', lmContent);
     /* 3 Launch Videos */
-    if (val(la.story1hook) || val(la.story1why) || val(la.pos1claim) || val(la.exp1format)) {
-      laContent += '<div style="margin:.75rem 0 .4rem"><div class="pb-label">Launch Videos</div></div>';
-      if (val(la.story1hook) || val(la.story1why)) {
-        laContent += '<div style="font-size:10px;font-weight:700;color:var(--dimmer);text-transform:uppercase;letter-spacing:.1em;margin:.75rem 0 .4rem">Video 1 \u2014 Your Story</div>';
-        laContent += highlight('Hook', la.story1hook);
-        laContent += grid([
-          field('Why You Do This', la.story1why),
-          field('The Challenge', la.story1challenge),
-          field('The Turn', la.story1turning),
-          field('What You Learned', la.story1learned)
-        ]);
-        laContent += gridFull([field('CTA', la.story1cta)]);
-      }
-      if (val(la.pos1claim) || val(la.pos1belief)) {
-        laContent += '<div style="font-size:10px;font-weight:700;color:var(--dimmer);text-transform:uppercase;letter-spacing:.1em;margin:.75rem 0 .4rem">Video 2 \u2014 Positioning Deep Dive</div>';
-        laContent += highlight('Core Claim', la.pos1claim);
-        laContent += grid([
-          field('Core Belief', la.pos1belief),
-          field('Anchor Statement', la.pos1anchor)
-        ]);
-      }
-      if (val(la.exp1format) || val(la.exp1idea)) {
-        laContent += '<div style="font-size:10px;font-weight:700;color:var(--dimmer);text-transform:uppercase;letter-spacing:.1em;margin:.75rem 0 .4rem">Video 3 \u2014 Experimentation Video</div>';
-        laContent += grid([
-          field('Format', la.exp1format),
-          field('Idea', la.exp1idea),
-          field('How It Feels Different', la.exp1diff1 || la.exp1feel),
-          field('Target Audience', la.exp1audience)
-        ]);
-      }
-    }
+    var videoContent = '';
+    var v1 = highlight('Hook', la.story1hook) +
+      grid([field('Why You Do This', la.story1why), field('The Challenge', la.story1challenge), field('The Turn', la.story1turning), field('What You Learned', la.story1learned)]) +
+      gridFull([field('CTA', la.story1cta)]);
+    if (v1) videoContent += '<div style="font-size:10px;font-weight:700;color:var(--dimmer);text-transform:uppercase;letter-spacing:.1em;margin:.75rem 0 .4rem">Video 1 \u2014 Your Story</div>' + v1;
+    var v2 = highlight('Core Claim', la.pos1claim) + grid([field('Core Belief', la.pos1belief), field('Anchor Statement', la.pos1anchor)]);
+    if (v2) videoContent += '<div style="font-size:10px;font-weight:700;color:var(--dimmer);text-transform:uppercase;letter-spacing:.1em;margin:.75rem 0 .4rem">Video 2 \u2014 Positioning Deep Dive</div>' + v2;
+    var v3 = grid([field('Format', la.exp1format), field('Idea', la.exp1idea), field('How It Feels Different', la.exp1diff1 || la.exp1feel), field('Target Audience', la.exp1audience)]);
+    if (v3) videoContent += '<div style="font-size:10px;font-weight:700;color:var(--dimmer);text-transform:uppercase;letter-spacing:.1em;margin:.75rem 0 .4rem">Video 3 \u2014 Experimentation Video</div>' + v3;
+    laContent += withLabel('Launch Videos', videoContent);
     /* 90-Day Goals */
-    laContent += '<div style="margin:.75rem 0 .4rem"><div class="pb-label">90-Day Goals</div></div>';
-    laContent += grid([
-      field('Followers Goal', la.goal90Followers),
-      field('Email Subscribers', la.goal90Email)
-    ]);
-    laContent += grid([
-      field('Revenue Goal', la.goal90Revenue),
-      field('Review Date', la.reviewDate)
-    ]);
-    laContent += grid([
-      field('Audience Goal', la.goal90Audience),
-      field('System Goal', la.goal90System)
-    ]);
-    laContent += highlight('Content Goal', la.goal90Content);
-    laContent += highlight('Offer Goal', la.goal90Offer);
-    if (val(la.accountabilityPartner)) {
-      laContent += grid([field('Accountability Partner', la.accountabilityPartner)]);
-    }
+    var goalsContent =
+      grid([field('Followers Goal', la.goal90Followers), field('Email Subscribers', la.goal90Email)]) +
+      grid([field('Revenue Goal', la.goal90Revenue), field('Review Date', la.reviewDate)]) +
+      grid([field('Audience Goal', la.goal90Audience), field('System Goal', la.goal90System)]) +
+      highlight('Content Goal', la.goal90Content) +
+      highlight('Offer Goal', la.goal90Offer) +
+      grid([field('Accountability Partner', la.accountabilityPartner)]);
+    laContent += withLabel('90-Day Goals', goalsContent);
   }
   html += chapter('04', 'Module 04', 'Launch', laContent);
 

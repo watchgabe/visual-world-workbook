@@ -2,7 +2,7 @@
   "version": "0.0.1",
   "configurations": [
     {
-      "name": "Visual World Workbook",
+      "name": "Watch Gabe Links",
       "runtimeExecutable": "node",
       "runtimeArgs": [".claude/serve.js"],
       "port": 8083
