@@ -853,12 +853,17 @@ async function laSyncToSupabase(payload){
   var email=localStorage.getItem('vww-user-email');
   if(!email)return;
   try{
-    var existRows=await(await fetch(_LA_BASE+'/rest/v1/vww_progress?email=eq.'+encodeURIComponent(email)+'&select=data',{headers:laHdrs()})).json();
+    var existRows=await(await fetch(_LA_BASE+'/rest/v1/vww_progress?email=eq.'+encodeURIComponent(email)+'&select=data&order=updated_at.desc&limit=1',{headers:laHdrs()})).json();
     var existing=(Array.isArray(existRows)&&existRows[0]&&existRows[0].data)?existRows[0].data:{};
     _laCachedExisting=existing;
     var data=payload||{};
     var merged=Object.assign({},existing,{'launch-v1':data});
-    await fetch(_LA_BASE+'/rest/v1/vww_progress',{method:'POST',headers:laHdrs(),body:JSON.stringify({email:email,data:merged,updated_at:new Date().toISOString()})});
+    var rowExists=Array.isArray(existRows)&&existRows.length>0;
+    if(rowExists){
+      await fetch(_LA_BASE+'/rest/v1/vww_progress?email=eq.'+encodeURIComponent(email),{method:'PATCH',headers:laHdrs(),body:JSON.stringify({data:merged,updated_at:new Date().toISOString()})});
+    }else{
+      await fetch(_LA_BASE+'/rest/v1/vww_progress',{method:'POST',headers:laHdrs(),body:JSON.stringify({email:email,data:merged,updated_at:new Date().toISOString()})});
+    }
   }catch(e){}
 }
 
@@ -872,7 +877,12 @@ window.addEventListener('beforeunload',function(){
   document.querySelectorAll('.check-item[data-key]').forEach(function(item){payload['chk_'+item.getAttribute('data-key')]=item.classList.contains('checked');});
   var merged=Object.assign({},_laCachedExisting);
   merged['launch-v1']=payload;
-  fetch(_LA_BASE+'/rest/v1/vww_progress',{method:'POST',headers:laHdrs(),body:JSON.stringify({email:email,data:merged,updated_at:new Date().toISOString()}),keepalive:true});
+  var laRowExists=Object.keys(_laCachedExisting).length>0;
+  if(laRowExists){
+    fetch(_LA_BASE+'/rest/v1/vww_progress?email=eq.'+encodeURIComponent(email),{method:'PATCH',headers:laHdrs(),body:JSON.stringify({data:merged,updated_at:new Date().toISOString()}),keepalive:true});
+  }else{
+    fetch(_LA_BASE+'/rest/v1/vww_progress',{method:'POST',headers:laHdrs(),body:JSON.stringify({email:email,data:merged,updated_at:new Date().toISOString()}),keepalive:true});
+  }
 });
 
 (async function laLoadFromCloud(){
@@ -881,7 +891,7 @@ window.addEventListener('beforeunload',function(){
   clearTimeout(laSyncTimer); clearTimeout(saveTimer); /* cancel empty-field debounce from init */
   try{
     var hdrs={'Content-Type':'application/json','apikey':_LA_ANON,'Authorization':'Bearer '+_LA_ANON};
-    var rows=await(await fetch(_LA_BASE+'/rest/v1/vww_progress?email=eq.'+encodeURIComponent(email)+'&select=data',{headers:hdrs})).json();
+    var rows=await(await fetch(_LA_BASE+'/rest/v1/vww_progress?email=eq.'+encodeURIComponent(email)+'&select=data&order=updated_at.desc&limit=1',{headers:hdrs})).json();
     if(!Array.isArray(rows)||!rows[0]||!rows[0].data)return;
     _laCachedExisting=rows[0].data;
     if(!rows[0].data['launch-v1'])return;
