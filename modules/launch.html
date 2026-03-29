@@ -878,6 +878,7 @@ window.addEventListener('beforeunload',function(){
 (async function laLoadFromCloud(){
   var email=localStorage.getItem('vww-user-email');
   if(!email)return;
+  clearTimeout(laSyncTimer); clearTimeout(saveTimer); /* cancel empty-field debounce from init */
   try{
     var hdrs={'Content-Type':'application/json','apikey':_LA_ANON,'Authorization':'Bearer '+_LA_ANON};
     var rows=await(await fetch(_LA_BASE+'/rest/v1/vww_progress?email=eq.'+encodeURIComponent(email)+'&select=data',{headers:hdrs})).json();

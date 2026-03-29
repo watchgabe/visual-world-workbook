@@ -1504,6 +1504,7 @@ async function vwFinishModule() {
 
 async function loadFromSupabase() {
   if (!USER_EMAIL) return;
+  clearTimeout(syncTimer); /* cancel any debounce started with empty fields on init */
   try {
     /* ping last_seen without waiting */
     fetch(SUPABASE_URL + '/rest/v1/vww_users', {

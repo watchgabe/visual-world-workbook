@@ -1139,6 +1139,7 @@ buildNav();initOpts();wireSave();initChecklists();go(cur);
 /* ── LOAD CF DATA FROM SUPABASE ON START ── */
 (async function cfLoadFromCloud() {
   if (!CF_USER_EMAIL) return;
+  clearTimeout(cfSyncTimer); /* cancel any debounce started with empty fields on init */
   try {
     var rows = await (await fetch(
       SUPABASE_URL + '/rest/v1/vww_progress?email=eq.' + encodeURIComponent(CF_USER_EMAIL) + '&select=data',

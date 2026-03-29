@@ -1977,6 +1977,7 @@ window.addEventListener('beforeunload',function(){
 (async function ccLoadFromCloud(){
   var email=localStorage.getItem('vww-user-email');
   if(!email)return;
+  clearTimeout(_ccSyncTimer); clearTimeout(saveTimer); /* cancel empty-field debounce from init */
   try{
     var hdrs={'Content-Type':'application/json','apikey':_CC_ANON,'Authorization':'Bearer '+_CC_ANON};
     var rows=await(await fetch(_CC_BASE+'/rest/v1/vww_progress?email=eq.'+encodeURIComponent(email)+'&select=data',{headers:hdrs})).json();
