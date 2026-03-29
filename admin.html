@@ -611,7 +611,8 @@ async function renderDetail(idx, user, md, cfd) {
     + barRow('02 — Visual World', vwP)
     + barRow('03 — Create Content', ccP)
     + barRow('04 — Launch', laP)
-    + '</div>'
+    + '</div></div>'
+    + '<div style="display:flex;justify-content:flex-end;margin-bottom:1.25rem;">'
     + '<button class="del-btn" id="del-btn-'+idx+'" onclick="deleteUser(\''+safeEmail+'\','+idx+')">Delete User</button>'
     + '</div>';
 
