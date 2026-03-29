@@ -3090,7 +3090,7 @@ window.addEventListener('message',function(e){
   cur=n;
   document.querySelectorAll('.sc').forEach(function(s){s.classList.remove('show');});
   var sec=document.getElementById('s'+n);if(sec)sec.classList.add('show');
-  buildNav();updateProgress();saveData();window.scrollTo(0,0);
+  render();saveData();window.scrollTo(0,0);
   vwNotifyShell();
 });
 
