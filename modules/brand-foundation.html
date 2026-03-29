@@ -781,11 +781,15 @@ function cfSyncToSupabase(payload) {
 window.addEventListener('beforeunload', function() {
   clearTimeout(cfSyncTimer);
   if (!CF_USER_EMAIL) return;
-  if (!Object.keys(_cfCachedExisting).length) return; // skip if cloud load hasn't completed yet
   var raw = localStorage.getItem(KEY);
   if (!raw) return;
   var payload; try { payload = JSON.parse(raw); } catch(e) { return; }
-  var merged = Object.assign({}, _cfCachedExisting, {cf: payload});
+  // Use cloud cache as base; fill in all modules from localStorage so we never wipe sibling data
+  var merged = Object.assign({}, _cfCachedExisting);
+  try { var r=localStorage.getItem('vww-v1');   if(r) merged.vw=JSON.parse(r); } catch(e){}
+  try { var r=localStorage.getItem('ccb-v1');   if(r) merged.cc=JSON.parse(r); } catch(e){}
+  try { var r=localStorage.getItem('launch-v1');if(r) merged['launch-v1']=JSON.parse(r); } catch(e){}
+  merged.cf = payload;
   fetch(SUPABASE_URL + '/rest/v1/vww_progress', {
     method: 'POST', headers: cfSbHeaders(),
     body: JSON.stringify({email: CF_USER_EMAIL, data: merged, updated_at: new Date().toISOString()}),
@@ -1209,6 +1213,14 @@ function _bfToggleTheme(){
 window.addEventListener('message',function(e){
   if(!e.data) return;
   if(e.data.type==='theme'){document.body.classList.toggle('light',e.data.value==='light');return;}
+  if(e.data.type==='flush-sync'){
+    clearTimeout(cfSyncTimer);
+    var _raw=localStorage.getItem(KEY);
+    if(!CF_USER_EMAIL||!_raw){window.parent.postMessage({type:'sync-done'},'*');return;}
+    try{_cfDoSync(JSON.parse(_raw)).then(function(){window.parent.postMessage({type:'sync-done'},'*');}).catch(function(){window.parent.postMessage({type:'sync-done'},'*');});}
+    catch(e){window.parent.postMessage({type:'sync-done'},'*');}
+    return;
+  }
   if(e.data.type!=='navigate')return;
   var n=e.data.to;
   cur=n;

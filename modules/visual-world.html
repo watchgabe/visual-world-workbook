@@ -1487,11 +1487,14 @@ function syncToSupabase(payload) {
 window.addEventListener('beforeunload', function() {
   clearTimeout(syncTimer);
   if (!USER_EMAIL) return;
-  if (!Object.keys(_vwCachedExisting).length) return; // skip if cloud load hasn't completed yet
   var raw = localStorage.getItem(SAVE_KEY);
   if (!raw) return;
   var payload; try { payload = JSON.parse(raw); } catch(e) { return; }
-  var merged = Object.assign({}, _vwCachedExisting, {vw: payload});
+  var merged = Object.assign({}, _vwCachedExisting);
+  try { var r=localStorage.getItem('cfww-v2');  if(r) merged.cf=JSON.parse(r); } catch(e){}
+  try { var r=localStorage.getItem('ccb-v1');   if(r) merged.cc=JSON.parse(r); } catch(e){}
+  try { var r=localStorage.getItem('launch-v1');if(r) merged['launch-v1']=JSON.parse(r); } catch(e){}
+  merged.vw = payload;
   fetch(SUPABASE_URL + '/rest/v1/vww_progress', {
     method: 'POST', headers: sbHeaders(),
     body: JSON.stringify({email: USER_EMAIL, data: merged, updated_at: new Date().toISOString()}),
@@ -3058,6 +3061,16 @@ if (VW_IN_FRAME) {
 window.addEventListener('message',function(e){
   if(!e.data) return;
   if(e.data.type==='theme'){document.body.classList.toggle('light',e.data.value==='light');return;}
+  if(e.data.type==='flush-sync'){
+    clearTimeout(syncTimer);
+    var _raw=localStorage.getItem(SAVE_KEY);
+    if(!USER_EMAIL||!_raw){window.parent.postMessage({type:'sync-done'},'*');return;}
+    try{
+      var _p=JSON.parse(_raw);
+      _vwDoSync(_p).then(function(){window.parent.postMessage({type:'sync-done'},'*');}).catch(function(){window.parent.postMessage({type:'sync-done'},'*');});
+    }catch(e){window.parent.postMessage({type:'sync-done'},'*');}
+    return;
+  }
   if(e.data.type!=='navigate')return;
   var n=e.data.to;
   cur=n;

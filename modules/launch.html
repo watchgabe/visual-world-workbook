@@ -867,11 +867,14 @@ window.addEventListener('beforeunload',function(){
   clearTimeout(laSyncTimer);
   var email=localStorage.getItem('vww-user-email');
   if(!email)return;
-  if(!Object.keys(_laCachedExisting).length)return; // skip if cloud load hasn't completed yet
   var raw=localStorage.getItem(KEY);
   if(!raw)return;
   var payload;try{payload=JSON.parse(raw);}catch(e){return;}
-  var merged=Object.assign({},_laCachedExisting,{'launch-v1':payload});
+  var merged=Object.assign({},_laCachedExisting);
+  try{var r=localStorage.getItem('cfww-v2'); if(r)merged.cf=JSON.parse(r);}catch(e){}
+  try{var r=localStorage.getItem('vww-v1');  if(r)merged.vw=JSON.parse(r);}catch(e){}
+  try{var r=localStorage.getItem('ccb-v1');  if(r)merged.cc=JSON.parse(r);}catch(e){}
+  merged['launch-v1']=payload;
   fetch(_LA_BASE+'/rest/v1/vww_progress',{method:'POST',headers:laHdrs(),body:JSON.stringify({email:email,data:merged,updated_at:new Date().toISOString()}),keepalive:true});
 });
 
@@ -914,6 +917,16 @@ function _laToggleTheme(){
 window.addEventListener('message',function(e){
   if(!e.data) return;
   if(e.data.type==='theme'){document.body.classList.toggle('light',e.data.value==='light');return;}
+  if(e.data.type==='flush-sync'){
+    clearTimeout(laSyncTimer);
+    var _raw=localStorage.getItem(KEY);
+    var _em=localStorage.getItem('vww-user-email');
+    if(!_em||!_raw){window.parent.postMessage({type:'sync-done'},'*');return;}
+    try{
+      laSyncToSupabase().then(function(){window.parent.postMessage({type:'sync-done'},'*');}).catch(function(){window.parent.postMessage({type:'sync-done'},'*');});
+    }catch(e){window.parent.postMessage({type:'sync-done'},'*');}
+    return;
+  }
   if(e.data.type!=='navigate')return;
   go(e.data.to);
 });

@@ -1902,6 +1902,16 @@ if (CC_IN_FRAME) {
 window.addEventListener('message',function(e){
   if(!e.data) return;
   if(e.data.type==='theme'){document.body.classList.toggle('light',e.data.value==='light');return;}
+  if(e.data.type==='flush-sync'){
+    clearTimeout(_ccSyncTimer);
+    var _raw=localStorage.getItem(SAVE_KEY);
+    var _em=localStorage.getItem('vww-user-email');
+    if(!_em||!_raw){window.parent.postMessage({type:'sync-done'},'*');return;}
+    try{
+      _ccDoSync(JSON.parse(_raw)).then(function(){window.parent.postMessage({type:'sync-done'},'*');}).catch(function(){window.parent.postMessage({type:'sync-done'},'*');});
+    }catch(e){window.parent.postMessage({type:'sync-done'},'*');}
+    return;
+  }
   if(e.data.type!=='navigate')return;
   go(e.data.to);
 });
@@ -1959,12 +1969,15 @@ window.addEventListener('beforeunload',function(){
   clearTimeout(_ccSyncTimer);
   var email=localStorage.getItem('vww-user-email')||'';
   if(!email)return;
-  if(!Object.keys(_ccCachedExisting).length)return; // skip if cloud load hasn't completed yet
   var raw=localStorage.getItem(SAVE_KEY);
   if(!raw)return;
   var payload;try{payload=JSON.parse(raw);}catch(e){return;}
   var hdrs={'Content-Type':'application/json','apikey':_CC_ANON,'Authorization':'Bearer '+_CC_ANON,'Prefer':'resolution=merge-duplicates'};
-  var merged=Object.assign({},_ccCachedExisting,{cc:payload});
+  var merged=Object.assign({},_ccCachedExisting);
+  try{var r=localStorage.getItem('cfww-v2'); if(r)merged.cf=JSON.parse(r);}catch(e){}
+  try{var r=localStorage.getItem('vww-v1');  if(r)merged.vw=JSON.parse(r);}catch(e){}
+  try{var r=localStorage.getItem('launch-v1');if(r)merged['launch-v1']=JSON.parse(r);}catch(e){}
+  merged.cc=payload;
   fetch(_CC_BASE+'/rest/v1/vww_progress',{method:'POST',headers:hdrs,body:JSON.stringify({email:email,data:merged,updated_at:new Date().toISOString()}),keepalive:true});
 });
 

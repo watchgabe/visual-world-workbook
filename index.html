@@ -593,6 +593,7 @@ var activeModule = null;
 var moduleStates = {};
 var expandedModules = {};
 var pendingNavigation = null;
+var _pendingFlush = null;
 var iframeLoading = false;
 
 /* ═══════════════════════════════════════════════════════
@@ -740,8 +741,8 @@ function pingUser() {
   }).catch(function(){});
 }
 
-/* Fetch cloud progress and seed localStorage — runs on every load so the
-   sidebar shows correct percentages even on a fresh browser with no localStorage */
+/* Runs on every load: seeds localStorage from Supabase (fresh browser) AND pushes
+   localStorage back to Supabase (keeps admin + other devices in sync) */
 async function loadProgressFromCloud() {
   if (!USER_EMAIL) return;
   try {
@@ -749,31 +750,40 @@ async function loadProgressFromCloud() {
       SUPABASE_URL + '/rest/v1/vww_progress?email=eq.' + encodeURIComponent(USER_EMAIL) + '&select=data',
       {headers: sbHeaders()}
     )).json();
-    if (!Array.isArray(rows) || !rows[0] || !rows[0].data) return;
-    var d = rows[0].data;
-    var map = [
-      ['cfww-v2',   d.cf],
-      ['vww-v1',    d.vw],
-      ['ccb-v1',    d.cc],
-      ['launch-v1', d['launch-v1']]
+    var cloudData = (Array.isArray(rows) && rows[0] && rows[0].data) ? rows[0].data : {};
+    var moduleMap = [
+      {local: 'cfww-v2',   cloud: 'cf'},
+      {local: 'vww-v1',    cloud: 'vw'},
+      {local: 'ccb-v1',    cloud: 'cc'},
+      {local: 'launch-v1', cloud: 'launch-v1'}
     ];
-    var updated = false;
-    map.forEach(function(pair) {
-      var key = pair[0], val = pair[1];
-      if (val && !localStorage.getItem(key)) {
-        localStorage.setItem(key, JSON.stringify(val));
-        updated = true;
+    var uiUpdated = false;
+    var merged = Object.assign({}, cloudData);
+    var hasPush = false;
+    moduleMap.forEach(function(m) {
+      var localRaw = localStorage.getItem(m.local);
+      if (localRaw) {
+        try { merged[m.cloud] = JSON.parse(localRaw); hasPush = true; } catch(e) {}
+      } else if (cloudData[m.cloud]) {
+        localStorage.setItem(m.local, JSON.stringify(cloudData[m.cloud]));
+        uiUpdated = true;
       }
     });
-    if (updated) {
+    if (!localStorage.getItem('vww-user-avatar') && cloudData.avatar) {
+      localStorage.setItem('vww-user-avatar', cloudData.avatar);
+      updateIdentityDisplay();
+    }
+    // Push all local data to Supabase so admin and other devices always see current state
+    if (hasPush) {
+      fetch(SUPABASE_URL + '/rest/v1/vww_progress', {
+        method: 'POST', headers: sbHeaders(),
+        body: JSON.stringify({email: USER_EMAIL, data: merged, updated_at: new Date().toISOString()})
+      }).catch(function(){});
+    }
+    if (uiUpdated) {
       initModuleStates();
       renderSidebar();
       renderProgress();
-    }
-    // Seed avatar if not already stored locally
-    if (d.avatar && !localStorage.getItem('vww-user-avatar')) {
-      localStorage.setItem('vww-user-avatar', d.avatar);
-      updateIdentityDisplay();
     }
   } catch(e) {}
 }
@@ -1000,22 +1010,34 @@ function loadModule(moduleId, sectionIndex) {
   var mod = MODULES.find(function(m){ return m.id === moduleId; });
   if (!mod || mod.locked || !mod.file) return;
 
+  var iframe = document.getElementById('module-iframe');
+  // Flush the current module to Supabase before navigating away
+  if (activeModule && activeModule !== moduleId && !iframeLoading) {
+    var _done = false;
+    function _proceed() {
+      if (_done) return; _done = true; _pendingFlush = null;
+      _doLoadModule(moduleId, sectionIndex, mod);
+    }
+    _pendingFlush = _proceed;
+    setTimeout(_proceed, 600); // max wait 600ms
+    try { iframe.contentWindow.postMessage({type: 'flush-sync'}, '*'); } catch(e) { _proceed(); }
+  } else {
+    _doLoadModule(moduleId, sectionIndex, mod);
+  }
+}
+
+function _doLoadModule(moduleId, sectionIndex, mod) {
   Object.keys(expandedModules).forEach(function(k){ expandedModules[k] = false; });
   expandedModules[moduleId] = true;
   activeModule = moduleId;
   pendingNavigation = sectionIndex;
-
-  // Persist current position so refresh restores it
   localStorage.setItem('blp-last-module', moduleId);
   localStorage.setItem('blp-last-section', sectionIndex);
-
   updateMobileTitle(moduleId);
   showLoading(mod.title);
-
   var iframe = document.getElementById('module-iframe');
   iframeLoading = true;
   iframe.src = mod.file + '?v=' + Date.now();
-
   renderSidebar();
 }
 
@@ -1092,6 +1114,11 @@ window.addEventListener('message', function(e) {
       var iframe = document.getElementById('module-iframe');
       try { iframe.contentWindow.postMessage({type: 'navigate', to: nav}, '*'); } catch(ex) {}
     }
+  }
+
+  if (type === 'sync-done') {
+    if (_pendingFlush) { var fn = _pendingFlush; _pendingFlush = null; fn(); }
+    return;
   }
 
   if (type === 'sectionChange') {

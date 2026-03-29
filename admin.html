@@ -584,12 +584,23 @@ async function renderDetail(idx, user, md, cfd) {
       + '</div>';
   }
 
+  var allDone = normalizeDone(cfd&&cfd.done).length
+    + normalizeDone(md&&md.vw&&md.vw.done).length
+    + normalizeDone(md&&md.cc&&md.cc.done).length
+    + normalizeDone(md&&md['launch-v1']&&md['launch-v1'].done).length;
+  var overallPct = Math.round(Math.min(allDone, 32) / 32 * 100);
+
   var summaryHtml = '<div class="prog-summary">'
     + '<div class="prog-summary-user">'+avatarHtml2
     + '<div><div class="prog-summary-name">'+esc(user.name||'—')+'</div>'
     + '<div class="prog-summary-email">'+esc(user.email||'')+'</div></div></div>'
     + '<div class="prog-summary-divider"></div>'
     + '<div class="prog-bars">'
+    + '<div class="prog-bar-row" style="margin-bottom:.65rem;padding-bottom:.65rem;border-bottom:1px solid var(--border)">'
+    + '<span class="prog-bar-label" style="font-weight:700;color:var(--text)">Playbook Overall</span>'
+    + '<div class="prog-bar-track"><div class="prog-bar-fill'+(overallPct>=100?' done':'')+'" style="width:'+overallPct+'%"></div></div>'
+    + '<span class="prog-bar-pct" style="color:var(--orange);font-size:12px;font-weight:700">'+overallPct+'%</span>'
+    + '</div>'
     + barRow('01 — Brand Foundation', cfP)
     + barRow('02 — Visual World', vwP)
     + barRow('03 — Create Content', ccP)
