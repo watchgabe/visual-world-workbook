@@ -528,12 +528,11 @@ function normalizeDone(doneVal) {
   return [];
 }
 
-/* Compute % complete — excludes Intro (index 0) to match workbook sidebar rings */
+/* Compute % complete — matches workbook account page formula exactly (includes all sections) */
 function modPct(doneVal, totalWithIntro) {
-  var total = totalWithIntro - 1; // index 0 = Intro, not counted
-  if (!doneVal || total <= 0) return 0;
-  var done = normalizeDone(doneVal).filter(function(x){ return x > 0; });
-  return Math.round(Math.min(done.length, total) / total * 100);
+  if (!doneVal || totalWithIntro <= 0) return 0;
+  var done = normalizeDone(doneVal);
+  return Math.round(Math.min(done.length, totalWithIntro) / totalWithIntro * 100);
 }
 
 /* Does an object have any non-empty string fields? */
