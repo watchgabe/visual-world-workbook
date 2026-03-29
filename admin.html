@@ -651,50 +651,46 @@ async function renderDetail(idx, user, md, cfd) {
 
   modules.forEach(function(mod) {
     var obj = mod.data;
-    if (!obj || typeof obj !== 'object') return;
 
     /* Collect text fields */
     var textFields = [];
     var optFields  = [];
 
-    /* opts from the opts sub-object (VW/CC) — scoped per module */
-    if (mod.moduleOpts) {
-      Object.keys(mod.moduleOpts).forEach(function(g){
-        var v = mod.moduleOpts[g];
-        if (!v || typeof v !== 'string' || !v.trim()) return;
-        /* Assign opt to the correct module */
-        var isCC = isCCKey('opt_'+g) || CC_EXACT['opt_'+g] || g==='mbvibe';
-        if (mod.num==='02' && isCC) return;
-        if (mod.num==='03' && !isCC) return;
-        optFields.push({k:'opt_'+g, v:v.trim()});
+    if (obj && typeof obj === 'object') {
+      /* opts from the opts sub-object (VW/CC) — scoped per module */
+      if (mod.moduleOpts) {
+        Object.keys(mod.moduleOpts).forEach(function(g){
+          var v = mod.moduleOpts[g];
+          if (!v || typeof v !== 'string' || !v.trim()) return;
+          var isCC = isCCKey('opt_'+g) || CC_EXACT['opt_'+g] || g==='mbvibe';
+          if (mod.num==='02' && isCC) return;
+          if (mod.num==='03' && !isCC) return;
+          optFields.push({k:'opt_'+g, v:v.trim()});
+        });
+      }
+
+      Object.keys(obj).forEach(function(k) {
+        if (SKIP_KEYS[k]) return;
+        if (mod.isCF && (k==='cur'||k==='done'||k==='auditVals'||k.indexOf('chk_')===0)) return;
+        if (mod.filterFn && !mod.filterFn(k)) return;
+        var v = obj[k];
+        if (!v) return;
+        if (k.indexOf('opt_')===0) {
+          if (typeof v==='string'&&v.trim()) optFields.push({k:k,v:v.trim()});
+        } else if (typeof v==='string' && v.trim()) {
+          textFields.push({k:k, v:v.trim()});
+        }
       });
     }
 
-    Object.keys(obj).forEach(function(k) {
-      /* Skip meta keys */
-      if (SKIP_KEYS[k]) return;
-      if (mod.isCF && (k==='cur'||k==='done'||k==='auditVals'||k.indexOf('chk_')===0)) return;
-      /* Module filter for VW vs CC */
-      if (mod.filterFn && !mod.filterFn(k)) return;
-
-      var v = obj[k];
-      if (!v) return;
-
-      if (k.indexOf('opt_')===0) {
-        if (typeof v==='string'&&v.trim()) optFields.push({k:k,v:v.trim()});
-      } else if (typeof v==='string' && v.trim()) {
-        textFields.push({k:k, v:v.trim()});
-      }
-    });
-
-    if (textFields.length===0 && optFields.length===0) return;
-
+    /* Always render all 4 modules — show placeholder if no text answers yet */
+    var fieldCount = textFields.length + optFields.length;
     html += '<div class="mod-section">';
     html += '<div class="mod-sec-head">';
     html += '<div class="mod-sec-num">'+mod.num+'</div>';
     html += '<div class="mod-sec-title">'+mod.title+'</div>';
     html += '<div class="mod-sec-rule"></div>';
-    html += '<div class="mod-sec-count">'+( textFields.length+optFields.length)+' field'+(textFields.length+optFields.length!==1?'s':'')+'</div>';
+    html += '<div class="mod-sec-count">'+(fieldCount > 0 ? fieldCount+' field'+(fieldCount!==1?'s':'') : 'no text answers yet')+'</div>';
     html += '</div>';
 
     /* Selections (opts) */
@@ -707,7 +703,7 @@ async function renderDetail(idx, user, md, cfd) {
       html += '</div>';
     }
 
-    /* Text answers grid */
+    /* Text answers grid — or placeholder if none yet */
     if (textFields.length) {
       html += '<div class="ans-grid">';
       textFields.forEach(function(f){
@@ -719,12 +715,12 @@ async function renderDetail(idx, user, md, cfd) {
         html += '<div class="ans-card"><div class="ans-key">'+esc(label)+'</div><div class="ans-val">'+esc(f.v)+'</div></div>';
       });
       html += '</div>';
+    } else {
+      html += '<div class="no-data">Sections marked complete but no text answers saved yet — may be checkboxes or selection-only sections.</div>';
     }
 
     html += '</div>';
   });
-
-  if (!html) html = '<div class="no-data">No answers saved yet for this user.</div>';
 
   inner.innerHTML = summaryHtml + circleHtml + html;
 }
