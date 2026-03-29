@@ -882,16 +882,8 @@ textarea::placeholder,input[type=text]::placeholder{color:var(--dimmer)}
     <div class="rm-card" onclick="go(4)" style="cursor:pointer;transition:transform .15s" onmouseover="this.style.transform='scale(1.02)'" onmouseout="this.style.transform='scale(1)'"><div class="rm-num">04</div><div class="rm-title">Typography</div><div class="rm-sub">Define your typographic voice</div></div>
     <div class="rm-card" onclick="go(5)" style="cursor:pointer;transition:transform .15s" onmouseover="this.style.transform='scale(1.02)'" onmouseout="this.style.transform='scale(1)'"><div class="rm-num">05</div><div class="rm-title">Your Perspective</div><div class="rm-sub">Setting, mood, design details, and your visual narrative</div></div>
   </div>
-  <div class="nr" style="justify-content:flex-end;border-top:none;padding-top:0;flex-direction:column;align-items:stretch;gap:10px">
-    <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1rem 1.2rem;">
-      <div class="elbl" style="margin-bottom:8px">Before you begin</div>
-      <div class="q" style="margin-top:0">Your name or brand handle</div>
-      <div class="qh">This will appear on your final style guide.</div>
-      <input type="text" id="brandName" placeholder="e.g. Alex Rivera, @yourhandle, Studio Name...">
-    </div>
-    <div style="display:flex;justify-content:flex-end">
-      <button class="btn p" id="b0n">Begin Workshop 1 →</button>
-    </div>
+  <div class="nr" style="justify-content:flex-end;border-top:none;padding-top:0">
+    <button class="btn p" id="b0n">Begin Workshop 1 →</button>
   </div>
 </div>
 
@@ -2663,7 +2655,7 @@ function _buildGuide_removed_placeholder() {
     }
   }
 
-  var brandName=gv('brandName')||'Your Brand';
+  var brandName=USER_NAME||'Your Brand';
   var coverName=el('vg-cover-name'); if(coverName)coverName.textContent=brandName.toUpperCase();
 
   var colors=[{role:'Primary',val:gv('col-primary')},{role:'Secondary',val:gv('col-secondary')},{role:'Accent',val:gv('col-accent')},{role:'Neutral',val:gv('col-neutral')}];
@@ -3199,7 +3191,7 @@ function typRenderPairings(mood, offset, count) {
   var allPairings = TYP_PAIRINGS[mood];
   if (!allPairings) return;
   var pairings = allPairings.slice(offset||0, (offset||0)+(count||3));
-  var brandName = (document.getElementById('brandName') && document.getElementById('brandName').value) ? document.getElementById('brandName').value : 'Your Brand';
+  var brandName = USER_NAME || 'Your Brand';
   var html = '';
   pairings.forEach(function(p, i) {
     var hf = p.header.f;
