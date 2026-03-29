@@ -769,6 +769,8 @@ async function loadProgressFromCloud() {
     var hasCloudData = Object.keys(cloudData).some(function(k){
       return k==='cf'||k==='vw'||k==='cc'||k==='launch-v1';
     });
+    /* userExists: did Supabase return a row at all (even empty data)? */
+    var userExistsInCloud = Array.isArray(rows) && rows.length > 0;
     var uiUpdated = false;
     var merged = Object.assign({}, cloudData);
     var hasPush = false;
@@ -781,15 +783,23 @@ async function loadProgressFromCloud() {
         } else {
           localStorage.removeItem(m.local);
         }
+      } else if (!userExistsInCloud) {
+        /* No row in Supabase at all — user was deleted or is brand new.
+           Wipe any stale local data so the UI shows 0% (don't push old data back up). */
+        localStorage.removeItem(m.local);
+        uiUpdated = true;
       } else {
-        /* No cloud data for this user yet — push whatever is local up */
+        /* Row exists but no module data yet — push whatever is local up */
         var localRaw = localStorage.getItem(m.local);
         if (localRaw) {
           try { merged[m.cloud] = JSON.parse(localRaw); hasPush = true; } catch(e) {}
         }
       }
     });
-    if (!localStorage.getItem('vww-user-avatar') && cloudData.avatar) {
+    if (!userExistsInCloud) {
+      /* Also clear avatar so the initial display resets */
+      localStorage.removeItem('vww-user-avatar');
+    } else if (!localStorage.getItem('vww-user-avatar') && cloudData.avatar) {
       localStorage.setItem('vww-user-avatar', cloudData.avatar);
       updateIdentityDisplay();
     }
