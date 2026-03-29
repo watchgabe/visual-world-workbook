@@ -639,6 +639,15 @@ async function submitIdentity() {
   if (btn) { btn.disabled = true; btn.textContent = 'Saving...'; }
   if (errEl) errEl.style.display = 'none';
   try {
+    /* If a different user was previously logged in, wipe their module data so it
+       doesn't get pushed to the new user's Supabase record */
+    var prevEmail = localStorage.getItem('vww-user-email');
+    if (prevEmail && prevEmail !== email) {
+      ['cfww-v2','vww-v1','ccb-v1','launch-v1',
+       'vww-mb-v2','vww-creators-v1','vww-user-avatar'].forEach(function(k){
+        localStorage.removeItem(k);
+      });
+    }
     await fetch(SUPABASE_URL + '/rest/v1/vww_users', {
       method: 'POST',
       headers: sbHeaders(),
@@ -757,23 +766,33 @@ async function loadProgressFromCloud() {
       {local: 'ccb-v1',    cloud: 'cc'},
       {local: 'launch-v1', cloud: 'launch-v1'}
     ];
+    var hasCloudData = Object.keys(cloudData).some(function(k){
+      return k==='cf'||k==='vw'||k==='cc'||k==='launch-v1';
+    });
     var uiUpdated = false;
     var merged = Object.assign({}, cloudData);
     var hasPush = false;
     moduleMap.forEach(function(m) {
-      var localRaw = localStorage.getItem(m.local);
-      if (localRaw) {
-        try { merged[m.cloud] = JSON.parse(localRaw); hasPush = true; } catch(e) {}
-      } else if (cloudData[m.cloud]) {
-        localStorage.setItem(m.local, JSON.stringify(cloudData[m.cloud]));
-        uiUpdated = true;
+      if (hasCloudData) {
+        /* Cloud has this user's data — always trust cloud, seed local from it */
+        if (cloudData[m.cloud]) {
+          localStorage.setItem(m.local, JSON.stringify(cloudData[m.cloud]));
+          uiUpdated = true;
+        } else {
+          localStorage.removeItem(m.local);
+        }
+      } else {
+        /* No cloud data for this user yet — push whatever is local up */
+        var localRaw = localStorage.getItem(m.local);
+        if (localRaw) {
+          try { merged[m.cloud] = JSON.parse(localRaw); hasPush = true; } catch(e) {}
+        }
       }
     });
     if (!localStorage.getItem('vww-user-avatar') && cloudData.avatar) {
       localStorage.setItem('vww-user-avatar', cloudData.avatar);
       updateIdentityDisplay();
     }
-    // Push all local data to Supabase so admin and other devices always see current state
     if (hasPush) {
       fetch(SUPABASE_URL + '/rest/v1/vww_progress', {
         method: 'POST', headers: sbHeaders(),
