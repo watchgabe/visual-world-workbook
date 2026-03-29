@@ -139,6 +139,11 @@ body{background:var(--bg);color:var(--text);font-family:var(--font);font-size:14
 .opts-row{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:.75rem;}
 .opt-chip{font-size:11.5px;background:var(--orange-tint);border:1px solid var(--orange-border);color:var(--orange-dark);padding:3px 10px;border-radius:20px;}
 
+/* ── DELETE ── */
+.del-btn{font-size:11px;font-weight:600;color:#e05555;background:rgba(224,85,85,0.08);border:1px solid rgba(224,85,85,0.25);border-radius:var(--radius-md);padding:5px 12px;cursor:pointer;font-family:var(--font);margin-left:auto;flex-shrink:0;}
+.del-btn:hover{background:rgba(224,85,85,0.18);border-color:rgba(224,85,85,0.5);}
+.del-btn:disabled{opacity:.4;cursor:not-allowed;}
+
 /* ── MISC ── */
 #loading{text-align:center;padding:3rem;color:var(--dimmer);font-size:13px;}
 .spinner{display:inline-block;width:20px;height:20px;border:2px solid var(--border2);border-top-color:var(--orange);border-radius:50%;animation:spin .7s linear infinite;margin-bottom:.5rem;}
@@ -590,10 +595,11 @@ async function renderDetail(idx, user, md, cfd) {
     + normalizeDone(md&&md['launch-v1']&&md['launch-v1'].done).length;
   var overallPct = Math.round(Math.min(allDone, 32) / 32 * 100);
 
+  var safeEmail = esc(user.email||'');
   var summaryHtml = '<div class="prog-summary">'
     + '<div class="prog-summary-user">'+avatarHtml2
     + '<div><div class="prog-summary-name">'+esc(user.name||'—')+'</div>'
-    + '<div class="prog-summary-email">'+esc(user.email||'')+'</div></div></div>'
+    + '<div class="prog-summary-email">'+safeEmail+'</div></div></div>'
     + '<div class="prog-summary-divider"></div>'
     + '<div class="prog-bars">'
     + '<div class="prog-bar-row" style="margin-bottom:.65rem;padding-bottom:.65rem;border-bottom:1px solid var(--border)">'
@@ -605,7 +611,9 @@ async function renderDetail(idx, user, md, cfd) {
     + barRow('02 — Visual World', vwP)
     + barRow('03 — Create Content', ccP)
     + barRow('04 — Launch', laP)
-    + '</div></div>';
+    + '</div>'
+    + '<button class="del-btn" id="del-btn-'+idx+'" onclick="deleteUser(\''+safeEmail+'\','+idx+')">Delete User</button>'
+    + '</div>';
 
   var html = '';
 
@@ -754,6 +762,30 @@ function relTime(iso) {
 }
 
 function esc(s){ if(!s) return ''; return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+async function deleteUser(email, idx) {
+  if (!email) return;
+  if (!confirm('Delete all data for ' + email + '?\n\nThis removes them from both the users list and all saved progress. This cannot be undone.')) return;
+  var btn = document.getElementById('del-btn-'+idx);
+  if (btn) { btn.disabled = true; btn.textContent = 'Deleting...'; }
+  try {
+    var encoded = encodeURIComponent(email);
+    await Promise.all([
+      fetch(SUPABASE_URL+'/rest/v1/vww_users?email=eq.'+encoded, {method:'DELETE', headers:sbH()}),
+      fetch(SUPABASE_URL+'/rest/v1/vww_progress?email=eq.'+encoded, {method:'DELETE', headers:sbH()})
+    ]);
+    /* Close the detail row and remove both rows from the DOM */
+    var dtr = document.getElementById('detail-'+idx);
+    var tr  = document.querySelector('[data-idx="'+idx+'"]');
+    if (dtr) dtr.remove();
+    if (tr)  tr.remove();
+    /* Refresh stats */
+    loadDashboard();
+  } catch(e) {
+    alert('Delete failed: ' + e.message);
+    if (btn) { btn.disabled = false; btn.textContent = 'Delete User'; }
+  }
+}
 
 document.getElementById('auth-pass').addEventListener('keydown', function(e){ if(e.key==='Enter') checkAuth(); });
 </script>
