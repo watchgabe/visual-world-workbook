@@ -209,27 +209,38 @@ function withLabel(lbl, content) {
   return '<div style="margin:.75rem 0 .4rem"><div class="pb-label">'+lbl+'</div></div>' + content;
 }
 
-/* ── LOAD DATA ── */
-function loadKey(key) {
-  try {
-    var raw = localStorage.getItem(key);
-    if (!raw) return {};
-    return JSON.parse(raw) || {};
-  } catch(e) { return {}; }
-}
+/* ── SUPABASE CONFIG ── */
+var PB_SUPABASE_URL  = 'https://ljddfhzrjvxpedvfebli.supabase.co';
+var PB_SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxqZGRmaHpyanZ4cGVkdmZlYmxpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM5NTEzNjMsImV4cCI6MjA4OTUyNzM2M30.GqZMRvBlZyN4rmr9MrfxLcLSB04d7s59ZPfEw-dQwks';
+var PB_USER_EMAIL  = localStorage.getItem('vww-user-email')  || '';
+var PB_USER_NAME   = localStorage.getItem('vww-user-name')   || '';
+var PB_USER_HANDLE = localStorage.getItem('vww-user-handle') || '';
 
-function buildPlaybook() {
-  var cf = loadKey('cfww-v2');
-  var vwRaw = loadKey('vww-v1');
-  var vw = (vwRaw && vwRaw.inputs) ? vwRaw.inputs : {};
-  var vwOpts = (vwRaw && vwRaw.opts) ? vwRaw.opts : {};
-  var ccRaw = loadKey('ccb-v1');
-  var cc = (ccRaw && ccRaw.inputs) ? ccRaw.inputs : {};
-  var ccOpts = (ccRaw && ccRaw.opts) ? ccRaw.opts : {};
-  var la = loadKey('launch-v1');
-  var laOpts = (la && la.opts) ? la.opts : {};
+async function buildPlaybook() {
+  document.getElementById('playbook-doc').innerHTML = '<div style="text-align:center;padding:4rem 0;color:var(--dimmer);font-size:13px;">Loading your playbook...</div>';
+  var md = {};
+  if (PB_USER_EMAIL) {
+    try {
+      var resp = await fetch(
+        PB_SUPABASE_URL + '/rest/v1/vww_progress?email=eq.' + encodeURIComponent(PB_USER_EMAIL) + '&select=data',
+        {headers: {'apikey': PB_SUPABASE_ANON, 'Authorization': 'Bearer ' + PB_SUPABASE_ANON}}
+      );
+      var rows = await resp.json();
+      if (Array.isArray(rows) && rows[0] && rows[0].data) md = rows[0].data;
+    } catch(e) {}
+  }
 
-  var userName = val(localStorage.getItem('vww-user-name')) || val(cf.brandName) || val(la.brandName) || 'Your Brand';
+  var cf    = md.cf || {};
+  var vwRaw = md.vw || {};
+  var vw    = vwRaw.inputs || {};
+  var vwOpts = vwRaw.opts  || {};
+  var ccRaw = md.cc || {};
+  var cc    = ccRaw.inputs || {};
+  var ccOpts = ccRaw.opts  || {};
+  var la    = md['launch-v1'] || {};
+  var laOpts = la.opts || {};
+
+  var userName = val(PB_USER_NAME) || val(cf.brandName) || val(la.brandName) || 'Your Brand';
   var today = new Date().toLocaleDateString('en-US',{year:'numeric',month:'long',day:'numeric'});
 
   var html = '';
@@ -237,9 +248,7 @@ function buildPlaybook() {
   /* ── COVER ── */
   // Handle: bio entry takes priority; sign-up handle as fallback
   var bioHandle = val(la.bioUsername) || val(la.username) || '';
-  var signupHandle = val(localStorage.getItem('vww-user-handle'))
-    || val(localStorage.getItem('vww-user-instagram'))
-    || val(cf.brandHandle) || '';
+  var signupHandle = val(PB_USER_HANDLE) || val(cf.brandHandle) || '';
   var handle = bioHandle || signupHandle;
 
   // Known For — full text, no truncation
@@ -274,226 +283,210 @@ function buildPlaybook() {
   html += '</div>';
 
   /* ── CHAPTER 01: BRAND FOUNDATION ── */
-  var cfEmpty = !cf || Object.keys(cf).length === 0;
   var cfContent = '';
-  if (cfEmpty) {
-    cfContent = emptyChapter('Complete Module 01 \u2014 Brand Foundation to see your answers here.');
-  } else {
-    cfContent += highlight('Brand Journey Statement', cf.brandJourneyStmt);
-    cfContent += grid([
-      field('Desired Outcome', cf.q1outcome),
-      field('Known For', cf.q2known)
-    ]);
-    cfContent += grid([
-      field('Actions', cf.q3do),
-      field('Learning Priority', cf.q4learn)
-    ]);
-    cfContent += highlight('Core Mission', cf.coreMission);
-    cfContent += highlight('Ikigai', cf.ikigaiCenter);
-    cfContent += highlight('Avatar Statement', cf.avatarStatement);
-    var demoCombined = [val(cf.av1Age), val(cf.av1Occupation)].filter(Boolean).join(' \u00b7 ');
-    cfContent += grid([
-      field('Demographics', demoCombined),
-      field('Struggle', cf.av1Struggle)
-    ]);
-    cfContent += grid([
-      field('Desired Outcome', cf.av1Desired),
-      field('Where They Hang Out', cf.av1Platforms)
-    ]);
-    /* Values */
-    var hasVals = false;
-    var valsHtml = '<div class="pb-pillars">';
-    for (var vi = 1; vi <= 5; vi++) {
-      var vname = val(cf['val'+vi+'name']);
-      if (vname) {
-        hasVals = true;
-        var vpractice = val(cf['val'+vi+'practice']);
-        valsHtml += '<div class="pb-pillar"><div class="pb-pillar-n">0'+vi+'</div><div class="pb-pillar-name">'+escHtml(vname)+'</div>';
-        if (vpractice) valsHtml += '<div class="pb-pillar-sub">'+escHtml(vpractice)+'</div>';
-        valsHtml += '</div>';
-      }
+  cfContent += highlight('Brand Journey Statement', cf.brandJourneyStmt);
+  cfContent += grid([
+    field('Desired Outcome', cf.q1outcome),
+    field('Known For', cf.q2known)
+  ]);
+  cfContent += grid([
+    field('Actions', cf.q3do),
+    field('Learning Priority', cf.q4learn)
+  ]);
+  cfContent += highlight('Core Mission', cf.coreMission);
+  cfContent += highlight('Ikigai', cf.ikigaiCenter);
+  cfContent += highlight('Avatar Statement', cf.avatarStatement);
+  var demoCombined = [val(cf.av1Age), val(cf.av1Occupation)].filter(Boolean).join(' \u00b7 ');
+  cfContent += grid([
+    field('Demographics', demoCombined),
+    field('Struggle', cf.av1Struggle)
+  ]);
+  cfContent += grid([
+    field('Desired Outcome', cf.av1Desired),
+    field('Where They Hang Out', cf.av1Platforms)
+  ]);
+  /* Values */
+  var hasVals = false;
+  var valsHtml = '<div class="pb-pillars">';
+  for (var vi = 1; vi <= 5; vi++) {
+    var vname = val(cf['val'+vi+'name']);
+    if (vname) {
+      hasVals = true;
+      var vpractice = val(cf['val'+vi+'practice']);
+      valsHtml += '<div class="pb-pillar"><div class="pb-pillar-n">0'+vi+'</div><div class="pb-pillar-name">'+escHtml(vname)+'</div>';
+      if (vpractice) valsHtml += '<div class="pb-pillar-sub">'+escHtml(vpractice)+'</div>';
+      valsHtml += '</div>';
     }
-    valsHtml += '</div>';
-    if (hasVals) cfContent += '<div style="margin:.75rem 0 .4rem"><div class="pb-label">Core Values</div></div>' + valsHtml;
-    /* Content Pillars */
-    var pillarsHtml = '<div class="pb-pillars">';
-    var hasPillars = false;
-    for (var pi = 1; pi <= 5; pi++) {
-      var pname = val(cf['pillar'+pi+'name']);
-      if (pname) {
-        hasPillars = true;
-        pillarsHtml += '<div class="pb-pillar"><div class="pb-pillar-n">0'+pi+'</div><div class="pb-pillar-name">'+escHtml(pname)+'</div>';
-        var psub = val(cf['pillar'+pi+'sub']);
-        if (psub) pillarsHtml += '<div class="pb-pillar-sub">'+escHtml(psub)+'</div>';
-        pillarsHtml += '</div>';
-      }
-    }
-    pillarsHtml += '</div>';
-    if (hasPillars) cfContent += '<div style="margin:.75rem 0 .4rem"><div class="pb-label">Content Pillars</div></div>' + pillarsHtml;
-    cfContent += highlight('Origin Story', cf.originStory);
-    cfContent += grid([
-      field('3-Year Vision', cf.vision3yr),
-      field('Impact', cf.visionImpact)
-    ]);
-    cfContent += highlight('Brand Vision', cf.brandVision);
   }
+  valsHtml += '</div>';
+  if (hasVals) cfContent += '<div style="margin:.75rem 0 .4rem"><div class="pb-label">Core Values</div></div>' + valsHtml;
+  /* Content Pillars */
+  var pillarsHtml = '<div class="pb-pillars">';
+  var hasPillars = false;
+  for (var pi = 1; pi <= 5; pi++) {
+    var pname = val(cf['pillar'+pi+'name']);
+    if (pname) {
+      hasPillars = true;
+      pillarsHtml += '<div class="pb-pillar"><div class="pb-pillar-n">0'+pi+'</div><div class="pb-pillar-name">'+escHtml(pname)+'</div>';
+      var psub = val(cf['pillar'+pi+'sub']);
+      if (psub) pillarsHtml += '<div class="pb-pillar-sub">'+escHtml(psub)+'</div>';
+      pillarsHtml += '</div>';
+    }
+  }
+  pillarsHtml += '</div>';
+  if (hasPillars) cfContent += '<div style="margin:.75rem 0 .4rem"><div class="pb-label">Content Pillars</div></div>' + pillarsHtml;
+  cfContent += highlight('Origin Story', cf.originStory);
+  cfContent += grid([
+    field('3-Year Vision', cf.vision3yr),
+    field('Impact', cf.visionImpact)
+  ]);
+  cfContent += highlight('Brand Vision', cf.brandVision);
+  if (!cfContent.trim()) cfContent = emptyChapter('No answers yet \u2014 open Module 01 to get started.');
   html += chapter('01', 'Module 01', 'Brand Foundation', cfContent);
 
   /* ── CHAPTER 02: YOUR VISUAL WORLD ── */
-  var vwEmpty = !vwRaw || Object.keys(vwRaw).length === 0;
   var vwContent = '';
-  if (vwEmpty) {
-    vwContent = emptyChapter('Complete Module 02 \u2014 Define Your Visual World to see your answers here.');
-  } else {
-    vwContent += highlight('Visual World Narrative', vw.vwNarrative);
-    vwContent += highlight('Mood Board Statement', vw.mbStatement);
-    /* Color palette */
-    var colors = [
-      {label:'Primary', val:vw['col-primary'], emo:vw['col-primary-emotion']},
-      {label:'Secondary', val:vw['col-secondary']},
-      {label:'Accent', val:vw['col-accent']},
-      {label:'Neutral', val:vw['col-neutral']}
-    ];
-    var swatchHtml = '<div class="pb-field" style="margin-bottom:10px"><div class="pb-label">Color Palette' + (val(vw.paletteName) ? ' \u2014 ' + escHtml(val(vw.paletteName)) : '') + '</div>';
-    var hasColors = false;
-    colors.forEach(function(c){
-      var cv = val(c.val);
-      if (!cv) return;
-      hasColors = true;
-      var bg = cv.startsWith('#') ? cv : 'transparent';
-      swatchHtml += '<div class="pb-color-row"><div class="pb-swatch" style="background:'+escHtml(bg)+';border-color:'+escHtml(bg)+'"></div><div class="pb-color-info"><div class="pb-color-name">'+c.label+(c.emo?' \u2014 '+escHtml(val(c.emo)):'')+'</div><div class="pb-color-hex">'+escHtml(cv)+'</div></div></div>';
-    });
-    swatchHtml += '</div>';
-    if (hasColors) vwContent += swatchHtml;
-    /* Mood & Setting */
-    var moodSettingContent =
-      grid([field('Setting', vw['e1-location']), field('Environment', vwOpts.e1vibe), field('Primary Mood', vwOpts.e2mood)], 'grid-template-columns:1fr 1fr 1fr') +
-      grid([field('Lighting', vwOpts.e2light), field('Time of Day', vw['e2-time']), field('Color Grade', vwOpts.e3grade)], 'grid-template-columns:1fr 1fr 1fr') +
-      highlight('Setting Statement', vw['e1-statement']) +
-      highlight('Mood Statement', vw['e2-statement']);
-    vwContent += withLabel('Mood &amp; Setting', moodSettingContent);
-    /* Design Details */
-    var designContent =
-      grid([field('Signature Objects', vw['e4-objects']), field('Wardrobe', vw['e4-wardrobe'])]) +
-      gridFull([field('Never On Camera', vw['e4-never'])]);
-    vwContent += withLabel('Design Details', designContent);
-    /* Content Approach */
-    vwContent += grid([
-      field('Content Format', vwOpts.e6format),
-      field('Energy', vwOpts.e6energy)
-    ]);
-    vwContent += highlight('Content Approach Statement', vw['e6-statement']);
-    vwContent += grid([
-      field('What Makes You Different', vw.synDiff),
-      field('What You Own', vw.synOwn)
-    ]);
-  }
+  vwContent += highlight('Visual World Narrative', vw.vwNarrative);
+  vwContent += highlight('Mood Board Statement', vw.mbStatement);
+  /* Color palette */
+  var colors = [
+    {label:'Primary', val:vw['col-primary'], emo:vw['col-primary-emotion']},
+    {label:'Secondary', val:vw['col-secondary']},
+    {label:'Accent', val:vw['col-accent']},
+    {label:'Neutral', val:vw['col-neutral']}
+  ];
+  var swatchHtml = '<div class="pb-field" style="margin-bottom:10px"><div class="pb-label">Color Palette' + (val(vw.paletteName) ? ' \u2014 ' + escHtml(val(vw.paletteName)) : '') + '</div>';
+  var hasColors = false;
+  colors.forEach(function(c){
+    var cv = val(c.val);
+    if (!cv) return;
+    hasColors = true;
+    var bg = cv.startsWith('#') ? cv : 'transparent';
+    swatchHtml += '<div class="pb-color-row"><div class="pb-swatch" style="background:'+escHtml(bg)+';border-color:'+escHtml(bg)+'"></div><div class="pb-color-info"><div class="pb-color-name">'+c.label+(c.emo?' \u2014 '+escHtml(val(c.emo)):'')+'</div><div class="pb-color-hex">'+escHtml(cv)+'</div></div></div>';
+  });
+  swatchHtml += '</div>';
+  if (hasColors) vwContent += swatchHtml;
+  /* Mood & Setting */
+  var moodSettingContent =
+    grid([field('Setting', vw['e1-location']), field('Environment', vwOpts.e1vibe), field('Primary Mood', vwOpts.e2mood)], 'grid-template-columns:1fr 1fr 1fr') +
+    grid([field('Lighting', vwOpts.e2light), field('Time of Day', vw['e2-time']), field('Color Grade', vwOpts.e3grade)], 'grid-template-columns:1fr 1fr 1fr') +
+    highlight('Setting Statement', vw['e1-statement']) +
+    highlight('Mood Statement', vw['e2-statement']);
+  vwContent += withLabel('Mood &amp; Setting', moodSettingContent);
+  /* Design Details */
+  var designContent =
+    grid([field('Signature Objects', vw['e4-objects']), field('Wardrobe', vw['e4-wardrobe'])]) +
+    gridFull([field('Never On Camera', vw['e4-never'])]);
+  vwContent += withLabel('Design Details', designContent);
+  /* Content Approach */
+  vwContent += grid([
+    field('Content Format', vwOpts.e6format),
+    field('Energy', vwOpts.e6energy)
+  ]);
+  vwContent += highlight('Content Approach Statement', vw['e6-statement']);
+  vwContent += grid([
+    field('What Makes You Different', vw.synDiff),
+    field('What You Own', vw.synOwn)
+  ]);
+  if (!vwContent.trim()) vwContent = emptyChapter('No answers yet \u2014 open Module 02 to get started.');
   html += chapter('02', 'Module 02', 'Your Visual World', vwContent);
 
   /* ── CHAPTER 03: CREATE YOUR CONTENT ── */
-  var ccEmpty = !ccRaw || Object.keys(ccRaw).length === 0;
   var ccContent = '';
-  if (ccEmpty) {
-    ccContent = emptyChapter('Complete Module 03 \u2014 Create Your Content to see your answers here.');
-  } else {
-    ccContent += highlight('The Painful Problem', cc.painProblem);
-    ccContent += highlight('My Unique Solution', cc.uniqueSol);
-    ccContent += highlight('My Contextual Credibility', cc.credibility);
-    ccContent += grid([
-      field('Primary Platform', cc.sauron),
-      field('Weekly Hours', cc.weekHours),
-      field('Content Cadence', cc.cadence)
-    ], 'grid-template-columns:1fr 1fr 1fr');
-    /* Content topics */
-    var topicFields = [];
-    for (var ti = 1; ti <= 3; ti++) {
-      var tn = val(cc['topic'+ti]);
-      if (tn) {
-        var ts = val(cc['topic'+ti+'subs']);
-        topicFields.push(field('Topic ' + ti, tn + (ts ? '\n' + ts : '')));
-      }
+  ccContent += highlight('The Painful Problem', cc.painProblem);
+  ccContent += highlight('My Unique Solution', cc.uniqueSol);
+  ccContent += highlight('My Contextual Credibility', cc.credibility);
+  ccContent += grid([
+    field('Primary Platform', cc.sauron),
+    field('Weekly Hours', cc.weekHours),
+    field('Content Cadence', cc.cadence)
+  ], 'grid-template-columns:1fr 1fr 1fr');
+  /* Content topics */
+  var topicFields = [];
+  for (var ti = 1; ti <= 3; ti++) {
+    var tn = val(cc['topic'+ti]);
+    if (tn) {
+      var ts = val(cc['topic'+ti+'subs']);
+      topicFields.push(field('Topic ' + ti, tn + (ts ? '\n' + ts : '')));
     }
-    if (topicFields.length) ccContent += gridFull(topicFields);
-    /* Story framework */
-    var storyContent = grid([
-      field('Identity (I Am)', cc.storyI),
-      field('Hook', cc.storyH1),
-      field('Problem', cc.storyP),
-      field('Journey', cc.storyJ)
-    ]) + grid([
-      field('Lesson', cc.storyL),
-      field('CTA', cc.storyC)
-    ]);
-    ccContent += withLabel('Story Framework', storyContent);
-    /* Offer ladder */
-    var offerContent = grid([
-      field('Free Content', cc.ofree),
-      field('Lead Magnet', cc.olead),
-      field('Low-Ticket', cc.olow),
-      field('Mid-Ticket', cc.omid),
-      field('High-Ticket', cc.ohigh)
-    ]);
-    ccContent += withLabel('Offer Ladder', offerContent);
-    ccContent += grid([
-      field('Conversion Strategy', cc.conv),
-      field('CTA Strategy', cc.ctastrat)
-    ]);
   }
+  if (topicFields.length) ccContent += gridFull(topicFields);
+  /* Story framework */
+  var storyContent = grid([
+    field('Identity (I Am)', cc.storyI),
+    field('Hook', cc.storyH1),
+    field('Problem', cc.storyP),
+    field('Journey', cc.storyJ)
+  ]) + grid([
+    field('Lesson', cc.storyL),
+    field('CTA', cc.storyC)
+  ]);
+  ccContent += withLabel('Story Framework', storyContent);
+  /* Offer ladder */
+  var offerContent = grid([
+    field('Free Content', cc.ofree),
+    field('Lead Magnet', cc.olead),
+    field('Low-Ticket', cc.olow),
+    field('Mid-Ticket', cc.omid),
+    field('High-Ticket', cc.ohigh)
+  ]);
+  ccContent += withLabel('Offer Ladder', offerContent);
+  ccContent += grid([
+    field('Conversion Strategy', cc.conv),
+    field('CTA Strategy', cc.ctastrat)
+  ]);
+  if (!ccContent.trim()) ccContent = emptyChapter('No answers yet \u2014 open Module 03 to get started.');
   html += chapter('03', 'Module 03', 'Create Your Content', ccContent);
 
   /* ── CHAPTER 04: LAUNCH ── */
-  var laEmpty = !la || Object.keys(la).length === 0;
   var laContent = '';
-  if (laEmpty) {
-    laContent = emptyChapter('Complete Module 04 \u2014 Launch to see your answers here.');
-  } else {
-    /* Bio */
-    var bioFull = val(la.igBio) || [val(la.bioLine1),val(la.bioLine2),val(la.bioLine3),val(la.bioLine4)].filter(Boolean).join('\n');
-    var bioContent =
-      grid([field('Username', la.bioUsername || la.bioUsernameAlt), field('Link in Bio', la.igLink)]) +
-      highlight('Instagram Bio', bioFull) +
-      grid([field('LinkedIn Headline', la.liHeadline), field('TikTok Bio', la.ttBio)]);
-    laContent += withLabel('Bio', bioContent);
-    /* Funnel */
-    var offerPrice = [val(la.funnelOffer), val(la.funnelPrice)].filter(Boolean).join(' \u2014 ');
-    var funnelContent =
-      grid([field('Content Platforms', la.funnelPlatforms), field('Email Platform', la.funnelEmailPlatform)]) +
-      grid([field('Primary CTA', la.funnelCTA), field('Core Offer + Price', offerPrice || la.funnelOffer)]);
-    laContent += withLabel('Your Funnel', funnelContent);
-    /* ManyChat & Newsletter */
-    var nlFormatFreq = [val(laOpts.nlFormat), val(laOpts.nlFreq), val(la.nlDay)].filter(Boolean).join(' \u00b7 ');
-    var mcContent =
-      grid([field('Trigger Keyword', la.mcKeyword), field('Newsletter Name', la.nlName)]) +
-      grid([field('Format + Frequency', nlFormatFreq), field('Value Promise', la.nlValuePromise)]);
-    laContent += withLabel('ManyChat &amp; Newsletter', mcContent);
-    /* Lead Magnet */
-    var lmFormatDelivery = [val(laOpts.lmFormat), val(laOpts.lmDelivery)].filter(Boolean).join(' \u00b7 ');
-    var lmContent =
-      highlight('Lead Magnet Name', la.lmName) +
-      grid([field('The One Big Win', la.lmBigWin), field('Format + Delivery', lmFormatDelivery)]) +
-      gridFull([field('CTA', la.lmCTA)]);
-    laContent += withLabel('Lead Magnet', lmContent);
-    /* 3 Launch Videos */
-    var videoContent = '';
-    var v1 = highlight('Hook', la.story1hook) +
-      grid([field('Why You Do This', la.story1why), field('The Challenge', la.story1challenge), field('The Turn', la.story1turning), field('What You Learned', la.story1learned)]) +
-      gridFull([field('CTA', la.story1cta)]);
-    if (v1) videoContent += '<div style="font-size:10px;font-weight:700;color:var(--dimmer);text-transform:uppercase;letter-spacing:.1em;margin:.75rem 0 .4rem">Video 1 \u2014 Your Story</div>' + v1;
-    var v2 = highlight('Core Claim', la.pos1claim) + grid([field('Core Belief', la.pos1belief), field('Anchor Statement', la.pos1anchor)]);
-    if (v2) videoContent += '<div style="font-size:10px;font-weight:700;color:var(--dimmer);text-transform:uppercase;letter-spacing:.1em;margin:.75rem 0 .4rem">Video 2 \u2014 Positioning Deep Dive</div>' + v2;
-    var v3 = grid([field('Format', la.exp1format), field('Idea', la.exp1idea), field('How It Feels Different', la.exp1diff1 || la.exp1feel), field('Target Audience', la.exp1audience)]);
-    if (v3) videoContent += '<div style="font-size:10px;font-weight:700;color:var(--dimmer);text-transform:uppercase;letter-spacing:.1em;margin:.75rem 0 .4rem">Video 3 \u2014 Experimentation Video</div>' + v3;
-    laContent += withLabel('Launch Videos', videoContent);
-    /* 90-Day Goals */
-    var goalsContent =
-      grid([field('Followers Goal', la.goal90Followers), field('Email Subscribers', la.goal90Email)]) +
-      grid([field('Revenue Goal', la.goal90Revenue), field('Review Date', la.reviewDate)]) +
-      grid([field('Audience Goal', la.goal90Audience), field('System Goal', la.goal90System)]) +
-      highlight('Content Goal', la.goal90Content) +
-      highlight('Offer Goal', la.goal90Offer) +
-      grid([field('Accountability Partner', la.accountabilityPartner)]);
-    laContent += withLabel('90-Day Goals', goalsContent);
-  }
+  /* Bio */
+  var bioFull = val(la.igBio) || [val(la.bioLine1),val(la.bioLine2),val(la.bioLine3),val(la.bioLine4)].filter(Boolean).join('\n');
+  var bioContent =
+    grid([field('Username', la.bioUsername || la.bioUsernameAlt), field('Link in Bio', la.igLink)]) +
+    highlight('Instagram Bio', bioFull) +
+    grid([field('LinkedIn Headline', la.liHeadline), field('TikTok Bio', la.ttBio)]);
+  laContent += withLabel('Bio', bioContent);
+  /* Funnel */
+  var offerPrice = [val(la.funnelOffer), val(la.funnelPrice)].filter(Boolean).join(' \u2014 ');
+  var funnelContent =
+    grid([field('Content Platforms', la.funnelPlatforms), field('Email Platform', la.funnelEmailPlatform)]) +
+    grid([field('Primary CTA', la.funnelCTA), field('Core Offer + Price', offerPrice || la.funnelOffer)]);
+  laContent += withLabel('Your Funnel', funnelContent);
+  /* ManyChat & Newsletter */
+  var nlFormatFreq = [val(laOpts.nlFormat), val(laOpts.nlFreq), val(la.nlDay)].filter(Boolean).join(' \u00b7 ');
+  var mcContent =
+    grid([field('Trigger Keyword', la.mcKeyword), field('Newsletter Name', la.nlName)]) +
+    grid([field('Format + Frequency', nlFormatFreq), field('Value Promise', la.nlValuePromise)]);
+  laContent += withLabel('ManyChat &amp; Newsletter', mcContent);
+  /* Lead Magnet */
+  var lmFormatDelivery = [val(laOpts.lmFormat), val(laOpts.lmDelivery)].filter(Boolean).join(' \u00b7 ');
+  var lmContent =
+    highlight('Lead Magnet Name', la.lmName) +
+    grid([field('The One Big Win', la.lmBigWin), field('Format + Delivery', lmFormatDelivery)]) +
+    gridFull([field('CTA', la.lmCTA)]);
+  laContent += withLabel('Lead Magnet', lmContent);
+  /* 3 Launch Videos */
+  var videoContent = '';
+  var v1 = highlight('Hook', la.story1hook) +
+    grid([field('Why You Do This', la.story1why), field('The Challenge', la.story1challenge), field('The Turn', la.story1turning), field('What You Learned', la.story1learned)]) +
+    gridFull([field('CTA', la.story1cta)]);
+  if (v1) videoContent += '<div style="font-size:10px;font-weight:700;color:var(--dimmer);text-transform:uppercase;letter-spacing:.1em;margin:.75rem 0 .4rem">Video 1 \u2014 Your Story</div>' + v1;
+  var v2 = highlight('Core Claim', la.pos1claim) + grid([field('Core Belief', la.pos1belief), field('Anchor Statement', la.pos1anchor)]);
+  if (v2) videoContent += '<div style="font-size:10px;font-weight:700;color:var(--dimmer);text-transform:uppercase;letter-spacing:.1em;margin:.75rem 0 .4rem">Video 2 \u2014 Positioning Deep Dive</div>' + v2;
+  var v3 = grid([field('Format', la.exp1format), field('Idea', la.exp1idea), field('How It Feels Different', la.exp1diff1 || la.exp1feel), field('Target Audience', la.exp1audience)]);
+  if (v3) videoContent += '<div style="font-size:10px;font-weight:700;color:var(--dimmer);text-transform:uppercase;letter-spacing:.1em;margin:.75rem 0 .4rem">Video 3 \u2014 Experimentation Video</div>' + v3;
+  laContent += withLabel('Launch Videos', videoContent);
+  /* 90-Day Goals */
+  var goalsContent =
+    grid([field('Followers Goal', la.goal90Followers), field('Email Subscribers', la.goal90Email)]) +
+    grid([field('Revenue Goal', la.goal90Revenue), field('Review Date', la.reviewDate)]) +
+    grid([field('Audience Goal', la.goal90Audience), field('System Goal', la.goal90System)]) +
+    highlight('Content Goal', la.goal90Content) +
+    highlight('Offer Goal', la.goal90Offer) +
+    grid([field('Accountability Partner', la.accountabilityPartner)]);
+  laContent += withLabel('90-Day Goals', goalsContent);
+  if (!laContent.trim()) laContent = emptyChapter('No answers yet \u2014 open Module 04 to get started.');
   html += chapter('04', 'Module 04', 'Launch', laContent);
 
   /* ── CTA ── */
