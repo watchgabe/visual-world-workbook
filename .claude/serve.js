@@ -39,4 +39,5 @@ http.createServer((req, res) => {
     res.writeHead(200, headers);
     res.end(data);
   });
-}).listen(8083, () => console.log('Serving on http://localhost:8083'));
+const PORT = process.env.PORT || 8083;
+}).listen(PORT, () => console.log('Serving on http://localhost:' + PORT));

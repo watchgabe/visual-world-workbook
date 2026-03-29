@@ -1487,13 +1487,11 @@ function syncToSupabase(payload) {
 window.addEventListener('beforeunload', function() {
   clearTimeout(syncTimer);
   if (!USER_EMAIL) return;
-  var raw = localStorage.getItem(SAVE_KEY);
-  if (!raw) return;
-  var payload; try { payload = JSON.parse(raw); } catch(e) { return; }
+  var payload = {inputs:{}, opts:{}, done:Array.from(done), cur:cur, checks:checks};
+  document.querySelectorAll('textarea,input[type=text]').forEach(function(e){ if(e.id) payload.inputs[e.id]=e.value; });
+  document.querySelectorAll('.opt.sel[data-g]').forEach(function(e){ payload.opts[e.getAttribute('data-g')]=e.textContent.trim(); });
+  if (creatorCount > 0) payload.creatorData = {count: creatorCount, store: creatorStore};
   var merged = Object.assign({}, _vwCachedExisting);
-  try { var r=localStorage.getItem('cfww-v2');  if(r) merged.cf=JSON.parse(r); } catch(e){}
-  try { var r=localStorage.getItem('ccb-v1');   if(r) merged.cc=JSON.parse(r); } catch(e){}
-  try { var r=localStorage.getItem('launch-v1');if(r) merged['launch-v1']=JSON.parse(r); } catch(e){}
   merged.vw = payload;
   fetch(SUPABASE_URL + '/rest/v1/vww_progress', {
     method: 'POST', headers: sbHeaders(),
@@ -1505,10 +1503,8 @@ window.addEventListener('beforeunload', function() {
 /* Called by Finish Module button — flushes sync immediately before navigating */
 async function vwFinishModule() {
   if (sectionComplete(5)) done.add(5);
-  saveData();
+  var payload = saveData();
   clearTimeout(syncTimer);
-  var raw = localStorage.getItem(SAVE_KEY);
-  var payload = raw ? JSON.parse(raw) : {};
   await _vwDoSync(payload);
   vwNotifyCircleComplete();
   window.parent.postMessage({type:'navigate-module',to:'content'},'*');
@@ -1516,7 +1512,6 @@ async function vwFinishModule() {
 
 async function loadFromSupabase() {
   if (!USER_EMAIL) return;
-  var hasLocal = !!localStorage.getItem(SAVE_KEY);
   try {
     /* ping last_seen without waiting */
     fetch(SUPABASE_URL + '/rest/v1/vww_users', {
@@ -1533,10 +1528,8 @@ async function loadFromSupabase() {
     var rows = await resp.json();
     if (!rows.length || !rows[0].data) return;
     _vwCachedExisting = rows[0].data;
-    /* If localStorage already has data, use it (it's more up-to-date than Supabase) */
-    if (hasLocal) { loadData(); go(cur); render(); updateSwatches(); return; }
-    /* No local data — restore from Supabase */
-    var data = (rows[0].data.vw) ? rows[0].data.vw : rows[0].data;
+    if (!rows[0].data.vw) { go(cur); render(); updateSwatches(); return; }
+    var data = rows[0].data.vw;
     /* apply inputs */
     if (data.inputs) Object.keys(data.inputs).forEach(function(id){ var e=document.getElementById(id); if(e&&data.inputs[id])e.value=data.inputs[id]; });
     /* apply option selections */
@@ -1546,8 +1539,18 @@ async function loadFromSupabase() {
     if (typeof data.cur==='number') cur=data.cur;
     /* apply checklists */
     if (data.checks) { checks=data.checks; document.querySelectorAll('.check-item[data-key]').forEach(function(item){ item.classList.toggle('checked', !!checks[item.getAttribute('data-key')]); }); }
-    /* cache locally */
-    localStorage.setItem(SAVE_KEY, JSON.stringify(data));
+    /* restore creator card analyzed data */
+    if (data.creatorData && data.creatorData.store) {
+      creatorStore = data.creatorData.store;
+      var savedCount = data.creatorData.count || 0;
+      if (savedCount > 0 && creatorCount === 0) {
+        for (var i = 1; i <= savedCount; i++) {
+          addCreatorCard();
+          var s = creatorStore[i];
+          if (s && s.analyzed) restoreCreatorCard(i, s);
+        }
+      }
+    }
     go(cur); render(); updateSwatches();
   } catch(e) { console.warn('Cloud load failed:', e); }
 }
@@ -2009,36 +2012,10 @@ function saveData() {
   document.querySelectorAll('.opt.sel[data-g]').forEach(function(e){ data.opts[e.getAttribute('data-g')]=e.textContent.trim(); });
   /* include creator card analyzed data so it syncs to Supabase */
   if (creatorCount > 0) data.creatorData = {count: creatorCount, store: creatorStore};
-  try {
-    localStorage.setItem(SAVE_KEY, JSON.stringify(data));
-    syncToSupabase(data);
-  } catch(e){}
+  syncToSupabase(data);
+  return data;
 }
 
-function loadData() {
-  var raw = localStorage.getItem(SAVE_KEY);
-  if (!raw) return;
-  try {
-    var data = JSON.parse(raw);
-    if (data.inputs) Object.keys(data.inputs).forEach(function(id){ var e=document.getElementById(id); if(e&&data.inputs[id])e.value=data.inputs[id]; });
-    if (data.opts) Object.keys(data.opts).forEach(function(g){ var v=data.opts[g]; document.querySelectorAll('.opt[data-g="'+g+'"]').forEach(function(e){ if(e.textContent.trim()===v)e.classList.add('sel'); }); });
-    if (data.done&&Array.isArray(data.done)) data.done.forEach(function(i){done.add(Number(i));});
-    if (typeof data.cur==='number') cur=data.cur;
-    if (data.checks){ checks=data.checks; document.querySelectorAll('.check-item[data-key]').forEach(function(item){ var k=item.getAttribute('data-key'); if(checks[k])item.classList.add('checked'); }); }
-    /* restore creator card analyzed data */
-    if (data.creatorData && data.creatorData.store) {
-      creatorStore = data.creatorData.store;
-      var savedCount = data.creatorData.count || 0;
-      if (savedCount > 0 && creatorCount === 0) {
-        for (var i = 1; i <= savedCount; i++) {
-          addCreatorCard();
-          var s = creatorStore[i];
-          if (s && s.analyzed) restoreCreatorCard(i, s);
-        }
-      }
-    }
-  } catch(e){}
-}
 
 function wireSave() {
   document.querySelectorAll('textarea,input[type=text]').forEach(function(e){ e.addEventListener('input',function(){saveData();updateSwatches();}); });
@@ -3017,7 +2994,6 @@ function updatePinterestEmbed() {
 mbLoad();
 initOpts();
 wire();
-loadData();
 initColorSwatches();
 initChecklists();
 /* Restore Pinterest embed if URL was saved */
@@ -3077,10 +3053,12 @@ window.addEventListener('message',function(e){
   if(e.data.type==='theme'){document.body.classList.toggle('light',e.data.value==='light');return;}
   if(e.data.type==='flush-sync'){
     clearTimeout(syncTimer);
-    var _raw=localStorage.getItem(SAVE_KEY);
-    if(!USER_EMAIL||!_raw){window.parent.postMessage({type:'sync-done'},'*');return;}
+    if(!USER_EMAIL){window.parent.postMessage({type:'sync-done'},'*');return;}
     try{
-      var _p=JSON.parse(_raw);
+      var _p={inputs:{},opts:{},done:Array.from(done),cur:cur,checks:checks};
+      document.querySelectorAll('textarea,input[type=text]').forEach(function(el){if(el.id)_p.inputs[el.id]=el.value;});
+      document.querySelectorAll('.opt.sel[data-g]').forEach(function(el){_p.opts[el.getAttribute('data-g')]=el.textContent.trim();});
+      if(creatorCount>0)_p.creatorData={count:creatorCount,store:creatorStore};
       _vwDoSync(_p).then(function(){window.parent.postMessage({type:'sync-done'},'*');}).catch(function(){window.parent.postMessage({type:'sync-done'},'*');});
     }catch(e){window.parent.postMessage({type:'sync-done'},'*');}
     return;

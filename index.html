@@ -595,6 +595,7 @@ var expandedModules = {};
 var pendingNavigation = null;
 var _pendingFlush = null;
 var iframeLoading = false;
+var _cloudProgress = {};
 
 /* ═══════════════════════════════════════════════════════
    SUPABASE
@@ -639,14 +640,12 @@ async function submitIdentity() {
   if (btn) { btn.disabled = true; btn.textContent = 'Saving...'; }
   if (errEl) errEl.style.display = 'none';
   try {
-    /* If a different user was previously logged in, wipe their module data so it
-       doesn't get pushed to the new user's Supabase record */
+    /* If a different user was previously logged in, reset in-memory progress
+       so it doesn't bleed into the new user's session */
     var prevEmail = localStorage.getItem('vww-user-email');
     if (prevEmail && prevEmail !== email) {
-      ['cfww-v2','vww-v1','ccb-v1','launch-v1',
-       'vww-mb-v2','vww-creators-v1','vww-user-avatar'].forEach(function(k){
-        localStorage.removeItem(k);
-      });
+      _cloudProgress = {};
+      localStorage.removeItem('vww-user-avatar');
     }
     await fetch(SUPABASE_URL + '/rest/v1/vww_users', {
       method: 'POST',
@@ -750,8 +749,7 @@ function pingUser() {
   }).catch(function(){});
 }
 
-/* Runs on every load: seeds localStorage from Supabase (fresh browser) AND pushes
-   localStorage back to Supabase (keeps admin + other devices in sync) */
+/* Runs on every load: fetches progress from Supabase into _cloudProgress in memory */
 async function loadProgressFromCloud() {
   if (!USER_EMAIL) return;
   try {
@@ -759,82 +757,54 @@ async function loadProgressFromCloud() {
       SUPABASE_URL + '/rest/v1/vww_progress?email=eq.' + encodeURIComponent(USER_EMAIL) + '&select=data',
       {headers: sbHeaders()}
     )).json();
-    var cloudData = (Array.isArray(rows) && rows[0] && rows[0].data) ? rows[0].data : {};
-    var moduleMap = [
-      {local: 'cfww-v2',   cloud: 'cf'},
-      {local: 'vww-v1',    cloud: 'vw'},
-      {local: 'ccb-v1',    cloud: 'cc'},
-      {local: 'launch-v1', cloud: 'launch-v1'}
-    ];
-    var hasCloudData = Object.keys(cloudData).some(function(k){
-      return k==='cf'||k==='vw'||k==='cc'||k==='launch-v1';
-    });
-    /* userExists: did Supabase return a row at all (even empty data)? */
+    var cloudData = (Array.isArray(rows) && rows[0] && rows[0].data) ? rows[0].data : null;
     var userExistsInCloud = Array.isArray(rows) && rows.length > 0;
-    var uiUpdated = false;
-    var merged = Object.assign({}, cloudData);
-    var hasPush = false;
-    moduleMap.forEach(function(m) {
-      if (hasCloudData) {
-        /* Cloud has this user's data — always trust cloud, seed local from it */
-        if (cloudData[m.cloud]) {
-          localStorage.setItem(m.local, JSON.stringify(cloudData[m.cloud]));
-          uiUpdated = true;
-        } else {
-          localStorage.removeItem(m.local);
-        }
-      } else if (!userExistsInCloud) {
-        /* No row in Supabase at all — user was deleted or is brand new.
-           Wipe any stale local data so the UI shows 0% (don't push old data back up). */
-        localStorage.removeItem(m.local);
-        uiUpdated = true;
-      } else {
-        /* Row exists but no module data yet — push whatever is local up */
-        var localRaw = localStorage.getItem(m.local);
-        if (localRaw) {
-          try { merged[m.cloud] = JSON.parse(localRaw); hasPush = true; } catch(e) {}
-        }
+
+    if (cloudData) {
+      _cloudProgress = cloudData;
+    } else {
+      /* No row or no data — user deleted or brand new */
+      _cloudProgress = {};
+      if (!userExistsInCloud) {
+        localStorage.removeItem('vww-user-avatar');
       }
-    });
+    }
+
+    /* Handle avatar */
     if (!userExistsInCloud) {
-      /* Also clear avatar so the initial display resets */
       localStorage.removeItem('vww-user-avatar');
-    } else if (!localStorage.getItem('vww-user-avatar') && cloudData.avatar) {
+    } else if (!localStorage.getItem('vww-user-avatar') && cloudData && cloudData.avatar) {
       localStorage.setItem('vww-user-avatar', cloudData.avatar);
       updateIdentityDisplay();
     }
-    if (hasPush) {
-      fetch(SUPABASE_URL + '/rest/v1/vww_progress', {
-        method: 'POST', headers: sbHeaders(),
-        body: JSON.stringify({email: USER_EMAIL, data: merged, updated_at: new Date().toISOString()})
-      }).catch(function(){});
-    }
-    if (uiUpdated) {
-      initModuleStates();
-      renderSidebar();
-      renderProgress();
-    }
+
+    initModuleStates();
+    renderSidebar();
+    renderProgress();
   } catch(e) {}
 }
 
 /* ═══════════════════════════════════════════════════════
-   READ localStorage FOR COMPLETION STATE
+   READ _cloudProgress FOR COMPLETION STATE
 ══════════════════════════════════════════════════════════ */
+function normalizeDone(d) {
+  if (Array.isArray(d)) return d.map(Number);
+  if (d && typeof d === 'object') return Object.keys(d).filter(function(k){return d[k];}).map(Number);
+  return [];
+}
+
 function getModuleState(mod) {
   if (!mod.saveKey) return {cur: 0, done: []};
   try {
-    var raw = localStorage.getItem(mod.saveKey);
-    if (!raw) return {cur: 0, done: []};
-    var d = JSON.parse(raw);
-    var done = [];
-    if (d.done) {
-      if (Array.isArray(d.done)) {
-        done = d.done.map(Number);
-      } else {
-        done = Object.keys(d.done).filter(function(k){ return d.done[k]; }).map(Number);
-      }
-    }
-    return {cur: typeof d.cur === 'number' ? d.cur : 0, done: done};
+    /* Map saveKey to cloud key */
+    var cloudKeyMap = {'cfww-v2':'cf','vww-v1':'vw','ccb-v1':'cc','launch-v1':'launch-v1'};
+    var cloudKey = cloudKeyMap[mod.saveKey];
+    if (!cloudKey || !_cloudProgress[cloudKey]) return {cur: 0, done: []};
+    var d = _cloudProgress[cloudKey];
+    return {
+      cur: typeof d.cur === 'number' ? d.cur : 0,
+      done: normalizeDone(d.done)
+    };
   } catch(e) { return {cur: 0, done: []}; }
 }
 
@@ -1264,8 +1234,17 @@ function saveAccountProfile() {
 
 function clearModule(moduleId, saveKey) {
   if (!confirm('Clear all answers for this module? This cannot be undone.')) return;
-  localStorage.removeItem(saveKey);
+  var cloudKeyMap = {'cfww-v2':'cf','vww-v1':'vw','ccb-v1':'cc','launch-v1':'launch-v1'};
+  var cloudKey = cloudKeyMap[saveKey];
+  if (cloudKey) delete _cloudProgress[cloudKey];
   moduleStates[moduleId] = {cur: 0, done: []};
+  /* Push cleared state to Supabase */
+  if (USER_EMAIL) {
+    fetch(SUPABASE_URL + '/rest/v1/vww_progress', {
+      method: 'POST', headers: sbHeaders(),
+      body: JSON.stringify({email: USER_EMAIL, data: _cloudProgress, updated_at: new Date().toISOString()})
+    }).catch(function(){});
+  }
   renderSidebar();
   if (activeModule === moduleId) loadModule(moduleId, 0);
   closeAccountPanel();
@@ -1283,8 +1262,15 @@ function hideClearConfirm() {
 }
 
 function confirmClearAll() {
-  ['cfww-v2','vww-v1','ccb-v1','launch-v1'].forEach(function(k){ localStorage.removeItem(k); });
+  ['cf','vw','cc','launch-v1'].forEach(function(k){ delete _cloudProgress[k]; });
   MODULES.forEach(function(m){ moduleStates[m.id] = {cur:0, done:[]}; });
+  /* Push cleared state to Supabase */
+  if (USER_EMAIL) {
+    fetch(SUPABASE_URL + '/rest/v1/vww_progress', {
+      method: 'POST', headers: sbHeaders(),
+      body: JSON.stringify({email: USER_EMAIL, data: _cloudProgress, updated_at: new Date().toISOString()})
+    }).catch(function(){});
+  }
   renderSidebar();
   if (activeModule) loadModule(activeModule, 0);
   closeAccountPanel();

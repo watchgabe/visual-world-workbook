@@ -3,8 +3,8 @@
   "configurations": [
     {
       "name": "Watch Gabe Links",
-      "runtimeExecutable": "node",
-      "runtimeArgs": [".claude/serve.js"],
+      "runtimeExecutable": "python3",
+      "runtimeArgs": ["/tmp/watchgabe_serve.py"],
       "port": 8083
     }
   ]

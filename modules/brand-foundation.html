@@ -781,14 +781,12 @@ function cfSyncToSupabase(payload) {
 window.addEventListener('beforeunload', function() {
   clearTimeout(cfSyncTimer);
   if (!CF_USER_EMAIL) return;
-  var raw = localStorage.getItem(KEY);
-  if (!raw) return;
-  var payload; try { payload = JSON.parse(raw); } catch(e) { return; }
-  // Use cloud cache as base; fill in all modules from localStorage so we never wipe sibling data
+  var payload = {cur: cur, done: done, auditVals: auditVals};
+  document.querySelectorAll('textarea[id],input[type=text][id]').forEach(function(el){payload[el.id]=el.value;});
+  document.querySelectorAll('.opt.sel[data-g]').forEach(function(btn){payload['opt_'+btn.getAttribute('data-g')]=btn.textContent.trim();});
+  document.querySelectorAll('.check-item[data-key]').forEach(function(item){payload['chk_'+item.getAttribute('data-key')]=item.classList.contains('checked');});
+  // Use cloud cache as base
   var merged = Object.assign({}, _cfCachedExisting);
-  try { var r=localStorage.getItem('vww-v1');   if(r) merged.vw=JSON.parse(r); } catch(e){}
-  try { var r=localStorage.getItem('ccb-v1');   if(r) merged.cc=JSON.parse(r); } catch(e){}
-  try { var r=localStorage.getItem('launch-v1');if(r) merged['launch-v1']=JSON.parse(r); } catch(e){}
   merged.cf = payload;
   fetch(SUPABASE_URL + '/rest/v1/vww_progress', {
     method: 'POST', headers: cfSbHeaders(),
@@ -800,10 +798,9 @@ window.addEventListener('beforeunload', function() {
 /* Called by Finish Module button — flushes sync immediately before navigating */
 async function cfFinishModule() {
   done[7] = true;
-  saveData();
+  var payload = saveData();
   clearTimeout(cfSyncTimer);
-  var raw = localStorage.getItem(KEY);
-  await _cfDoSync(raw ? JSON.parse(raw) : {});
+  await _cfDoSync(payload);
   cfNotifyCircleComplete();
   window.parent.postMessage({type:'navigate-module',to:'visual-world'},'*');
 }
@@ -943,17 +940,16 @@ function saveData(){
     document.querySelectorAll('textarea[id],input[type=text][id]').forEach(function(el){d[el.id]=el.value;});
     document.querySelectorAll('.opt.sel[data-g]').forEach(function(btn){d['opt_'+btn.getAttribute('data-g')]=btn.textContent.trim();});
     document.querySelectorAll('.check-item[data-key]').forEach(function(item){d['chk_'+item.getAttribute('data-key')]=item.classList.contains('checked');});
-    localStorage.setItem(KEY,JSON.stringify(d));
     var dot=document.getElementById('saveDot');
     if(dot){dot.classList.add('saved');setTimeout(function(){dot.classList.remove('saved');},1500);}
     cfSyncToSupabase(d);
-  }catch(e){}
+    return d;
+  }catch(e){ return {}; }
 }
 
-function loadData(){
+function loadData(d){
   try{
-    var raw=localStorage.getItem(KEY);if(!raw)return;
-    var d=JSON.parse(raw);if(!d)return;
+    if(!d)return;
     if(d.done)done=d.done;
     if(d.auditVals){auditVals=d.auditVals;updateAuditScores();}
     Object.keys(d).forEach(function(k){
@@ -1138,13 +1134,11 @@ async function generateBrandVision(){
 function esc(s){return(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
 
 
-buildNav();initOpts();wireSave();loadData();initChecklists();go(cur);
+buildNav();initOpts();wireSave();initChecklists();go(cur);
 
 /* ── LOAD CF DATA FROM SUPABASE ON START ── */
-/* Only runs if localStorage is empty (cloud restore for new device/browser) */
 (async function cfLoadFromCloud() {
   if (!CF_USER_EMAIL) return;
-  var hasLocal = !!localStorage.getItem(KEY);
   try {
     var rows = await (await fetch(
       SUPABASE_URL + '/rest/v1/vww_progress?email=eq.' + encodeURIComponent(CF_USER_EMAIL) + '&select=data',
@@ -1152,29 +1146,9 @@ buildNav();initOpts();wireSave();loadData();initChecklists();go(cur);
     )).json();
     if (!Array.isArray(rows) || !rows[0] || !rows[0].data) return;
     _cfCachedExisting = rows[0].data;
-    if (hasLocal || !rows[0].data.cf) return;
+    if (!rows[0].data.cf) return;
     var d = rows[0].data.cf;
-    /* Restore fields into DOM */
-    Object.keys(d).forEach(function(k) {
-      if (k === 'cur' || k === 'done' || k === 'auditVals') return;
-      if (k.indexOf('opt_') === 0) {
-        var g = k.replace('opt_', '');
-        document.querySelectorAll('.opt[data-g="'+g+'"]').forEach(function(btn){ btn.classList.toggle('sel', btn.textContent.trim()===d[k]); });
-        return;
-      }
-      if (k.indexOf('chk_') === 0) {
-        var item = document.querySelector('.check-item[data-key="'+k.replace('chk_','')+'"]');
-        if (item && d[k]) item.classList.add('checked');
-        return;
-      }
-      var el = document.getElementById(k);
-      if (el && (el.tagName==='TEXTAREA'||el.type==='text') && d[k]) el.value = d[k];
-    });
-    if (d.done) { done = d.done; updateProgress(); }
-    if (d.auditVals) { auditVals = d.auditVals; updateAuditScores(); }
-    /* Cache to localStorage so subsequent loads use it instantly */
-    if (typeof d.cur === 'number') cur = d.cur;
-    localStorage.setItem(KEY, JSON.stringify(d));
+    loadData(d);
     buildNav();
     updateProgress();
     go(cur);
@@ -1215,10 +1189,14 @@ window.addEventListener('message',function(e){
   if(e.data.type==='theme'){document.body.classList.toggle('light',e.data.value==='light');return;}
   if(e.data.type==='flush-sync'){
     clearTimeout(cfSyncTimer);
-    var _raw=localStorage.getItem(KEY);
-    if(!CF_USER_EMAIL||!_raw){window.parent.postMessage({type:'sync-done'},'*');return;}
-    try{_cfDoSync(JSON.parse(_raw)).then(function(){window.parent.postMessage({type:'sync-done'},'*');}).catch(function(){window.parent.postMessage({type:'sync-done'},'*');});}
-    catch(e){window.parent.postMessage({type:'sync-done'},'*');}
+    if(!CF_USER_EMAIL){window.parent.postMessage({type:'sync-done'},'*');return;}
+    try{
+      var _p={cur:cur,done:done,auditVals:auditVals};
+      document.querySelectorAll('textarea[id],input[type=text][id]').forEach(function(el){_p[el.id]=el.value;});
+      document.querySelectorAll('.opt.sel[data-g]').forEach(function(btn){_p['opt_'+btn.getAttribute('data-g')]=btn.textContent.trim();});
+      document.querySelectorAll('.check-item[data-key]').forEach(function(item){_p['chk_'+item.getAttribute('data-key')]=item.classList.contains('checked');});
+      _cfDoSync(_p).then(function(){window.parent.postMessage({type:'sync-done'},'*');}).catch(function(){window.parent.postMessage({type:'sync-done'},'*');});
+    }catch(e){window.parent.postMessage({type:'sync-done'},'*');}
     return;
   }
   if(e.data.type!=='navigate')return;

@@ -755,27 +755,26 @@ function saveData(){
     document.querySelectorAll('textarea[id],input[type=text][id]').forEach(function(el){d[el.id]=el.value;});
     document.querySelectorAll('.opt.sel[data-g]').forEach(function(btn){d['opt_'+btn.getAttribute('data-g')]=btn.textContent.trim();});
     document.querySelectorAll('.check-item[data-key]').forEach(function(item){d['chk_'+item.getAttribute('data-key')]=item.classList.contains('checked');});
-    localStorage.setItem(KEY,JSON.stringify(d));
     var dot=document.getElementById('saveDot');
     if(dot){dot.classList.add('saved');setTimeout(function(){dot.classList.remove('saved');},1500);}
-  }catch(e){}
-  clearTimeout(laSyncTimer);laSyncTimer=setTimeout(laSyncToSupabase,800);
+    clearTimeout(laSyncTimer);laSyncTimer=setTimeout(function(){laSyncToSupabase(d);},800);
+    return d;
+  }catch(e){ return {}; }
 }
 
 /* Called by Finish Module button — flushes sync immediately before navigating */
 async function laFinishModule(){
   done[6]=true;
-  saveData();
+  var payload=saveData();
   clearTimeout(laSyncTimer);
-  await laSyncToSupabase();
+  await laSyncToSupabase(payload);
   laNotifyCircleComplete();
   window.parent.postMessage({type:'navigate-module',to:'playbook'},'*');
 }
 
-function loadData(){
+function loadData(d){
   try{
-    var raw=localStorage.getItem(KEY);if(!raw)return;
-    var d=JSON.parse(raw);if(!d)return;
+    if(!d)return;
     if(d.done)done=d.done;
     Object.keys(d).forEach(function(k){
       if(k==='cur'||k==='done')return;
@@ -843,22 +842,22 @@ function setReviewDate(){
   var el=document.getElementById('reviewDate');if(el){el.value=str;saveData();}
 }
 
-buildNav();initOpts();wireSave();loadData();initChecklists();go(cur);
+buildNav();initOpts();wireSave();initChecklists();go(cur);
 
 var laSyncTimer;
 var _laCachedExisting={};
 var _LA_ANON='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxqZGRmaHpyanZ4cGVkdmZlYmxpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM5NTEzNjMsImV4cCI6MjA4OTUyNzM2M30.GqZMRvBlZyN4rmr9MrfxLcLSB04d7s59ZPfEw-dQwks';
 var _LA_BASE='https://ljddfhzrjvxpedvfebli.supabase.co';
 function laHdrs(){return{'Content-Type':'application/json','apikey':_LA_ANON,'Authorization':'Bearer '+_LA_ANON,'Prefer':'resolution=merge-duplicates'};}
-async function laSyncToSupabase(){
+async function laSyncToSupabase(payload){
   var email=localStorage.getItem('vww-user-email');
   if(!email)return;
   try{
     var existRows=await(await fetch(_LA_BASE+'/rest/v1/vww_progress?email=eq.'+encodeURIComponent(email)+'&select=data',{headers:laHdrs()})).json();
     var existing=(Array.isArray(existRows)&&existRows[0]&&existRows[0].data)?existRows[0].data:{};
     _laCachedExisting=existing;
-    var allData=JSON.parse(localStorage.getItem(KEY)||'{}');
-    var merged=Object.assign({},existing,{'launch-v1':allData});
+    var data=payload||{};
+    var merged=Object.assign({},existing,{'launch-v1':data});
     await fetch(_LA_BASE+'/rest/v1/vww_progress',{method:'POST',headers:laHdrs(),body:JSON.stringify({email:email,data:merged,updated_at:new Date().toISOString()})});
   }catch(e){}
 }
@@ -867,13 +866,11 @@ window.addEventListener('beforeunload',function(){
   clearTimeout(laSyncTimer);
   var email=localStorage.getItem('vww-user-email');
   if(!email)return;
-  var raw=localStorage.getItem(KEY);
-  if(!raw)return;
-  var payload;try{payload=JSON.parse(raw);}catch(e){return;}
+  var payload={cur:cur,done:done};
+  document.querySelectorAll('textarea[id],input[type=text][id]').forEach(function(el){payload[el.id]=el.value;});
+  document.querySelectorAll('.opt.sel[data-g]').forEach(function(btn){payload['opt_'+btn.getAttribute('data-g')]=btn.textContent.trim();});
+  document.querySelectorAll('.check-item[data-key]').forEach(function(item){payload['chk_'+item.getAttribute('data-key')]=item.classList.contains('checked');});
   var merged=Object.assign({},_laCachedExisting);
-  try{var r=localStorage.getItem('cfww-v2'); if(r)merged.cf=JSON.parse(r);}catch(e){}
-  try{var r=localStorage.getItem('vww-v1');  if(r)merged.vw=JSON.parse(r);}catch(e){}
-  try{var r=localStorage.getItem('ccb-v1');  if(r)merged.cc=JSON.parse(r);}catch(e){}
   merged['launch-v1']=payload;
   fetch(_LA_BASE+'/rest/v1/vww_progress',{method:'POST',headers:laHdrs(),body:JSON.stringify({email:email,data:merged,updated_at:new Date().toISOString()}),keepalive:true});
 });
@@ -881,15 +878,13 @@ window.addEventListener('beforeunload',function(){
 (async function laLoadFromCloud(){
   var email=localStorage.getItem('vww-user-email');
   if(!email)return;
-  var hasLocal=!!localStorage.getItem(KEY);
   try{
     var hdrs={'Content-Type':'application/json','apikey':_LA_ANON,'Authorization':'Bearer '+_LA_ANON};
     var rows=await(await fetch(_LA_BASE+'/rest/v1/vww_progress?email=eq.'+encodeURIComponent(email)+'&select=data',{headers:hdrs})).json();
     if(!Array.isArray(rows)||!rows[0]||!rows[0].data)return;
     _laCachedExisting=rows[0].data;
-    if(hasLocal||!rows[0].data['launch-v1'])return;
-    localStorage.setItem(KEY,JSON.stringify(rows[0].data['launch-v1']));
-    loadData();updateProgress();buildNav();go(cur);
+    if(!rows[0].data['launch-v1'])return;
+    loadData(rows[0].data['launch-v1']);updateProgress();buildNav();go(cur);
   }catch(e){}
 })();
 
@@ -919,11 +914,14 @@ window.addEventListener('message',function(e){
   if(e.data.type==='theme'){document.body.classList.toggle('light',e.data.value==='light');return;}
   if(e.data.type==='flush-sync'){
     clearTimeout(laSyncTimer);
-    var _raw=localStorage.getItem(KEY);
     var _em=localStorage.getItem('vww-user-email');
-    if(!_em||!_raw){window.parent.postMessage({type:'sync-done'},'*');return;}
+    if(!_em){window.parent.postMessage({type:'sync-done'},'*');return;}
     try{
-      laSyncToSupabase().then(function(){window.parent.postMessage({type:'sync-done'},'*');}).catch(function(){window.parent.postMessage({type:'sync-done'},'*');});
+      var _p={cur:cur,done:done};
+      document.querySelectorAll('textarea[id],input[type=text][id]').forEach(function(el){_p[el.id]=el.value;});
+      document.querySelectorAll('.opt.sel[data-g]').forEach(function(btn){_p['opt_'+btn.getAttribute('data-g')]=btn.textContent.trim();});
+      document.querySelectorAll('.check-item[data-key]').forEach(function(item){_p['chk_'+item.getAttribute('data-key')]=item.classList.contains('checked');});
+      laSyncToSupabase(_p).then(function(){window.parent.postMessage({type:'sync-done'},'*');}).catch(function(){window.parent.postMessage({type:'sync-done'},'*');});
     }catch(e){window.parent.postMessage({type:'sync-done'},'*');}
     return;
   }
