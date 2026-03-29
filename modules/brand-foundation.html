@@ -1153,6 +1153,7 @@ buildNav();initOpts();wireSave();initChecklists();go(cur);
     buildNav();
     updateProgress();
     go(cur);
+    clearTimeout(cfSyncTimer); /* cancel save triggered by go() — data is already in cloud */
     updateMissionPreview();
   } catch(e) { console.warn('CF cloud load failed:', e); }
 })();

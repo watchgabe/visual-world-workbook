@@ -886,6 +886,7 @@ window.addEventListener('beforeunload',function(){
     _laCachedExisting=rows[0].data;
     if(!rows[0].data['launch-v1'])return;
     loadData(rows[0].data['launch-v1']);updateProgress();buildNav();go(cur);
+    clearTimeout(laSyncTimer); clearTimeout(saveTimer); /* cancel save triggered by go() — data is already in cloud */
   }catch(e){}
 })();
 
