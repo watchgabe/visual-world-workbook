@@ -77,13 +77,9 @@ body{background:var(--bg);color:var(--text);font-family:var(--font);font-size:14
 .u-prog-fill.full{background:var(--green-text);}
 
 /* ── MODULE BADGES ── */
-.mod-badges{display:flex;gap:4px;flex-wrap:wrap;align-items:center;}
-.mbadge{display:inline-flex;align-items:center;gap:5px;font-size:9.5px;padding:3px 8px;border-radius:10px;font-weight:600;border:1px solid var(--border);color:var(--dimmer);white-space:nowrap;}
-.mbadge.has{background:rgba(240,96,27,.1);color:var(--orange);border-color:var(--orange-border);}
-.mbadge.done{background:var(--green-bg);color:var(--green-text);border-color:var(--green-border);}
-.mbadge-bar{width:32px;height:3px;background:var(--border);border-radius:2px;overflow:hidden;display:inline-block;}
-.mbadge-fill{height:100%;border-radius:2px;background:var(--orange);}
-.mbadge.done .mbadge-fill{background:var(--green-text);}
+.mod-badges{display:flex;gap:3px;flex-wrap:wrap;}
+.mbadge{display:inline-flex;align-items:center;gap:3px;font-size:9px;padding:2px 7px;border-radius:10px;font-weight:600;border:1px solid var(--border);color:var(--dimmer);white-space:nowrap;}
+.mbadge.has{background:var(--green-bg);color:var(--green-text);border-color:var(--green-border);}
 
 /* ── PROGRESS SUMMARY (detail panel) ── */
 .prog-summary{background:var(--surface);border:1px solid var(--border2);border-radius:var(--radius-md);padding:1rem 1.25rem;margin-bottom:1.25rem;display:flex;gap:1.5rem;flex-wrap:wrap;align-items:flex-start;}
@@ -472,24 +468,17 @@ async function loadDashboard() {
       var initials = (user.name||user.email||'?').charAt(0).toUpperCase();
       var lastSeen = user.last_seen ? relTime(user.last_seen) : '—';
 
-      /* Per-module completion percentages */
-      var cfPct = modPct(cfd&&cfd.done, 8);
-      var vwPct = modPct(md&&md.vw&&md.vw.done, 6);
-      var ccPct = modPct(md&&md.cc&&md.cc.done, 11);
-      var laPct = modPct(md&&md['launch-v1']&&md['launch-v1'].done, 7);
+      /* Simple has/hasn't badges for the collapsed row */
+      var modBadges = [
+        {label:'01 Foundation', has:hasCF},
+        {label:'02 Visuals',    has:hasVW},
+        {label:'03 Content',    has:hasCC},
+        {label:'04 Launch',     has:hasLA}
+      ].map(function(b){
+        return '<span class="mbadge'+(b.has?' has':'')+'">'+b.label+'</span>';
+      }).join('');
 
-      function badgeHtml(num, label, pct) {
-        var cls = 'mbadge' + (pct >= 100 ? ' done' : pct > 0 ? ' has' : '');
-        return '<span class="'+cls+'">'+num+' — '+pct+'%'
-          +'<span class="mbadge-bar"><span class="mbadge-fill" style="width:'+pct+'%"></span></span>'
-          +'</span>';
-      }
-      var modBadges = badgeHtml('01',null,cfPct)
-        + badgeHtml('02',null,vwPct)
-        + badgeHtml('03',null,ccPct)
-        + badgeHtml('04',null,laPct);
-
-      /* Avatar — use uploaded photo if stored */
+      /* Avatar — show uploaded photo if synced to Supabase */
       var avatarHtml = (md && md.avatar)
         ? '<div class="u-avatar"><img src="'+md.avatar+'" alt=""></div>'
         : '<div class="u-avatar">'+esc(initials)+'</div>';
@@ -530,12 +519,21 @@ async function loadDashboard() {
   }
 }
 
-/* Compute % of a module complete — excludes Intro (index 0) to match workbook display */
-function modPct(doneArr, totalWithIntro) {
-  var total = totalWithIntro - 1; // Intro is index 0, not counted
-  if (!Array.isArray(doneArr) || total <= 0) return 0;
-  var doneCount = doneArr.filter(function(x){ return x > 0; }).length;
-  return Math.round(Math.min(doneCount, total) / total * 100);
+/* Normalize done — stored as array OR object {1:true, 2:true} depending on module */
+function normalizeDone(doneVal) {
+  if (Array.isArray(doneVal)) return doneVal.map(Number);
+  if (doneVal && typeof doneVal === 'object') {
+    return Object.keys(doneVal).filter(function(k){ return doneVal[k]; }).map(Number);
+  }
+  return [];
+}
+
+/* Compute % complete — excludes Intro (index 0) to match workbook sidebar rings */
+function modPct(doneVal, totalWithIntro) {
+  var total = totalWithIntro - 1; // index 0 = Intro, not counted
+  if (!doneVal || total <= 0) return 0;
+  var done = normalizeDone(doneVal).filter(function(x){ return x > 0; });
+  return Math.round(Math.min(done.length, total) / total * 100);
 }
 
 /* Does an object have any non-empty string fields? */
