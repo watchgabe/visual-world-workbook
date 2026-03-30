@@ -1454,24 +1454,16 @@ async function _vwDoSync(payload) {
   if (!USER_EMAIL) return;
   try {
     var existRows = await (await fetch(
-      SUPABASE_URL + '/rest/v1/vww_progress?email=eq.' + encodeURIComponent(USER_EMAIL) + '&select=data&order=updated_at.desc&limit=1',
+      SUPABASE_URL + '/rest/v1/vww_progress?email=eq.' + encodeURIComponent(USER_EMAIL) + '&select=data&order=id.desc&limit=1',
       {headers: sbHeaders()}
     )).json();
     var existing = (Array.isArray(existRows) && existRows[0] && existRows[0].data) ? existRows[0].data : {};
     _vwCachedExisting = existing;
     var merged = Object.assign({}, existing, {vw: payload});
-    var rowExists = Array.isArray(existRows) && existRows.length > 0;
-    if (rowExists) {
-      await fetch(SUPABASE_URL + '/rest/v1/vww_progress?email=eq.' + encodeURIComponent(USER_EMAIL), {
-        method: 'PATCH', headers: sbHeaders(),
-        body: JSON.stringify({data: merged, updated_at: new Date().toISOString()})
-      });
-    } else {
-      await fetch(SUPABASE_URL + '/rest/v1/vww_progress', {
-        method: 'POST', headers: sbHeaders(),
-        body: JSON.stringify({email: USER_EMAIL, data: merged, updated_at: new Date().toISOString()})
-      });
-    }
+    await fetch(SUPABASE_URL + '/rest/v1/vww_progress', {
+      method: 'POST', headers: sbHeaders(),
+      body: JSON.stringify({email: USER_EMAIL, data: merged, updated_at: new Date().toISOString()})
+    });
     setSyncDot('saved');
   } catch(e) { console.warn('Cloud sync failed:', e); setSyncDot(''); }
 }
@@ -1492,20 +1484,11 @@ window.addEventListener('beforeunload', function() {
   if (creatorCount > 0) payload.creatorData = {count: creatorCount, store: creatorStore};
   var merged = Object.assign({}, _vwCachedExisting);
   merged.vw = payload;
-  var vwRowExists = Object.keys(_vwCachedExisting).length > 0;
-  if (vwRowExists) {
-    fetch(SUPABASE_URL + '/rest/v1/vww_progress?email=eq.' + encodeURIComponent(USER_EMAIL), {
-      method: 'PATCH', headers: sbHeaders(),
-      body: JSON.stringify({data: merged, updated_at: new Date().toISOString()}),
-      keepalive: true
-    });
-  } else {
-    fetch(SUPABASE_URL + '/rest/v1/vww_progress', {
-      method: 'POST', headers: sbHeaders(),
-      body: JSON.stringify({email: USER_EMAIL, data: merged, updated_at: new Date().toISOString()}),
-      keepalive: true
-    });
-  }
+  fetch(SUPABASE_URL + '/rest/v1/vww_progress', {
+    method: 'POST', headers: sbHeaders(),
+    body: JSON.stringify({email: USER_EMAIL, data: merged, updated_at: new Date().toISOString()}),
+    keepalive: true
+  });
 });
 
 /* Called by Finish Module button — flushes sync immediately before navigating */
@@ -1530,7 +1513,7 @@ async function loadFromSupabase() {
     });
     /* fetch saved progress — always fetch to cache existing for beforeunload merge */
     var resp = await fetch(
-      SUPABASE_URL + '/rest/v1/vww_progress?email=eq.' + encodeURIComponent(USER_EMAIL) + '&select=data&order=updated_at.desc&limit=1',
+      SUPABASE_URL + '/rest/v1/vww_progress?email=eq.' + encodeURIComponent(USER_EMAIL) + '&select=data&order=id.desc&limit=1',
       {headers: sbHeaders()}
     );
     if (!resp.ok) return;

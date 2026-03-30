@@ -1948,16 +1948,11 @@ async function _ccDoSync(data){
   if(!email)return;
   var hdrs={'Content-Type':'application/json','apikey':_CC_ANON,'Authorization':'Bearer '+_CC_ANON,'Prefer':'resolution=merge-duplicates'};
   try{
-    var rows=await(await fetch(_CC_BASE+'/rest/v1/vww_progress?email=eq.'+encodeURIComponent(email)+'&select=data&order=updated_at.desc&limit=1',{headers:hdrs})).json();
+    var rows=await(await fetch(_CC_BASE+'/rest/v1/vww_progress?email=eq.'+encodeURIComponent(email)+'&select=data&order=id.desc&limit=1',{headers:hdrs})).json();
     var existing=(Array.isArray(rows)&&rows[0]&&rows[0].data)?rows[0].data:{};
     _ccCachedExisting=existing;
     var merged=Object.assign({},existing,{cc:data});
-    var rowExists=Array.isArray(rows)&&rows.length>0;
-    if(rowExists){
-      await fetch(_CC_BASE+'/rest/v1/vww_progress?email=eq.'+encodeURIComponent(email),{method:'PATCH',headers:hdrs,body:JSON.stringify({data:merged,updated_at:new Date().toISOString()})});
-    }else{
-      await fetch(_CC_BASE+'/rest/v1/vww_progress',{method:'POST',headers:hdrs,body:JSON.stringify({email:email,data:merged,updated_at:new Date().toISOString()})});
-    }
+    await fetch(_CC_BASE+'/rest/v1/vww_progress',{method:'POST',headers:hdrs,body:JSON.stringify({email:email,data:merged,updated_at:new Date().toISOString()})});
   }catch(e){ console.warn('CC sync failed:',e); }
 }
 
@@ -1976,12 +1971,7 @@ window.addEventListener('beforeunload',function(){
   var hdrs={'Content-Type':'application/json','apikey':_CC_ANON,'Authorization':'Bearer '+_CC_ANON,'Prefer':'resolution=merge-duplicates'};
   var merged=Object.assign({},_ccCachedExisting);
   merged.cc=payload;
-  var ccRowExists=Object.keys(_ccCachedExisting).length>0;
-  if(ccRowExists){
-    fetch(_CC_BASE+'/rest/v1/vww_progress?email=eq.'+encodeURIComponent(email),{method:'PATCH',headers:hdrs,body:JSON.stringify({data:merged,updated_at:new Date().toISOString()}),keepalive:true});
-  }else{
-    fetch(_CC_BASE+'/rest/v1/vww_progress',{method:'POST',headers:hdrs,body:JSON.stringify({email:email,data:merged,updated_at:new Date().toISOString()}),keepalive:true});
-  }
+  fetch(_CC_BASE+'/rest/v1/vww_progress',{method:'POST',headers:hdrs,body:JSON.stringify({email:email,data:merged,updated_at:new Date().toISOString()}),keepalive:true});
 });
 
 (async function ccLoadFromCloud(){
@@ -1990,7 +1980,7 @@ window.addEventListener('beforeunload',function(){
   clearTimeout(_ccSyncTimer); clearTimeout(saveTimer); /* cancel empty-field debounce from init */
   try{
     var hdrs={'Content-Type':'application/json','apikey':_CC_ANON,'Authorization':'Bearer '+_CC_ANON};
-    var rows=await(await fetch(_CC_BASE+'/rest/v1/vww_progress?email=eq.'+encodeURIComponent(email)+'&select=data&order=updated_at.desc&limit=1',{headers:hdrs})).json();
+    var rows=await(await fetch(_CC_BASE+'/rest/v1/vww_progress?email=eq.'+encodeURIComponent(email)+'&select=data&order=id.desc&limit=1',{headers:hdrs})).json();
     if(!Array.isArray(rows)||!rows[0]||!rows[0].data)return;
     _ccCachedExisting=rows[0].data;
     if(!rows[0].data.cc)return;
