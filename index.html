@@ -952,13 +952,17 @@ function renderSidebar() {
    PROGRESS FOOTER
 ══════════════════════════════════════════════════════════ */
 function renderProgress() {
-  var unlocked = MODULES.filter(function(m){ return !m.locked; });
+  var unlocked = MODULES.filter(function(m){ return !m.locked && m.saveKey; });
   var totalSecs = 0, doneSecs = 0;
   unlocked.forEach(function(mod) {
-    totalSecs += mod.sections.length;
+    var firstIsIntro = (mod.sections[0] === 'Intro');
+    var modTotal = firstIsIntro ? mod.sections.length - 1 : mod.sections.length;
+    totalSecs += modTotal;
     var state = moduleStates[mod.id] || {done: []};
-    // cap at section count so stale data can't exceed 100%
-    doneSecs += Math.min(state.done.length, mod.sections.length);
+    var doneCount = firstIsIntro
+      ? state.done.filter(function(x){ return x > 0; }).length
+      : state.done.length;
+    doneSecs += Math.min(doneCount, modTotal);
   });
   var pct = totalSecs > 0 ? Math.round((doneSecs / totalSecs) * 100) : 0;
   var fill = document.getElementById('prog-fill');
@@ -1181,8 +1185,12 @@ function openAccountPanel() {
     var mod = MODULES.find(function(m){ return m.id === id; });
     if (!mod) return;
     var state = moduleStates[id] || {done:[]};
-    var total = mod.sections.length;
-    var done  = Math.min(state.done.length, total);
+    var firstIsIntro = (mod.sections[0] === 'Intro');
+    var total = firstIsIntro ? mod.sections.length - 1 : mod.sections.length;
+    var doneCount = firstIsIntro
+      ? state.done.filter(function(x){ return x > 0; }).length
+      : state.done.length;
+    var done  = Math.min(doneCount, total);
     var pct   = total > 0 ? Math.round((done / total) * 100) : 0;
     el.textContent = pct + '%';
     el.className = 'ap-mod-pct' + (pct >= 100 ? ' done' : '');

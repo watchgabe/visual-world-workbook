@@ -1475,9 +1475,17 @@ function loadData(data){
   }catch(e){}
 }
 
+var _ccDirtyFields={};
 function wireSave(){
-  document.querySelectorAll('textarea,input[type=text]').forEach(function(el){el.addEventListener('input',saveData);});
-  document.querySelectorAll('.opt[data-g]').forEach(function(btn){btn.addEventListener('click',saveData);});
+  document.querySelectorAll('textarea[id],input[type=text][id]').forEach(function(el){
+    el.addEventListener('input',function(){ _ccDirtyFields[el.id]=true; });
+    el.addEventListener('blur',function(){
+      if(_ccDirtyFields[el.id] && _ccCloudReady){
+        delete _ccDirtyFields[el.id];
+        saveData();
+      }
+    });
+  });
 }
 
 // ─── SCORE ───
@@ -1899,7 +1907,7 @@ window.addEventListener('message',function(e){
   if(e.data.type==='flush-sync'){
     clearTimeout(_ccSyncTimer);
     var _em=localStorage.getItem('vww-user-email');
-    if(!_em){window.parent.postMessage({type:'sync-done'},'*');return;}
+    if(!_em||!_ccCloudReady){window.parent.postMessage({type:'sync-done'},'*');return;}
     try{
       var _p={inputs:{},opts:{},done:Array.from(done),cur:cur};
       document.querySelectorAll('textarea,input[type=text]').forEach(function(el){if(el.id)_p.inputs[el.id]=el.value;});
@@ -1940,6 +1948,7 @@ setTimeout(function(){
 /* ── SUPABASE SYNC ── */
 var _ccSyncTimer;
 var _ccCachedExisting={};
+var _ccCloudReady=false;
 var _CC_ANON='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxqZGRmaHpyanZ4cGVkdmZlYmxpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM5NTEzNjMsImV4cCI6MjA4OTUyNzM2M30.GqZMRvBlZyN4rmr9MrfxLcLSB04d7s59ZPfEw-dQwks';
 var _CC_BASE='https://ljddfhzrjvxpedvfebli.supabase.co';
 
@@ -1948,7 +1957,7 @@ async function _ccDoSync(data){
   if(!email)return;
   var hdrs={'Content-Type':'application/json','apikey':_CC_ANON,'Authorization':'Bearer '+_CC_ANON,'Prefer':'resolution=merge-duplicates'};
   try{
-    var rows=await(await fetch(_CC_BASE+'/rest/v1/vww_progress?email=eq.'+encodeURIComponent(email)+'&select=data&order=id.desc&limit=1',{headers:hdrs})).json();
+    var rows=await(await fetch(_CC_BASE+'/rest/v1/vww_progress?email=eq.'+encodeURIComponent(email)+'&select=data',{headers:hdrs})).json();
     var existing=(Array.isArray(rows)&&rows[0]&&rows[0].data)?rows[0].data:{};
     _ccCachedExisting=existing;
     var merged=Object.assign({},existing,{cc:data});
@@ -1957,35 +1966,26 @@ async function _ccDoSync(data){
 }
 
 function ccSyncSupabase(data){
+  if(!_ccCloudReady)return;
   clearTimeout(_ccSyncTimer);
   _ccSyncTimer=setTimeout(function(){ _ccDoSync(data); },800);
 }
 
-window.addEventListener('beforeunload',function(){
-  clearTimeout(_ccSyncTimer);
-  var email=localStorage.getItem('vww-user-email')||'';
-  if(!email)return;
-  var payload={inputs:{},opts:{},done:Array.from(done),cur:cur};
-  document.querySelectorAll('textarea,input[type=text]').forEach(function(el){if(el.id)payload.inputs[el.id]=el.value;});
-  document.querySelectorAll('.opt.sel[data-g]').forEach(function(el){payload.opts[el.getAttribute('data-g')]=el.textContent.trim();});
-  var hdrs={'Content-Type':'application/json','apikey':_CC_ANON,'Authorization':'Bearer '+_CC_ANON,'Prefer':'resolution=merge-duplicates'};
-  var merged=Object.assign({},_ccCachedExisting);
-  merged.cc=payload;
-  fetch(_CC_BASE+'/rest/v1/vww_progress',{method:'POST',headers:hdrs,body:JSON.stringify({email:email,data:merged,updated_at:new Date().toISOString()}),keepalive:true});
-});
+/* beforeunload removed — saves happen explicitly via Save & Continue */
 
 (async function ccLoadFromCloud(){
   var email=localStorage.getItem('vww-user-email');
-  if(!email)return;
+  if(!email){ _ccCloudReady=true; return; }
   clearTimeout(_ccSyncTimer); clearTimeout(saveTimer); /* cancel empty-field debounce from init */
   try{
     var hdrs={'Content-Type':'application/json','apikey':_CC_ANON,'Authorization':'Bearer '+_CC_ANON};
-    var rows=await(await fetch(_CC_BASE+'/rest/v1/vww_progress?email=eq.'+encodeURIComponent(email)+'&select=data&order=id.desc&limit=1',{headers:hdrs})).json();
-    if(!Array.isArray(rows)||!rows[0]||!rows[0].data)return;
+    var rows=await(await fetch(_CC_BASE+'/rest/v1/vww_progress?email=eq.'+encodeURIComponent(email)+'&select=data',{headers:hdrs})).json();
+    if(!Array.isArray(rows)||!rows[0]||!rows[0].data){ _ccCloudReady=true; return; }
     _ccCachedExisting=rows[0].data;
-    if(!rows[0].data.cc)return;
+    if(!rows[0].data.cc){ _ccCloudReady=true; return; }
     loadData(rows[0].data.cc);go(cur);
   }catch(e){}
+  _ccCloudReady=true;
 })();
 </script>
 <script async src="https://www.instagram.com/embed.js"></script>
