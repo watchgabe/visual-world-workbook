@@ -302,7 +302,7 @@ textarea::placeholder,input[type=text]::placeholder{color:var(--dimmer)}
     <textarea rows="2" id="funnelBroken" placeholder="Be honest. This is your starting point."></textarea>
   </div>
 
-  <div class="nr"><button class="btn" onclick="go(1)">&#8592; Back</button><span class="si">2/6</span><button class="btn p" onclick="go(3)">Save &amp; Continue &#8594;</button></div>
+  <div class="nr"><button class="btn" onclick="go(1)">&#8592; Back</button><span class="si">2/6</span><button class="btn p" onclick="saveData();go(3)">Save &amp; Continue &#8594;</button></div>
 </div>
 
 <!-- S2 MANYCHAT & NEWSLETTER -->
@@ -339,7 +339,7 @@ textarea::placeholder,input[type=text]::placeholder{color:var(--dimmer)}
   <h2>Why These Two Platforms</h2>
   <div class="ins"><p>Social media is rented land. Every follower you have lives on a platform that can change its algorithm, ban your account, or disappear entirely. ManyChat converts that rented attention into owned contacts. Email is where the relationship deepens into real trust &#8212; and real trust is what drives sales. Together, ManyChat and email are the infrastructure that makes your content work for you long after you&#8217;ve posted it.</p></div>
 
-  <div class="nr"><button class="btn" onclick="go(2)">&#8592; Back</button><span class="si">3/6</span><button class="btn p" onclick="go(4)">Save &amp; Continue &#8594;</button></div>
+  <div class="nr"><button class="btn" onclick="go(2)">&#8592; Back</button><span class="si">3/6</span><button class="btn p" onclick="saveData();go(4)">Save &amp; Continue &#8594;</button></div>
 </div>
 
 <!-- S3 LEAD MAGNET -->
@@ -394,7 +394,7 @@ textarea::placeholder,input[type=text]::placeholder{color:var(--dimmer)}
     </div>
   </div>
 
-  <div class="nr"><button class="btn" onclick="go(3)">&#8592; Back</button><span class="si">4/6</span><button class="btn p" onclick="go(5)">Save &amp; Continue &#8594;</button></div>
+  <div class="nr"><button class="btn" onclick="go(3)">&#8592; Back</button><span class="si">4/6</span><button class="btn p" onclick="saveData();go(5)">Save &amp; Continue &#8594;</button></div>
 </div>
 
 <!-- S4 BIO -->
@@ -476,7 +476,7 @@ textarea::placeholder,input[type=text]::placeholder{color:var(--dimmer)}
     </div>
   </div>
 
-  <div class="nr"><button class="btn" onclick="go(0)">&#8592; Back</button><span class="si">1/6</span><button class="btn p" onclick="go(2)">Save &amp; Continue &#8594;</button></div>
+  <div class="nr"><button class="btn" onclick="go(0)">&#8592; Back</button><span class="si">1/6</span><button class="btn p" onclick="saveData();go(2)">Save &amp; Continue &#8594;</button></div>
 </div>
 
 <!-- S5 LAUNCH CONTENT -->
@@ -566,7 +566,7 @@ textarea::placeholder,input[type=text]::placeholder{color:var(--dimmer)}
     <textarea rows="2" id="mc1waterfall" placeholder="e.g. Each section becomes 1 short-form clip (5&#8211;7 clips total), quotes become carousels, key moments become Reels..."></textarea>
   </div>
 
-  <div class="nr"><button class="btn" onclick="go(4)">&#8592; Back</button><span class="si">5/6</span><button class="btn p" onclick="go(6)">Save &amp; Continue &#8594;</button></div>
+  <div class="nr"><button class="btn" onclick="go(4)">&#8592; Back</button><span class="si">5/6</span><button class="btn p" onclick="saveData();go(6)">Save &amp; Continue &#8594;</button></div>
 </div>
 
 <!-- S6 CALENDAR & GOALS -->
@@ -674,9 +674,9 @@ function updateProgress(){
   var count=Object.keys(done).filter(function(k){return done[k]&&k!=='0'&&k!=='7';}).length;
   var pct=Math.round(count/6*100);
   document.getElementById('toppf').style.width=pct+'%';
-  document.getElementById('toppt').textContent=count+'/7';
+  document.getElementById('toppt').textContent=count+'/6';
   document.getElementById('sbpf').style.width=pct+'%';
-  document.getElementById('sbpt').textContent=count+'/7';
+  document.getElementById('sbpt').textContent=count+'/6';
   var dc=document.getElementById('dc');if(dc)dc.textContent=count;
 }
 
@@ -706,7 +706,7 @@ function go(n){
   document.querySelectorAll('.sc').forEach(function(s){s.classList.remove('show');});
   var sid=SECTION_MAP[n];
   var sec=document.getElementById('s'+sid);if(sec)sec.classList.add('show');
-  buildNav();updateProgress();saveData();window.scrollTo(0,0);
+  buildNav();updateProgress();window.scrollTo(0,0);
 }
 
 function initOpts(){
@@ -714,7 +714,7 @@ function initOpts(){
     btn.addEventListener('click',function(){
       var g=btn.getAttribute('data-g');
       document.querySelectorAll('.opt[data-g="'+g+'"]').forEach(function(b){b.classList.remove('sel');});
-      btn.classList.add('sel');saveData();
+      btn.classList.add('sel');
     });
   });
 }
@@ -743,10 +743,9 @@ function updateBioPreview(){
 }
 
 var saveTimer;
+var _laCloudReady=false;
 function wireSave(){
-  document.querySelectorAll('textarea,input[type=text]').forEach(function(el){
-    el.addEventListener('input',function(){clearTimeout(saveTimer);saveTimer=setTimeout(saveData,600);});
-  });
+  /* save only on section navigation (Continue button), not on every keystroke */
 }
 
 function saveData(){
@@ -757,7 +756,7 @@ function saveData(){
     document.querySelectorAll('.check-item[data-key]').forEach(function(item){d['chk_'+item.getAttribute('data-key')]=item.classList.contains('checked');});
     var dot=document.getElementById('saveDot');
     if(dot){dot.classList.add('saved');setTimeout(function(){dot.classList.remove('saved');},1500);}
-    clearTimeout(laSyncTimer);laSyncTimer=setTimeout(function(){laSyncToSupabase(d);},800);
+    if(_laCloudReady){clearTimeout(laSyncTimer);laSyncTimer=setTimeout(function(){laSyncToSupabase(d);},800);}
     return d;
   }catch(e){ return {}; }
 }
@@ -853,7 +852,7 @@ async function laSyncToSupabase(payload){
   var email=localStorage.getItem('vww-user-email');
   if(!email)return;
   try{
-    var existRows=await(await fetch(_LA_BASE+'/rest/v1/vww_progress?email=eq.'+encodeURIComponent(email)+'&select=data&order=id.desc&limit=1',{headers:laHdrs()})).json();
+    var existRows=await(await fetch(_LA_BASE+'/rest/v1/vww_progress?email=eq.'+encodeURIComponent(email)+'&select=data',{headers:laHdrs()})).json();
     var existing=(Array.isArray(existRows)&&existRows[0]&&existRows[0].data)?existRows[0].data:{};
     _laCachedExisting=existing;
     var data=payload||{};
@@ -862,32 +861,22 @@ async function laSyncToSupabase(payload){
   }catch(e){}
 }
 
-window.addEventListener('beforeunload',function(){
-  clearTimeout(laSyncTimer);
-  var email=localStorage.getItem('vww-user-email');
-  if(!email)return;
-  var payload={cur:cur,done:done};
-  document.querySelectorAll('textarea[id],input[type=text][id]').forEach(function(el){payload[el.id]=el.value;});
-  document.querySelectorAll('.opt.sel[data-g]').forEach(function(btn){payload['opt_'+btn.getAttribute('data-g')]=btn.textContent.trim();});
-  document.querySelectorAll('.check-item[data-key]').forEach(function(item){payload['chk_'+item.getAttribute('data-key')]=item.classList.contains('checked');});
-  var merged=Object.assign({},_laCachedExisting);
-  merged['launch-v1']=payload;
-  fetch(_LA_BASE+'/rest/v1/vww_progress',{method:'POST',headers:laHdrs(),body:JSON.stringify({email:email,data:merged,updated_at:new Date().toISOString()}),keepalive:true});
-});
+/* beforeunload removed — saves happen explicitly via Save & Continue */
 
 (async function laLoadFromCloud(){
   var email=localStorage.getItem('vww-user-email');
-  if(!email)return;
+  if(!email){ _laCloudReady=true; return; }
   clearTimeout(laSyncTimer); clearTimeout(saveTimer); /* cancel empty-field debounce from init */
   try{
     var hdrs={'Content-Type':'application/json','apikey':_LA_ANON,'Authorization':'Bearer '+_LA_ANON};
-    var rows=await(await fetch(_LA_BASE+'/rest/v1/vww_progress?email=eq.'+encodeURIComponent(email)+'&select=data&order=id.desc&limit=1',{headers:hdrs})).json();
-    if(!Array.isArray(rows)||!rows[0]||!rows[0].data)return;
+    var rows=await(await fetch(_LA_BASE+'/rest/v1/vww_progress?email=eq.'+encodeURIComponent(email)+'&select=data',{headers:hdrs})).json();
+    if(!Array.isArray(rows)||!rows[0]||!rows[0].data){ _laCloudReady=true; return; }
     _laCachedExisting=rows[0].data;
-    if(!rows[0].data['launch-v1'])return;
+    if(!rows[0].data['launch-v1']){ _laCloudReady=true; return; }
     loadData(rows[0].data['launch-v1']);updateProgress();buildNav();go(cur);
     clearTimeout(laSyncTimer); clearTimeout(saveTimer); /* cancel save triggered by go() — data is already in cloud */
   }catch(e){}
+  _laCloudReady=true;
 })();
 
 /* ── iframe bridge ── */
@@ -917,7 +906,7 @@ window.addEventListener('message',function(e){
   if(e.data.type==='flush-sync'){
     clearTimeout(laSyncTimer);
     var _em=localStorage.getItem('vww-user-email');
-    if(!_em){window.parent.postMessage({type:'sync-done'},'*');return;}
+    if(!_em||!_laCloudReady){window.parent.postMessage({type:'sync-done'},'*');return;}
     try{
       var _p={cur:cur,done:done};
       document.querySelectorAll('textarea[id],input[type=text][id]').forEach(function(el){_p[el.id]=el.value;});

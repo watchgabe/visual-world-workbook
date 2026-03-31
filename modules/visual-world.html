@@ -1432,6 +1432,7 @@ var USER_EMAIL = localStorage.getItem('vww-user-email') || '';
 var USER_NAME  = localStorage.getItem('vww-user-name')  || '';
 var syncTimer;
 var _vwCachedExisting = {};
+var _vwCloudReady = false;
 
 function sbHeaders() {
   return {
@@ -1454,7 +1455,7 @@ async function _vwDoSync(payload) {
   if (!USER_EMAIL) return;
   try {
     var existRows = await (await fetch(
-      SUPABASE_URL + '/rest/v1/vww_progress?email=eq.' + encodeURIComponent(USER_EMAIL) + '&select=data&order=id.desc&limit=1',
+      SUPABASE_URL + '/rest/v1/vww_progress?email=eq.' + encodeURIComponent(USER_EMAIL) + '&select=data',
       {headers: sbHeaders()}
     )).json();
     var existing = (Array.isArray(existRows) && existRows[0] && existRows[0].data) ? existRows[0].data : {};
@@ -1469,27 +1470,13 @@ async function _vwDoSync(payload) {
 }
 
 function syncToSupabase(payload) {
-  if (!USER_EMAIL) return;
+  if (!USER_EMAIL || !_vwCloudReady) return;
   clearTimeout(syncTimer);
   setSyncDot('syncing');
   syncTimer = setTimeout(function(){ _vwDoSync(payload); }, 800);
 }
 
-window.addEventListener('beforeunload', function() {
-  clearTimeout(syncTimer);
-  if (!USER_EMAIL) return;
-  var payload = {inputs:{}, opts:{}, done:Array.from(done), cur:cur, checks:checks};
-  document.querySelectorAll('textarea,input[type=text]').forEach(function(e){ if(e.id) payload.inputs[e.id]=e.value; });
-  document.querySelectorAll('.opt.sel[data-g]').forEach(function(e){ payload.opts[e.getAttribute('data-g')]=e.textContent.trim(); });
-  if (creatorCount > 0) payload.creatorData = {count: creatorCount, store: creatorStore};
-  var merged = Object.assign({}, _vwCachedExisting);
-  merged.vw = payload;
-  fetch(SUPABASE_URL + '/rest/v1/vww_progress', {
-    method: 'POST', headers: sbHeaders(),
-    body: JSON.stringify({email: USER_EMAIL, data: merged, updated_at: new Date().toISOString()}),
-    keepalive: true
-  });
-});
+/* beforeunload removed — saves happen explicitly via Save & Continue */
 
 /* Called by Finish Module button — flushes sync immediately before navigating */
 async function vwFinishModule() {
@@ -1502,7 +1489,7 @@ async function vwFinishModule() {
 }
 
 async function loadFromSupabase() {
-  if (!USER_EMAIL) return;
+  if (!USER_EMAIL) { _vwCloudReady = true; return; }
   clearTimeout(syncTimer); /* cancel any debounce started with empty fields on init */
   try {
     /* ping last_seen without waiting */
@@ -1513,14 +1500,14 @@ async function loadFromSupabase() {
     });
     /* fetch saved progress — always fetch to cache existing for beforeunload merge */
     var resp = await fetch(
-      SUPABASE_URL + '/rest/v1/vww_progress?email=eq.' + encodeURIComponent(USER_EMAIL) + '&select=data&order=id.desc&limit=1',
+      SUPABASE_URL + '/rest/v1/vww_progress?email=eq.' + encodeURIComponent(USER_EMAIL) + '&select=data',
       {headers: sbHeaders()}
     );
-    if (!resp.ok) return;
+    if (!resp.ok) { _vwCloudReady = true; return; }
     var rows = await resp.json();
-    if (!rows.length || !rows[0].data) return;
+    if (!rows.length || !rows[0].data) { _vwCloudReady = true; return; }
     _vwCachedExisting = rows[0].data;
-    if (!rows[0].data.vw) { go(cur); render(); updateSwatches(); return; }
+    if (!rows[0].data.vw) { go(cur); render(); updateSwatches(); _vwCloudReady = true; return; }
     var data = rows[0].data.vw;
     /* apply inputs */
     if (data.inputs) Object.keys(data.inputs).forEach(function(id){ var e=document.getElementById(id); if(e&&data.inputs[id])e.value=data.inputs[id]; });
@@ -1545,6 +1532,7 @@ async function loadFromSupabase() {
     }
     go(cur); render(); updateSwatches();
   } catch(e) { console.warn('Cloud load failed:', e); }
+  _vwCloudReady = true;
 }
 
 function initIdentity() {
@@ -2010,8 +1998,8 @@ function saveData() {
 
 
 function wireSave() {
-  document.querySelectorAll('textarea,input[type=text]').forEach(function(e){ e.addEventListener('input',function(){saveData();updateSwatches();}); });
-  document.querySelectorAll('.opt[data-g]').forEach(function(b){b.addEventListener('click',saveData);});
+  /* save only on section navigation (Continue button), not on every keystroke */
+  document.querySelectorAll('textarea,input[type=text]').forEach(function(e){ e.addEventListener('input',function(){updateSwatches();}); });
 }
 
 /* ═══════════════════════════════════════════════════════
@@ -3045,7 +3033,7 @@ window.addEventListener('message',function(e){
   if(e.data.type==='theme'){document.body.classList.toggle('light',e.data.value==='light');return;}
   if(e.data.type==='flush-sync'){
     clearTimeout(syncTimer);
-    if(!USER_EMAIL){window.parent.postMessage({type:'sync-done'},'*');return;}
+    if(!USER_EMAIL||!_vwCloudReady){window.parent.postMessage({type:'sync-done'},'*');return;}
     try{
       var _p={inputs:{},opts:{},done:Array.from(done),cur:cur,checks:checks};
       document.querySelectorAll('textarea,input[type=text]').forEach(function(el){if(el.id)_p.inputs[el.id]=el.value;});
@@ -3060,7 +3048,7 @@ window.addEventListener('message',function(e){
   cur=n;
   document.querySelectorAll('.sc').forEach(function(s){s.classList.remove('show');});
   var sec=document.getElementById('s'+n);if(sec)sec.classList.add('show');
-  render();saveData();window.scrollTo(0,0);
+  render();window.scrollTo(0,0);
   vwNotifyShell();
 });
 
