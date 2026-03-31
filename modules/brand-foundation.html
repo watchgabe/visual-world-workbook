@@ -3861,8 +3861,17 @@
       }
 
       var saveTimer
+      var _cfDirtyFields = {}
       function wireSave() {
-        /* save only on section navigation (Continue button), not on every keystroke */
+        document.querySelectorAll('textarea[id],input[type=text][id]').forEach(function (el) {
+          el.addEventListener('input', function () { _cfDirtyFields[el.id] = true })
+          el.addEventListener('blur', function () {
+            if (_cfDirtyFields[el.id] && _cfCloudReady) {
+              delete _cfDirtyFields[el.id]
+              saveData()
+            }
+          })
+        })
       }
 
       function saveData() {

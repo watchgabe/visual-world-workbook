@@ -744,8 +744,17 @@ function updateBioPreview(){
 
 var saveTimer;
 var _laCloudReady=false;
+var _laDirtyFields={};
 function wireSave(){
-  /* save only on section navigation (Continue button), not on every keystroke */
+  document.querySelectorAll('textarea[id],input[type=text][id]').forEach(function(el){
+    el.addEventListener('input',function(){ _laDirtyFields[el.id]=true; });
+    el.addEventListener('blur',function(){
+      if(_laDirtyFields[el.id] && _laCloudReady){
+        delete _laDirtyFields[el.id];
+        saveData();
+      }
+    });
+  });
 }
 
 function saveData(){

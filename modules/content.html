@@ -1475,8 +1475,17 @@ function loadData(data){
   }catch(e){}
 }
 
+var _ccDirtyFields={};
 function wireSave(){
-  /* save only on section navigation (Continue button), not on every keystroke */
+  document.querySelectorAll('textarea[id],input[type=text][id]').forEach(function(el){
+    el.addEventListener('input',function(){ _ccDirtyFields[el.id]=true; });
+    el.addEventListener('blur',function(){
+      if(_ccDirtyFields[el.id] && _ccCloudReady){
+        delete _ccDirtyFields[el.id];
+        saveData();
+      }
+    });
+  });
 }
 
 // ─── SCORE ───

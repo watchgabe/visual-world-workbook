@@ -1997,9 +1997,17 @@ function saveData() {
 }
 
 
+var _vwDirtyFields = {};
 function wireSave() {
-  /* save only on section navigation (Continue button), not on every keystroke */
-  document.querySelectorAll('textarea,input[type=text]').forEach(function(e){ e.addEventListener('input',function(){updateSwatches();}); });
+  document.querySelectorAll('textarea,input[type=text]').forEach(function(e){
+    e.addEventListener('input',function(){ updateSwatches(); if(e.id) _vwDirtyFields[e.id]=true; });
+    e.addEventListener('blur',function(){
+      if(e.id && _vwDirtyFields[e.id] && _vwCloudReady){
+        delete _vwDirtyFields[e.id];
+        saveData();
+      }
+    });
+  });
 }
 
 /* ═══════════════════════════════════════════════════════
