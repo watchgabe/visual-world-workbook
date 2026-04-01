@@ -32,7 +32,10 @@ Decimal phases appear between their surrounding integers in numeric order.
   3. New database schema is applied in Supabase with tables and columns designed for the unified auto-save pattern
   4. Dark/light theme toggle switches the app theme and the choice survives a browser refresh (stored in cookie, no hydration flash)
   5. Sidebar collapses to a hamburger menu on mobile and expands on desktop
-**Plans**: TBD
+**Plans:** 2 plans
+Plans:
+- [ ] 01-01-PLAN.md — Scaffold Next.js 15, Supabase clients, DB schema, CSS architecture
+- [ ] 01-02-PLAN.md — Three-panel app shell with sidebar, theme toggle, mobile responsive, module routing
 **UI hint**: yes
 
 ### Phase 2: Authentication
@@ -113,7 +116,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Foundation & App Shell | 0/TBD | Not started | - |
+| 1. Foundation & App Shell | 0/2 | Planning complete | - |
 | 2. Authentication | 0/TBD | Not started | - |
 | 3. Component Library & Data Hooks | 0/TBD | Not started | - |
 | 4. API Security | 0/TBD | Not started | - |
