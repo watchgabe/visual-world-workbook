@@ -1,10 +1,13 @@
 'use client'
 
+import { useState } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { MODULES } from '@/lib/modules'
 import { ProgressBar } from './ProgressBar'
 import { ThemeToggle } from './ThemeToggle'
+import { useAuth } from '@/context/AuthContext'
+import { UserModal } from '@/components/auth/UserModal'
 
 interface SidebarProps {
   isOpen: boolean
@@ -14,6 +17,8 @@ interface SidebarProps {
 
 export function Sidebar({ isOpen, onClose, currentTheme }: SidebarProps) {
   const pathname = usePathname()
+  const { user, signOut } = useAuth()
+  const [modalOpen, setModalOpen] = useState(false)
 
   return (
     <aside
@@ -181,7 +186,7 @@ export function Sidebar({ isOpen, onClose, currentTheme }: SidebarProps) {
         })}
       </nav>
 
-      {/* Sidebar footer — progress bar + theme toggle (matches original layout) */}
+      {/* Sidebar footer — progress bar + user trigger + theme toggle */}
       <div
         style={{
           padding: '1rem 1.25rem',
@@ -195,6 +200,54 @@ export function Sidebar({ isOpen, onClose, currentTheme }: SidebarProps) {
         <div style={{ flex: 1 }}>
           <ProgressBar percent={0} />
         </div>
+
+        {/* User avatar trigger — only when logged in */}
+        {user && (
+          <div style={{ position: 'relative' }}>
+            <button
+              type="button"
+              onClick={() => setModalOpen(prev => !prev)}
+              aria-label="Account options"
+              aria-expanded={modalOpen}
+              style={{
+                width: '28px',
+                height: '28px',
+                borderRadius: '50%',
+                background: 'var(--border2)',
+                color: 'var(--dim)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                fontSize: '11px',
+                fontWeight: 700,
+                cursor: 'pointer',
+                border: 'none',
+                fontFamily: 'var(--font)',
+                transition: 'background .12s, color .12s',
+                flexShrink: 0,
+              }}
+              onMouseEnter={e => {
+                e.currentTarget.style.background = 'var(--orange-tint)'
+                e.currentTarget.style.color = 'var(--orange)'
+              }}
+              onMouseLeave={e => {
+                e.currentTarget.style.background = 'var(--border2)'
+                e.currentTarget.style.color = 'var(--dim)'
+              }}
+            >
+              {user.email ? user.email[0].toUpperCase() : '?'}
+            </button>
+
+            {modalOpen && (
+              <UserModal
+                email={user.email ?? ''}
+                onSignOut={signOut}
+                onClose={() => setModalOpen(false)}
+              />
+            )}
+          </div>
+        )}
+
         <ThemeToggle currentTheme={currentTheme} />
       </div>
     </aside>
