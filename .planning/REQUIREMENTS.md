@@ -17,8 +17,8 @@ Requirements for initial release. Each maps to roadmap phases.
 
 ### Data Layer
 
-- [ ] **DATA-01**: Single Supabase service module with browser and server client creators
-- [ ] **DATA-02**: Well-structured database schema (new tables/columns designed for scalability)
+- [x] **DATA-01**: Single Supabase service module with browser and server client creators
+- [x] **DATA-02**: Well-structured database schema (new tables/columns designed for scalability)
 - [ ] **DATA-03**: Auto-save hook with debounce used by all form fields across all modules
 - [ ] **DATA-04**: Auto-save uses AbortController to prevent race condition overwrites
 - [ ] **DATA-05**: Save status indicator visible to user (syncing/saved/error)
@@ -69,7 +69,7 @@ Requirements for initial release. Each maps to roadmap phases.
 ### Deployment
 
 - [ ] **DEPLOY-01**: Vercel deployment with environment variables (no hardcoded keys)
-- [ ] **DEPLOY-02**: TypeScript throughout the codebase
+- [x] **DEPLOY-02**: TypeScript throughout the codebase
 - [ ] **DEPLOY-03**: Magic link redirect URLs configured for both localhost and production
 
 ## v2 Requirements
@@ -120,8 +120,8 @@ Which phases cover which requirements. Updated during roadmap creation.
 | AUTH-03 | Phase 2 | Pending |
 | AUTH-04 | Phase 2 | Pending |
 | AUTH-05 | Phase 2 | Pending |
-| DATA-01 | Phase 1 | Pending |
-| DATA-02 | Phase 1 | Pending |
+| DATA-01 | Phase 1 | Complete |
+| DATA-02 | Phase 1 | Complete |
 | DATA-03 | Phase 3 | Pending |
 | DATA-04 | Phase 3 | Pending |
 | DATA-05 | Phase 3 | Pending |
@@ -154,7 +154,7 @@ Which phases cover which requirements. Updated during roadmap creation.
 | ADMIN-04 | Phase 6 | Pending |
 | ADMIN-05 | Phase 6 | Pending |
 | DEPLOY-01 | Phase 7 | Pending |
-| DEPLOY-02 | Phase 1 | Pending |
+| DEPLOY-02 | Phase 1 | Complete |
 | DEPLOY-03 | Phase 7 | Pending |
 
 **Coverage:**
