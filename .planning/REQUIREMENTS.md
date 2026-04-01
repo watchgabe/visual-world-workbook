@@ -9,11 +9,11 @@ Requirements for initial release. Each maps to roadmap phases.
 
 ### Authentication
 
-- [ ] **AUTH-01**: User can sign in via magic link (email sent by Supabase Auth)
+- [x] **AUTH-01**: User can sign in via magic link (email sent by Supabase Auth)
 - [x] **AUTH-02**: User session persists across browser refresh via cookies
 - [x] **AUTH-03**: Unauthenticated users are redirected to login page
 - [x] **AUTH-04**: Auth callback route handles magic link token exchange
-- [ ] **AUTH-05**: User can sign out from any page
+- [x] **AUTH-05**: User can sign out from any page
 
 ### Data Layer
 
@@ -115,11 +115,11 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| AUTH-01 | Phase 2 | Pending |
+| AUTH-01 | Phase 2 | Complete |
 | AUTH-02 | Phase 2 | Complete |
 | AUTH-03 | Phase 2 | Complete |
 | AUTH-04 | Phase 2 | Complete |
-| AUTH-05 | Phase 2 | Pending |
+| AUTH-05 | Phase 2 | Complete |
 | DATA-01 | Phase 1 | Complete |
 | DATA-02 | Phase 1 | Complete |
 | DATA-03 | Phase 3 | Pending |

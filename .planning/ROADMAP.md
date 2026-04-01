@@ -51,7 +51,7 @@ Plans:
 **Plans:** 1/2 plans executed
 Plans:
 - [x] 02-01-PLAN.md — Auth infrastructure: middleware, callback route, AuthContext provider
-- [ ] 02-02-PLAN.md — Login page UI, LoginForm, UserModal, sign-out in sidebar
+- [x] 02-02-PLAN.md — Login page UI, LoginForm, UserModal, sign-out in sidebar
 **UI hint**: yes
 
 ### Phase 3: Component Library & Data Hooks
