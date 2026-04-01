@@ -48,9 +48,9 @@ Plans:
   3. User who is not signed in and navigates to any module URL is redirected to the login page
   4. Auth callback route exchanges the magic link token and redirects to the dashboard without error
   5. User clicks sign out from any page and is immediately redirected to the login page
-**Plans:** 2 plans
+**Plans:** 1/2 plans executed
 Plans:
-- [ ] 02-01-PLAN.md — Auth infrastructure: middleware, callback route, AuthContext provider
+- [x] 02-01-PLAN.md — Auth infrastructure: middleware, callback route, AuthContext provider
 - [ ] 02-02-PLAN.md — Login page UI, LoginForm, UserModal, sign-out in sidebar
 **UI hint**: yes
 
@@ -121,7 +121,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. Foundation & App Shell | 2/2 | Complete   | 2026-04-01 |
-| 2. Authentication | 0/2 | Not started | - |
+| 2. Authentication | 1/2 | In Progress|  |
 | 3. Component Library & Data Hooks | 0/TBD | Not started | - |
 | 4. API Security | 0/TBD | Not started | - |
 | 5. Module Migration | 0/TBD | Not started | - |

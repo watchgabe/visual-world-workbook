@@ -2,15 +2,15 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-status: verifying
-stopped_at: Phase 2 context gathered
-last_updated: "2026-04-01T21:50:31.897Z"
+status: executing
+stopped_at: Completed 02-01-PLAN.md
+last_updated: "2026-04-01T22:35:56.893Z"
 last_activity: 2026-04-01
 progress:
   total_phases: 7
   completed_phases: 1
-  total_plans: 2
-  completed_plans: 2
+  total_plans: 4
+  completed_plans: 3
   percent: 0
 ---
 
@@ -21,13 +21,13 @@ progress:
 See: .planning/PROJECT.md (updated 2026-04-01)
 
 **Core value:** Students can work through all course modules with their progress reliably saved, synced, and accessible — without data loss or auth confusion.
-**Current focus:** Phase 01 — foundation-app-shell
+**Current focus:** Phase 02 — authentication
 
 ## Current Position
 
-Phase: 2
-Plan: Not started
-Status: Phase complete — ready for verification
+Phase: 02 (authentication) — EXECUTING
+Plan: 2 of 2
+Status: Ready to execute
 Last activity: 2026-04-01
 
 Progress: [░░░░░░░░░░] 0%
@@ -55,6 +55,7 @@ Progress: [░░░░░░░░░░] 0%
 | Phase 01-foundation-app-shell P01 | 35 | 3 tasks | 14 files |
 | Phase 01-foundation-app-shell P02 | 25 | 2 tasks | 9 files |
 | Phase 01-foundation-app-shell P02 | 30 | 3 tasks | 9 files |
+| Phase 02-authentication P01 | 2 | 2 tasks | 5 files |
 
 ## Accumulated Context
 
@@ -73,6 +74,9 @@ Recent decisions affecting current work:
 - [Phase 01-foundation-app-shell]: ThemeToggle: document.cookie write + router.refresh() — no flash, no SSR mismatch, no extra dependency
 - [Phase 01-foundation-app-shell]: No desktop topbar — original app has brand, progress, and theme toggle in sidebar footer; Topbar.tsx removed after human verification
 - [Phase 01-foundation-app-shell]: ThemeToggle in Sidebar footer on desktop; in MobileTopbar on mobile — matching original app exactly
+- [Phase 02-authentication]: getUser() not getSession() in middleware — getSession does not revalidate JWT (Supabase security advisory)
+- [Phase 02-authentication]: AuthProvider wraps AppShellClient in (app) layout only — login page is pre-auth, doesn't need AuthContext
+- [Phase 02-authentication]: window.location.href hard redirect on signOut — prevents stale Next.js router cache showing authenticated UI
 
 ### Pending Todos
 
@@ -85,6 +89,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-04-01T21:50:31.886Z
-Stopped at: Phase 2 context gathered
-Resume file: .planning/phases/02-authentication/02-CONTEXT.md
+Last session: 2026-04-01T22:35:56.891Z
+Stopped at: Completed 02-01-PLAN.md
+Resume file: None
