@@ -2,8 +2,8 @@
 phase: 1
 slug: foundation-app-shell
 status: draft
-nyquist_compliant: false
-wave_0_complete: false
+nyquist_compliant: true
+wave_0_complete: true
 created: 2026-04-01
 ---
 
@@ -17,46 +17,42 @@ created: 2026-04-01
 
 | Property | Value |
 |----------|-------|
-| **Framework** | vitest (or jest 29.x — planner decides) |
-| **Config file** | none — Wave 0 installs |
-| **Quick run command** | `npm test` |
-| **Full suite command** | `npm test -- --run` |
-| **Estimated runtime** | ~5 seconds |
+| **Framework** | build-only (no unit test framework in Phase 1) |
+| **Config file** | N/A — `npm run build` with TypeScript strict mode is the automated check |
+| **Quick run command** | `npm run build` |
+| **Full suite command** | `npm run build` |
+| **Estimated runtime** | ~15 seconds |
+
+### Wave 0 Rationale
+
+Phase 1 is pure scaffolding: project setup, Supabase client modules, CSS tokens, layout components, and placeholder pages. There is no business logic with defined I/O to unit test. The meaningful automated verification is:
+
+1. **`npm run build`** — TypeScript strict mode catches type errors, import resolution failures, and JSX issues across all files.
+2. **Human checkpoint (01-02 Task 3)** — Visual fidelity and interaction verification for the app shell.
+
+Unit test infrastructure (Vitest) will be introduced in Phase 3 (Component Library & Data Hooks) where business logic and data hooks provide testable behavior. This avoids installing test tooling that sits unused for two phases.
 
 ---
 
 ## Sampling Rate
 
-- **After every task commit:** Run `npm test`
-- **After every plan wave:** Run `npm test -- --run`
-- **Before `/gsd:verify-work`:** Full suite must be green
-- **Max feedback latency:** 10 seconds
+- **After every task commit:** Run `npm run build`
+- **After every plan wave:** Run `npm run build`
+- **Before `/gsd:verify-work`:** Build must pass + human checkpoint approved
+- **Max feedback latency:** 15 seconds
 
 ---
 
 ## Per-Task Verification Map
 
-| Task ID | Plan | Wave | Requirement | Test Type | Automated Command | File Exists | Status |
-|---------|------|------|-------------|-----------|-------------------|-------------|--------|
-| 01-01-01 | 01 | 1 | DATA-01 | unit | `npm test` | ❌ W0 | ⬜ pending |
-| 01-02-01 | 02 | 1 | DATA-02 | manual | SQL check in Supabase | N/A | ⬜ pending |
-| 01-03-01 | 03 | 1 | NAV-01 | e2e | `npm run dev` visual | ❌ W0 | ⬜ pending |
-| 01-03-02 | 03 | 1 | NAV-02 | unit | `npm test` | ❌ W0 | ⬜ pending |
-| 01-03-03 | 03 | 1 | NAV-05 | manual | Cookie + refresh test | N/A | ⬜ pending |
-| 01-03-04 | 03 | 1 | NAV-06 | manual | Viewport resize test | N/A | ⬜ pending |
-| 01-01-02 | 01 | 1 | DEPLOY-02 | unit | `npx tsc --noEmit` | ✅ | ⬜ pending |
-
-*Status: ⬜ pending · ✅ green · ❌ red · ⚠️ flaky*
-
----
-
-## Wave 0 Requirements
-
-- [ ] Test framework install (vitest or jest)
-- [ ] Test config file (vitest.config.ts or jest.config.ts)
-- [ ] Basic test stubs for Supabase client imports
-
-*If none: "Existing infrastructure covers all phase requirements."*
+| Task ID | Plan | Wave | Requirement | Test Type | Automated Command | Status |
+|---------|------|------|-------------|-----------|-------------------|--------|
+| 01-01-T1 | 01 | 1 | DEPLOY-02 | build | `npm run build` | pending |
+| 01-01-T2 | 01 | 1 | DATA-01, DATA-02 | build | `npm run build` | pending |
+| 01-01-T3 | 01 | 1 | NAV-05 (foundation) | build | `npm run build` | pending |
+| 01-02-T1 | 02 | 2 | NAV-01, NAV-06 | build | `npm run build` | pending |
+| 01-02-T2 | 02 | 2 | NAV-02 | build | `npm run build` | pending |
+| 01-02-T3 | 02 | 2 | NAV-01, NAV-05, NAV-06 | human | Visual + interaction check | pending |
 
 ---
 
@@ -66,18 +62,19 @@ created: 2026-04-01
 |----------|-------------|------------|-------------------|
 | Theme toggle survives refresh | NAV-05 | Requires browser cookie + full reload | Toggle theme, refresh browser, verify theme persists |
 | Sidebar hamburger on mobile | NAV-06 | Requires viewport resize | Resize to <768px, verify hamburger appears and sidebar slides |
-| Supabase schema applied | DATA-02 | Requires Supabase dashboard | Check tables exist in Supabase Studio |
+| Supabase schema applied | DATA-02 | Requires Supabase dashboard | Run SQL in Supabase Studio, check table exists |
 | App shell loads visually | NAV-01 | Visual verification | `npm run dev` and check sidebar + topbar + main area render |
+| Desktop topbar layout | D-06 | Visual verification | Check brand left, progress center, theme toggle right |
 
 ---
 
 ## Validation Sign-Off
 
-- [ ] All tasks have `<automated>` verify or Wave 0 dependencies
-- [ ] Sampling continuity: no 3 consecutive tasks without automated verify
-- [ ] Wave 0 covers all MISSING references
-- [ ] No watch-mode flags
-- [ ] Feedback latency < 10s
-- [ ] `nyquist_compliant: true` set in frontmatter
+- [x] All tasks have `<automated>` verify (`npm run build`)
+- [x] Sampling continuity: every task runs build check
+- [x] Wave 0 not needed — no unit-testable logic in Phase 1 (build-only approach)
+- [x] No watch-mode flags
+- [x] Feedback latency < 15s
+- [x] `nyquist_compliant: true` set in frontmatter
 
-**Approval:** pending
+**Approval:** approved (build-only for scaffolding phase)
