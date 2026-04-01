@@ -13,7 +13,7 @@ A brownfield migration of a live course platform from monolithic HTML/iframe arc
 Decimal phases appear between their surrounding integers in numeric order.
 
 - [x] **Phase 1: Foundation & App Shell** - Next.js 15 scaffold, Supabase clients, TypeScript types, new DB schema, and three-panel app layout with theme support (completed 2026-04-01)
-- [ ] **Phase 2: Authentication** - Supabase magic link auth with middleware route protection, session cookies, and AuthContext
+- [x] **Phase 2: Authentication** - Supabase magic link auth with middleware route protection, session cookies, and AuthContext (completed 2026-04-01)
 - [ ] **Phase 3: Component Library & Data Hooks** - Reusable workshop UI components and unified auto-save hook with AbortController
 - [ ] **Phase 4: API Security** - Server-side Next.js API route wrappers for all three Supabase edge functions
 - [ ] **Phase 5: Module Migration** - All six course module pages migrated 1:1 with full content, URL routing, and progress tracking
@@ -48,7 +48,7 @@ Plans:
   3. User who is not signed in and navigates to any module URL is redirected to the login page
   4. Auth callback route exchanges the magic link token and redirects to the dashboard without error
   5. User clicks sign out from any page and is immediately redirected to the login page
-**Plans:** 1/2 plans executed
+**Plans:** 2/2 plans complete
 Plans:
 - [x] 02-01-PLAN.md — Auth infrastructure: middleware, callback route, AuthContext provider
 - [x] 02-02-PLAN.md — Login page UI, LoginForm, UserModal, sign-out in sidebar
@@ -121,7 +121,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. Foundation & App Shell | 2/2 | Complete   | 2026-04-01 |
-| 2. Authentication | 1/2 | In Progress|  |
+| 2. Authentication | 2/2 | Complete   | 2026-04-01 |
 | 3. Component Library & Data Hooks | 0/TBD | Not started | - |
 | 4. API Security | 0/TBD | Not started | - |
 | 5. Module Migration | 0/TBD | Not started | - |

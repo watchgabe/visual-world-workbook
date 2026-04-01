@@ -60,7 +60,7 @@ completed: 2026-04-01
 - **Duration:** ~3 min
 - **Started:** 2026-04-01T22:36:54Z
 - **Completed:** 2026-04-01T22:39:00Z
-- **Tasks:** 2 of 3 (stopped at checkpoint:human-verify)
+- **Tasks:** 3 of 3
 - **Files modified:** 5
 
 ## Accomplishments
@@ -75,8 +75,7 @@ Each task was committed atomically:
 
 1. **Task 1: Create login page with branded layout and LoginForm component** - `a67ddd7` (feat)
 2. **Task 2: Create UserModal and add user trigger to Sidebar footer** - `c9bddcb` (feat)
-
-_Task 3 is a checkpoint:human-verify — awaiting manual end-to-end flow verification._
+3. **Task 3: Verify complete auth flow** - checkpoint:human-verify approved by user
 
 ## Files Created/Modified
 - `src/app/login/layout.tsx` — Minimal passthrough layout (bypasses (app) route group)
@@ -101,10 +100,9 @@ None.
 None from code changes. The Supabase Auth dashboard "Redirect URLs" must include `http://localhost:3000/auth/callback` — this is a one-time manual step noted in the research. The checkpoint verification step includes a pre-check reminder for this.
 
 ## Next Phase Readiness
-- Login UI fully implemented and TypeScript-clean
-- UserModal and Sidebar updated with sign-out trigger
-- Awaiting human verification of end-to-end auth flow (Task 3 checkpoint)
-- After checkpoint passes, Phase 02 authentication is complete and Phase 03 can begin
+- Complete auth flow verified end-to-end: redirect to /login with return URL, magic link send + success state, callback redirect to original destination, session persistence, sign-out with immediate redirect
+- Phase 02 authentication is complete — Phase 03 (module shell) can safely assume AuthContext is available and users are protected by middleware
+- UserModal is minimal by design — future phases can extend with profile info, progress reset, etc.
 
 ---
 *Phase: 02-authentication*
