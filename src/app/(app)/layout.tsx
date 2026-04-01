@@ -1,5 +1,6 @@
 import { cookies } from 'next/headers'
 import { AppShellClient } from '@/components/layout/AppShellClient'
+import { AuthProvider } from '@/context/AuthContext'
 
 export default async function AppLayout({
   children,
@@ -10,8 +11,10 @@ export default async function AppLayout({
   const theme = (cookieStore.get('blp-theme')?.value as 'dark' | 'light') ?? 'dark'
 
   return (
-    <AppShellClient currentTheme={theme}>
-      {children}
-    </AppShellClient>
+    <AuthProvider>
+      <AppShellClient currentTheme={theme}>
+        {children}
+      </AppShellClient>
+    </AuthProvider>
   )
 }
