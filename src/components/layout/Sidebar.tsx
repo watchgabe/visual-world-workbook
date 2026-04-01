@@ -4,6 +4,7 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { MODULES } from '@/lib/modules'
 import { ProgressBar } from './ProgressBar'
+import { ThemeToggle } from './ThemeToggle'
 
 interface SidebarProps {
   isOpen: boolean
@@ -11,7 +12,7 @@ interface SidebarProps {
   currentTheme: 'dark' | 'light'
 }
 
-export function Sidebar({ isOpen, onClose }: SidebarProps) {
+export function Sidebar({ isOpen, onClose, currentTheme }: SidebarProps) {
   const pathname = usePathname()
 
   return (
@@ -180,15 +181,21 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
         })}
       </nav>
 
-      {/* Sidebar footer with progress bar */}
+      {/* Sidebar footer — progress bar + theme toggle (matches original layout) */}
       <div
         style={{
           padding: '1rem 1.25rem',
           borderTop: '1px solid var(--border)',
           flexShrink: 0,
+          display: 'flex',
+          alignItems: 'center',
+          gap: '10px',
         }}
       >
-        <ProgressBar percent={0} />
+        <div style={{ flex: 1 }}>
+          <ProgressBar percent={0} />
+        </div>
+        <ThemeToggle currentTheme={currentTheme} />
       </div>
     </aside>
   )

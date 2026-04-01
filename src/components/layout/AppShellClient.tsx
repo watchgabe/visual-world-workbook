@@ -2,7 +2,6 @@
 
 import { useState } from 'react'
 import { Sidebar } from './Sidebar'
-import { Topbar } from './Topbar'
 import { MobileTopbar } from './MobileTopbar'
 
 interface AppShellClientProps {
@@ -15,9 +14,6 @@ export function AppShellClient({ children, currentTheme }: AppShellClientProps) 
 
   return (
     <>
-      {/* Desktop topbar — hidden on mobile, visible md+ per D-06 */}
-      <Topbar currentTheme={currentTheme} />
-
       {/* Mobile topbar — visible below 768px only */}
       <MobileTopbar
         onToggle={() => setSidebarOpen(prev => !prev)}
@@ -43,8 +39,8 @@ export function AppShellClient({ children, currentTheme }: AppShellClientProps) 
         className="ml-0 md:ml-[280px] min-h-screen overflow-y-auto"
         style={{ height: '100vh' }}
       >
-        {/* On mobile/desktop, add top padding for topbar */}
-        <div className="pt-[var(--topbar-h)] p-6">
+        {/* Mobile: add top padding for mobile topbar. Desktop: no topbar, no padding needed */}
+        <div className="pt-[var(--topbar-h)] md:pt-0 p-6">
           {children}
         </div>
       </main>
