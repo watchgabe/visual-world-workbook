@@ -3,8 +3,8 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: verifying
-stopped_at: "Checkpoint: 01-02 Task 3 human-verify — waiting for visual inspection"
-last_updated: "2026-04-01T20:38:36.679Z"
+stopped_at: Completed 01-02-PLAN.md — Phase 01 complete
+last_updated: "2026-04-01T20:59:04.863Z"
 last_activity: 2026-04-01
 progress:
   total_phases: 7
@@ -54,6 +54,7 @@ Progress: [░░░░░░░░░░] 0%
 *Updated after each plan completion*
 | Phase 01-foundation-app-shell P01 | 35 | 3 tasks | 14 files |
 | Phase 01-foundation-app-shell P02 | 25 | 2 tasks | 9 files |
+| Phase 01-foundation-app-shell P02 | 30 | 3 tasks | 9 files |
 
 ## Accumulated Context
 
@@ -70,6 +71,8 @@ Recent decisions affecting current work:
 - [Phase 01-foundation-app-shell]: Google Fonts link tag in layout.tsx matches old app approach; ESLint warning is non-blocking
 - [Phase 01-foundation-app-shell]: AppShellClient thin-wrapper pattern: server layout reads cookie -> passes to client wrapper -> client manages sidebar open/close state without Context
 - [Phase 01-foundation-app-shell]: ThemeToggle: document.cookie write + router.refresh() — no flash, no SSR mismatch, no extra dependency
+- [Phase 01-foundation-app-shell]: No desktop topbar — original app has brand, progress, and theme toggle in sidebar footer; Topbar.tsx removed after human verification
+- [Phase 01-foundation-app-shell]: ThemeToggle in Sidebar footer on desktop; in MobileTopbar on mobile — matching original app exactly
 
 ### Pending Todos
 
@@ -82,6 +85,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-04-01T20:38:36.676Z
-Stopped at: Checkpoint: 01-02 Task 3 human-verify — waiting for visual inspection
+Last session: 2026-04-01T20:59:04.854Z
+Stopped at: Completed 01-02-PLAN.md — Phase 01 complete
 Resume file: None

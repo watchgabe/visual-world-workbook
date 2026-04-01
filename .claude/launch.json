@@ -2,10 +2,10 @@
   "version": "0.0.1",
   "configurations": [
     {
-      "name": "Watch Gabe Links",
-      "runtimeExecutable": "python3",
-      "runtimeArgs": ["/tmp/watchgabe_serve.py"],
-      "port": 8083
+      "name": "nextjs-dev",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["run", "dev"],
+      "port": 3000
     }
   ]
 }
