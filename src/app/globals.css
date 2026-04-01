@@ -1,26 +1,77 @@
 @import "tailwindcss";
 
+/* Activate dark: prefix utilities when data-theme="dark" is on <html> — per D-07 hybrid approach */
+@custom-variant dark (&:where([data-theme=dark], [data-theme=dark] *));
+
+/* ─── DESIGN TOKENS — DARK (default, per D-08) ─── */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --bg: #0a0a0a;
+  --surface: #111111;
+  --card: #161616;
+  --border: #1f1f1f;
+  --border2: #2a2a2a;
+  --text: #ffffff;
+  --dim: #a0a0a0;
+  --dimmer: #555555;
+  --orange: #F0601B;
+  --orange-hover: #ff6d28;
+  --orange-tint: rgba(240, 96, 27, 0.1);
+  --orange-border: rgba(240, 96, 27, 0.28);
+  --orange-dark: #ff8050;
+  --green-bg: rgba(61, 184, 100, 0.1);
+  --green-text: #5DCAA5;
+  --green-border: rgba(93, 202, 165, 0.3);
+  --radius-lg: 10px;
+  --radius-md: 6px;
+  --font: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  --font-num: 'Barlow Condensed', sans-serif;
+  --topbar-h: 48px;
+  --sidebar-w: 280px;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+/* ─── TOKENS — LIGHT OVERRIDE ─── */
+[data-theme="light"] {
+  --bg: #f7f6f4;
+  --surface: #edecea;
+  --card: #e2e0dc;
+  --border: #ccc9c2;
+  --border2: #b8b4ac;
+  --text: #0a0a0a;
+  --dim: #404040;
+  --dimmer: #888888;
+  --orange-tint: #FEF0E8;
+  --orange-border: #F4B89A;
+  --orange-dark: #B84410;
+  --green-bg: #E6F5EF;
+  --green-text: #085041;
+  --green-border: #5DCAA5;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
-
+/* ─── BASE ─── */
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font);
+  font-size: 15px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  overflow: hidden;
+  transition: background .25s, color .25s;
+}
+
+/* ─── GRAIN OVERLAY (D-09) ─── */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='grain'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23grain)' opacity='0.025'/%3E%3C/svg%3E");
+  mix-blend-mode: overlay;
+}
+
+/* ─── SCROLLBAR ─── */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--border2) transparent;
 }
