@@ -2,15 +2,15 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-status: executing
-stopped_at: Completed 01-foundation-app-shell/01-01-PLAN.md
-last_updated: "2026-04-01T20:32:46.471Z"
+status: verifying
+stopped_at: "Checkpoint: 01-02 Task 3 human-verify — waiting for visual inspection"
+last_updated: "2026-04-01T20:38:36.679Z"
 last_activity: 2026-04-01
 progress:
   total_phases: 7
-  completed_phases: 0
+  completed_phases: 1
   total_plans: 2
-  completed_plans: 1
+  completed_plans: 2
   percent: 0
 ---
 
@@ -27,7 +27,7 @@ See: .planning/PROJECT.md (updated 2026-04-01)
 
 Phase: 01 (foundation-app-shell) — EXECUTING
 Plan: 2 of 2
-Status: Ready to execute
+Status: Phase complete — ready for verification
 Last activity: 2026-04-01
 
 Progress: [░░░░░░░░░░] 0%
@@ -53,6 +53,7 @@ Progress: [░░░░░░░░░░] 0%
 
 *Updated after each plan completion*
 | Phase 01-foundation-app-shell P01 | 35 | 3 tasks | 14 files |
+| Phase 01-foundation-app-shell P02 | 25 | 2 tasks | 9 files |
 
 ## Accumulated Context
 
@@ -67,6 +68,8 @@ Recent decisions affecting current work:
 - Init: React Context over Zustand for auth, progress, and theme state
 - [Phase 01-foundation-app-shell]: Excluded old/ from TypeScript compilation to avoid Deno type errors in edge function files
 - [Phase 01-foundation-app-shell]: Google Fonts link tag in layout.tsx matches old app approach; ESLint warning is non-blocking
+- [Phase 01-foundation-app-shell]: AppShellClient thin-wrapper pattern: server layout reads cookie -> passes to client wrapper -> client manages sidebar open/close state without Context
+- [Phase 01-foundation-app-shell]: ThemeToggle: document.cookie write + router.refresh() — no flash, no SSR mismatch, no extra dependency
 
 ### Pending Todos
 
@@ -79,6 +82,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-04-01T20:32:46.468Z
-Stopped at: Completed 01-foundation-app-shell/01-01-PLAN.md
+Last session: 2026-04-01T20:38:36.676Z
+Stopped at: Checkpoint: 01-02 Task 3 human-verify — waiting for visual inspection
 Resume file: None

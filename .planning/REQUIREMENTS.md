@@ -26,12 +26,12 @@ Requirements for initial release. Each maps to roadmap phases.
 
 ### Navigation & Layout
 
-- [ ] **NAV-01**: App layout with sidebar, topbar, and overall progress bar shared across all pages
-- [ ] **NAV-02**: Direct routing via Next.js App Router (no iframes)
+- [x] **NAV-01**: App layout with sidebar, topbar, and overall progress bar shared across all pages
+- [x] **NAV-02**: Direct routing via Next.js App Router (no iframes)
 - [ ] **NAV-03**: Each module section is URL-addressable (e.g., /modules/brand-foundation/core-values)
 - [ ] **NAV-04**: Sidebar shows module list with per-module completion status
-- [ ] **NAV-05**: Dark/light theme toggle stored in cookie (no SSR hydration mismatch)
-- [ ] **NAV-06**: Mobile responsive sidebar with hamburger menu
+- [x] **NAV-05**: Dark/light theme toggle stored in cookie (no SSR hydration mismatch)
+- [x] **NAV-06**: Mobile responsive sidebar with hamburger menu
 
 ### Component Library
 
@@ -126,12 +126,12 @@ Which phases cover which requirements. Updated during roadmap creation.
 | DATA-04 | Phase 3 | Pending |
 | DATA-05 | Phase 3 | Pending |
 | DATA-06 | Phase 3 | Pending |
-| NAV-01 | Phase 1 | Pending |
-| NAV-02 | Phase 1 | Pending |
+| NAV-01 | Phase 1 | Complete |
+| NAV-02 | Phase 1 | Complete |
 | NAV-03 | Phase 5 | Pending |
 | NAV-04 | Phase 5 | Pending |
-| NAV-05 | Phase 1 | Pending |
-| NAV-06 | Phase 1 | Pending |
+| NAV-05 | Phase 1 | Complete |
+| NAV-06 | Phase 1 | Complete |
 | COMP-01 | Phase 3 | Pending |
 | COMP-02 | Phase 3 | Pending |
 | COMP-03 | Phase 3 | Pending |

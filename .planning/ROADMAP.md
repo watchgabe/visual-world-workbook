@@ -12,7 +12,7 @@ A brownfield migration of a live course platform from monolithic HTML/iframe arc
 
 Decimal phases appear between their surrounding integers in numeric order.
 
-- [ ] **Phase 1: Foundation & App Shell** - Next.js 15 scaffold, Supabase clients, TypeScript types, new DB schema, and three-panel app layout with theme support
+- [x] **Phase 1: Foundation & App Shell** - Next.js 15 scaffold, Supabase clients, TypeScript types, new DB schema, and three-panel app layout with theme support (completed 2026-04-01)
 - [ ] **Phase 2: Authentication** - Supabase magic link auth with middleware route protection, session cookies, and AuthContext
 - [ ] **Phase 3: Component Library & Data Hooks** - Reusable workshop UI components and unified auto-save hook with AbortController
 - [ ] **Phase 4: API Security** - Server-side Next.js API route wrappers for all three Supabase edge functions
@@ -32,10 +32,10 @@ Decimal phases appear between their surrounding integers in numeric order.
   3. New database schema is applied in Supabase with tables and columns designed for the unified auto-save pattern
   4. Dark/light theme toggle switches the app theme and the choice survives a browser refresh (stored in cookie, no hydration flash)
   5. Sidebar collapses to a hamburger menu on mobile and expands on desktop
-**Plans:** 1/2 plans executed
+**Plans:** 2/2 plans complete
 Plans:
 - [x] 01-01-PLAN.md — Scaffold Next.js 15, Supabase clients, DB schema, CSS architecture
-- [ ] 01-02-PLAN.md — Three-panel app shell with sidebar, theme toggle, mobile responsive, module routing
+- [x] 01-02-PLAN.md — Three-panel app shell with sidebar, theme toggle, mobile responsive, module routing
 **UI hint**: yes
 
 ### Phase 2: Authentication
@@ -116,7 +116,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Foundation & App Shell | 1/2 | In Progress|  |
+| 1. Foundation & App Shell | 2/2 | Complete   | 2026-04-01 |
 | 2. Authentication | 0/TBD | Not started | - |
 | 3. Component Library & Data Hooks | 0/TBD | Not started | - |
 | 4. API Security | 0/TBD | Not started | - |
