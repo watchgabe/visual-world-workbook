@@ -107,7 +107,8 @@ export default function BrandFoundationOverview() {
       <div
         style={{
           display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))',
+          gridTemplateColumns: 'repeat(2, 1fr)',
+          gridAutoRows: '1fr',
           gap: '8px',
           marginBottom: '2rem',
         }}
@@ -124,7 +125,7 @@ export default function BrandFoundationOverview() {
           <Link
             key={card.slug}
             href={`/modules/brand-foundation/${card.slug}`}
-            style={{ textDecoration: 'none' }}
+            style={{ textDecoration: 'none', display: 'flex' }}
           >
             <div
               style={{
@@ -134,6 +135,7 @@ export default function BrandFoundationOverview() {
                 padding: '1rem 1.1rem',
                 cursor: 'pointer',
                 transition: 'transform 0.15s',
+                flex: 1,
               }}
             >
               <div
