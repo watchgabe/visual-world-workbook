@@ -68,7 +68,7 @@ export default function BrandFoundationOverview() {
             <div
               style={{
                 fontFamily: 'var(--font-num)',
-                fontSize: 'clamp(2.5rem, 4vw, 3.5rem)',
+                fontSize: 'clamp(1.8rem, 3vw, 2.2rem)',
                 fontWeight: 900,
                 color: 'var(--text)',
                 lineHeight: 1,
