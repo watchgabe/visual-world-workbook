@@ -138,10 +138,53 @@ export const MODULE_SECTIONS: Partial<Record<ModuleSlug, SectionDef[]>> = {
   ],
   'visual-world': [
     { slug: 'overview',         name: 'Overview',         fields: [] },
-    { slug: 'creator-analysis', name: 'Creator Analysis', fields: [] },
-    { slug: 'color-palette',    name: 'Color Palette',    fields: [] },
-    { slug: 'typography',       name: 'Typography',       fields: [] },
-    { slug: 'shot-system',      name: 'Shot System',      fields: [] },
+    { slug: 'creator-analysis', name: 'Creator Analysis', fields: [
+      { key: 'vw_ca_patterns',   required: false },
+      { key: 'vw_ca_different',  required: false },
+      { key: 'vw_ca_own',        required: false },
+      { key: 'vw_ca_gap',        required: false },
+    ]},
+    { slug: 'color-palette',    name: 'Color Palette',    fields: [
+      // Mood Board section fields
+      { key: 'vw_mb_link',       required: false },
+      { key: 'vw_mb_colors',     required: false },
+      { key: 'vw_mb_lighting',   required: false },
+      { key: 'vw_mb_mood',       required: false },
+      { key: 'vw_mb_textures',   required: false },
+      { key: 'vw_mb_movie',      required: false },
+      { key: 'vw_mb_time',       required: false },
+      { key: 'vw_mb_place',      required: false },
+      // Color Palette fields
+      { key: 'vw_color_primary',   required: false },
+      { key: 'vw_color_secondary', required: false },
+      { key: 'vw_color_accent',    required: false },
+      { key: 'vw_color_neutral',   required: false },
+      { key: 'vw_color_name',      required: false },
+    ]},
+    { slug: 'typography',       name: 'Typography',       fields: [
+      { key: 'vw_typo_primary',  required: false },
+      { key: 'vw_typo_body',     required: false },
+    ]},
+    { slug: 'shot-system',      name: 'Shot System',      fields: [
+      // Element 1: Setting
+      { key: 'vw_shot_e1_location',    required: false },
+      { key: 'vw_shot_e1_vibe',        required: false },
+      { key: 'vw_shot_e1_communicate', required: false },
+      { key: 'vw_shot_e1_statement',   required: false },
+      // Element 2: Mood
+      { key: 'vw_shot_e2_mood',        required: false },
+      { key: 'vw_shot_e2_lighting',    required: false },
+      { key: 'vw_shot_e2_time',        required: false },
+      { key: 'vw_shot_e2_statement',   required: false },
+      // Element 3: Color Language
+      { key: 'vw_shot_e3_grade',       required: false },
+      { key: 'vw_shot_e3_ref',         required: false },
+      // Element 4: Design Details
+      { key: 'vw_shot_e4_objects',     required: false },
+      { key: 'vw_shot_e4_textures',    required: false },
+      { key: 'vw_shot_e4_wardrobe',    required: false },
+      { key: 'vw_shot_e4_never',       required: false },
+    ]},
     { slug: 'visual-world-doc', name: 'Visual World Doc', fields: [] },
   ],
   'content': [

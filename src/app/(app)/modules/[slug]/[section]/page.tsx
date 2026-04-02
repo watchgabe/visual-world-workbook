@@ -23,7 +23,10 @@ const SECTION_REGISTRY: Record<string, React.ComponentType<any>> = {
   'brand-foundation/origin-story':    dynamic(() => import('@/components/sections/brand-foundation/origin-story')),
   'brand-foundation/brand-vision':    dynamic(() => import('@/components/sections/brand-foundation/brand-vision')),
 
-  // Visual World sections — populated by Plan 03
+  // Visual World sections — Plan 03 (Tasks 1-2)
+  'visual-world/overview':         dynamic(() => import('@/components/sections/visual-world/overview')),
+  'visual-world/creator-analysis': dynamic(() => import('@/components/sections/visual-world/creator-analysis')),
+  'visual-world/color-palette':    dynamic(() => import('@/components/sections/visual-world/color-palette')),
 
   // Content sections — populated by Plan 04
 
