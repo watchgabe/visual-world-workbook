@@ -57,12 +57,11 @@ export function ModuleOverview({
       </div>
       <h1
         style={{
-          fontFamily: 'var(--font-num)',
-          fontSize: 'clamp(2.2rem, 5vw, 3.2rem)',
-          fontWeight: 900,
-          letterSpacing: '-.01em',
-          lineHeight: 1.05,
-          textTransform: 'uppercase',
+          fontFamily: 'var(--font)',
+          fontSize: 'clamp(1.8rem, 4vw, 2.4rem)',
+          fontWeight: 700,
+          letterSpacing: '-.02em',
+          lineHeight: 1.15,
           marginBottom: '1rem',
         }}
       >
