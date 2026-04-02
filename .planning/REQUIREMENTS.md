@@ -28,8 +28,8 @@ Requirements for initial release. Each maps to roadmap phases.
 
 - [x] **NAV-01**: App layout with sidebar, topbar, and overall progress bar shared across all pages
 - [x] **NAV-02**: Direct routing via Next.js App Router (no iframes)
-- [ ] **NAV-03**: Each module section is URL-addressable (e.g., /modules/brand-foundation/core-values)
-- [ ] **NAV-04**: Sidebar shows module list with per-module completion status
+- [x] **NAV-03**: Each module section is URL-addressable (e.g., /modules/brand-foundation/core-values)
+- [x] **NAV-04**: Sidebar shows module list with per-module completion status
 - [x] **NAV-05**: Dark/light theme toggle stored in cookie (no SSR hydration mismatch)
 - [x] **NAV-06**: Mobile responsive sidebar with hamburger menu
 
@@ -44,7 +44,7 @@ Requirements for initial release. Each maps to roadmap phases.
 
 ### Module Migration
 
-- [ ] **MOD-01**: Module 00 — Welcome page (static overview/landing for logged-in users)
+- [x] **MOD-01**: Module 00 — Welcome page (static overview/landing for logged-in users)
 - [ ] **MOD-02**: Module 01 — Brand Foundation: 7 sections, ~45 form fields, all content migrated 1:1
 - [ ] **MOD-03**: Module 02 — Visual World: 6 sections including mood board, color picker, font uploader
 - [ ] **MOD-04**: Module 03 — Content: 5 sections including Claude AI content generation integration
@@ -128,8 +128,8 @@ Which phases cover which requirements. Updated during roadmap creation.
 | DATA-06 | Phase 3 | Complete |
 | NAV-01 | Phase 1 | Complete |
 | NAV-02 | Phase 1 | Complete |
-| NAV-03 | Phase 5 | Pending |
-| NAV-04 | Phase 5 | Pending |
+| NAV-03 | Phase 5 | Complete |
+| NAV-04 | Phase 5 | Complete |
 | NAV-05 | Phase 1 | Complete |
 | NAV-06 | Phase 1 | Complete |
 | COMP-01 | Phase 3 | Complete |
@@ -138,7 +138,7 @@ Which phases cover which requirements. Updated during roadmap creation.
 | COMP-04 | Phase 3 | Complete |
 | COMP-05 | Phase 3 | Complete |
 | COMP-06 | Phase 3 | Complete |
-| MOD-01 | Phase 5 | Pending |
+| MOD-01 | Phase 5 | Complete |
 | MOD-02 | Phase 5 | Pending |
 | MOD-03 | Phase 5 | Pending |
 | MOD-04 | Phase 5 | Pending |

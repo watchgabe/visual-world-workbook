@@ -2,15 +2,15 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-status: verifying
-stopped_at: Phase 5 context gathered
-last_updated: "2026-04-02T16:42:57.445Z"
+status: executing
+stopped_at: Completed 05-01-PLAN.md
+last_updated: "2026-04-02T18:07:07.126Z"
 last_activity: 2026-04-02
 progress:
   total_phases: 7
   completed_phases: 4
-  total_plans: 8
-  completed_plans: 8
+  total_plans: 14
+  completed_plans: 9
   percent: 0
 ---
 
@@ -21,13 +21,13 @@ progress:
 See: .planning/PROJECT.md (updated 2026-04-01)
 
 **Core value:** Students can work through all course modules with their progress reliably saved, synced, and accessible — without data loss or auth confusion.
-**Current focus:** Phase 04 — api-security
+**Current focus:** Phase 05 — module-migration
 
 ## Current Position
 
-Phase: 5
-Plan: Not started
-Status: Phase complete — ready for verification
+Phase: 05 (module-migration) — EXECUTING
+Plan: 2 of 6
+Status: Ready to execute
 Last activity: 2026-04-02
 
 Progress: [░░░░░░░░░░] 0%
@@ -62,6 +62,7 @@ Progress: [░░░░░░░░░░] 0%
 | Phase 03-component-library-data-hooks P02 | 15 | 2 tasks | 4 files |
 | Phase 03-component-library-data-hooks P03 | 45 | 3 tasks | 10 files |
 | Phase 04-api-security P01 | 15 | 2 tasks | 6 files |
+| Phase 05-module-migration P01 | 20 | 4 tasks | 14 files |
 
 ## Accumulated Context
 
@@ -95,6 +96,8 @@ Recent decisions affecting current work:
 - [Phase 03-component-library-data-hooks]: SectionWrapper uses data-complete HTML attribute rather than Context subscription — pure presentational container, ProgressContext reads field data independently
 - [Phase 04-api-security]: Direct fetch() from Route Handlers to edge functions with SUPABASE_SERVICE_ROLE_KEY (no NEXT_PUBLIC_ prefix) — server-to-server calls keep API keys out of browser
 - [Phase 04-api-security]: Single /api/circle route with pass-through action field (thin proxy D-03/D-04) — consistent, no URL/body duplication
+- [Phase 05-module-migration]: Static SECTION_REGISTRY in [section]/page.tsx instead of template-literal dynamic imports — webpack requires base directory to exist at build time
+- [Phase 05-module-migration]: Plans 02-05 add SECTION_REGISTRY entries in [slug]/[section]/page.tsx when creating section components — convention: default export from src/components/sections/{slug}/{section-slug}.tsx
 
 ### Pending Todos
 
@@ -107,6 +110,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-04-02T16:42:57.433Z
-Stopped at: Phase 5 context gathered
-Resume file: .planning/phases/05-module-migration/05-CONTEXT.md
+Last session: 2026-04-02T18:07:07.122Z
+Stopped at: Completed 05-01-PLAN.md
+Resume file: None
