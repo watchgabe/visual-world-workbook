@@ -16,7 +16,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [x] **Phase 2: Authentication** - Supabase magic link auth with middleware route protection, session cookies, and AuthContext (completed 2026-04-01)
 - [x] **Phase 3: Component Library & Data Hooks** - Reusable workshop UI components and unified auto-save hook with AbortController (completed 2026-04-02)
 - [x] **Phase 4: API Security** - Server-side Next.js API route wrappers for all three Supabase edge functions (completed 2026-04-02)
-- [ ] **Phase 5: Module Migration** - All six course module pages migrated 1:1 with full content, URL routing, and progress tracking
+- [x] **Phase 5: Module Migration** - All six course module pages migrated 1:1 with full content, URL routing, and progress tracking (completed 2026-04-02)
 - [ ] **Phase 6: Admin Dashboard** - Server-side protected admin with user list, progress viewer, badge award, and delete
 - [ ] **Phase 7: Deployment** - Vercel environment variables, Supabase production URL config, and production smoke test
 
@@ -93,14 +93,14 @@ Plans:
   3. A student types into any form field in any module, closes the tab, reopens it, and their answer is still there
   4. Module 04 Content page generates AI copy via the Claude integration and populates the relevant form field
   5. Module 05 Playbook page displays a read-only compiled view of all answers from all prior modules, and the print view renders cleanly
-**Plans:** 5/6 plans executed
+**Plans:** 6/6 plans complete
 Plans:
 - [x] 05-01-PLAN.md — Infrastructure: useAutoSave full-responses, MODULE_SECTIONS config, module layout routing, sidebar progress, Welcome page
 - [x] 05-02-PLAN.md — Brand Foundation: 7 sections migrated with ~45 form fields
 - [x] 05-03-PLAN.md — Visual World: 6 sections with color palette, typography, and compiled doc
 - [x] 05-04-PLAN.md — Content: 6 sections with Claude AI generation integration
 - [x] 05-05-PLAN.md — Launch: 7 sections for bio, funnel, lead magnet, goals
-- [ ] 05-06-PLAN.md — Playbook: read-only compiled view with print CSS + visual checkpoint
+- [x] 05-06-PLAN.md — Playbook: read-only compiled view with print CSS + visual checkpoint
 **UI hint**: yes
 
 ### Phase 6: Admin Dashboard
@@ -137,6 +137,6 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7
 | 2. Authentication | 2/2 | Complete   | 2026-04-01 |
 | 3. Component Library & Data Hooks | 3/3 | Complete   | 2026-04-02 |
 | 4. API Security | 1/1 | Complete   | 2026-04-02 |
-| 5. Module Migration | 5/6 | In Progress|  |
+| 5. Module Migration | 6/6 | Complete   | 2026-04-02 |
 | 6. Admin Dashboard | 0/TBD | Not started | - |
 | 7. Deployment | 0/TBD | Not started | - |

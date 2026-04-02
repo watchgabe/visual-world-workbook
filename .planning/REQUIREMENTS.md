@@ -49,8 +49,8 @@ Requirements for initial release. Each maps to roadmap phases.
 - [x] **MOD-03**: Module 02 — Visual World: 6 sections including mood board, color picker, font uploader
 - [x] **MOD-04**: Module 03 — Content: 5 sections including Claude AI content generation integration
 - [x] **MOD-05**: Module 04 — Launch: 6 sections for bio, funnel, lead magnet, goals
-- [ ] **MOD-06**: Module 05 — Compiled Playbook: read-only view aggregating all module data
-- [ ] **MOD-07**: Print-friendly playbook view preserved
+- [x] **MOD-06**: Module 05 — Compiled Playbook: read-only view aggregating all module data
+- [x] **MOD-07**: Print-friendly playbook view preserved
 
 ### API Security
 
@@ -143,8 +143,8 @@ Which phases cover which requirements. Updated during roadmap creation.
 | MOD-03 | Phase 5 | Complete |
 | MOD-04 | Phase 5 | Complete |
 | MOD-05 | Phase 5 | Complete |
-| MOD-06 | Phase 5 | Pending |
-| MOD-07 | Phase 5 | Pending |
+| MOD-06 | Phase 5 | Complete |
+| MOD-07 | Phase 5 | Complete |
 | API-01 | Phase 4 | Complete |
 | API-02 | Phase 4 | Complete |
 | API-03 | Phase 4 | Complete |
