@@ -12,11 +12,17 @@ interface RoadmapCard {
   sub: string
 }
 
+interface StatCard {
+  num: number
+  label: string
+}
+
 interface ModuleOverviewProps {
   moduleSlug: ModuleSlug
   moduleNumber: string
   title: string
   description: string
+  stats: [StatCard, StatCard]
   roadmap: RoadmapCard[]
 }
 
@@ -25,19 +31,15 @@ export function ModuleOverview({
   moduleNumber,
   title,
   description,
+  stats,
   roadmap,
 }: ModuleOverviewProps) {
   const { moduleProgress } = useProgress()
   const sections = MODULE_SECTIONS[moduleSlug] ?? []
 
-  // Workshops = sections with fields (exclude overview which has no fields)
-  const workshops = sections.filter(s => s.fields.length > 0).length
-  // Deliverables = total unique fields across all sections
-  const deliverables = sections.reduce((sum, s) => sum + s.fields.length, 0)
-  // Completed = count of sections where all required fields are filled
-  // For now we use progress as a proxy — 100% module progress means all complete
+  const workshopCount = sections.filter(s => s.fields.length > 0).length
   const progress = moduleProgress[moduleSlug] ?? 0
-  const completed = progress === 100 ? workshops : Math.floor((progress / 100) * workshops)
+  const completed = progress === 100 ? workshopCount : Math.floor((progress / 100) * workshopCount)
 
   return (
     <section>
@@ -87,8 +89,8 @@ export function ModuleOverview({
         }}
       >
         {[
-          { num: workshops, label: 'WORKSHOPS' },
-          { num: deliverables, label: 'DELIVERABLES' },
+          stats[0],
+          stats[1],
           { num: completed, label: 'COMPLETED' },
         ].map(card => (
           <div

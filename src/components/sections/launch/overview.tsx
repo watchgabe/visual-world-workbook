@@ -7,6 +7,10 @@ export default function LaunchOverview() {
       moduleNumber="04"
       title="Launch™"
       description="Now it's time to build the infrastructure that turns attention into subscribers and subscribers into buyers — then announce your brand to the world with clarity and momentum. You don't own your audience. Every follower you have lives on a platform that can change its algorithm, ban your account, or disappear entirely. This module is how you fix that."
+      stats={[
+        { num: 7, label: 'WORKSHOPS' },
+        { num: 7, label: 'DELIVERABLES' },
+      ]}
       roadmap={[
         { num: '01', slug: 'bio', title: 'Bio Optimization', sub: 'Turn your profile into a conversion tool' },
         { num: '02', slug: 'funnel', title: 'Your Funnel', sub: 'Map the path from attention to customer' },

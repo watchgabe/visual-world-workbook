@@ -7,6 +7,10 @@ export default function ContentOverview() {
       moduleNumber="03"
       title="Create Your Content™"
       description="How to create content that looks premium, builds trust, and gets customers. Each section teaches you the framework, then gives you an exercise to apply it. By the end you'll have a complete personalized content playbook. The creators who win aren't the most talented. They're the most consistent. They understand three things: how to look premium, how to build trust, and how to get customers. This workbook covers all three."
+      stats={[
+        { num: 10, label: 'PARTS' },
+        { num: 24, label: 'EXERCISES' },
+      ]}
       roadmap={[
         { num: '01', slug: 'content-strategy', title: 'Content Strategy', sub: 'The framework behind effective content' },
         { num: '02', slug: 'sustainability', title: 'Sustainability', sub: 'Build a system that keeps you consistent' },
