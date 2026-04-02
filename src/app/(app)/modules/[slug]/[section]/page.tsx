@@ -39,7 +39,14 @@ const SECTION_REGISTRY: Record<string, React.ComponentType<any>> = {
   'content/content-system':    dynamic(() => import('@/components/sections/content/content-system')),
   'content/trust-and-money':   dynamic(() => import('@/components/sections/content/trust-and-money')),
 
-  // Launch sections — populated by Plan 05
+  // Launch sections — Plan 05
+  'launch/overview':        dynamic(() => import('@/components/sections/launch/overview')),
+  'launch/funnel':          dynamic(() => import('@/components/sections/launch/funnel')),
+  'launch/manychat':        dynamic(() => import('@/components/sections/launch/manychat')),
+  'launch/lead-magnet':     dynamic(() => import('@/components/sections/launch/lead-magnet')),
+  'launch/bio':             dynamic(() => import('@/components/sections/launch/bio')),
+  'launch/launch-content':  dynamic(() => import('@/components/sections/launch/launch-content')),
+  'launch/goals':           dynamic(() => import('@/components/sections/launch/goals')),
 }
 
 export default async function SectionPage({ params }: SectionPageProps) {
