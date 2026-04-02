@@ -11,6 +11,7 @@ interface WorkshopInputProps {
   placeholder?: string
   required?: boolean
   label?: string
+  getFullResponses?: () => Record<string, string>
 }
 
 const baseStyle: React.CSSProperties = {
@@ -43,11 +44,13 @@ export function WorkshopInput({
   onChange,
   placeholder,
   label,
+  getFullResponses,
 }: WorkshopInputProps) {
   const { saveError, isFocused, handleBlur, handleFocus, retry } = useAutoSave({
     moduleSlug,
     fieldKey,
     value,
+    getFullResponses,
   })
 
   return (

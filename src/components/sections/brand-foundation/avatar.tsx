@@ -1,0 +1,576 @@
+'use client'
+
+import { useEffect } from 'react'
+import { useForm } from 'react-hook-form'
+import { createClient } from '@/lib/supabase/client'
+import { useAuth } from '@/context/AuthContext'
+import { WorkshopTextarea } from '@/components/workshop/WorkshopTextarea'
+import { WorkshopInput } from '@/components/workshop/WorkshopInput'
+import { SectionWrapper } from '@/components/workshop/SectionWrapper'
+import { MODULE_SECTIONS } from '@/lib/modules'
+
+const MODULE_SLUG = 'brand-foundation' as const
+const SECTION_INDEX = 2
+const SECTION_DEF = MODULE_SECTIONS['brand-foundation']![SECTION_INDEX]
+
+export default function Avatar() {
+  const { user } = useAuth()
+  const { watch, setValue, getValues } = useForm({
+    defaultValues: Object.fromEntries(
+      SECTION_DEF.fields.map(f => [f.key, ''])
+    ),
+  })
+
+  useEffect(() => {
+    if (!user) return
+    let cancelled = false
+    const supabase = createClient()
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    ;(supabase as any)
+      .from('blp_responses')
+      .select('responses')
+      .eq('user_id', user.id)
+      .eq('module_slug', MODULE_SLUG)
+      .single()
+      .then(({ data }: { data: { responses: Record<string, string> } | null }) => {
+        if (cancelled || !data?.responses) return
+        const saved = data.responses as Record<string, string>
+        Object.entries(saved).forEach(([key, val]) => {
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          if (typeof val === "string") (setValue as (k: string, v: string) => void)(key, val)
+        })
+      })
+    return () => { cancelled = true }
+  }, [user, setValue])
+
+  const responses = watch()
+
+  return (
+    <SectionWrapper
+      moduleSlug={MODULE_SLUG}
+      sectionIndex={SECTION_INDEX}
+      fields={SECTION_DEF.fields}
+      responses={responses}
+    >
+      <div
+        style={{
+          fontSize: '10px',
+          fontWeight: 700,
+          letterSpacing: '.12em',
+          textTransform: 'uppercase',
+          color: 'var(--orange)',
+          marginBottom: '.5rem',
+        }}
+      >
+        Workshop 2
+      </div>
+      <h1
+        style={{
+          fontFamily: 'var(--font-num)',
+          fontSize: 'clamp(2.2rem, 5vw, 3.2rem)',
+          fontWeight: 900,
+          letterSpacing: '-.01em',
+          lineHeight: 1.05,
+          textTransform: 'uppercase',
+          marginBottom: '1rem',
+        }}
+      >
+        Define Your Avatar
+      </h1>
+      <p
+        style={{
+          fontSize: '14px',
+          color: 'var(--dim)',
+          lineHeight: 1.8,
+          marginBottom: '1.25rem',
+        }}
+      >
+        You are no longer speaking to a niche — you are speaking to one exact
+        person, your perfect dream customer. This is how you build true trust and
+        relatability, because you&apos;re speaking to one person who feels like
+        they&apos;ve been talking to you the whole time. If you don&apos;t know who
+        that one person is, your content will never land. Speaking to everyone means
+        you&apos;re actually speaking to no one.
+      </p>
+
+      <div
+        style={{
+          background: 'var(--orange-tint)',
+          border: '1px solid var(--orange-border)',
+          borderRadius: 'var(--radius-md)',
+          padding: '1rem 1.2rem',
+          marginBottom: '1.5rem',
+        }}
+      >
+        <div
+          style={{
+            fontSize: '9px',
+            fontWeight: 700,
+            textTransform: 'uppercase',
+            letterSpacing: '0.13em',
+            color: 'var(--orange)',
+            marginBottom: '0.5rem',
+          }}
+        >
+          ★ Bonus Tip
+        </div>
+        <div style={{ fontSize: '13px', color: 'var(--text)', lineHeight: 1.75 }}>
+          <strong>If you&apos;re unsure where to start, use two past versions of yourself.</strong>{' '}
+          Maybe 5 years ago and 2 years ago. Speak from experience and explain:
+          <br /><br />
+          + How the old version of you could become the current version faster<br />
+          + The struggles and pain points you could have avoided<br />
+          + Your future goals and how you plan to get there
+        </div>
+      </div>
+
+      {/* Primary Avatar */}
+      <div
+        style={{
+          background: 'var(--card)',
+          border: '1px solid var(--border)',
+          borderRadius: 'var(--radius-lg)',
+          padding: '1.25rem',
+          marginBottom: '1rem',
+        }}
+      >
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '10px',
+            marginBottom: '1.25rem',
+          }}
+        >
+          <div
+            style={{
+              fontFamily: 'var(--font-num)',
+              fontSize: '1.5rem',
+              fontWeight: 900,
+              color: 'var(--orange)',
+              lineHeight: 1,
+            }}
+          >
+            01
+          </div>
+          <div>
+            <div
+              style={{
+                fontSize: '9px',
+                fontWeight: 700,
+                letterSpacing: '.12em',
+                textTransform: 'uppercase',
+                color: 'var(--dimmer)',
+              }}
+            >
+              Primary Avatar
+            </div>
+            <div style={{ fontSize: '13px', fontWeight: 600, color: 'var(--text)' }}>
+              Your core audience member
+            </div>
+          </div>
+        </div>
+
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px', marginBottom: '1rem' }}>
+          <div>
+            <WorkshopInput
+              moduleSlug={MODULE_SLUG}
+              fieldKey="bf_av1_age"
+              value={watch('bf_av1_age')}
+              onChange={val => setValue('bf_av1_age', val)}
+              getFullResponses={getValues}
+              label="Age range"
+              placeholder="e.g. 25–35"
+            />
+            <WorkshopInput
+              moduleSlug={MODULE_SLUG}
+              fieldKey="bf_av1_gender"
+              value={watch('bf_av1_gender')}
+              onChange={val => setValue('bf_av1_gender', val)}
+              getFullResponses={getValues}
+              label="Gender (if relevant)"
+              placeholder="e.g. Any / Primarily women"
+            />
+          </div>
+          <div>
+            <WorkshopInput
+              moduleSlug={MODULE_SLUG}
+              fieldKey="bf_av1_occupation"
+              value={watch('bf_av1_occupation')}
+              onChange={val => setValue('bf_av1_occupation', val)}
+              getFullResponses={getValues}
+              label="Occupation / Industry"
+              placeholder="e.g. Freelance designer"
+            />
+            <WorkshopInput
+              moduleSlug={MODULE_SLUG}
+              fieldKey="bf_av1_income"
+              value={watch('bf_av1_income')}
+              onChange={val => setValue('bf_av1_income', val)}
+              getFullResponses={getValues}
+              label="Income level"
+              placeholder="e.g. $30K–$80K/yr"
+            />
+          </div>
+        </div>
+
+        <WorkshopTextarea
+          moduleSlug={MODULE_SLUG}
+          fieldKey="bf_av1_situation"
+          value={watch('bf_av1_situation')}
+          onChange={val => setValue('bf_av1_situation', val)}
+          getFullResponses={getValues}
+          rows={2}
+          label="What is their current situation?"
+          placeholder="Describe their day-to-day life and where they're at right now..."
+        />
+        <WorkshopTextarea
+          moduleSlug={MODULE_SLUG}
+          fieldKey="bf_av1_who"
+          value={watch('bf_av1_who')}
+          onChange={val => setValue('bf_av1_who', val)}
+          getFullResponses={getValues}
+          rows={2}
+          label="Who are they?"
+          placeholder="Their identity — how they see themselves, their values, their world..."
+        />
+        <WorkshopTextarea
+          moduleSlug={MODULE_SLUG}
+          fieldKey="bf_av1_look"
+          value={watch('bf_av1_look')}
+          onChange={val => setValue('bf_av1_look', val)}
+          getFullResponses={getValues}
+          rows={2}
+          label="What do they look like?"
+          placeholder="Physical appearance, style, vibe — paint a picture..."
+        />
+        <WorkshopTextarea
+          moduleSlug={MODULE_SLUG}
+          fieldKey="bf_av1_story"
+          value={watch('bf_av1_story')}
+          onChange={val => setValue('bf_av1_story', val)}
+          getFullResponses={getValues}
+          rows={2}
+          label="What's their story?"
+          placeholder="Background, life stage, key experiences that shaped them..."
+        />
+        <WorkshopTextarea
+          moduleSlug={MODULE_SLUG}
+          fieldKey="bf_av1_goals"
+          value={watch('bf_av1_goals')}
+          onChange={val => setValue('bf_av1_goals', val)}
+          getFullResponses={getValues}
+          rows={2}
+          label="What are their goals, dreams, and desires?"
+          placeholder="Short-term and long-term — what does winning look like for them?"
+        />
+        <WorkshopTextarea
+          moduleSlug={MODULE_SLUG}
+          fieldKey="bf_av1_passions"
+          value={watch('bf_av1_passions')}
+          onChange={val => setValue('bf_av1_passions', val)}
+          getFullResponses={getValues}
+          rows={2}
+          label="What are their passions and hobbies?"
+          placeholder="What do they love, follow, and spend time on outside of work?"
+        />
+        <WorkshopTextarea
+          moduleSlug={MODULE_SLUG}
+          fieldKey="bf_av1_struggle"
+          value={watch('bf_av1_struggle')}
+          onChange={val => setValue('bf_av1_struggle', val)}
+          getFullResponses={getValues}
+          rows={2}
+          label="What are they struggling with most?"
+          placeholder="The specific problem that keeps them up at night..."
+        />
+        <WorkshopTextarea
+          moduleSlug={MODULE_SLUG}
+          fieldKey="bf_av1_tried"
+          value={watch('bf_av1_tried')}
+          onChange={val => setValue('bf_av1_tried', val)}
+          getFullResponses={getValues}
+          rows={2}
+          label="What have they already tried?"
+          placeholder="Previous courses, strategies, approaches..."
+        />
+        <WorkshopTextarea
+          moduleSlug={MODULE_SLUG}
+          fieldKey="bf_av1_desired"
+          value={watch('bf_av1_desired')}
+          onChange={val => setValue('bf_av1_desired', val)}
+          getFullResponses={getValues}
+          rows={2}
+          label="Their desired outcome"
+          placeholder="Their dream result in specific, tangible terms..."
+        />
+        <WorkshopTextarea
+          moduleSlug={MODULE_SLUG}
+          fieldKey="bf_av1_fears"
+          value={watch('bf_av1_fears')}
+          onChange={val => setValue('bf_av1_fears', val)}
+          getFullResponses={getValues}
+          rows={2}
+          label="What fears and objections do they have?"
+          placeholder="Fear of failure, looking stupid, wasting money..."
+        />
+
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px', marginBottom: '0.5rem' }}>
+          <WorkshopInput
+            moduleSlug={MODULE_SLUG}
+            fieldKey="bf_av1_platforms"
+            value={watch('bf_av1_platforms')}
+            onChange={val => setValue('bf_av1_platforms', val)}
+            getFullResponses={getValues}
+            label="Most active platforms"
+            placeholder="Instagram, TikTok, YouTube..."
+          />
+          <WorkshopInput
+            moduleSlug={MODULE_SLUG}
+            fieldKey="bf_av1_connection"
+            value={watch('bf_av1_connection')}
+            onChange={val => setValue('bf_av1_connection', val)}
+            getFullResponses={getValues}
+            label="How are you 2–3 steps ahead?"
+            placeholder="What did you figure out they haven't?"
+          />
+        </div>
+
+        <WorkshopTextarea
+          moduleSlug={MODULE_SLUG}
+          fieldKey="bf_av1_statement"
+          value={watch('bf_av1_statement')}
+          onChange={val => setValue('bf_av1_statement', val)}
+          getFullResponses={getValues}
+          rows={5}
+          label="Avatar Statement"
+          placeholder="Write your primary avatar statement here — edit freely..."
+        />
+      </div>
+
+      {/* Secondary Avatar */}
+      <div
+        style={{
+          background: 'var(--card)',
+          border: '1px solid var(--border)',
+          borderRadius: 'var(--radius-lg)',
+          padding: '1.25rem',
+          marginBottom: '1.5rem',
+        }}
+      >
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '10px',
+            marginBottom: '1.25rem',
+          }}
+        >
+          <div
+            style={{
+              fontFamily: 'var(--font-num)',
+              fontSize: '1.5rem',
+              fontWeight: 900,
+              color: 'var(--dimmer)',
+              lineHeight: 1,
+            }}
+          >
+            02
+          </div>
+          <div>
+            <div
+              style={{
+                fontSize: '9px',
+                fontWeight: 700,
+                letterSpacing: '.12em',
+                textTransform: 'uppercase',
+                color: 'var(--dimmer)',
+              }}
+            >
+              Secondary Avatar
+            </div>
+            <div style={{ fontSize: '13px', fontWeight: 600, color: 'var(--dim)' }}>
+              Optional second audience segment
+            </div>
+          </div>
+        </div>
+
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px', marginBottom: '1rem' }}>
+          <div>
+            <WorkshopInput
+              moduleSlug={MODULE_SLUG}
+              fieldKey="bf_av2_age"
+              value={watch('bf_av2_age')}
+              onChange={val => setValue('bf_av2_age', val)}
+              getFullResponses={getValues}
+              label="Age range"
+              placeholder="e.g. 35–50"
+            />
+            <WorkshopInput
+              moduleSlug={MODULE_SLUG}
+              fieldKey="bf_av2_gender"
+              value={watch('bf_av2_gender')}
+              onChange={val => setValue('bf_av2_gender', val)}
+              getFullResponses={getValues}
+              label="Gender (if relevant)"
+              placeholder="e.g. Any / Primarily men"
+            />
+          </div>
+          <div>
+            <WorkshopInput
+              moduleSlug={MODULE_SLUG}
+              fieldKey="bf_av2_occupation"
+              value={watch('bf_av2_occupation')}
+              onChange={val => setValue('bf_av2_occupation', val)}
+              getFullResponses={getValues}
+              label="Occupation / Industry"
+              placeholder="e.g. Corporate professional"
+            />
+            <WorkshopInput
+              moduleSlug={MODULE_SLUG}
+              fieldKey="bf_av2_income"
+              value={watch('bf_av2_income')}
+              onChange={val => setValue('bf_av2_income', val)}
+              getFullResponses={getValues}
+              label="Income level"
+              placeholder="e.g. $80K–$150K/yr"
+            />
+          </div>
+        </div>
+
+        <WorkshopTextarea
+          moduleSlug={MODULE_SLUG}
+          fieldKey="bf_av2_situation"
+          value={watch('bf_av2_situation')}
+          onChange={val => setValue('bf_av2_situation', val)}
+          getFullResponses={getValues}
+          rows={2}
+          label="What is their current situation?"
+          placeholder="Describe their day-to-day life and where they're at right now..."
+        />
+        <WorkshopTextarea
+          moduleSlug={MODULE_SLUG}
+          fieldKey="bf_av2_who"
+          value={watch('bf_av2_who')}
+          onChange={val => setValue('bf_av2_who', val)}
+          getFullResponses={getValues}
+          rows={2}
+          label="Who are they?"
+          placeholder="Their identity — how they see themselves, their values, their world..."
+        />
+        <WorkshopTextarea
+          moduleSlug={MODULE_SLUG}
+          fieldKey="bf_av2_look"
+          value={watch('bf_av2_look')}
+          onChange={val => setValue('bf_av2_look', val)}
+          getFullResponses={getValues}
+          rows={2}
+          label="What do they look like?"
+          placeholder="Physical appearance, style, vibe — paint a picture..."
+        />
+        <WorkshopTextarea
+          moduleSlug={MODULE_SLUG}
+          fieldKey="bf_av2_story"
+          value={watch('bf_av2_story')}
+          onChange={val => setValue('bf_av2_story', val)}
+          getFullResponses={getValues}
+          rows={2}
+          label="What's their story?"
+          placeholder="Background, life stage, key experiences that shaped them..."
+        />
+        <WorkshopTextarea
+          moduleSlug={MODULE_SLUG}
+          fieldKey="bf_av2_goals"
+          value={watch('bf_av2_goals')}
+          onChange={val => setValue('bf_av2_goals', val)}
+          getFullResponses={getValues}
+          rows={2}
+          label="What are their goals, dreams, and desires?"
+          placeholder="Short-term and long-term — what does winning look like for them?"
+        />
+        <WorkshopTextarea
+          moduleSlug={MODULE_SLUG}
+          fieldKey="bf_av2_passions"
+          value={watch('bf_av2_passions')}
+          onChange={val => setValue('bf_av2_passions', val)}
+          getFullResponses={getValues}
+          rows={2}
+          label="What are their passions and hobbies?"
+          placeholder="What do they love, follow, and spend time on outside of work?"
+        />
+        <WorkshopTextarea
+          moduleSlug={MODULE_SLUG}
+          fieldKey="bf_av2_struggle"
+          value={watch('bf_av2_struggle')}
+          onChange={val => setValue('bf_av2_struggle', val)}
+          getFullResponses={getValues}
+          rows={2}
+          label="What are they struggling with most?"
+          placeholder="The specific problem that keeps them up at night..."
+        />
+        <WorkshopTextarea
+          moduleSlug={MODULE_SLUG}
+          fieldKey="bf_av2_tried"
+          value={watch('bf_av2_tried')}
+          onChange={val => setValue('bf_av2_tried', val)}
+          getFullResponses={getValues}
+          rows={2}
+          label="What have they already tried?"
+          placeholder="Previous courses, strategies, approaches..."
+        />
+        <WorkshopTextarea
+          moduleSlug={MODULE_SLUG}
+          fieldKey="bf_av2_desired"
+          value={watch('bf_av2_desired')}
+          onChange={val => setValue('bf_av2_desired', val)}
+          getFullResponses={getValues}
+          rows={2}
+          label="Their desired outcome"
+          placeholder="Their dream result in specific, tangible terms..."
+        />
+        <WorkshopTextarea
+          moduleSlug={MODULE_SLUG}
+          fieldKey="bf_av2_fears"
+          value={watch('bf_av2_fears')}
+          onChange={val => setValue('bf_av2_fears', val)}
+          getFullResponses={getValues}
+          rows={2}
+          label="What fears and objections do they have?"
+          placeholder="Fear of failure, looking stupid, wasting money..."
+        />
+
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px', marginBottom: '0.5rem' }}>
+          <WorkshopInput
+            moduleSlug={MODULE_SLUG}
+            fieldKey="bf_av2_platforms"
+            value={watch('bf_av2_platforms')}
+            onChange={val => setValue('bf_av2_platforms', val)}
+            getFullResponses={getValues}
+            label="Most active platforms"
+            placeholder="Instagram, LinkedIn, YouTube..."
+          />
+          <WorkshopInput
+            moduleSlug={MODULE_SLUG}
+            fieldKey="bf_av2_connection"
+            value={watch('bf_av2_connection')}
+            onChange={val => setValue('bf_av2_connection', val)}
+            getFullResponses={getValues}
+            label="How are you 2–3 steps ahead?"
+            placeholder="What did you figure out they haven't?"
+          />
+        </div>
+
+        <WorkshopTextarea
+          moduleSlug={MODULE_SLUG}
+          fieldKey="bf_av2_statement"
+          value={watch('bf_av2_statement')}
+          onChange={val => setValue('bf_av2_statement', val)}
+          getFullResponses={getValues}
+          rows={5}
+          label="Avatar 2 Statement"
+          placeholder="Write your secondary avatar statement here — edit freely..."
+        />
+      </div>
+    </SectionWrapper>
+  )
+}

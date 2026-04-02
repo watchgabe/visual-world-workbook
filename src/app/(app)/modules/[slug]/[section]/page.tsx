@@ -11,11 +11,17 @@ interface SectionPageProps {
 
 // Static component registry — each entry maps a "slug/section" key to a lazy-loaded component.
 // Plans 02-05 add entries here when creating section components.
-// Usage: import dynamic from 'next/dynamic' then add:
-//   'brand-foundation/overview': dynamic(() => import('@/components/sections/brand-foundation/overview'))
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const SECTION_REGISTRY: Record<string, React.ComponentType<any>> = {
-  // Brand Foundation sections — populated by Plan 02
+  // Brand Foundation sections — Plan 02
+  'brand-foundation/overview':        dynamic(() => import('@/components/sections/brand-foundation/overview')),
+  'brand-foundation/brand-journey':   dynamic(() => import('@/components/sections/brand-foundation/brand-journey')),
+  'brand-foundation/avatar':          dynamic(() => import('@/components/sections/brand-foundation/avatar')),
+  'brand-foundation/core-mission':    dynamic(() => import('@/components/sections/brand-foundation/core-mission')),
+  'brand-foundation/core-values':     dynamic(() => import('@/components/sections/brand-foundation/core-values')),
+  'brand-foundation/content-pillars': dynamic(() => import('@/components/sections/brand-foundation/content-pillars')),
+  'brand-foundation/origin-story':    dynamic(() => import('@/components/sections/brand-foundation/origin-story')),
+  'brand-foundation/brand-vision':    dynamic(() => import('@/components/sections/brand-foundation/brand-vision')),
 
   // Visual World sections — populated by Plan 03
 

@@ -16,6 +16,7 @@ interface OptionSelectorProps {
   options: OptionItem[]
   columns?: number
   label?: string
+  getFullResponses?: () => Record<string, string>
 }
 
 export function OptionSelector({
@@ -26,11 +27,13 @@ export function OptionSelector({
   options,
   columns = 2,
   label,
+  getFullResponses,
 }: OptionSelectorProps) {
   const { saveError, isFocused, handleBlur, handleFocus, retry } = useAutoSave({
     moduleSlug,
     fieldKey,
     value,
+    getFullResponses,
   })
 
   const gridStyle: React.CSSProperties = {

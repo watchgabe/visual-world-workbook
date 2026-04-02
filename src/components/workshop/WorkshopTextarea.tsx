@@ -12,6 +12,7 @@ interface WorkshopTextareaProps {
   rows?: number
   required?: boolean
   label?: string
+  getFullResponses?: () => Record<string, string>
 }
 
 const baseStyle: React.CSSProperties = {
@@ -46,11 +47,13 @@ export function WorkshopTextarea({
   placeholder,
   rows = 4,
   label,
+  getFullResponses,
 }: WorkshopTextareaProps) {
   const { saveError, isFocused, handleBlur, handleFocus, retry } = useAutoSave({
     moduleSlug,
     fieldKey,
     value,
+    getFullResponses,
   })
 
   return (
