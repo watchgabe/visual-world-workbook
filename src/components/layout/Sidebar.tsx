@@ -18,7 +18,7 @@ interface SidebarProps {
 export function Sidebar({ isOpen, onClose }: SidebarProps) {
   const pathname = usePathname()
   const { user, signOut } = useAuth()
-  const { moduleProgress } = useProgress()
+  const { moduleProgress, overallProgress } = useProgress()
   const [modalOpen, setModalOpen] = useState(false)
 
   return (
@@ -199,7 +199,7 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
         }}
       >
         <div style={{ flex: 1 }}>
-          <ProgressBar percent={0} />
+          <ProgressBar percent={overallProgress} />
         </div>
 
         {/* User avatar trigger — only when logged in */}

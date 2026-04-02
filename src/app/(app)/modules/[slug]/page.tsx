@@ -1,5 +1,6 @@
-import { notFound } from 'next/navigation'
-import { MODULES } from '@/lib/modules'
+import { redirect, notFound } from 'next/navigation'
+import { MODULES, MODULE_SECTIONS } from '@/lib/modules'
+import type { ModuleSlug } from '@/types/database'
 
 interface ModulePageProps {
   params: Promise<{ slug: string }>
@@ -8,33 +9,17 @@ interface ModulePageProps {
 export default async function ModulePage({ params }: ModulePageProps) {
   const { slug } = await params
   const mod = MODULES.find(m => m.slug === slug)
+  if (!mod) notFound()
 
-  if (!mod) {
-    notFound()
+  const sections = MODULE_SECTIONS[slug as ModuleSlug]
+  if (sections && sections.length > 0) {
+    redirect(`/modules/${slug}/${sections[0].slug}`)
   }
 
-  return (
-    <div>
-      <h1
-        style={{
-          fontFamily: 'var(--font)',
-          fontSize: '24px',
-          fontWeight: 700,
-          color: 'var(--text)',
-          marginBottom: '8px',
-        }}
-      >
-        Module {mod.number}: {mod.title}
-      </h1>
-      <p style={{ color: 'var(--dim)', fontSize: '14px' }}>
-        Content will be added in Phase 5.
-      </p>
-    </div>
-  )
+  // Modules without sections (welcome, playbook) fall through to their dedicated routes
+  return null
 }
 
 export async function generateStaticParams() {
-  return MODULES.map((mod) => ({
-    slug: mod.slug,
-  }))
+  return MODULES.map((mod) => ({ slug: mod.slug }))
 }
