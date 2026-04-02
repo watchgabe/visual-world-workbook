@@ -21,7 +21,7 @@ Requirements for initial release. Each maps to roadmap phases.
 - [x] **DATA-02**: Well-structured database schema (new tables/columns designed for scalability)
 - [x] **DATA-03**: Auto-save hook with debounce used by all form fields across all modules
 - [x] **DATA-04**: Auto-save uses AbortController to prevent race condition overwrites
-- [x] **DATA-05**: Save status indicator visible to user (syncing/saved/error)
+- [x] **DATA-05**: Save error indicator visible to user on blur (error-only by design — D-01)
 - [x] **DATA-06**: React Context provides user state, progress state, and theme state
 
 ### Navigation & Layout
