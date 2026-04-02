@@ -44,60 +44,51 @@ export default function BrandFoundationOverview() {
 
       <div
         style={{
-          display: 'flex',
+          display: 'grid',
+          gridTemplateColumns: 'repeat(3, 1fr)',
           gap: '1rem',
           marginBottom: '2rem',
-          flexWrap: 'wrap',
         }}
       >
-        <div
-          style={{
-            background: 'var(--card)',
-            border: '1px solid var(--border)',
-            borderRadius: 'var(--radius-lg)',
-            padding: '.75rem 1.25rem',
-            textAlign: 'center' as const,
-          }}
-        >
+        {[
+          { num: '7', label: 'WORKSHOPS' },
+          { num: '8', label: 'DELIVERABLES' },
+          { num: '2', label: 'COMPLETED' },
+        ].map(card => (
           <div
+            key={card.label}
             style={{
-              fontFamily: 'var(--font-num)',
-              fontSize: '2rem',
-              fontWeight: 900,
-              color: 'var(--orange)',
-              lineHeight: 1,
+              background: 'var(--card)',
+              border: '1px solid var(--border)',
+              borderRadius: 'var(--radius-lg)',
+              padding: '2rem 1.5rem',
+              textAlign: 'center' as const,
             }}
           >
-            7
+            <div
+              style={{
+                fontFamily: 'var(--font-num)',
+                fontSize: 'clamp(2.5rem, 4vw, 3.5rem)',
+                fontWeight: 900,
+                color: 'var(--text)',
+                lineHeight: 1,
+                marginBottom: '8px',
+              }}
+            >
+              {card.num}
+            </div>
+            <div
+              style={{
+                fontSize: '11px',
+                fontWeight: 600,
+                letterSpacing: '.08em',
+                color: 'var(--dim)',
+              }}
+            >
+              {card.label}
+            </div>
           </div>
-          <div style={{ fontSize: '11px', color: 'var(--dim)', marginTop: '2px' }}>
-            Workshops
-          </div>
-        </div>
-        <div
-          style={{
-            background: 'var(--card)',
-            border: '1px solid var(--border)',
-            borderRadius: 'var(--radius-lg)',
-            padding: '.75rem 1.25rem',
-            textAlign: 'center' as const,
-          }}
-        >
-          <div
-            style={{
-              fontFamily: 'var(--font-num)',
-              fontSize: '2rem',
-              fontWeight: 900,
-              color: 'var(--orange)',
-              lineHeight: 1,
-            }}
-          >
-            8
-          </div>
-          <div style={{ fontSize: '11px', color: 'var(--dim)', marginTop: '2px' }}>
-            Deliverables
-          </div>
-        </div>
+        ))}
       </div>
 
       <h2
