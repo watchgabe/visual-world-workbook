@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { createClient } from '@/lib/supabase/client'
 import { useAuth } from '@/context/AuthContext'
@@ -45,6 +45,7 @@ const STORY_PARTS = [
 
 export default function OriginStory() {
   const { user } = useAuth()
+  const [isGenerating, setIsGenerating] = useState<string | null>(null)
   const { watch, setValue, getValues } = useForm({
     defaultValues: Object.fromEntries(
       SECTION_DEF.fields.map(f => [f.key, ''])
@@ -72,6 +73,38 @@ export default function OriginStory() {
       })
     return () => { cancelled = true }
   }, [user, setValue])
+
+  async function handleGenerateOriginStory() {
+    const story1 = getValues('bf_story1')
+    const story2 = getValues('bf_story2')
+    if (!story1.trim() && !story2.trim()) return
+    setIsGenerating('bf_origin_story')
+    try {
+      const story3 = getValues('bf_story3')
+      const story4 = getValues('bf_story4')
+      const prompt =
+        'You are a personal brand storyteller. Your job is to piece together what the creator has written into a cohesive, flowing origin story \u2014 NOT to invent, assume, or fill in any gaps.\n\nCRITICAL RULES:\n- Use ONLY what is explicitly written. Do not assume any details not provided.\n- If something is vague or incomplete, write it as-is or use [???] as a placeholder \u2014 e.g. "I moved to [???]" or "I started working with [???]"\n- Never guess locations, names, dates, outcomes, or emotions that were not stated.\n- Your role is to connect the dots they gave you \u2014 not add new ones.\n\nWrite a compelling, authentic 3-5 paragraph story in first person. Lead with the struggle. End with a lesson or invitation for the reader. Warm, direct, relatable voice. No fluff, no hype, no preamble.\n\nPart 1 \u2014 The Struggle: ' +
+        story1 +
+        '\nPart 2 \u2014 The Turning Point: ' +
+        story2 +
+        '\nPart 3 \u2014 The Journey: ' +
+        story3 +
+        '\nPart 4 \u2014 The Transformation: ' +
+        story4
+      const res = await fetch('/api/claude', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ prompt, maxTokens: 800 }),
+      })
+      const data = await res.json()
+      if (data.error) throw new Error(data.error)
+      ;(setValue as (k: string, v: string) => void)('bf_origin_story', data.text || '')
+    } catch {
+      // silent error
+    } finally {
+      setIsGenerating(null)
+    }
+  }
 
   const responses = watch()
 
@@ -235,6 +268,32 @@ export default function OriginStory() {
         </div>
         <div style={{ fontSize: '12px', color: 'var(--dim)', marginBottom: '8px' }}>
           Use the AI output as a starting point and refine in your own voice.
+        </div>
+        <div style={{ marginBottom: '8px' }}>
+          <button
+            type="button"
+            onClick={handleGenerateOriginStory}
+            disabled={isGenerating === 'bf_origin_story'}
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '6px',
+              padding: '8px 14px',
+              fontSize: '12px',
+              fontWeight: 600,
+              color: isGenerating === 'bf_origin_story' ? 'var(--dimmer)' : 'var(--orange)',
+              background: 'var(--orange-tint)',
+              borderWidth: '1px',
+              borderStyle: 'solid',
+              borderColor: 'var(--orange-border)',
+              borderRadius: 'var(--radius-md)',
+              cursor: isGenerating === 'bf_origin_story' ? 'not-allowed' : 'pointer',
+              fontFamily: 'var(--font)',
+              opacity: isGenerating === 'bf_origin_story' ? 0.6 : 1,
+            }}
+          >
+            {isGenerating === 'bf_origin_story' ? 'Generating...' : '✦ Generate'}
+          </button>
         </div>
         <WorkshopTextarea
           moduleSlug={MODULE_SLUG}

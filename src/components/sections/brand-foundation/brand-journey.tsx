@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { createClient } from '@/lib/supabase/client'
 import { useAuth } from '@/context/AuthContext'
@@ -14,6 +14,7 @@ const SECTION_DEF = MODULE_SECTIONS['brand-foundation']![SECTION_INDEX]
 
 export default function BrandJourney() {
   const { user } = useAuth()
+  const [isGenerating, setIsGenerating] = useState<string | null>(null)
   const { watch, setValue, getValues } = useForm({
     defaultValues: Object.fromEntries(
       SECTION_DEF.fields.map(f => [f.key, ''])
@@ -41,6 +42,38 @@ export default function BrandJourney() {
       })
     return () => { cancelled = true }
   }, [user, setValue])
+
+  async function handleGenerateJourney() {
+    const outcome = getValues('bf_journey_outcome')
+    const known = getValues('bf_journey_known')
+    const doField = getValues('bf_journey_do')
+    const learn = getValues('bf_journey_learn')
+    if (!outcome.trim() || !known.trim() || !doField.trim() || !learn.trim()) return
+    setIsGenerating('bf_journey_statement')
+    try {
+      const prompt =
+        'You are a personal brand strategist. Write ONE sentence using EXACTLY this format: "I want to [desired outcome] by being known for [known for] through [actions] starting with [learning]."\n\nFill in the brackets using their exact words below. Output ONLY the single sentence. No headers, no explanation, no asterisks, no markdown, no quotation marks around the sentence.\n\nDesired Outcome: ' +
+        outcome +
+        '\nKnown For: ' +
+        known +
+        '\nActions: ' +
+        doField +
+        '\nLearn: ' +
+        learn
+      const res = await fetch('/api/claude', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ prompt, maxTokens: 300 }),
+      })
+      const data = await res.json()
+      if (data.error) throw new Error(data.error)
+      ;(setValue as (k: string, v: string) => void)('bf_journey_statement', data.text || '')
+    } catch {
+      // silent error — user can retry
+    } finally {
+      setIsGenerating(null)
+    }
+  }
 
   const responses = watch()
 
@@ -366,6 +399,32 @@ export default function BrandJourney() {
         </div>
         <div style={{ fontSize: '13px', color: 'var(--dim)', marginBottom: '10px', lineHeight: 1.6 }}>
           Fill in all four questions above, then write your statement here.
+        </div>
+        <div style={{ marginBottom: '8px' }}>
+          <button
+            type="button"
+            onClick={handleGenerateJourney}
+            disabled={isGenerating === 'bf_journey_statement'}
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '6px',
+              padding: '8px 14px',
+              fontSize: '12px',
+              fontWeight: 600,
+              color: isGenerating === 'bf_journey_statement' ? 'var(--dimmer)' : 'var(--orange)',
+              background: 'var(--orange-tint)',
+              borderWidth: '1px',
+              borderStyle: 'solid',
+              borderColor: 'var(--orange-border)',
+              borderRadius: 'var(--radius-md)',
+              cursor: isGenerating === 'bf_journey_statement' ? 'not-allowed' : 'pointer',
+              fontFamily: 'var(--font)',
+              opacity: isGenerating === 'bf_journey_statement' ? 0.6 : 1,
+            }}
+          >
+            {isGenerating === 'bf_journey_statement' ? 'Generating...' : '✦ Generate'}
+          </button>
         </div>
         <WorkshopTextarea
           moduleSlug={MODULE_SLUG}

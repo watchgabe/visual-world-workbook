@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { createClient } from '@/lib/supabase/client'
 import { useAuth } from '@/context/AuthContext'
@@ -15,6 +15,7 @@ const SECTION_DEF = MODULE_SECTIONS['brand-foundation']![SECTION_INDEX]
 
 export default function CoreMission() {
   const { user } = useAuth()
+  const [isGenerating, setIsGenerating] = useState<string | null>(null)
   const { watch, setValue, getValues } = useForm({
     defaultValues: Object.fromEntries(
       SECTION_DEF.fields.map(f => [f.key, ''])
@@ -42,6 +43,39 @@ export default function CoreMission() {
       })
     return () => { cancelled = true }
   }, [user, setValue])
+
+  async function handleGenerateIkigai() {
+    const love = getValues('bf_ikigai_love')
+    const good = getValues('bf_ikigai_good')
+    const world = getValues('bf_ikigai_world')
+    const paid = getValues('bf_ikigai_paid')
+    if (!love.trim() || !good.trim() || !world.trim() || !paid.trim()) return
+    setIsGenerating('bf_ikigai_center')
+    try {
+      const prompt =
+        "You are a personal brand strategist. Identify this creator's Ikigai.\n\nLOVE: " +
+        love +
+        '\nGOOD AT: ' +
+        good +
+        '\nWORLD NEEDS: ' +
+        world +
+        '\nPAID FOR: ' +
+        paid +
+        '\n\nIn 3 sentences: (1) State the Ikigai clearly \u2014 the thread that runs through all four. (2) Why this is their unique intersection. (3) A single-line Ikigai statement they can use as a mission foundation. Be specific and show them something they might not have articulated. No preamble.'
+      const res = await fetch('/api/claude', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ prompt, maxTokens: 400 }),
+      })
+      const data = await res.json()
+      if (data.error) throw new Error(data.error)
+      ;(setValue as (k: string, v: string) => void)('bf_ikigai_center', data.text || '')
+    } catch {
+      // silent error
+    } finally {
+      setIsGenerating(null)
+    }
+  }
 
   const responses = watch()
 
@@ -287,6 +321,32 @@ export default function CoreMission() {
           }}
         >
           Your Ikigai — Where All Four Overlap
+        </div>
+        <div style={{ marginBottom: '8px' }}>
+          <button
+            type="button"
+            onClick={handleGenerateIkigai}
+            disabled={isGenerating === 'bf_ikigai_center'}
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '6px',
+              padding: '8px 14px',
+              fontSize: '12px',
+              fontWeight: 600,
+              color: isGenerating === 'bf_ikigai_center' ? 'var(--dimmer)' : 'var(--orange)',
+              background: 'var(--orange-tint)',
+              borderWidth: '1px',
+              borderStyle: 'solid',
+              borderColor: 'var(--orange-border)',
+              borderRadius: 'var(--radius-md)',
+              cursor: isGenerating === 'bf_ikigai_center' ? 'not-allowed' : 'pointer',
+              fontFamily: 'var(--font)',
+              opacity: isGenerating === 'bf_ikigai_center' ? 0.6 : 1,
+            }}
+          >
+            {isGenerating === 'bf_ikigai_center' ? 'Generating...' : '✦ Generate'}
+          </button>
         </div>
         <WorkshopTextarea
           moduleSlug={MODULE_SLUG}

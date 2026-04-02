@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { createClient } from '@/lib/supabase/client'
 import { useAuth } from '@/context/AuthContext'
@@ -15,6 +15,7 @@ const SECTION_DEF = MODULE_SECTIONS['brand-foundation']![SECTION_INDEX]
 
 export default function Avatar() {
   const { user } = useAuth()
+  const [isGenerating, setIsGenerating] = useState<string | null>(null)
   const { watch, setValue, getValues } = useForm({
     defaultValues: Object.fromEntries(
       SECTION_DEF.fields.map(f => [f.key, ''])
@@ -42,6 +43,58 @@ export default function Avatar() {
       })
     return () => { cancelled = true }
   }, [user, setValue])
+
+  async function handleGenerateAvatar(num: 1 | 2) {
+    const prefix = `bf_av${num}_`
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const all = getValues() as Record<string, any>
+    const situation: string = all[`${prefix}situation`] || ''
+    const struggle: string = all[`${prefix}struggle`] || ''
+    if (!situation.trim() && !struggle.trim()) return
+    const targetKey = `${prefix}statement`
+    setIsGenerating(targetKey)
+    try {
+      const age: string = all[`${prefix}age`] || ''
+      const gender: string = all[`${prefix}gender`] || ''
+      const occ: string = all[`${prefix}occupation`] || ''
+      const income: string = all[`${prefix}income`] || ''
+      const who: string = all[`${prefix}who`] || ''
+      const look: string = all[`${prefix}look`] || ''
+      const story: string = all[`${prefix}story`] || ''
+      const goals: string = all[`${prefix}goals`] || ''
+      const passions: string = all[`${prefix}passions`] || ''
+      const tried: string = all[`${prefix}tried`] || ''
+      const desired: string = all[`${prefix}desired`] || ''
+      const fears: string = all[`${prefix}fears`] || ''
+      const conn: string = all[`${prefix}connection`] || ''
+      const prompt =
+        'You are a personal brand strategist. Do TWO things:\n\n' +
+        '1. Give this avatar a realistic first name that fits their demographic perfectly (format: "NAME: [name]")\n\n' +
+        '2. Write a compelling avatar statement using exactly this structure — one flowing paragraph:\n' +
+        '"[Name] is [who they are + what they look like + their story]. They love [passions/hobbies]. They\'re currently [situation]. They\'ve tried [previous attempts] but nothing has fully worked. What they really want is [goals/desired outcome]. The thing holding them back most is [fears/obstacles]. They trust creators who [connection]."\n\n' +
+        'Avatar data:\n' +
+        'Age: ' + age + ' | Gender: ' + gender + ' | Occupation: ' + occ + ' | Income: ' + income + '\n' +
+        'Who they are: ' + who + '\nWhat they look like: ' + look + '\nTheir story: ' + story + '\n' +
+        'Goals & Desires: ' + goals + '\nPassions & Hobbies: ' + passions + '\n' +
+        'Situation: ' + situation + '\nStruggle: ' + struggle + '\nTried: ' + tried + '\nDesired: ' + desired + '\nFears: ' + fears + '\nCreator is ahead because: ' + conn + '\n\n' +
+        'Be specific, vivid, and real. One paragraph only. No preamble. No markdown. No asterisks.'
+      const res = await fetch('/api/claude', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ prompt, maxTokens: 600 }),
+      })
+      const data = await res.json()
+      if (data.error) throw new Error(data.error)
+      // Strip the NAME: line — use the statement portion only
+      const text: string = data.text || ''
+      const statement = text.replace(/NAME:\s*[^\n]+\n?/i, '').trim()
+      ;(setValue as (k: string, v: string) => void)(targetKey, statement)
+    } catch {
+      // silent error
+    } finally {
+      setIsGenerating(null)
+    }
+  }
 
   const responses = watch()
 
@@ -336,6 +389,32 @@ export default function Avatar() {
           />
         </div>
 
+        <div style={{ marginBottom: '6px' }}>
+          <button
+            type="button"
+            onClick={() => handleGenerateAvatar(1)}
+            disabled={isGenerating === 'bf_av1_statement'}
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '6px',
+              padding: '8px 14px',
+              fontSize: '12px',
+              fontWeight: 600,
+              color: isGenerating === 'bf_av1_statement' ? 'var(--dimmer)' : 'var(--orange)',
+              background: 'var(--orange-tint)',
+              borderWidth: '1px',
+              borderStyle: 'solid',
+              borderColor: 'var(--orange-border)',
+              borderRadius: 'var(--radius-md)',
+              cursor: isGenerating === 'bf_av1_statement' ? 'not-allowed' : 'pointer',
+              fontFamily: 'var(--font)',
+              opacity: isGenerating === 'bf_av1_statement' ? 0.6 : 1,
+            }}
+          >
+            {isGenerating === 'bf_av1_statement' ? 'Generating...' : '✦ Generate'}
+          </button>
+        </div>
         <WorkshopTextarea
           moduleSlug={MODULE_SLUG}
           fieldKey="bf_av1_statement"
@@ -560,6 +639,32 @@ export default function Avatar() {
           />
         </div>
 
+        <div style={{ marginBottom: '6px' }}>
+          <button
+            type="button"
+            onClick={() => handleGenerateAvatar(2)}
+            disabled={isGenerating === 'bf_av2_statement'}
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '6px',
+              padding: '8px 14px',
+              fontSize: '12px',
+              fontWeight: 600,
+              color: isGenerating === 'bf_av2_statement' ? 'var(--dimmer)' : 'var(--orange)',
+              background: 'var(--orange-tint)',
+              borderWidth: '1px',
+              borderStyle: 'solid',
+              borderColor: 'var(--orange-border)',
+              borderRadius: 'var(--radius-md)',
+              cursor: isGenerating === 'bf_av2_statement' ? 'not-allowed' : 'pointer',
+              fontFamily: 'var(--font)',
+              opacity: isGenerating === 'bf_av2_statement' ? 0.6 : 1,
+            }}
+          >
+            {isGenerating === 'bf_av2_statement' ? 'Generating...' : '✦ Generate'}
+          </button>
+        </div>
         <WorkshopTextarea
           moduleSlug={MODULE_SLUG}
           fieldKey="bf_av2_statement"
