@@ -34,7 +34,7 @@ Students can work through all course modules with their progress reliably saved,
 - [ ] Next.js App Router with direct routing (replace iframe loading)
 - ✓ Reusable component library (WorkshopTextarea, WorkshopInput, OptionSelector, SectionNav, ProgressRing) — Phase 3
 - ✓ Section wrapper with unified completion tracking — Phase 3
-- [ ] Next.js API routes wrapping edge function calls (claude-proxy, circle-proxy, waterfall-analyzer)
+- ✓ Next.js API routes wrapping edge function calls (claude-proxy, circle-proxy, waterfall-analyzer) — Phase 4
 - [ ] App layout with sidebar, topbar, progress bar shared across pages
 - [ ] TypeScript throughout
 - [ ] Deploy to Vercel with environment variables
@@ -93,4 +93,4 @@ This document evolves at phase transitions and milestone boundaries.
 4. Update Context with current state
 
 ---
-*Last updated: 2026-04-02 after Phase 3 completion*
+*Last updated: 2026-04-02 after Phase 4 completion*
