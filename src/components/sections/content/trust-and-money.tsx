@@ -48,9 +48,9 @@ export default function TrustAndMoney() {
   }, [user, setValue])
 
   /**
-   * AI generation handler — generates 10 content angles for a given idea.
-   * Calls /api/claude, populates the angles field, auto-save fires naturally.
-   * Per D-05 and D-06.
+   * AI generation handler — generates 4 content angles for a given idea.
+   * Calls /api/claude, populates individual angle fields a1–a4.
+   * Auto-save fires naturally on each setValue call per D-06.
    *
    * @param pillarIdx — 1-5
    * @param ideaIdx   — 1-4
@@ -58,11 +58,10 @@ export default function TrustAndMoney() {
   async function handleGenerateAngles(pillarIdx: number, ideaIdx: number) {
     const ideaKey = `ct_ig_p${pillarIdx}i${ideaIdx}`
     const pillarKey = `ct_ig_pillar${pillarIdx}`
-    const anglesKey = `ct_ig_p${pillarIdx}i${ideaIdx}_angles`
     const generateKey = `${pillarIdx}_${ideaIdx}`
 
-    const idea = getValues()[ideaKey] || ''
-    const pillarName = getValues()[pillarKey] || ''
+    const idea = (getValues() as Record<string, string>)[ideaKey] || ''
+    const pillarName = (getValues() as Record<string, string>)[pillarKey] || ''
 
     if (!idea.trim()) {
       setGenerateError('Add an idea title first, then generate angles for it.')
@@ -74,12 +73,12 @@ export default function TrustAndMoney() {
 
     try {
       const ctx = pillarName ? ` (pillar: "${pillarName}")` : ''
-      const prompt = `You are a social media content strategist. Generate EXACTLY 10 specific content angles for this idea: "${idea}"${ctx}. Each angle should be a punchy hook or take under 10 words — specific enough to film. Output ONLY a numbered list 1 through 10, one per line, no headers, no explanations.`
+      const prompt = `You are a social media content strategist. Generate EXACTLY 4 specific content angles for this idea: "${idea}"${ctx}. Each angle should be a punchy hook or take under 10 words — specific enough to film. Output ONLY 4 lines, one angle per line, no numbers, no headers, no explanations.`
 
       const res = await fetch('/api/claude', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ prompt, maxTokens: 600 }),
+        body: JSON.stringify({ prompt, maxTokens: 300 }),
       })
 
       if (!res.ok) throw new Error('Generation failed')
@@ -89,8 +88,12 @@ export default function TrustAndMoney() {
       const text: string = data.text || data.content || ''
       if (text) {
         // D-06: setValue triggers useAutoSave 5s debounce naturally.
-        // Student can edit the generated angles before save fires.
-        ;(setValue as (k: string, v: string) => void)(anglesKey, text)
+        // Parse into 4 individual angle fields.
+        const lines = text.split('\n').filter((l: string) => l.trim())
+        for (let a = 0; a < 4; a++) {
+          const angleKey = `ct_ig_p${pillarIdx}i${ideaIdx}a${a + 1}`
+          ;(setValue as (k: string, v: string) => void)(angleKey, lines[a] || '')
+        }
       }
     } catch (err) {
       setGenerateError(err instanceof Error ? err.message : 'Generation failed')
@@ -440,7 +443,6 @@ export default function TrustAndMoney() {
           {/* Ideas A–D */}
           {[1, 2, 3, 4].map(ideaIdx => {
             const ideaKey = `ct_ig_p${pillarIdx}i${ideaIdx}` as Parameters<typeof setValue>[0]
-            const anglesKey = `ct_ig_p${pillarIdx}i${ideaIdx}_angles` as Parameters<typeof setValue>[0]
             const genKey = `${pillarIdx}_${ideaIdx}`
             const isThisGenerating = isGenerating === genKey
             const ideaLabel = ['A', 'B', 'C', 'D'][ideaIdx - 1]
@@ -482,7 +484,7 @@ export default function TrustAndMoney() {
                 </div>
 
                 {/* Generate angles with AI button */}
-                <div style={{ marginBottom: '6px' }}>
+                <div style={{ marginBottom: '8px' }}>
                   <button
                     type="button"
                     onClick={() => handleGenerateAngles(pillarIdx, ideaIdx)}
@@ -511,16 +513,42 @@ export default function TrustAndMoney() {
                   </button>
                 </div>
 
-                {/* Generated angles output field */}
-                <WorkshopTextarea
-                  moduleSlug={MODULE_SLUG}
-                  fieldKey={anglesKey}
-                  value={watch(anglesKey)}
-                  onChange={val => setValue(anglesKey, val)}
-                  getFullResponses={getValues}
-                  rows={4}
-                  placeholder="Generated angles will appear here — or write your own…"
-                />
+                {/* 4 individual angle inputs in a 2x2 grid */}
+                <div
+                  style={{
+                    display: 'grid',
+                    gridTemplateColumns: '1fr 1fr',
+                    gap: '6px',
+                  }}
+                >
+                  {[1, 2, 3, 4].map(angleIdx => {
+                    const angleKey = `ct_ig_p${pillarIdx}i${ideaIdx}a${angleIdx}` as Parameters<typeof setValue>[0]
+                    return (
+                      <div key={angleIdx}>
+                        <div
+                          style={{
+                            fontSize: '9px',
+                            fontWeight: 700,
+                            color: 'var(--dimmer)',
+                            textTransform: 'uppercase',
+                            letterSpacing: '.08em',
+                            marginBottom: '3px',
+                          }}
+                        >
+                          Angle {angleIdx}
+                        </div>
+                        <WorkshopInput
+                          moduleSlug={MODULE_SLUG}
+                          fieldKey={angleKey}
+                          value={(watch as (k: string) => string)(angleKey)}
+                          onChange={val => (setValue as (k: string, v: string) => void)(angleKey, val)}
+                          getFullResponses={getValues}
+                          placeholder={`Angle ${angleIdx}…`}
+                        />
+                      </div>
+                    )
+                  })}
+                </div>
               </div>
             )
           })}
