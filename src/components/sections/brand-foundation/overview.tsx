@@ -61,7 +61,7 @@ export default function BrandFoundationOverview() {
               background: 'var(--card)',
               border: '1px solid var(--border)',
               borderRadius: 'var(--radius-lg)',
-              padding: '2rem 1.5rem',
+              padding: '1.25rem 1.5rem',
               textAlign: 'center' as const,
             }}
           >
