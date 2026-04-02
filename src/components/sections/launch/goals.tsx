@@ -55,6 +55,14 @@ export default function LaunchGoals() {
     return () => { cancelled = true }
   }, [user, setValue])
 
+  function setDate() {
+    const d = new Date()
+    d.setDate(d.getDate() + 90)
+    const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
+    const formatted = months[d.getMonth()] + ' ' + d.getDate() + ', ' + d.getFullYear()
+    ;(setValue as (k: string, v: string) => void)('la_goal_review_date', formatted)
+  }
+
   const responses = watch()
 
   return (
@@ -494,14 +502,42 @@ export default function LaunchGoals() {
         <div style={{ fontSize: '13px', fontWeight: 500, color: 'var(--text)', marginBottom: '6px' }}>
           My 90-day review date
         </div>
-        <WorkshopInput
-          moduleSlug={MODULE_SLUG}
-          fieldKey="la_goal_review_date"
-          value={watch('la_goal_review_date')}
-          onChange={val => setValue('la_goal_review_date', val)}
-          getFullResponses={getValues}
-          placeholder="e.g. June 21, 2026"
-        />
+        <div style={{ display: 'flex', alignItems: 'flex-start', gap: '8px', flexWrap: 'wrap' }}>
+          <div style={{ flex: 1, minWidth: '200px' }}>
+            <WorkshopInput
+              moduleSlug={MODULE_SLUG}
+              fieldKey="la_goal_review_date"
+              value={watch('la_goal_review_date')}
+              onChange={val => setValue('la_goal_review_date', val)}
+              getFullResponses={getValues}
+              placeholder="e.g. June 21, 2026"
+            />
+          </div>
+          <button
+            type="button"
+            onClick={setDate}
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '6px',
+              padding: '8px 14px',
+              fontSize: '12px',
+              fontWeight: 600,
+              color: 'var(--orange)',
+              background: 'var(--orange-tint)',
+              borderWidth: '1px',
+              borderStyle: 'solid',
+              borderColor: 'var(--orange-border)',
+              borderRadius: 'var(--radius-md)',
+              cursor: 'pointer',
+              fontFamily: 'var(--font)',
+              whiteSpace: 'nowrap',
+              flexShrink: 0,
+            }}
+          >
+            Set My Date (90 Days)
+          </button>
+        </div>
 
         <div style={{ fontSize: '13px', fontWeight: 500, color: 'var(--text)', margin: '10px 0 6px' }}>
           Who is my accountability partner?

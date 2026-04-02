@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { createClient } from '@/lib/supabase/client'
 import { useAuth } from '@/context/AuthContext'
@@ -16,6 +16,7 @@ const SECTION_DEF = MODULE_SECTIONS[MODULE_SLUG]![SECTION_INDEX]
 
 export default function LaunchLeadMagnet() {
   const { user } = useAuth()
+  const [isGenerating, setIsGenerating] = useState<string | null>(null)
   const { watch, setValue, getValues } = useForm({
     defaultValues: Object.fromEntries(
       SECTION_DEF.fields.map(f => [f.key, ''])
@@ -43,6 +44,42 @@ export default function LaunchLeadMagnet() {
       })
     return () => { cancelled = true }
   }, [user, setValue])
+
+  async function handleGenerateLeadMagnet() {
+    const name = getValues('la_lm_name')
+    const topic = getValues('la_lm_topic')
+    if (!name.trim() && !topic.trim()) return
+    setIsGenerating('la_lm_outline')
+    try {
+      const bigWin = getValues('la_lm_big_win')
+      const format = getValues('la_lm_format')
+      const bridge = getValues('la_lm_offer_bridge')
+      const prompt =
+        'You are a personal brand strategist. Create a complete lead magnet outline based on these inputs.\n\nName: ' +
+        name +
+        '\nTopic/problem it solves: ' +
+        topic +
+        '\nBig win: ' +
+        bigWin +
+        '\nFormat: ' +
+        format +
+        '\nConnection to offer: ' +
+        bridge +
+        '\n\nProvide:\n1. A refined, punchy name using the formula (if improvement needed)\n2. The introduction/hook section (2-3 sentences that sell them on reading)\n3. Each of the 3-5 sections with a title and 2-3 bullet points of specific, actionable content\n4. A closing CTA section\n5. One shareability tip\n\nBe specific and immediately actionable. No filler. Write as if you are the expert teaching this.'
+      const res = await fetch('/api/claude', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ prompt, maxTokens: 800 }),
+      })
+      const data = await res.json()
+      if (data.error) throw new Error(data.error)
+      ;(setValue as (k: string, v: string) => void)('la_lm_outline', data.text || '')
+    } catch {
+      // silent error
+    } finally {
+      setIsGenerating(null)
+    }
+  }
 
   const responses = watch()
 
@@ -223,6 +260,32 @@ export default function LaunchLeadMagnet() {
 
         <div style={{ fontSize: '13px', fontWeight: 500, color: 'var(--text)', margin: '10px 0 6px' }}>
           The 3–5 sections or steps
+        </div>
+        <div style={{ marginBottom: '6px' }}>
+          <button
+            type="button"
+            onClick={handleGenerateLeadMagnet}
+            disabled={isGenerating === 'la_lm_outline'}
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '6px',
+              padding: '8px 14px',
+              fontSize: '12px',
+              fontWeight: 600,
+              color: isGenerating === 'la_lm_outline' ? 'var(--dimmer)' : 'var(--orange)',
+              background: 'var(--orange-tint)',
+              borderWidth: '1px',
+              borderStyle: 'solid',
+              borderColor: 'var(--orange-border)',
+              borderRadius: 'var(--radius-md)',
+              cursor: isGenerating === 'la_lm_outline' ? 'not-allowed' : 'pointer',
+              fontFamily: 'var(--font)',
+              opacity: isGenerating === 'la_lm_outline' ? 0.6 : 1,
+            }}
+          >
+            {isGenerating === 'la_lm_outline' ? 'Generating...' : '✦ Generate'}
+          </button>
         </div>
         <WorkshopTextarea
           moduleSlug={MODULE_SLUG}
