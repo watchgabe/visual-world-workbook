@@ -16,7 +16,9 @@ interface WorkshopTextareaProps {
 
 const baseStyle: React.CSSProperties = {
   width: '100%',
-  border: '1px solid var(--border)',
+  borderWidth: '1px',
+  borderStyle: 'solid',
+  borderColor: 'var(--border)',
   borderRadius: 'var(--radius-md)',
   padding: '9px 12px',
   fontSize: '13px',

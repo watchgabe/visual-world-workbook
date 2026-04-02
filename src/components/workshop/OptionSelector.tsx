@@ -42,7 +42,9 @@ export function OptionSelector({
 
   const baseButtonStyle: React.CSSProperties = {
     padding: '9px 11px',
-    border: '1px solid var(--border)',
+    borderWidth: '1px',
+    borderStyle: 'solid',
+    borderColor: 'var(--border)',
     borderRadius: 'var(--radius-md)',
     background: 'var(--surface)',
     color: 'var(--dim)',
