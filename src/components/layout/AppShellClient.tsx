@@ -6,10 +6,9 @@ import { MobileTopbar } from './MobileTopbar'
 
 interface AppShellClientProps {
   children: React.ReactNode
-  currentTheme: 'dark' | 'light'
 }
 
-export function AppShellClient({ children, currentTheme }: AppShellClientProps) {
+export function AppShellClient({ children }: AppShellClientProps) {
   const [sidebarOpen, setSidebarOpen] = useState(false)
 
   return (
@@ -17,7 +16,6 @@ export function AppShellClient({ children, currentTheme }: AppShellClientProps) 
       {/* Mobile topbar — visible below 768px only */}
       <MobileTopbar
         onToggle={() => setSidebarOpen(prev => !prev)}
-        currentTheme={currentTheme}
       />
 
       {/* Overlay — per D-11: dark overlay on mobile when sidebar is open */}
@@ -32,7 +30,6 @@ export function AppShellClient({ children, currentTheme }: AppShellClientProps) 
       <Sidebar
         isOpen={sidebarOpen}
         onClose={() => setSidebarOpen(false)}
-        currentTheme={currentTheme}
       />
 
       <main

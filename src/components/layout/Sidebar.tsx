@@ -7,17 +7,18 @@ import { MODULES } from '@/lib/modules'
 import { ProgressBar } from './ProgressBar'
 import { ThemeToggle } from './ThemeToggle'
 import { useAuth } from '@/context/AuthContext'
+import { useProgress } from '@/context/ProgressContext'
 import { UserModal } from '@/components/auth/UserModal'
 
 interface SidebarProps {
   isOpen: boolean
   onClose: () => void
-  currentTheme: 'dark' | 'light'
 }
 
-export function Sidebar({ isOpen, onClose, currentTheme }: SidebarProps) {
+export function Sidebar({ isOpen, onClose }: SidebarProps) {
   const pathname = usePathname()
   const { user, signOut } = useAuth()
+  const { moduleProgress } = useProgress()
   const [modalOpen, setModalOpen] = useState(false)
 
   return (
@@ -176,7 +177,7 @@ export function Sidebar({ isOpen, onClose, currentTheme }: SidebarProps) {
                         textAlign: 'right',
                       }}
                     >
-                      0%
+                      {moduleProgress[mod.slug] ?? 0}%
                     </span>
                   </div>
                 </Link>
@@ -248,7 +249,7 @@ export function Sidebar({ isOpen, onClose, currentTheme }: SidebarProps) {
           </div>
         )}
 
-        <ThemeToggle currentTheme={currentTheme} />
+        <ThemeToggle />
       </div>
     </aside>
   )

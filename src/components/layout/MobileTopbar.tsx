@@ -4,10 +4,9 @@ import { ThemeToggle } from './ThemeToggle'
 
 interface MobileTopbarProps {
   onToggle: () => void
-  currentTheme: 'dark' | 'light'
 }
 
-export function MobileTopbar({ onToggle, currentTheme }: MobileTopbarProps) {
+export function MobileTopbar({ onToggle }: MobileTopbarProps) {
   return (
     <header
       className="flex md:hidden fixed top-0 left-0 right-0 items-center z-[200]"
@@ -78,7 +77,7 @@ export function MobileTopbar({ onToggle, currentTheme }: MobileTopbarProps) {
         </div>
       </div>
 
-      <ThemeToggle currentTheme={currentTheme} />
+      <ThemeToggle />
     </header>
   )
 }

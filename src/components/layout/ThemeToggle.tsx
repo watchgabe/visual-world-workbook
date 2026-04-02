@@ -1,18 +1,12 @@
 'use client'
 
-import { useRouter } from 'next/navigation'
+import { useTheme } from '@/context/ThemeContext'
 
-interface ThemeToggleProps {
-  currentTheme: 'dark' | 'light'
-}
-
-export function ThemeToggle({ currentTheme }: ThemeToggleProps) {
-  const router = useRouter()
+export function ThemeToggle() {
+  const { theme, setTheme } = useTheme()
 
   function handleToggle() {
-    const next = currentTheme === 'dark' ? 'light' : 'dark'
-    document.cookie = `blp-theme=${next}; path=/; max-age=31536000; SameSite=Lax`
-    router.refresh()
+    setTheme(theme === 'dark' ? 'light' : 'dark')
   }
 
   return (
@@ -35,7 +29,7 @@ export function ThemeToggle({ currentTheme }: ThemeToggleProps) {
       onMouseEnter={e => (e.currentTarget.style.color = 'var(--text)')}
       onMouseLeave={e => (e.currentTarget.style.color = 'var(--dimmer)')}
     >
-      {currentTheme === 'dark' ? (
+      {theme === 'dark' ? (
         /* Moon icon — shown in dark mode (click to switch to light) */
         <svg
           width="16"

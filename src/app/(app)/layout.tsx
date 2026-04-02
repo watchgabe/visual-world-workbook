@@ -1,6 +1,8 @@
 import { cookies } from 'next/headers'
 import { AppShellClient } from '@/components/layout/AppShellClient'
 import { AuthProvider } from '@/context/AuthContext'
+import { ThemeProvider } from '@/context/ThemeContext'
+import { ProgressProvider } from '@/context/ProgressContext'
 
 export default async function AppLayout({
   children,
@@ -12,9 +14,13 @@ export default async function AppLayout({
 
   return (
     <AuthProvider>
-      <AppShellClient currentTheme={theme}>
-        {children}
-      </AppShellClient>
+      <ThemeProvider initialTheme={theme}>
+        <ProgressProvider>
+          <AppShellClient>
+            {children}
+          </AppShellClient>
+        </ProgressProvider>
+      </ThemeProvider>
     </AuthProvider>
   )
 }

@@ -21,7 +21,10 @@ export interface Database {
         Row: BlpResponse
         Insert: Omit<BlpResponse, 'id' | 'updated_at'> & { id?: string; updated_at?: string }
         Update: Partial<Omit<BlpResponse, 'id'>>
+        Relationships: []
       }
     }
+    Views: Record<string, never>
+    Functions: Record<string, never>
   }
 }
