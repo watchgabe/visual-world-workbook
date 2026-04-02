@@ -151,6 +151,7 @@ export const MODULE_SECTIONS: Partial<Record<ModuleSlug, SectionDef[]>> = {
   'visual-world': [
     { slug: 'overview',         name: 'Overview',         fields: [] },
     { slug: 'creator-analysis', name: 'Creator Analysis', fields: [
+      { key: 'vw_ca_creators',   required: false },
       { key: 'vw_ca_patterns',   required: false },
       { key: 'vw_ca_different',  required: false },
       { key: 'vw_ca_own',        required: false },
