@@ -2,15 +2,15 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-status: verifying
-stopped_at: Phase 05.1 planned and verified
-last_updated: "2026-04-02T22:39:37.057Z"
+status: executing
+stopped_at: Completed 05.1-01-PLAN.md
+last_updated: "2026-04-02T22:57:32.557Z"
 last_activity: 2026-04-02
 progress:
   total_phases: 8
   completed_phases: 5
   total_plans: 20
-  completed_plans: 14
+  completed_plans: 15
   percent: 0
 ---
 
@@ -21,13 +21,13 @@ progress:
 See: .planning/PROJECT.md (updated 2026-04-01)
 
 **Core value:** Students can work through all course modules with their progress reliably saved, synced, and accessible — without data loss or auth confusion.
-**Current focus:** Phase 05 — module-migration
+**Current focus:** Phase 05.1 — module-migration-remediation
 
 ## Current Position
 
-Phase: 6
-Plan: Not started
-Status: Phase complete — ready for verification
+Phase: 05.1 (module-migration-remediation) — EXECUTING
+Plan: 2 of 6
+Status: Ready to execute
 Last activity: 2026-04-02
 
 Progress: [░░░░░░░░░░] 0%
@@ -68,6 +68,7 @@ Progress: [░░░░░░░░░░] 0%
 | Phase 05-module-migration P04 | 45 | 2 tasks | 8 files |
 | Phase 05-module-migration P05 | 45 | 2 tasks | 9 files |
 | Phase 05-module-migration P06 | 25 | 2 tasks | 3 files |
+| Phase 05.1-module-migration-remediation P01 | 12 | 2 tasks | 7 files |
 
 ## Accumulated Context
 
@@ -114,6 +115,8 @@ Recent decisions affecting current work:
 - [Phase 05-module-migration]: bio section live preview computed from watch() values — mirrors old HTML updateBioPreview() live update pattern
 - [Phase 05-module-migration]: data-print-hide data attribute on MobileTopbar — explicit and Tailwind-class-change-safe for print CSS targeting
 - [Phase 05-module-migration]: Playbook page uses per-module chapter renderer functions (not generic loop) for custom layout (color swatches, pillar cards, avatar demographics)
+- [Phase 05.1-module-migration-remediation]: getValues() (no args) + Record<string, any> cast for dynamic field access — avoids TypeScript union narrowing with template-literal keys in avatar.tsx and bio.tsx
+- [Phase 05.1-module-migration-remediation]: Bio AI result in separate bioResult state shown in read-only div — matches old app showResult() pattern, bio prompt includes 6 fields (4 bio lines + la_funnel_cta + la_lm_name) per D-03
 
 ### Roadmap Evolution
 
@@ -130,6 +133,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-04-02T22:39:37.049Z
-Stopped at: Phase 05.1 planned and verified
-Resume file: .planning/phases/05.1-module-migration-remediation/05.1-01-PLAN.md
+Last session: 2026-04-02T22:57:32.555Z
+Stopped at: Completed 05.1-01-PLAN.md
+Resume file: None
