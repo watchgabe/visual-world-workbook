@@ -37,7 +37,9 @@ const SECTION_REGISTRY: Record<string, React.ComponentType<any>> = {
   'content/sustainability':    dynamic(() => import('@/components/sections/content/sustainability')),
   'content/formats':           dynamic(() => import('@/components/sections/content/formats')),
   'content/content-system':    dynamic(() => import('@/components/sections/content/content-system')),
-  'content/trust-and-money':   dynamic(() => import('@/components/sections/content/trust-and-money')),
+  'content/trust-and-money':      dynamic(() => import('@/components/sections/content/trust-and-money')),
+  'content/cinematic-content':    dynamic(() => import('@/components/sections/content/cinematic-content')),
+  'content/content-blueprint':    dynamic(() => import('@/components/sections/content/content-blueprint')),
 
   // Launch sections — Plan 05
   'launch/overview':        dynamic(() => import('@/components/sections/launch/overview')),
