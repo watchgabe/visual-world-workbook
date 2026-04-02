@@ -141,7 +141,7 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
                     alignItems: 'center',
                     flex: 1,
                     minWidth: 0,
-                    padding: '10px 0 10px 1rem',
+                    padding: '14px 0 14px 1rem',
                     textDecoration: 'none',
                   }}
                 >
@@ -188,7 +188,7 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
                 >
                   {hasSections && (
                     <>
-                      <ProgressRing percent={progress} size={20} />
+                      <ProgressRing percent={progress} size={18} showLabel={false} />
                       <span
                         style={{
                           fontSize: '9.5px',
@@ -197,6 +197,7 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
                           whiteSpace: 'nowrap',
                           minWidth: '24px',
                           textAlign: 'right',
+                          marginLeft: '-2px',
                         }}
                       >
                         {progress}%
@@ -248,7 +249,28 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
                   {sections.filter(s => s.slug !== 'overview').map(section => {
                     const sectionHref = `/modules/${mod.slug}/${section.slug}`
                     const isSectionActive = pathname === sectionHref
-                    const sectionComplete = false // TODO: wire to real completion data
+                    // TODO: wire to real per-section completion from ProgressContext
+                    const sectionPercent: number = 0
+
+                    // 3 states: 0% = outline circle + gray text, >0% = filled circle + white text, 100% = green circle + green text
+                    const isStarted = sectionPercent > 0
+                    const isComplete = sectionPercent === 100
+
+                    const dotColor = isComplete
+                      ? 'var(--green-text)'
+                      : isStarted
+                        ? 'var(--text)'
+                        : 'transparent'
+                    const dotBorder = isComplete
+                      ? '1.5px solid var(--green-text)'
+                      : isStarted
+                        ? '1.5px solid var(--text)'
+                        : '1.5px solid var(--dimmer)'
+                    const textColor = isComplete
+                      ? 'var(--green-text)'
+                      : isStarted
+                        ? 'var(--text)'
+                        : 'var(--dim)'
 
                     return (
                       <Link
@@ -266,10 +288,11 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
                       >
                         <span
                           style={{
-                            width: '6px',
-                            height: '6px',
+                            width: '7px',
+                            height: '7px',
                             borderRadius: '50%',
-                            background: sectionComplete ? 'var(--green-text)' : 'var(--dimmer)',
+                            background: dotColor,
+                            border: dotBorder,
                             marginRight: '10px',
                             flexShrink: 0,
                           }}
@@ -277,7 +300,7 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
                         <span
                           style={{
                             fontSize: '12px',
-                            color: sectionComplete ? 'var(--green-text)' : 'var(--dim)',
+                            color: textColor,
                             fontWeight: isSectionActive ? 600 : 400,
                             flex: 1,
                             overflow: 'hidden',
@@ -287,7 +310,7 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
                         >
                           {section.name}
                         </span>
-                        {sectionComplete && (
+                        {isComplete && (
                           <span
                             style={{
                               fontSize: '10px',

@@ -6,9 +6,10 @@ const CIRCUMFERENCE = 2 * Math.PI * RADIUS // ~113.097
 interface ProgressRingProps {
   percent: number // 0-100
   size?: number // default 44
+  showLabel?: boolean // default true — show percentage text inside ring
 }
 
-export function ProgressRing({ percent = 0, size = 44 }: ProgressRingProps) {
+export function ProgressRing({ percent = 0, size = 44, showLabel = true }: ProgressRingProps) {
   const clampedPercent = Math.max(0, Math.min(100, Math.round(percent)))
   const offset = CIRCUMFERENCE - (CIRCUMFERENCE * clampedPercent) / 100
 
@@ -47,16 +48,18 @@ export function ProgressRing({ percent = 0, size = 44 }: ProgressRingProps) {
         }}
       />
       {/* Percentage label */}
-      <text
-        x="22"
-        y="26.5"
-        textAnchor="middle"
-        fontSize="10"
-        fontWeight="700"
-        fill="var(--text)"
-      >
-        {clampedPercent}%
-      </text>
+      {showLabel && (
+        <text
+          x="22"
+          y="26.5"
+          textAnchor="middle"
+          fontSize="10"
+          fontWeight="700"
+          fill="var(--text)"
+        >
+          {clampedPercent}%
+        </text>
+      )}
     </svg>
   )
 }
