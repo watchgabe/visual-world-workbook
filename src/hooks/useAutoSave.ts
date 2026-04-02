@@ -10,6 +10,7 @@ export interface UseAutoSaveOptions {
   fieldKey: string
   value: string
   onSaveSuccess?: () => void
+  getFullResponses?: () => Record<string, string>  // prevents partial overwrites when saving
 }
 
 export interface UseAutoSaveReturn {
@@ -66,8 +67,12 @@ export function useAutoSave(opts: UseAutoSaveOptions): UseAutoSaveReturn {
     const currentValue = latestValueRef.current
 
     try {
-      // Note: Caller should ideally pass full module responses to avoid partial overwrites.
-      // Phase 5 module pages use react-hook-form getValues() for this.
+      // Use getFullResponses if provided to avoid partial overwrites (Research Pitfall 4).
+      // Falls back to single-field save for backward compatibility.
+      const responses = opts.getFullResponses
+        ? opts.getFullResponses()
+        : { [opts.fieldKey]: currentValue }
+
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const { error } = await (supabase as any)
         .from('blp_responses')
@@ -75,7 +80,7 @@ export function useAutoSave(opts: UseAutoSaveOptions): UseAutoSaveReturn {
           {
             user_id: user.id,
             module_slug: opts.moduleSlug,
-            responses: { [opts.fieldKey]: currentValue },
+            responses,
           },
           { onConflict: 'user_id,module_slug' }
         )
@@ -106,7 +111,7 @@ export function useAutoSave(opts: UseAutoSaveOptions): UseAutoSaveReturn {
       }
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [user, opts.moduleSlug, opts.fieldKey, refreshProgress])
+  }, [user, opts.moduleSlug, opts.fieldKey, opts.getFullResponses, refreshProgress])
 
   // Debounce effect: 5s debounce OR blur, whichever first (per D-02)
   useEffect(() => {
