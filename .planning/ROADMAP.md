@@ -15,7 +15,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [x] **Phase 1: Foundation & App Shell** - Next.js 15 scaffold, Supabase clients, TypeScript types, new DB schema, and three-panel app layout with theme support (completed 2026-04-01)
 - [x] **Phase 2: Authentication** - Supabase magic link auth with middleware route protection, session cookies, and AuthContext (completed 2026-04-01)
 - [x] **Phase 3: Component Library & Data Hooks** - Reusable workshop UI components and unified auto-save hook with AbortController (completed 2026-04-02)
-- [ ] **Phase 4: API Security** - Server-side Next.js API route wrappers for all three Supabase edge functions
+- [x] **Phase 4: API Security** - Server-side Next.js API route wrappers for all three Supabase edge functions (completed 2026-04-02)
 - [ ] **Phase 5: Module Migration** - All six course module pages migrated 1:1 with full content, URL routing, and progress tracking
 - [ ] **Phase 6: Admin Dashboard** - Server-side protected admin with user list, progress viewer, badge award, and delete
 - [ ] **Phase 7: Deployment** - Vercel environment variables, Supabase production URL config, and production smoke test
@@ -79,9 +79,9 @@ Plans:
   1. A call to `/api/claude` from the browser reaches the Claude proxy edge function and returns a response — no Supabase URL or keys appear in browser network requests
   2. A call to `/api/circle` from the browser reaches the Circle proxy edge function and returns a response — API keys remain server-side
   3. A call to `/api/waterfall` from the browser reaches the waterfall analyzer edge function and returns a response — API keys remain server-side
-**Plans:** 1 plan
+**Plans:** 1/1 plans complete
 Plans:
-- [ ] 04-01-PLAN.md — API route handlers for claude-proxy, circle-proxy, waterfall-analyzer with auth, size limits, and tests
+- [x] 04-01-PLAN.md — API route handlers for claude-proxy, circle-proxy, waterfall-analyzer with auth, size limits, and tests
 
 ### Phase 5: Module Migration
 **Goal**: All six course module pages are fully migrated with 1:1 content fidelity, URL-addressable sections, and working auto-save and progress tracking on every form field
@@ -129,7 +129,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7
 | 1. Foundation & App Shell | 2/2 | Complete   | 2026-04-01 |
 | 2. Authentication | 2/2 | Complete   | 2026-04-01 |
 | 3. Component Library & Data Hooks | 3/3 | Complete   | 2026-04-02 |
-| 4. API Security | 0/1 | Not started | - |
+| 4. API Security | 1/1 | Complete   | 2026-04-02 |
 | 5. Module Migration | 0/TBD | Not started | - |
 | 6. Admin Dashboard | 0/TBD | Not started | - |
 | 7. Deployment | 0/TBD | Not started | - |

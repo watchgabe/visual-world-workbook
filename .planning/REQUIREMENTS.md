@@ -54,9 +54,9 @@ Requirements for initial release. Each maps to roadmap phases.
 
 ### API Security
 
-- [ ] **API-01**: Next.js API route wrapping claude-proxy edge function (API keys server-side)
-- [ ] **API-02**: Next.js API route wrapping circle-proxy edge function (API keys server-side)
-- [ ] **API-03**: Next.js API route wrapping waterfall-analyzer edge function (API keys server-side)
+- [x] **API-01**: Next.js API route wrapping claude-proxy edge function (API keys server-side)
+- [x] **API-02**: Next.js API route wrapping circle-proxy edge function (API keys server-side)
+- [x] **API-03**: Next.js API route wrapping waterfall-analyzer edge function (API keys server-side)
 
 ### Admin
 
@@ -145,9 +145,9 @@ Which phases cover which requirements. Updated during roadmap creation.
 | MOD-05 | Phase 5 | Pending |
 | MOD-06 | Phase 5 | Pending |
 | MOD-07 | Phase 5 | Pending |
-| API-01 | Phase 4 | Pending |
-| API-02 | Phase 4 | Pending |
-| API-03 | Phase 4 | Pending |
+| API-01 | Phase 4 | Complete |
+| API-02 | Phase 4 | Complete |
+| API-03 | Phase 4 | Complete |
 | ADMIN-01 | Phase 6 | Pending |
 | ADMIN-02 | Phase 6 | Pending |
 | ADMIN-03 | Phase 6 | Pending |

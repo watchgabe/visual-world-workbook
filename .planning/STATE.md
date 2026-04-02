@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: verifying
-stopped_at: Phase 4 context gathered
-last_updated: "2026-04-02T15:56:48.890Z"
+stopped_at: Completed 04-api-security/04-01-PLAN.md
+last_updated: "2026-04-02T16:20:23.354Z"
 last_activity: 2026-04-02
 progress:
   total_phases: 7
-  completed_phases: 3
-  total_plans: 7
-  completed_plans: 7
+  completed_phases: 4
+  total_plans: 8
+  completed_plans: 8
   percent: 0
 ---
 
@@ -21,12 +21,12 @@ progress:
 See: .planning/PROJECT.md (updated 2026-04-01)
 
 **Core value:** Students can work through all course modules with their progress reliably saved, synced, and accessible — without data loss or auth confusion.
-**Current focus:** Phase 03 — component-library-data-hooks
+**Current focus:** Phase 04 — api-security
 
 ## Current Position
 
-Phase: 4
-Plan: Not started
+Phase: 04 (api-security) — EXECUTING
+Plan: 1 of 1
 Status: Phase complete — ready for verification
 Last activity: 2026-04-02
 
@@ -61,6 +61,7 @@ Progress: [░░░░░░░░░░] 0%
 | Phase 03-component-library-data-hooks P01 | 20 | 3 tasks | 11 files |
 | Phase 03-component-library-data-hooks P02 | 15 | 2 tasks | 4 files |
 | Phase 03-component-library-data-hooks P03 | 45 | 3 tasks | 10 files |
+| Phase 04-api-security P01 | 15 | 2 tasks | 6 files |
 
 ## Accumulated Context
 
@@ -92,6 +93,8 @@ Recent decisions affecting current work:
 - [Phase 03-component-library-data-hooks]: Border shorthand split into borderWidth/borderStyle/borderColor in all workshop form components to eliminate React DOM prop warnings
 - [Phase 03-component-library-data-hooks]: OptionSelector calls handleBlur() immediately after onChange on selection for immediate auto-save (discrete selection, not continuous typing)
 - [Phase 03-component-library-data-hooks]: SectionWrapper uses data-complete HTML attribute rather than Context subscription — pure presentational container, ProgressContext reads field data independently
+- [Phase 04-api-security]: Direct fetch() from Route Handlers to edge functions with SUPABASE_SERVICE_ROLE_KEY (no NEXT_PUBLIC_ prefix) — server-to-server calls keep API keys out of browser
+- [Phase 04-api-security]: Single /api/circle route with pass-through action field (thin proxy D-03/D-04) — consistent, no URL/body duplication
 
 ### Pending Todos
 
@@ -104,6 +107,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-04-02T15:56:48.882Z
-Stopped at: Phase 4 context gathered
-Resume file: .planning/phases/04-api-security/04-CONTEXT.md
+Last session: 2026-04-02T16:20:23.352Z
+Stopped at: Completed 04-api-security/04-01-PLAN.md
+Resume file: None
