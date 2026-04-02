@@ -19,10 +19,10 @@ Requirements for initial release. Each maps to roadmap phases.
 
 - [x] **DATA-01**: Single Supabase service module with browser and server client creators
 - [x] **DATA-02**: Well-structured database schema (new tables/columns designed for scalability)
-- [ ] **DATA-03**: Auto-save hook with debounce used by all form fields across all modules
-- [ ] **DATA-04**: Auto-save uses AbortController to prevent race condition overwrites
-- [ ] **DATA-05**: Save status indicator visible to user (syncing/saved/error)
-- [ ] **DATA-06**: React Context provides user state, progress state, and theme state
+- [x] **DATA-03**: Auto-save hook with debounce used by all form fields across all modules
+- [x] **DATA-04**: Auto-save uses AbortController to prevent race condition overwrites
+- [x] **DATA-05**: Save status indicator visible to user (syncing/saved/error)
+- [x] **DATA-06**: React Context provides user state, progress state, and theme state
 
 ### Navigation & Layout
 
@@ -122,10 +122,10 @@ Which phases cover which requirements. Updated during roadmap creation.
 | AUTH-05 | Phase 2 | Complete |
 | DATA-01 | Phase 1 | Complete |
 | DATA-02 | Phase 1 | Complete |
-| DATA-03 | Phase 3 | Pending |
-| DATA-04 | Phase 3 | Pending |
-| DATA-05 | Phase 3 | Pending |
-| DATA-06 | Phase 3 | Pending |
+| DATA-03 | Phase 3 | Complete |
+| DATA-04 | Phase 3 | Complete |
+| DATA-05 | Phase 3 | Complete |
+| DATA-06 | Phase 3 | Complete |
 | NAV-01 | Phase 1 | Complete |
 | NAV-02 | Phase 1 | Complete |
 | NAV-03 | Phase 5 | Pending |
