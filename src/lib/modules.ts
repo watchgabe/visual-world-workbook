@@ -175,8 +175,12 @@ export const MODULE_SECTIONS: Partial<Record<ModuleSlug, SectionDef[]>> = {
       { key: 'vw_color_name',      required: false },
     ]},
     { slug: 'typography',       name: 'Typography',       fields: [
-      { key: 'vw_typo_primary',  required: false },
-      { key: 'vw_typo_body',     required: false },
+      { key: 'vw_typo_primary',        required: false },
+      { key: 'vw_typo_body',           required: false },
+      { key: 'vw_typo_primary_italic', required: false },
+      { key: 'vw_typo_primary_bold',   required: false },
+      { key: 'vw_typo_body_italic',    required: false },
+      { key: 'vw_typo_body_bold',      required: false },
     ]},
     { slug: 'shot-system',      name: 'Your Perspective', fields: [
       // Element 1: Setting
