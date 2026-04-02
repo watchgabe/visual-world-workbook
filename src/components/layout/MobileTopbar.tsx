@@ -9,6 +9,7 @@ interface MobileTopbarProps {
 export function MobileTopbar({ onToggle }: MobileTopbarProps) {
   return (
     <header
+      data-print-hide
       className="flex md:hidden fixed top-0 left-0 right-0 items-center z-[200]"
       style={{
         height: 'var(--topbar-h)',

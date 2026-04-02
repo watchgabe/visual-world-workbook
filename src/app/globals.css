@@ -80,3 +80,38 @@ body::before {
 .workshop-field::placeholder {
   color: var(--dimmer);
 }
+
+/* ── Print styles for Playbook (MOD-07) ── */
+@media print {
+  /* Hide navigation and UI chrome */
+  aside,
+  [data-print-hide],
+  .print-btn {
+    display: none !important;
+  }
+
+  /* Reset main content to full width */
+  main {
+    margin-left: 0 !important;
+    padding: 0 !important;
+  }
+
+  /* Allow body to scroll/expand for print */
+  body {
+    overflow: visible !important;
+    background: #fff !important;
+    color: #000 !important;
+  }
+
+  /* Ensure cards print with borders visible */
+  * {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  /* Page breaks — keep chapters together */
+  .pb-chapter {
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+}
