@@ -12,7 +12,7 @@ export default function LaunchOverview() {
         { num: 7, label: 'DELIVERABLES' },
       ]}
       roadmap={[
-        { num: '01', slug: 'bio', title: 'Bio Optimization', sub: 'Turn your profile into a conversion tool' },
+        { num: '01', slug: 'bio', title: 'Bio', sub: 'Turn your profile into a conversion tool' },
         { num: '02', slug: 'funnel', title: 'Your Funnel', sub: 'Map the path from attention to customer' },
         { num: '03', slug: 'manychat', title: 'ManyChat & Newsletter', sub: 'Build the infrastructure you actually own' },
         { num: '04', slug: 'lead-magnet', title: 'Lead Magnet', sub: 'Create the offer that earns the opt-in' },

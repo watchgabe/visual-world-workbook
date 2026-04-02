@@ -65,7 +65,7 @@ export const MODULE_SECTIONS: Partial<Record<ModuleSlug, SectionDef[]>> = {
       { key: 'bf_av2_connection', required: false },
       { key: 'bf_av2_statement',  required: false },
     ]},
-    { slug: 'core-mission',    name: 'Core Mission',    fields: [
+    { slug: 'core-mission',    name: 'Mission',         fields: [
       { key: 'bf_ikigai_love',    required: true },
       { key: 'bf_ikigai_good',    required: true },
       { key: 'bf_ikigai_world',   required: true },
@@ -77,7 +77,7 @@ export const MODULE_SECTIONS: Partial<Record<ModuleSlug, SectionDef[]>> = {
       { key: 'bf_mission_why',    required: true },
       { key: 'bf_core_mission',   required: false },
     ]},
-    { slug: 'core-values',     name: 'Core Values',     fields: [
+    { slug: 'core-values',     name: 'Values',          fields: [
       { key: 'bf_val1_name',     required: false },
       { key: 'bf_val1_practice', required: false },
       { key: 'bf_val2_name',     required: false },
@@ -91,7 +91,7 @@ export const MODULE_SECTIONS: Partial<Record<ModuleSlug, SectionDef[]>> = {
       { key: 'bf_val6_name',     required: false },
       { key: 'bf_val6_practice', required: false },
     ]},
-    { slug: 'content-pillars', name: 'Content Pillars', fields: [
+    { slug: 'content-pillars', name: 'Pillars',          fields: [
       { key: 'bf_pillar_discover1', required: false },
       { key: 'bf_pillar_discover2', required: false },
       { key: 'bf_pillar_discover3', required: false },
@@ -165,7 +165,7 @@ export const MODULE_SECTIONS: Partial<Record<ModuleSlug, SectionDef[]>> = {
       { key: 'vw_typo_primary',  required: false },
       { key: 'vw_typo_body',     required: false },
     ]},
-    { slug: 'shot-system',      name: 'Shot System',      fields: [
+    { slug: 'shot-system',      name: 'Your Perspective', fields: [
       // Element 1: Setting
       { key: 'vw_shot_e1_location',    required: false },
       { key: 'vw_shot_e1_vibe',        required: false },
@@ -189,7 +189,7 @@ export const MODULE_SECTIONS: Partial<Record<ModuleSlug, SectionDef[]>> = {
   ],
   'content': [
     { slug: 'overview',          name: 'Overview',          fields: [] },
-    { slug: 'content-strategy',  name: 'Content Strategy',  fields: [
+    { slug: 'content-strategy',  name: 'Strategy',          fields: [
       { key: 'ct_strategy_goal',         required: false },
       { key: 'ct_strategy_next_step',    required: false },
       { key: 'ct_strategy_pain_problem', required: true  },
@@ -219,7 +219,7 @@ export const MODULE_SECTIONS: Partial<Record<ModuleSlug, SectionDef[]>> = {
       { key: 'ct_batch_commit',   required: false },
     ]},
     { slug: 'formats',           name: 'Formats',           fields: [] },
-    { slug: 'content-system',    name: 'Content System',    fields: [] },
+    { slug: 'content-system',    name: 'Content System',   fields: [] },
     { slug: 'trust-and-money',   name: 'Trust & Money',     fields: [
       // Workshop 6 — Trust & Money
       { key: 'ct_tm_free',       required: false },
@@ -286,7 +286,7 @@ export const MODULE_SECTIONS: Partial<Record<ModuleSlug, SectionDef[]>> = {
   ],
   'launch': [
     { slug: 'overview',       name: 'Overview',       fields: [] },
-    { slug: 'funnel',         name: 'Funnel',         fields: [
+    { slug: 'funnel',         name: 'Your Funnel',    fields: [
       // Funnel Map
       { key: 'la_funnel_platforms',       required: false },
       { key: 'la_funnel_lead_magnet',     required: false },
@@ -302,7 +302,7 @@ export const MODULE_SECTIONS: Partial<Record<ModuleSlug, SectionDef[]>> = {
       { key: 'la_funnel_has_offer',      required: false },
       { key: 'la_funnel_broken',         required: false },
     ]},
-    { slug: 'manychat',       name: 'ManyChat',       fields: [] },
+    { slug: 'manychat',       name: 'ManyChat & Newsletter', fields: [] },
     { slug: 'lead-magnet',    name: 'Lead Magnet',    fields: [
       { key: 'la_lm_name',         required: false },
       { key: 'la_lm_topic',        required: false },

@@ -13,7 +13,7 @@ export default function VisualWorldOverview() {
       ]}
       roadmap={[
         { num: '01', slug: 'creator-analysis', title: 'Creator Analysis', sub: 'Study what premium looks like in your space' },
-        { num: '02', slug: 'color-palette', title: 'Color Palette', sub: 'Build your visual language' },
+        { num: '02', slug: 'color-palette', title: 'Mood Board & Color Palette', sub: 'Gather inspiration and build your visual language' },
         { num: '03', slug: 'typography', title: 'Typography', sub: 'Define your typographic voice' },
         { num: '04', slug: 'shot-system', title: 'Your Perspective', sub: 'Setting, mood, design details, and your visual narrative' },
         { num: '05', slug: 'visual-world-doc', title: 'Visual World Doc', sub: 'Your compiled visual identity document' },
