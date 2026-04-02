@@ -28,6 +28,7 @@ export function checkSectionComplete(
 }
 
 export function SectionWrapper({
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   moduleSlug: _moduleSlug,
   sectionIndex,
   fields,
