@@ -38,8 +38,8 @@ Requirements for initial release. Each maps to roadmap phases.
 - [ ] **COMP-01**: WorkshopTextarea component with auto-save integration
 - [ ] **COMP-02**: WorkshopInput component with auto-save integration
 - [ ] **COMP-03**: OptionSelector component (radio/checkbox groups) with auto-save integration
-- [ ] **COMP-04**: SectionNav component for navigating between sections within a module
-- [ ] **COMP-05**: ProgressRing SVG component showing completion percentage
+- [x] **COMP-04**: SectionNav component for navigating between sections within a module
+- [x] **COMP-05**: ProgressRing SVG component showing completion percentage
 - [ ] **COMP-06**: SectionWrapper component with completion tracking per section
 
 ### Module Migration
@@ -135,8 +135,8 @@ Which phases cover which requirements. Updated during roadmap creation.
 | COMP-01 | Phase 3 | Pending |
 | COMP-02 | Phase 3 | Pending |
 | COMP-03 | Phase 3 | Pending |
-| COMP-04 | Phase 3 | Pending |
-| COMP-05 | Phase 3 | Pending |
+| COMP-04 | Phase 3 | Complete |
+| COMP-05 | Phase 3 | Complete |
 | COMP-06 | Phase 3 | Pending |
 | MOD-01 | Phase 5 | Pending |
 | MOD-02 | Phase 5 | Pending |
