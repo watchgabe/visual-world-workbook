@@ -17,6 +17,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [x] **Phase 3: Component Library & Data Hooks** - Reusable workshop UI components and unified auto-save hook with AbortController (completed 2026-04-02)
 - [x] **Phase 4: API Security** - Server-side Next.js API route wrappers for all three Supabase edge functions (completed 2026-04-02)
 - [x] **Phase 5: Module Migration** - All six course module pages migrated 1:1 with full content, URL routing, and progress tracking (completed 2026-04-02)
+- [ ] **Phase 5.1: Module Migration Remediation** - Restore missing features, content, and AI integrations for true 1:1 feature parity (INSERTED)
 - [ ] **Phase 6: Admin Dashboard** - Server-side protected admin with user list, progress viewer, badge award, and delete
 - [ ] **Phase 7: Deployment** - Vercel environment variables, Supabase production URL config, and production smoke test
 
@@ -103,6 +104,32 @@ Plans:
 - [x] 05-06-PLAN.md — Playbook: read-only compiled view with print CSS + visual checkpoint
 **UI hint**: yes
 
+### Phase 05.1: Module Migration Remediation (INSERTED)
+
+**Goal:** Restore all missing features, content, and AI integrations from the old HTML modules that were not migrated in Phase 5 — achieving true 1:1 feature parity
+**Depends on:** Phase 5
+**Requirements**: MOD-02, MOD-03, MOD-04, MOD-05
+**Success Criteria** (what must be TRUE):
+  1. Brand Foundation Values Audit (12 scored items, 4 categories, chart visualization) is fully functional
+  2. Visual World Creator Analysis has the dynamic creator card system with Instagram AI lookup and per-creator notes
+  3. Visual World Mood Board has drag-and-drop image gallery with 4 categories and mosaic view
+  4. Visual World Typography has AI font identifier, pairing suggestions, live font preview, and italic/bold toggles
+  5. Visual World Color Palette has clickable color picker on swatches and AI color extraction from photo
+  6. Content module includes Cinematic Content section (Workshop 10) with all instructional content and shot type images
+  7. Content Blueprint/Playbook view with compiled summary and 19 unique fields (brand colors, mood vibe, creator analysis x3)
+  8. Content Idea Generation has individual angle fields or AI generation matching old behavior
+  9. Launch Bio and Lead Magnet sections have AI generate buttons calling Claude proxy
+  10. Launch Goals section has "Set My Date" 90-day calculator button
+**Plans:** 6 plans
+Plans:
+- [ ] 05.1-01-PLAN.md — Launch AI buttons (bio, lead magnet) + Set My Date + Brand Foundation 5 AI generate buttons
+- [ ] 05.1-02-PLAN.md — Brand Foundation Values Audit (12 scored items, chart visualization)
+- [ ] 05.1-03-PLAN.md — Content: 80 angle fields + Cinematic Content section + Content Blueprint section
+- [ ] 05.1-04-PLAN.md — Visual World Creator Analysis rewrite with dynamic cards and AI
+- [ ] 05.1-05-PLAN.md — Visual World Color Palette: mood board gallery, color picker, AI extraction, Pinterest
+- [ ] 05.1-06-PLAN.md — Visual World Typography: font identifier, pairing, live preview, italic/bold
+**UI hint**: yes
+
 ### Phase 6: Admin Dashboard
 **Goal**: Admins can access a server-side protected dashboard to view all users, inspect any user's module progress, award Circle.so badges, and delete accounts — with no client-side password check
 **Depends on**: Phase 5
@@ -129,7 +156,7 @@ Plans:
 ## Progress
 
 **Execution Order:**
-Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7
+Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 5.1 → 6 → 7
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
@@ -138,5 +165,6 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7
 | 3. Component Library & Data Hooks | 3/3 | Complete   | 2026-04-02 |
 | 4. API Security | 1/1 | Complete   | 2026-04-02 |
 | 5. Module Migration | 6/6 | Complete   | 2026-04-02 |
+| 5.1 Module Migration Remediation | 0/6 | Not started | - |
 | 6. Admin Dashboard | 0/TBD | Not started | - |
 | 7. Deployment | 0/TBD | Not started | - |
