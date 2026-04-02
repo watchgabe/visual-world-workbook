@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { createClient } from '@/lib/supabase/client'
 import { useAuth } from '@/context/AuthContext'
@@ -12,6 +12,26 @@ import { MODULE_SECTIONS } from '@/lib/modules'
 const MODULE_SLUG = 'visual-world' as const
 const SECTION_INDEX = 2
 const SECTION_DEF = MODULE_SECTIONS['visual-world']![SECTION_INDEX]
+
+const MB_KEY = 'vww-mb-v2'
+type MBCategory = 'colorgrading' | 'fonts' | 'shots' | 'colors'
+const MB_CATS: MBCategory[] = ['colorgrading', 'fonts', 'shots', 'colors']
+
+const MB_CAT_LABELS: Record<MBCategory, { label: string; sub: string }> = {
+  colorgrading: { label: 'Color Grading', sub: 'Color tones, filters, and moods' },
+  fonts:        { label: 'Fonts & Typography', sub: 'Type styles, headlines, body text' },
+  shots:        { label: 'Composition & Shots', sub: 'Shot angles, transitions, framing, effects' },
+  colors:       { label: 'Colors', sub: 'Palettes, swatches, and combinations that resonate' },
+}
+
+type ExtractedPalette = {
+  name: string
+  mood: string
+  primary: string
+  secondary: string
+  accent: string
+  neutral: string
+}
 
 const LIGHTING_OPTIONS = [
   { label: 'Warm, golden natural', value: 'warm-golden' },
@@ -35,6 +55,25 @@ export default function ColorPalette() {
     ),
   })
 
+  // ── Mood Board State ──────────────────────────────────
+  const [mbImages, setMbImages] = useState<Record<MBCategory, string[]>>({
+    colorgrading: [], fonts: [], shots: [], colors: [],
+  })
+  const [mbStorageFull, setMbStorageFull] = useState(false)
+  const [mbDragOver, setMbDragOver] = useState<MBCategory | null>(null)
+  const mbFileInputRefs = useRef<Record<MBCategory, HTMLInputElement | null>>({
+    colorgrading: null, fonts: null, shots: null, colors: null,
+  })
+
+  // ── Color Extraction State ────────────────────────────
+  const [extractPhoto, setExtractPhoto] = useState<{ base64: string; mime: string; preview: string } | null>(null)
+  const [isExtracting, setIsExtracting] = useState(false)
+  const [extractResults, setExtractResults] = useState<ExtractedPalette[]>([])
+  const [extractError, setExtractError] = useState<string | null>(null)
+  const [extractDragOver, setExtractDragOver] = useState(false)
+  const extractFileInputRef = useRef<HTMLInputElement | null>(null)
+
+  // ── Load from Supabase on mount ───────────────────────
   useEffect(() => {
     if (!user) return
     let cancelled = false
@@ -57,7 +96,187 @@ export default function ColorPalette() {
     return () => { cancelled = true }
   }, [user, setValue])
 
+  // ── Load mood board from localStorage on mount ────────
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem(MB_KEY)
+      if (saved) {
+        const d = JSON.parse(saved)
+        setMbImages(prev => {
+          const next = { ...prev }
+          MB_CATS.forEach(c => {
+            if (d[c] && Array.isArray(d[c])) next[c] = d[c]
+          })
+          return next
+        })
+      }
+    } catch {}
+  }, [])
+
+  // ── Save mood board to localStorage on change ─────────
+  useEffect(() => {
+    try {
+      localStorage.setItem(MB_KEY, JSON.stringify(mbImages))
+      setMbStorageFull(false)
+    } catch {
+      setMbStorageFull(true)
+      console.warn('Mood board save failed — localStorage may be full')
+    }
+  }, [mbImages])
+
+  // ── Pinterest embed effect ─────────────────────────────
+  useEffect(() => {
+    let url = watch('vw_mb_link') || ''
+    if (!url) return
+    if (!url.match(/^https?:\/\//)) url = 'https://' + url
+    if (!url.includes('pinterest.com')) return
+
+    const container = document.getElementById('pinterest-embed')
+    if (!container) return
+
+    container.innerHTML =
+      '<div style="overflow:auto;-webkit-overflow-scrolling:touch;max-height:520px;border-radius:8px">' +
+      '<a data-pin-do="embedBoard" data-pin-board-width="800" data-pin-scale-height="480" data-pin-scale-width="80" href="' + url + '"></a>' +
+      '</div>' +
+      '<div style="margin-top:10px;text-align:right">' +
+      '<a href="' + url + '" target="_blank" rel="noopener" style="font-size:11px;color:var(--dimmer);text-decoration:none">Open in Pinterest</a>' +
+      '</div>'
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    if ((window as any).PinUtils) {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      ;(window as any).PinUtils.build()
+    } else {
+      const existingScript = document.getElementById('pinterest-sdk')
+      if (existingScript) existingScript.remove()
+      const script = document.createElement('script')
+      script.id = 'pinterest-sdk'
+      script.src = 'https://assets.pinterest.com/js/pinit.js'
+      script.async = true
+      document.body.appendChild(script)
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [watch('vw_mb_link')])
+
+  // ── Mood Board Handlers ───────────────────────────────
+  function addImages(category: MBCategory, files: File[]) {
+    const images = files.filter(f => f.type.startsWith('image/'))
+    if (!images.length) return
+    let loaded = 0
+    images.forEach(file => {
+      const reader = new FileReader()
+      reader.onload = () => {
+        setMbImages(prev => ({
+          ...prev,
+          [category]: [...prev[category], reader.result as string],
+        }))
+        loaded++
+      }
+      reader.readAsDataURL(file)
+    })
+  }
+
+  function handleMbDrop(category: MBCategory, e: React.DragEvent) {
+    e.preventDefault()
+    setMbDragOver(null)
+    const files = Array.from(e.dataTransfer.files)
+    addImages(category, files)
+  }
+
+  function removeImage(category: MBCategory, index: number) {
+    setMbImages(prev => ({
+      ...prev,
+      [category]: prev[category].filter((_, i) => i !== index),
+    }))
+  }
+
+  function handleMbFileInput(category: MBCategory, e: React.ChangeEvent<HTMLInputElement>) {
+    const files = Array.from(e.target.files || [])
+    addImages(category, files)
+    e.target.value = ''
+  }
+
+  // ── Color Extraction Handlers ─────────────────────────
+  function handleExtractFile(file: File) {
+    if (!file.type.startsWith('image/')) return
+    const reader = new FileReader()
+    reader.onload = () => {
+      const dataUrl = reader.result as string
+      const base64 = dataUrl.split(',')[1]
+      setExtractPhoto({ base64, mime: file.type, preview: dataUrl })
+      setExtractResults([])
+      setExtractError(null)
+    }
+    reader.readAsDataURL(file)
+  }
+
+  function handleExtractDrop(e: React.DragEvent) {
+    e.preventDefault()
+    setExtractDragOver(false)
+    const files = Array.from(e.dataTransfer.files)
+    if (files[0]) handleExtractFile(files[0])
+  }
+
+  async function extractColors() {
+    if (!extractPhoto) return
+    setIsExtracting(true)
+    setExtractError(null)
+    setExtractResults([])
+
+    try {
+      const res = await fetch('/api/claude', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          maxTokens: 800,
+          messages: [{
+            role: 'user',
+            content: [
+              {
+                type: 'image',
+                source: {
+                  type: 'base64',
+                  media_type: extractPhoto.mime,
+                  data: extractPhoto.base64,
+                },
+              },
+              {
+                type: 'text',
+                text: 'Analyze this image and extract 3 color palette options. Follow these rules exactly:\n\nPalette 1 -- Neutral Foundation: Put the ONE bold/saturated color from the image as "primary" (it will appear largest on the left). The other three -- secondary, accent, neutral -- must be true neutrals ONLY: pure grays, near-blacks (#111-#555), or near-whites/off-whites (#E0-#F8). No tans, beiges, or muted colors. Think monochrome base + one pop.\n\nPalette 2 -- pick two colors from the image that come from DIFFERENT hue families (e.g. a warm and a cool), plus 2 true neutrals.\n\nPalette 3 -- must look visually DIFFERENT from Palette 2. Use a completely different dominant hue or mood. If Palette 2 is warm, make Palette 3 cool or dark.\n\nFor each, return exactly 4 hex codes and a short 2-3 word name. Return ONLY valid JSON:\n[\n  {\n    "name": "Palette Name",\n    "mood": "One sentence mood description",\n    "primary": "#hexcode",\n    "secondary": "#hexcode",\n    "accent": "#hexcode",\n    "neutral": "#hexcode"\n  }\n]\nOnly return the JSON, no other text.',
+              },
+            ],
+          }],
+        }),
+      })
+
+      const data = await res.json()
+      if (data.error) throw new Error(data.error)
+      const text: string = data.text || ''
+      const cleaned = text.replace(/```json|```/g, '').trim()
+      const jsonStart = cleaned.indexOf('[')
+      const jsonEnd = cleaned.lastIndexOf(']')
+      if (jsonStart === -1 || jsonEnd === -1) throw new Error('No JSON array found in response')
+      const palettes: ExtractedPalette[] = JSON.parse(cleaned.slice(jsonStart, jsonEnd + 1))
+      setExtractResults(palettes)
+    } catch (e) {
+      setExtractError(e instanceof Error ? e.message : 'Extraction failed')
+    } finally {
+      setIsExtracting(false)
+    }
+  }
+
+  function applyPalette(palette: ExtractedPalette) {
+    ;(setValue as (k: string, v: string) => void)('vw_color_primary', palette.primary)
+    ;(setValue as (k: string, v: string) => void)('vw_color_secondary', palette.secondary)
+    ;(setValue as (k: string, v: string) => void)('vw_color_accent', palette.accent)
+    ;(setValue as (k: string, v: string) => void)('vw_color_neutral', palette.neutral)
+    if (palette.name) {
+      ;(setValue as (k: string, v: string) => void)('vw_color_name', palette.name)
+    }
+  }
+
   const responses = watch()
+  const mbTotal = MB_CATS.reduce((s, c) => s + mbImages[c].length, 0)
 
   return (
     <SectionWrapper
@@ -99,7 +318,6 @@ export default function ColorPalette() {
         the typography, before any design decisions. All of those decisions should flow from the
         mood you create here.
       </p>
-
       <p style={{ fontSize: '13.5px', color: 'var(--dim)', lineHeight: 1.7, marginBottom: '1rem' }}>
         Think of this as your creative cheat sheet — a snapshot of how your content should look,
         feel, and sound. Keep it close whenever you&apos;re filming, editing, or designing to stay
@@ -135,6 +353,212 @@ export default function ColorPalette() {
           paste your board link below and we&apos;ll reference it.
         </div>
       </div>
+
+      {/* ── Mood Board Image Zones ─────────────────────── */}
+      {mbStorageFull && (
+        <div
+          style={{
+            background: 'rgba(220,50,50,.1)',
+            border: '1px solid rgba(220,50,50,.3)',
+            borderRadius: 'var(--radius-md)',
+            padding: '10px 14px',
+            marginBottom: '1rem',
+            fontSize: '12.5px',
+            color: 'rgba(220,100,100,1)',
+          }}
+        >
+          Storage is full. Remove some images to add new ones.
+        </div>
+      )}
+
+      <div
+        style={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))',
+          gap: '12px',
+          marginBottom: '1.25rem',
+        }}
+      >
+        {MB_CATS.map(cat => {
+          const imgs = mbImages[cat]
+          const isDragTarget = mbDragOver === cat
+          return (
+            <div
+              key={cat}
+              style={{
+                border: isDragTarget
+                  ? '2px solid var(--orange)'
+                  : '1px solid var(--border)',
+                borderRadius: 'var(--radius-lg)',
+                overflow: 'hidden',
+                background: 'var(--card)',
+                transition: 'border-color .15s',
+              }}
+              onDragOver={e => { e.preventDefault(); setMbDragOver(cat) }}
+              onDragLeave={() => setMbDragOver(null)}
+              onDrop={e => handleMbDrop(cat, e)}
+            >
+              {/* Panel header */}
+              <div
+                style={{
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                  padding: '10px 12px',
+                  borderBottom: '1px solid var(--border)',
+                  background: 'var(--surface)',
+                }}
+              >
+                <div>
+                  <div style={{ fontSize: '12px', fontWeight: 700, color: 'var(--text)' }}>
+                    {MB_CAT_LABELS[cat].label}
+                  </div>
+                  <div style={{ fontSize: '10px', color: 'var(--dimmer)', marginTop: '1px' }}>
+                    {MB_CAT_LABELS[cat].sub}
+                  </div>
+                </div>
+                <span
+                  style={{
+                    fontSize: '11px',
+                    fontWeight: 700,
+                    color: imgs.length >= 10 ? 'var(--green, #4caf50)' : 'var(--dimmer)',
+                    background: 'var(--card)',
+                    borderRadius: '12px',
+                    padding: '2px 8px',
+                    border: '1px solid var(--border)',
+                  }}
+                >
+                  {imgs.length}
+                </span>
+              </div>
+
+              {/* Drop zone or grid */}
+              <div style={{ padding: '10px' }}>
+                {imgs.length === 0 ? (
+                  <div
+                    onClick={() => mbFileInputRefs.current[cat]?.click()}
+                    style={{
+                      border: '1.5px dashed var(--border2)',
+                      borderRadius: 'var(--radius-md)',
+                      padding: '20px 12px',
+                      textAlign: 'center',
+                      cursor: 'pointer',
+                      color: 'var(--dimmer)',
+                    }}
+                  >
+                    <div style={{ fontSize: '20px', marginBottom: '6px' }}>+</div>
+                    <div style={{ fontSize: '11.5px' }}>Drop images or click to browse</div>
+                  </div>
+                ) : (
+                  <div
+                    style={{
+                      display: 'grid',
+                      gridTemplateColumns: 'repeat(auto-fill, minmax(80px, 1fr))',
+                      gap: '6px',
+                    }}
+                  >
+                    {imgs.map((src, i) => (
+                      <div
+                        key={i}
+                        style={{ position: 'relative', borderRadius: '6px', overflow: 'hidden', aspectRatio: '1' }}
+                      >
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                        <img
+                          src={src}
+                          alt=""
+                          loading="lazy"
+                          style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
+                        />
+                        <button
+                          onClick={() => removeImage(cat, i)}
+                          style={{
+                            position: 'absolute',
+                            top: '3px',
+                            right: '3px',
+                            background: 'rgba(0,0,0,.65)',
+                            color: '#fff',
+                            border: 'none',
+                            borderRadius: '50%',
+                            width: '18px',
+                            height: '18px',
+                            cursor: 'pointer',
+                            fontSize: '11px',
+                            lineHeight: '18px',
+                            textAlign: 'center',
+                            padding: 0,
+                          }}
+                          aria-label="Remove image"
+                        >
+                          ×
+                        </button>
+                      </div>
+                    ))}
+                    {/* Add more button */}
+                    <div
+                      onClick={() => mbFileInputRefs.current[cat]?.click()}
+                      style={{
+                        aspectRatio: '1',
+                        border: '1.5px dashed var(--border2)',
+                        borderRadius: '6px',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        cursor: 'pointer',
+                        color: 'var(--dimmer)',
+                        fontSize: '20px',
+                      }}
+                    >
+                      +
+                    </div>
+                  </div>
+                )}
+
+                {/* Hidden file input */}
+                <input
+                  ref={el => { mbFileInputRefs.current[cat] = el }}
+                  type="file"
+                  accept="image/*"
+                  multiple
+                  style={{ display: 'none' }}
+                  onChange={e => handleMbFileInput(cat, e)}
+                />
+              </div>
+            </div>
+          )
+        })}
+      </div>
+
+      {/* Total count */}
+      {mbTotal > 0 && (
+        <div
+          style={{
+            fontSize: '11px',
+            color: 'var(--dimmer)',
+            marginBottom: '1.25rem',
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+          }}
+        >
+          <span>{mbTotal} image{mbTotal === 1 ? '' : 's'} added</span>
+          <button
+            onClick={() => setMbImages({ colorgrading: [], fonts: [], shots: [], colors: [] })}
+            style={{
+              background: 'none',
+              border: 'none',
+              fontSize: '11px',
+              color: 'var(--dimmer)',
+              cursor: 'pointer',
+              textDecoration: 'underline',
+              textUnderlineOffset: '2px',
+              fontFamily: 'var(--font)',
+              padding: 0,
+            }}
+          >
+            Clear all
+          </button>
+        </div>
+      )}
 
       {/* Link Existing Board */}
       <div
@@ -173,6 +597,20 @@ export default function ColorPalette() {
           getFullResponses={getValues}
           placeholder="www.pinterest.com/yourname/yourboard"
         />
+        {/* Pinterest embed container */}
+        {watch('vw_mb_link') && watch('vw_mb_link').includes('pinterest.com') && (
+          <div style={{ marginTop: '10px' }}>
+            <div
+              id="pinterest-embed"
+              style={{
+                borderRadius: 'var(--radius-md)',
+                overflow: 'hidden',
+                border: '1px solid var(--border)',
+                background: 'var(--surface)',
+              }}
+            />
+          </div>
+        )}
       </div>
 
       {/* Identify Patterns */}
@@ -344,6 +782,195 @@ export default function ColorPalette() {
         and what you stand for before you say anything.
       </p>
 
+      {/* ── Extract Colors From a Photo ──────────────────── */}
+      <h2
+        style={{
+          fontSize: '11px',
+          fontWeight: 700,
+          letterSpacing: '.1em',
+          textTransform: 'uppercase',
+          color: 'var(--dimmer)',
+          marginBottom: '.75rem',
+        }}
+      >
+        Extract Colors From a Photo
+      </h2>
+      <p style={{ fontSize: '13.5px', color: 'var(--dim)', lineHeight: 1.7, marginBottom: '.85rem' }}>
+        Drop a photo that captures the mood you want — AI will extract multiple palette options. Pick the one that feels right.
+      </p>
+
+      {/* Photo drop zone */}
+      <div
+        onClick={() => extractFileInputRef.current?.click()}
+        onDragOver={e => { e.preventDefault(); setExtractDragOver(true) }}
+        onDragLeave={() => setExtractDragOver(false)}
+        onDrop={handleExtractDrop}
+        style={{
+          border: extractDragOver ? '2px solid var(--orange)' : '2px dashed var(--border2)',
+          borderRadius: 'var(--radius-lg)',
+          padding: '1.25rem',
+          textAlign: 'center',
+          cursor: 'pointer',
+          marginBottom: '.75rem',
+          background: extractDragOver ? 'var(--orange-tint)' : 'var(--card)',
+          transition: 'border-color .15s, background .15s',
+          minHeight: '100px',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          flexDirection: 'column',
+          position: 'relative',
+          overflow: 'hidden',
+        }}
+      >
+        <input
+          ref={extractFileInputRef}
+          type="file"
+          accept="image/*"
+          style={{ display: 'none' }}
+          onChange={e => { if (e.target.files?.[0]) handleExtractFile(e.target.files[0]); e.target.value = '' }}
+        />
+        {extractPhoto ? (
+          <>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={extractPhoto.preview}
+              alt="Photo for color extraction"
+              style={{
+                maxHeight: '160px',
+                maxWidth: '100%',
+                objectFit: 'contain',
+                borderRadius: '8px',
+                display: 'block',
+                margin: '0 auto 8px',
+              }}
+            />
+            <div style={{ fontSize: '11px', color: 'var(--dimmer)' }}>Click or drop to replace</div>
+          </>
+        ) : (
+          <>
+            <div style={{ fontSize: '28px', marginBottom: '8px' }}>🎨</div>
+            <div style={{ fontSize: '13.5px', color: 'var(--text)', fontWeight: 600, marginBottom: '4px' }}>
+              Drop a photo here
+            </div>
+            <div style={{ fontSize: '11px', color: 'var(--dimmer)' }}>
+              or click to upload · Mood board images, brand inspo, photography you love
+            </div>
+          </>
+        )}
+      </div>
+
+      {/* Extract button */}
+      {extractPhoto && (
+        <button
+          onClick={extractColors}
+          disabled={isExtracting}
+          style={{
+            display: 'block',
+            width: '100%',
+            padding: '11px',
+            marginBottom: '1rem',
+            background: isExtracting ? 'var(--dimmer)' : 'var(--orange)',
+            color: '#fff',
+            border: 'none',
+            borderRadius: 'var(--radius-md)',
+            fontSize: '13.5px',
+            fontWeight: 600,
+            cursor: isExtracting ? 'not-allowed' : 'pointer',
+            fontFamily: 'var(--font)',
+            transition: 'background .15s',
+          }}
+        >
+          {isExtracting ? 'Extracting...' : 'Extract Color Palettes →'}
+        </button>
+      )}
+
+      {/* Extraction error */}
+      {extractError && (
+        <div
+          style={{
+            fontSize: '12px',
+            color: 'rgba(255,100,100,.9)',
+            padding: '.5rem 0',
+            marginBottom: '.75rem',
+          }}
+        >
+          Error: {extractError}. Make sure your API key is set.
+        </div>
+      )}
+
+      {/* Extraction results */}
+      {extractResults.length > 0 && (
+        <div style={{ marginBottom: '1.25rem' }}>
+          {extractResults.map((palette, idx) => (
+            <div
+              key={idx}
+              onClick={() => applyPalette(palette)}
+              style={{
+                border: '1px solid var(--border)',
+                borderRadius: 'var(--radius-lg)',
+                overflow: 'hidden',
+                marginBottom: '.75rem',
+                cursor: 'pointer',
+                transition: 'border-color .15s',
+              }}
+              onMouseEnter={e => ((e.currentTarget as HTMLElement).style.borderColor = 'var(--orange)')}
+              onMouseLeave={e => ((e.currentTarget as HTMLElement).style.borderColor = 'var(--border)')}
+              title="Click to use this palette"
+            >
+              {/* Color bar */}
+              <div style={{ display: 'flex', height: '60px' }}>
+                <div style={{ flex: 2.5, background: palette.primary || '#ccc' }} />
+                <div style={{ flex: 2, background: palette.secondary || '#999' }} />
+                <div style={{ flex: 1, background: palette.accent || '#666' }} />
+                <div style={{ flex: 1.5, background: palette.neutral || '#f0f0f0' }} />
+              </div>
+              {/* Info row */}
+              <div style={{ padding: '.75rem 1rem', background: 'var(--surface)' }}>
+                <div style={{ fontSize: '13px', fontWeight: 600, color: 'var(--text)', marginBottom: '2px' }}>
+                  {palette.name}
+                </div>
+                <div style={{ fontSize: '11px', color: 'var(--dimmer)', marginBottom: '10px' }}>
+                  {palette.mood}
+                </div>
+                <div style={{ display: 'flex', gap: '5px', alignItems: 'center', flexWrap: 'wrap' }}>
+                  {[palette.primary, palette.secondary, palette.accent, palette.neutral].map((h, i) => (
+                    <span
+                      key={i}
+                      style={{
+                        fontSize: '10px',
+                        fontFamily: 'monospace',
+                        color: 'var(--dim)',
+                        background: 'var(--card)',
+                        border: '1px solid var(--border)',
+                        borderRadius: '3px',
+                        padding: '2px 6px',
+                      }}
+                    >
+                      {h}
+                    </span>
+                  ))}
+                  <span
+                    style={{
+                      padding: '5px 12px',
+                      borderRadius: 'var(--radius-md)',
+                      fontSize: '11.5px',
+                      background: 'var(--orange)',
+                      color: '#fff',
+                      fontWeight: 600,
+                      whiteSpace: 'nowrap',
+                    }}
+                  >
+                    Use This →
+                  </span>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+
+      {/* Color Palette Framework */}
       <div
         style={{
           background: 'var(--card)',
@@ -366,7 +993,7 @@ export default function ColorPalette() {
           The Color Palette Framework
         </div>
         <div style={{ fontSize: '12.5px', color: 'var(--dim)', lineHeight: 1.65, marginBottom: '12px' }}>
-          Enter hex codes (e.g. #F0601B) or color names. The swatches will update live.
+          Enter hex codes (e.g. #F0601B) or color names. The swatches will update live. Click any swatch to fine-tune the color with the picker.
         </div>
 
         {/* Safe place to start tip */}
@@ -406,18 +1033,26 @@ export default function ColorPalette() {
             Primary Color — your dominant brand color
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-            <div
-              style={{
-                width: 32,
-                height: 32,
-                borderRadius: 6,
-                background: watch('vw_color_primary') || 'var(--border)',
-                flexShrink: 0,
-                borderWidth: '1px',
-                borderStyle: 'solid',
-                borderColor: 'var(--border)',
-              }}
-            />
+            <label style={{ cursor: 'pointer', position: 'relative', flexShrink: 0 }}>
+              <div
+                style={{
+                  width: 32,
+                  height: 32,
+                  borderRadius: 6,
+                  background: watch('vw_color_primary') || 'var(--border)',
+                  borderWidth: '1px',
+                  borderStyle: 'solid',
+                  borderColor: 'var(--border)',
+                }}
+                title="Click to pick color"
+              />
+              <input
+                type="color"
+                value={watch('vw_color_primary') && /^#[0-9a-fA-F]{6}$/.test(watch('vw_color_primary')) ? watch('vw_color_primary') : '#cccccc'}
+                onChange={e => (setValue as (k: string, v: string) => void)('vw_color_primary', e.target.value)}
+                style={{ position: 'absolute', opacity: 0, width: 0, height: 0, top: 0, left: 0 }}
+              />
+            </label>
             <div style={{ flex: 1 }}>
               <WorkshopInput
                 moduleSlug={MODULE_SLUG}
@@ -437,18 +1072,26 @@ export default function ColorPalette() {
             Secondary Color — your supporting color
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-            <div
-              style={{
-                width: 32,
-                height: 32,
-                borderRadius: 6,
-                background: watch('vw_color_secondary') || 'var(--border)',
-                flexShrink: 0,
-                borderWidth: '1px',
-                borderStyle: 'solid',
-                borderColor: 'var(--border)',
-              }}
-            />
+            <label style={{ cursor: 'pointer', position: 'relative', flexShrink: 0 }}>
+              <div
+                style={{
+                  width: 32,
+                  height: 32,
+                  borderRadius: 6,
+                  background: watch('vw_color_secondary') || 'var(--border)',
+                  borderWidth: '1px',
+                  borderStyle: 'solid',
+                  borderColor: 'var(--border)',
+                }}
+                title="Click to pick color"
+              />
+              <input
+                type="color"
+                value={watch('vw_color_secondary') && /^#[0-9a-fA-F]{6}$/.test(watch('vw_color_secondary')) ? watch('vw_color_secondary') : '#cccccc'}
+                onChange={e => (setValue as (k: string, v: string) => void)('vw_color_secondary', e.target.value)}
+                style={{ position: 'absolute', opacity: 0, width: 0, height: 0, top: 0, left: 0 }}
+              />
+            </label>
             <div style={{ flex: 1 }}>
               <WorkshopInput
                 moduleSlug={MODULE_SLUG}
@@ -468,18 +1111,26 @@ export default function ColorPalette() {
             Accent Color — used sparingly, for emphasis
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-            <div
-              style={{
-                width: 32,
-                height: 32,
-                borderRadius: 6,
-                background: watch('vw_color_accent') || 'var(--border)',
-                flexShrink: 0,
-                borderWidth: '1px',
-                borderStyle: 'solid',
-                borderColor: 'var(--border)',
-              }}
-            />
+            <label style={{ cursor: 'pointer', position: 'relative', flexShrink: 0 }}>
+              <div
+                style={{
+                  width: 32,
+                  height: 32,
+                  borderRadius: 6,
+                  background: watch('vw_color_accent') || 'var(--border)',
+                  borderWidth: '1px',
+                  borderStyle: 'solid',
+                  borderColor: 'var(--border)',
+                }}
+                title="Click to pick color"
+              />
+              <input
+                type="color"
+                value={watch('vw_color_accent') && /^#[0-9a-fA-F]{6}$/.test(watch('vw_color_accent')) ? watch('vw_color_accent') : '#cccccc'}
+                onChange={e => (setValue as (k: string, v: string) => void)('vw_color_accent', e.target.value)}
+                style={{ position: 'absolute', opacity: 0, width: 0, height: 0, top: 0, left: 0 }}
+              />
+            </label>
             <div style={{ flex: 1 }}>
               <WorkshopInput
                 moduleSlug={MODULE_SLUG}
@@ -499,18 +1150,26 @@ export default function ColorPalette() {
             Neutral Base — your background canvas
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-            <div
-              style={{
-                width: 32,
-                height: 32,
-                borderRadius: 6,
-                background: watch('vw_color_neutral') || 'var(--border)',
-                flexShrink: 0,
-                borderWidth: '1px',
-                borderStyle: 'solid',
-                borderColor: 'var(--border)',
-              }}
-            />
+            <label style={{ cursor: 'pointer', position: 'relative', flexShrink: 0 }}>
+              <div
+                style={{
+                  width: 32,
+                  height: 32,
+                  borderRadius: 6,
+                  background: watch('vw_color_neutral') || 'var(--border)',
+                  borderWidth: '1px',
+                  borderStyle: 'solid',
+                  borderColor: 'var(--border)',
+                }}
+                title="Click to pick color"
+              />
+              <input
+                type="color"
+                value={watch('vw_color_neutral') && /^#[0-9a-fA-F]{6}$/.test(watch('vw_color_neutral')) ? watch('vw_color_neutral') : '#cccccc'}
+                onChange={e => (setValue as (k: string, v: string) => void)('vw_color_neutral', e.target.value)}
+                style={{ position: 'absolute', opacity: 0, width: 0, height: 0, top: 0, left: 0 }}
+              />
+            </label>
             <div style={{ flex: 1 }}>
               <WorkshopInput
                 moduleSlug={MODULE_SLUG}
