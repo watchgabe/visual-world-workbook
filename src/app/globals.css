@@ -75,3 +75,8 @@ body::before {
   scrollbar-width: thin;
   scrollbar-color: var(--border2) transparent;
 }
+
+/* ─── WORKSHOP FIELDS ─── */
+.workshop-field::placeholder {
+  color: var(--dimmer);
+}
