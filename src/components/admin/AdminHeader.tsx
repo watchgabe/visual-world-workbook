@@ -22,10 +22,10 @@ export default function AdminHeader() {
     <header className="bg-[var(--surface)] border-b border-[var(--border)] px-8 py-4 flex items-center justify-between">
       <div>
         <div className="text-[11px] font-bold text-[var(--orange)] tracking-[.1em] uppercase">
-          FSCREATIVE
+          FSCREATIVE™ — ADMIN
         </div>
         <div className="text-[13px] text-[var(--dim)] mt-0.5">
-          Admin Dashboard
+          Brand Launch Playbook — User Progress
         </div>
       </div>
       <div className="flex items-center gap-2">

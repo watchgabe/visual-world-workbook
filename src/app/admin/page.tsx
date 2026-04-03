@@ -66,6 +66,7 @@ export default async function AdminPage() {
   return (
     <AdminDashboard
       users={sortedUsers}
+      currentUserId={user.id}
       responsesByUser={responsesByUser}
       circleConfig={circleConfig}
     />

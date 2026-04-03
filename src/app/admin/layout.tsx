@@ -12,7 +12,7 @@ export default async function AdminLayout({
 
   return (
     <ThemeProvider initialTheme={theme}>
-      <div className="min-h-screen bg-[var(--bg)] text-[var(--text)]">
+      <div className="min-h-screen bg-[var(--bg)] text-[var(--text)] overflow-auto h-screen">
         <AdminHeader />
         {children}
       </div>

@@ -1,10 +1,362 @@
 /**
- * Admin label mapping — migrated 1:1 from old/admin.html lines 238-343
- * Maps field keys to human-readable labels for the admin dashboard.
+ * Admin label mapping — maps new field keys (bf_, vw_, ct_, la_ prefixes)
+ * to human-readable labels for the admin dashboard.
  */
 
 export const LABELS: Record<string, string> = {
-  /* Brand Foundation */
+  /* ── Brand Foundation ── */
+  bf_journey_outcome: 'Desired Outcome',
+  bf_journey_why: 'Why It Matters',
+  bf_journey_known: 'Known For',
+  bf_journey_do: 'What I Need To Do',
+  bf_journey_learn: 'What I Need To Learn',
+  bf_journey_statement: 'Brand Journey Statement',
+  // Avatar 1
+  bf_av1_age: 'Avatar 1 — Age',
+  bf_av1_gender: 'Avatar 1 — Gender',
+  bf_av1_occupation: 'Avatar 1 — Occupation',
+  bf_av1_income: 'Avatar 1 — Income',
+  bf_av1_situation: 'Avatar 1 — Situation',
+  bf_av1_who: 'Avatar 1 — Who They Are',
+  bf_av1_look: 'Avatar 1 — What They Look Like',
+  bf_av1_story: 'Avatar 1 — Story',
+  bf_av1_goals: 'Avatar 1 — Goals',
+  bf_av1_passions: 'Avatar 1 — Passions',
+  bf_av1_struggle: 'Avatar 1 — Biggest Struggle',
+  bf_av1_tried: "Avatar 1 — What They've Tried",
+  bf_av1_desired: 'Avatar 1 — Desired Outcome',
+  bf_av1_fears: 'Avatar 1 — Fears & Objections',
+  bf_av1_platforms: 'Avatar 1 — Platforms',
+  bf_av1_connection: 'Avatar 1 — Connection',
+  bf_av1_statement: 'Avatar 1 — Generated Statement',
+  // Avatar 2
+  bf_av2_age: 'Avatar 2 — Age',
+  bf_av2_gender: 'Avatar 2 — Gender',
+  bf_av2_occupation: 'Avatar 2 — Occupation',
+  bf_av2_income: 'Avatar 2 — Income',
+  bf_av2_situation: 'Avatar 2 — Situation',
+  bf_av2_who: 'Avatar 2 — Who They Are',
+  bf_av2_look: 'Avatar 2 — What They Look Like',
+  bf_av2_story: 'Avatar 2 — Story',
+  bf_av2_goals: 'Avatar 2 — Goals',
+  bf_av2_passions: 'Avatar 2 — Passions',
+  bf_av2_struggle: 'Avatar 2 — Biggest Struggle',
+  bf_av2_tried: "Avatar 2 — What They've Tried",
+  bf_av2_desired: 'Avatar 2 — Desired Outcome',
+  bf_av2_fears: 'Avatar 2 — Fears & Objections',
+  bf_av2_platforms: 'Avatar 2 — Platforms',
+  bf_av2_connection: 'Avatar 2 — Connection',
+  bf_av2_statement: 'Avatar 2 — Generated Statement',
+  // Mission
+  bf_ikigai_love: 'What I Love',
+  bf_ikigai_good: "What I'm Good At",
+  bf_ikigai_paid: 'What I Get Paid For',
+  bf_ikigai_world: 'What the World Needs',
+  bf_ikigai_center: 'Ikigai Center',
+  bf_mission_avatar: 'Mission — Avatar',
+  bf_mission_outcome: 'Mission — Outcome',
+  bf_mission_method: 'Mission — Method',
+  bf_mission_why: 'Mission — Deeper Why',
+  bf_core_mission: 'Core Mission Statement',
+  // Values
+  bf_val1_name: 'Value 1',
+  bf_val1_practice: 'Value 1 — Description',
+  bf_val2_name: 'Value 2',
+  bf_val2_practice: 'Value 2 — Description',
+  bf_val3_name: 'Value 3',
+  bf_val3_practice: 'Value 3 — Description',
+  bf_val4_name: 'Value 4',
+  bf_val4_practice: 'Value 4 — Description',
+  bf_val5_name: 'Value 5',
+  bf_val5_practice: 'Value 5 — Description',
+  bf_val6_name: 'Value 6',
+  bf_val6_practice: 'Value 6 — Description',
+  // Values Audit
+  bf_audit_vc1: 'Values Check 1',
+  bf_audit_vc2: 'Values Check 2',
+  bf_audit_vc3: 'Values Check 3',
+  bf_audit_pc1: 'Pillar Check 1',
+  bf_audit_pc2: 'Pillar Check 2',
+  bf_audit_pc3: 'Pillar Check 3',
+  bf_audit_cq1: 'Content Quality 1',
+  bf_audit_cq2: 'Content Quality 2',
+  bf_audit_cq3: 'Content Quality 3',
+  bf_audit_ts1: 'Trust Score 1',
+  bf_audit_ts2: 'Trust Score 2',
+  bf_audit_ts3: 'Trust Score 3',
+  // Pillars
+  bf_pillar_discover1: 'Pillar Brainstorm',
+  bf_pillar_discover2: 'Avatar Problems',
+  bf_pillar_discover3: 'Topics → Offer',
+  bf_pillar1_name: 'Pillar 1',
+  bf_pillar1_sub: 'Pillar 1 — Sub-topics',
+  bf_pillar1_avatar: 'Pillar 1 — Serves Avatar',
+  bf_pillar1_offer: 'Pillar 1 — Offer Connection',
+  bf_pillar1_test: 'Pillar 1 — Test',
+  bf_pillar2_name: 'Pillar 2',
+  bf_pillar2_sub: 'Pillar 2 — Sub-topics',
+  bf_pillar2_avatar: 'Pillar 2 — Serves Avatar',
+  bf_pillar2_offer: 'Pillar 2 — Offer Connection',
+  bf_pillar2_test: 'Pillar 2 — Test',
+  bf_pillar3_name: 'Pillar 3',
+  bf_pillar3_sub: 'Pillar 3 — Sub-topics',
+  bf_pillar3_avatar: 'Pillar 3 — Serves Avatar',
+  bf_pillar3_offer: 'Pillar 3 — Offer Connection',
+  bf_pillar3_test: 'Pillar 3 — Test',
+  bf_pillar4_name: 'Pillar 4',
+  bf_pillar4_sub: 'Pillar 4 — Sub-topics',
+  bf_pillar4_avatar: 'Pillar 4 — Serves Avatar',
+  bf_pillar4_offer: 'Pillar 4 — Offer Connection',
+  bf_pillar4_test: 'Pillar 4 — Test',
+  bf_pillar5_name: 'Pillar 5',
+  bf_pillar5_sub: 'Pillar 5 — Sub-topics',
+  bf_pillar5_avatar: 'Pillar 5 — Serves Avatar',
+  bf_pillar5_offer: 'Pillar 5 — Offer Connection',
+  bf_pillar5_test: 'Pillar 5 — Test',
+  // Origin Story
+  bf_story1: 'Origin — Before',
+  bf_story2: 'Origin — Trigger',
+  bf_story3: 'Origin — Breakthrough',
+  bf_story4: 'Origin — Transformation',
+  bf_origin_story: 'Origin Story Statement',
+  // Brand Vision
+  bf_vision_3yr: '3-Year Vision',
+  bf_vision_day: 'Ideal Day',
+  bf_vision_impact: 'Impact',
+  bf_vision_legacy: 'Legacy',
+  bf_brand_vision: 'Brand Vision Statement',
+
+  /* ── Visual World ── */
+  // Creator Analysis
+  vw_ca_creators: 'Creators Studied',
+  vw_ca_patterns: 'Patterns Noticed',
+  vw_ca_different: "How I'm Different",
+  vw_ca_own: 'My Own Style',
+  vw_ca_gap: 'Gap I Can Fill',
+  // Mood Board
+  vw_mb_link: 'Pinterest Board',
+  vw_mb_colors: 'Mood Board Colors',
+  vw_mb_lighting: 'Lighting',
+  vw_mb_mood: 'Mood Word',
+  vw_mb_textures: 'Textures',
+  vw_mb_movie: 'Reference Film',
+  vw_mb_time: 'Time of Day',
+  vw_mb_place: 'Setting',
+  // Color Palette
+  vw_color_primary: 'Primary Color',
+  vw_color_secondary: 'Secondary Color',
+  vw_color_accent: 'Accent Color',
+  vw_color_neutral: 'Neutral Color',
+  vw_color_name: 'Palette Name',
+  // Typography
+  vw_typo_primary: 'Primary Font',
+  vw_typo_body: 'Body Font',
+  vw_typo_primary_italic: 'Primary Font — Italic',
+  vw_typo_primary_bold: 'Primary Font — Bold',
+  vw_typo_body_italic: 'Body Font — Italic',
+  vw_typo_body_bold: 'Body Font — Bold',
+  // Shot System — Setting
+  vw_shot_e1_location: 'Setting — Location',
+  vw_shot_e1_vibe: 'Setting — Vibe',
+  vw_shot_e1_communicate: 'Setting — Communicates',
+  vw_shot_e1_statement: 'Setting — Statement',
+  // Shot System — Mood
+  vw_shot_e2_mood: 'Mood',
+  vw_shot_e2_lighting: 'Lighting Style',
+  vw_shot_e2_time: 'Time of Day',
+  vw_shot_e2_statement: 'Mood Statement',
+  // Shot System — Color Language
+  vw_shot_e3_grade: 'Color Grade',
+  vw_shot_e3_ref: 'Color Reference',
+  // Shot System — Design Details
+  vw_shot_e4_objects: 'Props & Objects',
+  vw_shot_e4_textures: 'Textures & Materials',
+  vw_shot_e4_wardrobe: 'Wardrobe',
+  vw_shot_e4_never: 'Never Show',
+
+  /* ── Content ── */
+  // Strategy
+  ct_strategy_goal: 'Content Goal',
+  ct_strategy_next_step: 'Next Step / CTA',
+  ct_strategy_pain_problem: 'Pain Problem',
+  ct_strategy_unique_sol: 'Unique Solution',
+  ct_strategy_credibility: 'Credibility Statement',
+  // Sustainability
+  ct_sustain_week_hours: 'Hours Per Week',
+  ct_sustain_energize: 'What Energizes You',
+  ct_sustain_drain: 'What Drains You',
+  ct_sustain_sharp: 'Stay Sharp',
+  ct_sustain_cadence: 'Content Cadence',
+  ct_sustain_medium: 'Preferred Medium',
+  ct_sustain_audience: 'Where Audience Is',
+  ct_sustain_enjoy: 'What I Enjoy Creating',
+  ct_sustain_freq: 'Posting Frequency',
+  ct_sustain_platgoal: 'Platform Goal',
+  ct_sustain_primary: 'Primary Platform',
+  ct_sustain_secondary: 'Secondary Platform',
+  ct_sustain_focus: 'Focus Platform',
+  // Batching
+  ct_batch_film_day: 'Film Day',
+  ct_batch_count: 'Batch Count',
+  ct_batch_setup: 'Film Setup',
+  ct_batch_commit: 'Batch Commitment',
+  // Trust & Money
+  ct_tm_free: 'Offer — Free Content',
+  ct_tm_lead: 'Offer — Lead Magnet',
+  ct_tm_low: 'Offer — Low-ticket',
+  ct_tm_mid: 'Offer — Mid-ticket',
+  ct_tm_high: 'Offer — High-ticket',
+  ct_tm_conv: 'Conversion Mechanism',
+  ct_tm_cta_strat: 'CTA Strategy',
+  // Storytelling
+  ct_story_idea: 'Story — Idea',
+  ct_story_hook: 'Story — Hook',
+  ct_story_prob: 'Story — Problem',
+  ct_story_journey: 'Story — Journey',
+  ct_story_lesson: 'Story — Lesson',
+  ct_story_cta: 'Story — CTA',
+  // Content Blueprint
+  ct_bp_color1: 'Brand Color 1',
+  ct_bp_color2: 'Brand Color 2',
+  ct_bp_color3: 'Brand Color 3',
+  ct_bp_mood_vibe: 'Mood Board Vibe',
+  ct_bp_narrative: 'Brand Aesthetic Narrative',
+  ct_bp_objects: 'Brand Props & Objects',
+  ct_bp_references: 'Brand References',
+  ct_bp_creator1_name: 'Creator 1 — Name',
+  ct_bp_creator1_why: 'Creator 1 — Why Study',
+  ct_bp_creator1_takeaway: 'Creator 1 — Key Takeaway',
+  ct_bp_creator1_difference: "Creator 1 — How I'm Different",
+  ct_bp_creator2_name: 'Creator 2 — Name',
+  ct_bp_creator2_why: 'Creator 2 — Why Study',
+  ct_bp_creator2_takeaway: 'Creator 2 — Key Takeaway',
+  ct_bp_creator2_difference: "Creator 2 — How I'm Different",
+  ct_bp_creator3_name: 'Creator 3 — Name',
+  ct_bp_creator3_why: 'Creator 3 — Why Study',
+  ct_bp_creator3_takeaway: 'Creator 3 — Key Takeaway',
+  ct_bp_creator3_difference: "Creator 3 — How I'm Different",
+
+  /* ── Launch ── */
+  // Funnel
+  la_funnel_platforms: 'Social Platforms',
+  la_funnel_lead_magnet: 'Lead Magnet',
+  la_funnel_email_platform: 'Email Platform',
+  la_funnel_newsletter_freq: 'Newsletter Frequency',
+  la_funnel_cta: 'Funnel CTA',
+  la_funnel_offer: 'Offer',
+  la_funnel_price: 'Price Point',
+  la_funnel_conversion: 'Conversion Goal',
+  la_funnel_has_lm: 'Has Lead Magnet?',
+  la_funnel_has_email: 'Has Email List?',
+  la_funnel_has_offer: 'Has Offer?',
+  la_funnel_broken: "Funnel — What's Broken",
+  // Lead Magnet
+  la_lm_name: 'Lead Magnet Name',
+  la_lm_topic: 'Lead Magnet Topic',
+  la_lm_offer_bridge: 'Offer Bridge',
+  la_lm_format: 'Lead Magnet Format',
+  la_lm_big_win: 'Big Win',
+  la_lm_outline: 'Lead Magnet Outline',
+  la_lm_cta: 'Lead Magnet CTA',
+  la_lm_tool: 'Lead Magnet Tool',
+  la_lm_delivery: 'Delivery Method',
+  // Bio
+  la_bio_link: 'Link in Bio',
+  la_bio_username: 'Username',
+  la_bio_ig_name: 'Instagram Name',
+  la_bio_pfp_visibility: 'Profile Pic — Visibility',
+  la_bio_pfp_bg: 'Profile Pic — Background',
+  la_bio_pfp_notes: 'Profile Pic — Notes',
+  la_bio_line1: 'Bio Line 1',
+  la_bio_line2: 'Bio Line 2',
+  la_bio_line3: 'Bio Line 3',
+  la_bio_line4: 'Bio Line 4',
+  // Launch Content — Story Post
+  la_lc_story_why: 'Story — Why I Started',
+  la_lc_story_challenge: 'Story — Challenge',
+  la_lc_story_turning: 'Story — Turning Point',
+  la_lc_story_learned: 'Story — What I Learned',
+  la_lc_story_hook: 'Story — Hook',
+  la_lc_story_examples: 'Story — Examples',
+  la_lc_story_cta: 'Story — CTA',
+  // Launch Content — Positioning
+  la_lc_pos_belief: 'Positioning — Belief',
+  la_lc_pos_claim: 'Positioning — Claim',
+  la_lc_pos_b1: 'Positioning — Bullet 1',
+  la_lc_pos_b2: 'Positioning — Bullet 2',
+  la_lc_pos_b3: 'Positioning — Bullet 3',
+  la_lc_pos_b4: 'Positioning — Bullet 4',
+  la_lc_pos_b5: 'Positioning — Bullet 5',
+  la_lc_pos_stop: 'Positioning — Stop',
+  la_lc_pos_oldbelief: 'Positioning — Old Belief',
+  la_lc_pos_start: 'Positioning — Start',
+  la_lc_pos_newbelief: 'Positioning — New Belief',
+  la_lc_pos_anchor: 'Positioning — Anchor',
+  // Launch Content — Masterclass
+  la_lc_mc_subject: 'Masterclass — Subject',
+  la_lc_mc_audience: 'Masterclass — Audience',
+  la_lc_mc_authority: 'Masterclass — Authority',
+  la_lc_mc_s1: 'Masterclass — Step 1',
+  la_lc_mc_s2: 'Masterclass — Step 2',
+  la_lc_mc_s3: 'Masterclass — Step 3',
+  la_lc_mc_s4: 'Masterclass — Step 4',
+  la_lc_mc_s5: 'Masterclass — Step 5',
+  la_lc_mc_s6: 'Masterclass — Step 6',
+  la_lc_mc_s7: 'Masterclass — Step 7',
+  la_lc_mc_hook: 'Masterclass — Hook',
+  la_lc_mc_waterfall: 'Masterclass — Waterfall Analysis',
+  // Goals — Launch Calendar
+  la_cal1_platform: 'Day 1 — Platform',
+  la_cal1_type: 'Day 1 — Type',
+  la_cal1_hook: 'Day 1 — Hook',
+  la_cal1_date: 'Day 1 — Date',
+  la_cal1_done: 'Day 1 — Done',
+  la_cal2_platform: 'Day 2 — Platform',
+  la_cal2_type: 'Day 2 — Type',
+  la_cal2_hook: 'Day 2 — Hook',
+  la_cal2_date: 'Day 2 — Date',
+  la_cal2_done: 'Day 2 — Done',
+  la_cal3_platform: 'Day 3 — Platform',
+  la_cal3_type: 'Day 3 — Type',
+  la_cal3_hook: 'Day 3 — Hook',
+  la_cal3_date: 'Day 3 — Date',
+  la_cal3_done: 'Day 3 — Done',
+  la_cal4_platform: 'Day 4 — Platform',
+  la_cal4_type: 'Day 4 — Type',
+  la_cal4_hook: 'Day 4 — Hook',
+  la_cal4_date: 'Day 4 — Date',
+  la_cal4_done: 'Day 4 — Done',
+  la_cal5_platform: 'Day 5 — Platform',
+  la_cal5_type: 'Day 5 — Type',
+  la_cal5_hook: 'Day 5 — Hook',
+  la_cal5_date: 'Day 5 — Date',
+  la_cal5_done: 'Day 5 — Done',
+  la_cal6_platform: 'Day 6 — Platform',
+  la_cal6_type: 'Day 6 — Type',
+  la_cal6_hook: 'Day 6 — Hook',
+  la_cal6_date: 'Day 6 — Date',
+  la_cal6_done: 'Day 6 — Done',
+  la_cal7_platform: 'Day 7 — Platform',
+  la_cal7_type: 'Day 7 — Type',
+  la_cal7_hook: 'Day 7 — Hook',
+  la_cal7_date: 'Day 7 — Date',
+  la_cal7_done: 'Day 7 — Done',
+  // Goals — 90-Day
+  la_goal_content_freq: 'Content Frequency',
+  la_goal_content_platforms: 'Content Platforms',
+  la_goal_content: '90-Day Content Goal',
+  la_goal_followers: '90-Day Followers Goal',
+  la_goal_email: '90-Day Email Goal',
+  la_goal_audience: '90-Day Audience Goal',
+  la_goal_offer: '90-Day Offer Goal',
+  la_goal_sales: '90-Day Sales Goal',
+  la_goal_revenue: '90-Day Revenue Goal',
+  la_goal_system_priority: 'System Priority',
+  la_goal_system: 'System Goal',
+  la_goal_review_date: '90-Day Review Date',
+  la_goal_accountability: 'Accountability Partner',
+
+  /* ── Legacy keys (old app data still in DB) ── */
   q1outcome: 'Desired Outcome',
   q1why: 'Why It Matters',
   q2known: 'Known For',
@@ -102,7 +454,6 @@ export const LABELS: Record<string, string> = {
   storyTransformation: 'Origin — Transformation',
   storyNow: 'Origin — Now',
   storyTeach: 'Origin — What I Teach',
-  /* Visual World */
   'col-primary': 'Primary Color',
   'col-secondary': 'Secondary Color',
   'col-accent': 'Accent Color',
@@ -131,7 +482,6 @@ export const LABELS: Record<string, string> = {
   mbPlace: 'Setting',
   signatureShot: 'Signature Shot',
   mbStatement: 'Mood Board Statement',
-  /* Content */
   nextStep: 'Next Step / CTA',
   painProblem: 'Pain Problem',
   uniqueSol: 'Unique Solution',
@@ -169,7 +519,6 @@ export const LABELS: Record<string, string> = {
   ig_pillar3: 'Content Pillar 3',
   ig_pillar4: 'Content Pillar 4',
   ig_pillar5: 'Content Pillar 5',
-  /* Launch */
   bioHandle: 'Handle',
   bioName: 'Bio Name',
   bioWho: 'Bio — Who You Help',
@@ -255,26 +604,36 @@ export const CC_EXACT = new Set([
   'mbRef',
 ])
 
-/** True if the key belongs to the content module (exact match or ig_/ca prefix) */
+/** True if the key belongs to the content module (exact match or ig_/ca/ct_ prefix) */
 export function isCCKey(k: string): boolean {
-  return !!(CC_EXACT.has(k) || /^(ig_|ca[123][a-z])/.test(k))
+  return !!(CC_EXACT.has(k) || /^(ig_|ca[123][a-z]|ct_)/.test(k))
 }
 
 const IDEA_LETTERS = ['A', 'B', 'C', 'D']
 
-/** Dynamic label for ig_ hierarchy keys */
+/** Dynamic label for ct_ig_ hierarchy keys */
 export function igLabel(k: string): string {
   let m: RegExpMatchArray | null
 
-  // ig_pillarN
+  // ct_ig_pillarN
+  m = k.match(/^ct_ig_pillar(\d)$/)
+  if (m) return 'Content Pillar ' + m[1]
+
+  // ct_ig_pNiMaL — angle
+  m = k.match(/^ct_ig_p(\d)i(\d)a(\d)$/)
+  if (m) return 'Pillar ' + m[1] + ' · Idea ' + IDEA_LETTERS[Number(m[2]) - 1] + ' · Angle ' + m[3]
+
+  // ct_ig_pNiM — idea
+  m = k.match(/^ct_ig_p(\d)i(\d)$/)
+  if (m) return 'Pillar ' + m[1] + ' — Idea ' + IDEA_LETTERS[Number(m[2]) - 1]
+
+  // Legacy ig_ keys
   m = k.match(/^ig_pillar(\d)$/)
   if (m) return 'Content Pillar ' + m[1]
 
-  // ig_pNiMaL — angle
   m = k.match(/^ig_p(\d)i(\d)a(\d)$/)
   if (m) return 'Pillar ' + m[1] + ' · Idea ' + IDEA_LETTERS[Number(m[2]) - 1] + ' · Angle ' + m[3]
 
-  // ig_pNiM — idea
   m = k.match(/^ig_p(\d)i(\d)$/)
   if (m) return 'Pillar ' + m[1] + ' — Idea ' + IDEA_LETTERS[Number(m[2]) - 1]
 
@@ -325,7 +684,7 @@ export function prettyKey(k: string): string {
 /** Get the best human-readable label for any field key */
 export function getLabelForKey(k: string): string {
   if (LABELS[k]) return LABELS[k]
-  if (k.startsWith('ig_')) return igLabel(k)
+  if (k.startsWith('ct_ig_') || k.startsWith('ig_')) return igLabel(k)
   if (/^ca[123][a-z]/.test(k)) return caLabel(k)
   if (k.startsWith('opt_')) return optLabel(k)
   return prettyKey(k)

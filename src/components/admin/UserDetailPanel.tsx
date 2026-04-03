@@ -199,15 +199,16 @@ export default function UserDetailPanel({
           ))}
         </div>
 
-        {/* Delete Button */}
-        <div className="flex-shrink-0 self-start">
-          <button
-            onClick={() => setShowDeleteConfirm(true)}
-            className="text-[11px] font-semibold text-[#e05555] bg-[rgba(224,85,85,0.08)] border border-[rgba(224,85,85,0.25)] rounded-[var(--radius-md)] px-3 py-1.5 cursor-pointer hover:bg-[rgba(224,85,85,0.18)] hover:border-[rgba(224,85,85,0.5)] transition-colors"
-          >
-            Delete User
-          </button>
-        </div>
+      </div>
+
+      {/* Delete Button */}
+      <div className="mb-5 flex justify-end">
+        <button
+          onClick={() => setShowDeleteConfirm(true)}
+          className="text-[11px] font-semibold text-[#e05555] bg-[rgba(224,85,85,0.08)] border border-[rgba(224,85,85,0.25)] rounded-[var(--radius-md)] px-3 py-1.5 cursor-pointer hover:bg-[rgba(224,85,85,0.18)] hover:border-[rgba(224,85,85,0.5)] transition-colors"
+        >
+          Delete User
+        </button>
       </div>
 
       {/* Delete Confirmation Dialog */}
@@ -386,7 +387,7 @@ export default function UserDetailPanel({
               </div>
             ) : (
               <div className="text-[12px] text-[var(--dimmer)] italic py-2">
-                Sections marked complete but no text answers saved yet
+                No answers yet
               </div>
             )}
           </div>
