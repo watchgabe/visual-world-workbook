@@ -26,6 +26,7 @@ export function UserModal({ email, name: initialName, handle: initialHandle, onS
   const [saving, setSaving] = useState(false)
   const [saved, setSaved] = useState(false)
   const [clearingModule, setClearingModule] = useState<string | null>(null)
+  const [confirmClearModule, setConfirmClearModule] = useState<string | null>(null)
   const [showClearAll, setShowClearAll] = useState(false)
   const [clearingAll, setClearingAll] = useState(false)
 
@@ -80,17 +81,11 @@ export function UserModal({ email, name: initialName, handle: initialHandle, onS
       {/* Overlay */}
       <div
         onClick={onClose}
+        className="fixed inset-0 flex items-start justify-center overflow-y-auto p-0 sm:p-4"
         style={{
-          position: 'fixed',
-          inset: 0,
           zIndex: 99999,
           background: 'rgba(0,0,0,0.88)',
           backdropFilter: 'blur(4px)',
-          display: 'flex',
-          alignItems: 'flex-start',
-          justifyContent: 'center',
-          padding: '1.5rem 1rem',
-          overflowY: 'auto',
         }}
       >
         {/* Panel */}
@@ -99,13 +94,11 @@ export function UserModal({ email, name: initialName, handle: initialHandle, onS
           role="dialog"
           aria-modal="true"
           aria-label="Your account"
+          className="w-full sm:max-w-[560px] sm:my-auto sm:rounded-[var(--radius-lg)]"
           style={{
             background: 'var(--surface)',
             border: '1px solid var(--border2)',
-            borderRadius: 'var(--radius-lg)',
-            width: '100%',
-            maxWidth: '560px',
-            margin: 'auto',
+            minHeight: '100dvh',
           }}
         >
           {/* Header */}
@@ -286,31 +279,53 @@ export function UserModal({ email, name: initialName, handle: initialHandle, onS
               {MODULES.map(mod => {
                 const pct = moduleProgress[mod.slug] ?? 0
                 const isClearing = clearingModule === mod.slug
+                const isConfirming = confirmClearModule === mod.slug
                 return (
-                  <div key={mod.slug} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '.35rem 0' }}>
-                    <span style={{ fontSize: '12px', color: 'var(--dim)' }}>{mod.label}</span>
-                    <span style={{ display: 'flex', alignItems: 'center', gap: '10px', flexShrink: 0 }}>
-                      <span style={{ fontSize: '11px', fontWeight: 600, color: pct >= 100 ? 'var(--green-text)' : 'var(--dimmer)', minWidth: '32px', textAlign: 'right' }}>
-                        {pct}%
+                  <div key={mod.slug}>
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '.35rem 0' }}>
+                      <span style={{ fontSize: '12px', color: 'var(--dim)' }}>{mod.label}</span>
+                      <span style={{ display: 'flex', alignItems: 'center', gap: '10px', flexShrink: 0 }}>
+                        <span style={{ fontSize: '11px', fontWeight: 600, color: pct >= 100 ? 'var(--green-text)' : 'var(--dimmer)', minWidth: '32px', textAlign: 'right' }}>
+                          {pct}%
+                        </span>
+                        <button
+                          onClick={() => setConfirmClearModule(isConfirming ? null : mod.slug)}
+                          disabled={isClearing}
+                          style={{
+                            background: 'none',
+                            border: 'none',
+                            fontSize: '11px',
+                            color: isConfirming ? '#e05555' : 'var(--dimmer)',
+                            cursor: isClearing ? 'not-allowed' : 'pointer',
+                            fontFamily: 'var(--font)',
+                            textDecoration: 'underline',
+                            padding: 0,
+                            opacity: isClearing ? 0.5 : 1,
+                          }}
+                        >
+                          {isClearing ? '...' : 'Clear'}
+                        </button>
                       </span>
-                      <button
-                        onClick={() => handleClearModule(mod.slug)}
-                        disabled={isClearing}
-                        style={{
-                          background: 'none',
-                          border: 'none',
-                          fontSize: '11px',
-                          color: 'var(--dimmer)',
-                          cursor: isClearing ? 'not-allowed' : 'pointer',
-                          fontFamily: 'var(--font)',
-                          textDecoration: 'underline',
-                          padding: 0,
-                          opacity: isClearing ? 0.5 : 1,
-                        }}
-                      >
-                        {isClearing ? '...' : 'Clear'}
-                      </button>
-                    </span>
+                    </div>
+                    {isConfirming && (
+                      <div style={{ padding: '.5rem .75rem', marginBottom: '.35rem', background: 'rgba(220,50,50,.07)', border: '1px solid rgba(220,50,50,.2)', borderRadius: 'var(--radius-md)', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                        <span style={{ fontSize: '11px', color: '#e05555', fontWeight: 600 }}>Clear this module?</span>
+                        <span style={{ display: 'flex', gap: '.5rem' }}>
+                          <button
+                            onClick={() => { setConfirmClearModule(null); handleClearModule(mod.slug) }}
+                            style={{ fontSize: '11px', color: '#e05555', fontWeight: 600, background: 'none', border: 'none', cursor: 'pointer', fontFamily: 'var(--font)', textDecoration: 'underline', padding: 0 }}
+                          >
+                            Yes
+                          </button>
+                          <button
+                            onClick={() => setConfirmClearModule(null)}
+                            style={{ fontSize: '11px', color: 'var(--dim)', background: 'none', border: 'none', cursor: 'pointer', fontFamily: 'var(--font)', padding: 0 }}
+                          >
+                            Cancel
+                          </button>
+                        </span>
+                      </div>
+                    )}
                   </div>
                 )
               })}

@@ -3,11 +3,7 @@
 export default function ModuleLayout({ children }: { children: React.ReactNode }) {
   return (
     <div
-      style={{
-        maxWidth: '60%',
-        margin: '0 auto',
-        padding: '2rem 2rem 5rem',
-      }}
+      className="max-w-[100%] sm:max-w-[60%] mx-auto px-4 sm:px-8 pt-6 sm:pt-8 pb-20"
     >
       {children}
     </div>

@@ -23,9 +23,17 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
   const { moduleProgress, sectionProgress, overallProgress } = useProgress()
   const [modalOpen, setModalOpen] = useState(false)
   const [expandedSlug, setExpandedSlug] = useState<string | null>(null)
+  const [allCollapsed, setAllCollapsed] = useState(false)
 
   const toggleExpand = (slug: string) => {
-    setExpandedSlug(prev => prev === slug ? null : slug)
+    if (expandedSlug === slug || (expandedSlug === null && !allCollapsed && pathname.startsWith(`/modules/${slug}`))) {
+      // Collapsing the currently expanded one
+      setExpandedSlug(null)
+      setAllCollapsed(true)
+    } else {
+      setExpandedSlug(slug)
+      setAllCollapsed(false)
+    }
   }
 
   return (
@@ -107,7 +115,7 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
           const isActive = pathname === href || pathname.startsWith(`${href}/`)
           const sections = MODULE_SECTIONS[mod.slug as ModuleSlug]
           const hasSections = sections && sections.length > 0
-          const isExpanded = expandedSlug === mod.slug || (isActive && expandedSlug === null)
+          const isExpanded = allCollapsed ? false : (expandedSlug === null ? isActive : expandedSlug === mod.slug)
           const progress = moduleProgress[mod.slug] ?? 0
 
           return (
@@ -217,21 +225,6 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
                       </button>
                     </>
                   )}
-                  {!hasSections && (
-                    <span
-                      style={{
-                        fontSize: '9.5px',
-                        fontWeight: 600,
-                        color: 'var(--dimmer)',
-                        whiteSpace: 'nowrap',
-                        minWidth: '24px',
-                        textAlign: 'right',
-                        paddingRight: '18px',
-                      }}
-                    >
-                      {progress}%
-                    </span>
-                  )}
                 </div>
               </div>
 
@@ -301,16 +294,16 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
                         >
                           {section.name}
                         </span>
-                        {isComplete && (
+                        {sectionPercent > 0 && (
                           <span
                             style={{
                               fontSize: '10px',
                               fontWeight: 600,
-                              color: 'var(--green-text)',
+                              color: isComplete ? 'var(--green-text)' : 'var(--dimmer)',
                               marginLeft: '6px',
                             }}
                           >
-                            100%
+                            {sectionPercent}%
                           </span>
                         )}
                       </Link>

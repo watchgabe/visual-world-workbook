@@ -41,34 +41,26 @@ export function ProgressProvider({ children }: { children: React.ReactNode }) {
 
     if (!sections) return
 
-    // Count total required fields across ALL sections of this module
-    const allRequiredFields = sections.flatMap(s => s.fields.filter(f => f.required).map(f => f.key))
-    const totalRequired = allRequiredFields.length
-
-    if (totalRequired === 0) {
-      setModuleProgress(prev => ({ ...prev, [slug]: 0 }))
-      return
-    }
-
     const responses = (data?.responses ?? {}) as Record<string, unknown>
 
-    // Module-level progress: filled required fields / total required fields
-    const filledRequired = allRequiredFields.filter(k => typeof responses[k] === 'string' && (responses[k] as string).trim() !== '').length
-    const pct = Math.round((filledRequired / totalRequired) * 100)
-    setModuleProgress(prev => ({ ...prev, [slug]: pct }))
-
-    // Per-section progress
+    // Per-section progress: filled fields / total fields
     const secProg: Record<string, number> = {}
     for (const section of sections) {
-      const reqFields = section.fields.filter(f => f.required)
-      if (reqFields.length === 0) {
+      if (section.fields.length === 0) {
         secProg[section.slug] = 0
         continue
       }
-      const filled = reqFields.filter(f => typeof responses[f.key] === 'string' && (responses[f.key] as string).trim() !== '').length
-      secProg[section.slug] = Math.round((filled / reqFields.length) * 100)
+      const filled = section.fields.filter(f => typeof responses[f.key] === 'string' && (responses[f.key] as string).trim() !== '').length
+      secProg[section.slug] = Math.round((filled / section.fields.length) * 100)
     }
     setSectionProgress(prev => ({ ...prev, [slug]: secProg }))
+
+    // Module progress: average of sections that have fields
+    const sectionsWithFields = sections.filter(s => s.fields.length > 0)
+    const modulePct = sectionsWithFields.length > 0
+      ? Math.round(sectionsWithFields.reduce((sum, s) => sum + (secProg[s.slug] ?? 0), 0) / sectionsWithFields.length)
+      : 0
+    setModuleProgress(prev => ({ ...prev, [slug]: modulePct }))
   }, [user])
 
   // Load progress for all modules on mount

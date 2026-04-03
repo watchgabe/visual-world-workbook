@@ -127,7 +127,7 @@ A full refactor of the Brand Launch Playbook course platform from monolithic HTM
 <!-- GSD:conventions-start source:CONVENTIONS.md -->
 ## Conventions
 
-Conventions not yet established. Will populate as patterns emerge during development.
+- **Content must match the old app exactly.** All text, titles, labels, and copy in module sections must come from the corresponding old HTML files in `/old/modules/`. Never invent or rephrase content — always reference the old source.
 <!-- GSD:conventions-end -->
 
 <!-- GSD:architecture-start source:ARCHITECTURE.md -->

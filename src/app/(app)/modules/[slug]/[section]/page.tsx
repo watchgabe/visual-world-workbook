@@ -72,12 +72,10 @@ export default async function SectionPage({ params }: SectionPageProps) {
     <>
       <Component />
       {section !== 'overview' && (
-        <div style={{ maxWidth: '700px', margin: '0 auto', padding: '0 2rem 3rem' }}>
-          <SectionNavBar
-            moduleSlug={slug as ModuleSlug}
-            currentSectionSlug={section}
-          />
-        </div>
+        <SectionNavBar
+          moduleSlug={slug as ModuleSlug}
+          currentSectionSlug={section}
+        />
       )}
     </>
   )

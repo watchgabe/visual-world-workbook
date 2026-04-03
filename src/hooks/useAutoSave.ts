@@ -10,7 +10,8 @@ export interface UseAutoSaveOptions {
   fieldKey: string
   value: string
   onSaveSuccess?: () => void
-  getFullResponses?: () => Record<string, string>  // prevents partial overwrites when saving
+  /** @deprecated No longer used — merge_responses RPC handles partial merges server-side */
+  getFullResponses?: () => Record<string, string>
 }
 
 export interface UseAutoSaveReturn {
@@ -67,23 +68,16 @@ export function useAutoSave(opts: UseAutoSaveOptions): UseAutoSaveReturn {
     const currentValue = latestValueRef.current
 
     try {
-      // Use getFullResponses if provided to avoid partial overwrites (Research Pitfall 4).
-      // Falls back to single-field save for backward compatibility.
-      const responses = opts.getFullResponses
-        ? opts.getFullResponses()
-        : { [opts.fieldKey]: currentValue }
+      // Send only the changed field — Postgres merges via JSONB || operator
+      const data = { [opts.fieldKey]: currentValue }
 
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const { error } = await (supabase as any)
-        .from('blp_responses')
-        .upsert(
-          {
-            user_id: user.id,
-            module_slug: opts.moduleSlug,
-            responses,
-          },
-          { onConflict: 'user_id,module_slug' }
-        )
+        .rpc('merge_responses', {
+          p_user_id: user.id,
+          p_module_slug: opts.moduleSlug,
+          p_data: data,
+        })
 
       if (error) {
         // Check if this is an AbortError (expected cancellation)
@@ -111,7 +105,7 @@ export function useAutoSave(opts: UseAutoSaveOptions): UseAutoSaveReturn {
       }
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [user, opts.moduleSlug, opts.fieldKey, opts.getFullResponses, refreshProgress])
+  }, [user, opts.moduleSlug, opts.fieldKey, refreshProgress])
 
   // Debounce effect: 5s debounce OR blur, whichever first (per D-02)
   useEffect(() => {

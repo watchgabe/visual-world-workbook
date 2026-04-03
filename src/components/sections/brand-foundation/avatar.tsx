@@ -16,6 +16,7 @@ const SECTION_DEF = MODULE_SECTIONS['brand-foundation']![SECTION_INDEX]
 export default function Avatar() {
   const { user } = useAuth()
   const [isGenerating, setIsGenerating] = useState<string | null>(null)
+  const [expandedAvatar, setExpandedAvatar] = useState<1 | 2 | null>(null)
   const { watch, setValue, getValues } = useForm({
     defaultValues: Object.fromEntries(
       SECTION_DEF.fields.map(f => [f.key, ''])
@@ -181,47 +182,76 @@ export default function Avatar() {
           background: 'var(--card)',
           border: '1px solid var(--border)',
           borderRadius: 'var(--radius-lg)',
-          padding: '1.25rem',
           marginBottom: '1rem',
+          overflow: 'hidden',
         }}
       >
-        <div
+        <button
+          type="button"
+          onClick={() => setExpandedAvatar(expandedAvatar === 1 ? null : 1)}
           style={{
             display: 'flex',
             alignItems: 'center',
             gap: '10px',
-            marginBottom: '1.25rem',
+            width: '100%',
+            padding: '1.25rem',
+            background: 'transparent',
+            border: 'none',
+            cursor: 'pointer',
+            textAlign: 'left',
+            fontFamily: 'var(--font)',
           }}
         >
           <div
             style={{
               fontFamily: 'var(--font-num)',
-              fontSize: '1.5rem',
+              fontSize: '2.5rem',
               fontWeight: 900,
               color: 'var(--orange)',
+              opacity: 0.5,
               lineHeight: 1,
             }}
           >
             01
           </div>
-          <div>
+          <div style={{ flex: 1 }}>
             <div
               style={{
                 fontSize: '9px',
                 fontWeight: 700,
                 letterSpacing: '.12em',
                 textTransform: 'uppercase',
-                color: 'var(--dimmer)',
+                color: 'var(--orange)',
               }}
             >
               Primary Avatar
             </div>
             <div style={{ fontSize: '13px', fontWeight: 600, color: 'var(--text)' }}>
-              Your core audience member
+              Click to expand
             </div>
           </div>
-        </div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexShrink: 0 }}>
+            <div style={{ width: '40px', height: '40px', borderRadius: '50%', border: '1.5px solid var(--border2)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--dimmer)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                <circle cx="12" cy="8" r="4" />
+                <path d="M5 20c0-4 3.5-7 7-7s7 3 7 7" />
+              </svg>
+            </div>
+            <span
+              style={{
+                fontSize: '12px',
+                color: 'var(--dimmer)',
+                transition: 'transform .15s',
+                transform: expandedAvatar === 1 ? 'rotate(180deg)' : 'rotate(0deg)',
+              }}
+            >
+              ▼
+            </span>
+          </div>
+        </button>
 
+        {expandedAvatar === 1 && (
+        <div style={{ padding: '0 1.25rem 1.25rem' }}>
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px', marginBottom: '1rem' }}>
           <div>
             <WorkshopInput
@@ -423,6 +453,8 @@ export default function Avatar() {
           label="Avatar Statement"
           placeholder="Write your primary avatar statement here — edit freely..."
         />
+        </div>
+        )}
       </div>
 
       {/* Secondary Avatar */}
@@ -431,47 +463,76 @@ export default function Avatar() {
           background: 'var(--card)',
           border: '1px solid var(--border)',
           borderRadius: 'var(--radius-lg)',
-          padding: '1.25rem',
           marginBottom: '1.5rem',
+          overflow: 'hidden',
         }}
       >
-        <div
+        <button
+          type="button"
+          onClick={() => setExpandedAvatar(expandedAvatar === 2 ? null : 2)}
           style={{
             display: 'flex',
             alignItems: 'center',
             gap: '10px',
-            marginBottom: '1.25rem',
+            width: '100%',
+            padding: '1.25rem',
+            background: 'transparent',
+            border: 'none',
+            cursor: 'pointer',
+            textAlign: 'left',
+            fontFamily: 'var(--font)',
           }}
         >
           <div
             style={{
               fontFamily: 'var(--font-num)',
-              fontSize: '1.5rem',
+              fontSize: '2.5rem',
               fontWeight: 900,
-              color: 'var(--dimmer)',
+              color: 'var(--orange)',
+              opacity: 0.5,
               lineHeight: 1,
             }}
           >
             02
           </div>
-          <div>
+          <div style={{ flex: 1 }}>
             <div
               style={{
                 fontSize: '9px',
                 fontWeight: 700,
                 letterSpacing: '.12em',
                 textTransform: 'uppercase',
-                color: 'var(--dimmer)',
+                color: 'var(--orange)',
               }}
             >
               Secondary Avatar
             </div>
             <div style={{ fontSize: '13px', fontWeight: 600, color: 'var(--dim)' }}>
-              Optional second audience segment
+              Click to expand
             </div>
           </div>
-        </div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexShrink: 0 }}>
+            <div style={{ width: '40px', height: '40px', borderRadius: '50%', border: '1.5px solid var(--border2)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--dimmer)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                <circle cx="12" cy="8" r="4" />
+                <path d="M5 20c0-4 3.5-7 7-7s7 3 7 7" />
+              </svg>
+            </div>
+            <span
+              style={{
+                fontSize: '12px',
+                color: 'var(--dimmer)',
+                transition: 'transform .15s',
+                transform: expandedAvatar === 2 ? 'rotate(180deg)' : 'rotate(0deg)',
+              }}
+            >
+              ▼
+            </span>
+          </div>
+        </button>
 
+        {expandedAvatar === 2 && (
+        <div style={{ padding: '0 1.25rem 1.25rem' }}>
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px', marginBottom: '1rem' }}>
           <div>
             <WorkshopInput
@@ -673,6 +734,8 @@ export default function Avatar() {
           label="Avatar 2 Statement"
           placeholder="Write your secondary avatar statement here — edit freely..."
         />
+        </div>
+        )}
       </div>
     </SectionWrapper>
   )
