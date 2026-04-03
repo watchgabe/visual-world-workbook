@@ -19,7 +19,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [x] **Phase 5: Module Migration** - All six course module pages migrated 1:1 with full content, URL routing, and progress tracking (completed 2026-04-02)
 - [ ] **Phase 5.1: Module Migration Remediation** - Restore missing features, content, and AI integrations for true 1:1 feature parity (INSERTED)
 - [ ] **Phase 6: Admin Dashboard** - Server-side protected admin with user list, progress viewer, badge award, and delete
-- [ ] **Phase 7: Deployment** - Vercel environment variables, Supabase production URL config, and production smoke test
+- [ ] **Phase 7: Deployment** - Vercel environment variables, Supabase production URL config, and production verification
 
 ## Phase Details
 
@@ -140,7 +140,7 @@ Plans:
   3. Admin can click any user and view their completion status for each module and section
   4. Admin can trigger a Circle.so badge award for a user and receive confirmation
   5. Admin can delete a user account and the user no longer appears in the list
-**Plans:** 1/2 plans executed
+**Plans:** 2/2 plans complete
 Plans:
 - [x] 06-01-PLAN.md — Infrastructure: service-role client, middleware admin gate, labels module (200+ entries), API routes (delete-user, circle-config), blp_config schema
 - [x] 06-02-PLAN.md — Admin dashboard UI: standalone layout, server component data fetch, stat cards, user table with expandable rows, answer grid, Circle integration, delete
@@ -154,7 +154,9 @@ Plans:
   1. The application is deployed to Vercel and loads at the production URL with no hardcoded keys in the client bundle
   2. A magic link email sent in production contains the correct production callback URL (not localhost)
   3. A full end-to-end smoke test passes: sign in → complete a form field → verify save → view playbook → sign out
-**Plans**: TBD
+**Plans:** 1 plan
+Plans:
+- [ ] 07-01-PLAN.md — Production readiness check, Vercel deployment, Supabase redirect URL config
 
 ## Progress
 
@@ -170,4 +172,4 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 5.1 → 6 → 7
 | 5. Module Migration | 6/6 | Complete   | 2026-04-02 |
 | 5.1 Module Migration Remediation | 0/6 | Not started | - |
 | 6. Admin Dashboard | 1/2 | In Progress|  |
-| 7. Deployment | 0/TBD | Not started | - |
+| 7. Deployment | 0/1 | Not started | - |
