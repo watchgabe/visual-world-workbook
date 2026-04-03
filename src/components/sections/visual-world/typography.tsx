@@ -384,7 +384,7 @@ export default function Typography() {
     setPairingOffset(0)
   }
 
-  function usePairing(p: Pairing) {
+  function applyPairing(p: Pairing) {
     ;(setValue as (k: string, v: string) => void)('vw_typo_primary', p.header.f)
     ;(setValue as (k: string, v: string) => void)('vw_typo_body', p.body.f)
   }
@@ -415,12 +415,10 @@ export default function Typography() {
       </div>
       <h1
         style={{
-          fontFamily: 'var(--font-num)',
-          fontSize: 'clamp(2.2rem, 5vw, 3.2rem)',
-          fontWeight: 900,
-          letterSpacing: '-.01em',
-          lineHeight: 1.05,
-          textTransform: 'uppercase',
+          fontSize: '26px',
+          fontWeight: 700,
+          letterSpacing: '-0.4px',
+          lineHeight: 1.2,
           marginBottom: '1rem',
         }}
       >
@@ -789,7 +787,7 @@ export default function Typography() {
                 <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
                   <button
                     type="button"
-                    onClick={() => usePairing(p)}
+                    onClick={() => applyPairing(p)}
                     style={{
                       background: 'var(--orange)',
                       color: '#fff',

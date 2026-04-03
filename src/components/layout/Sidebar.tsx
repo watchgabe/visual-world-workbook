@@ -20,12 +20,23 @@ interface SidebarProps {
 export function Sidebar({ isOpen, onClose }: SidebarProps) {
   const pathname = usePathname()
   const { user, signOut } = useAuth()
-  const { moduleProgress, overallProgress } = useProgress()
+  const { moduleProgress, sectionProgress, overallProgress } = useProgress()
   const [modalOpen, setModalOpen] = useState(false)
   const [expandedModules, setExpandedModules] = useState<Set<string>>(new Set())
+  const [collapsedModules, setCollapsedModules] = useState<Set<string>>(new Set())
 
   const toggleExpand = (slug: string) => {
     setExpandedModules(prev => {
+      const next = new Set(prev)
+      if (next.has(slug)) {
+        next.delete(slug)
+      } else {
+        next.add(slug)
+      }
+      return next
+    })
+    // If it's the active module, track explicit collapse
+    setCollapsedModules(prev => {
       const next = new Set(prev)
       if (next.has(slug)) {
         next.delete(slug)
@@ -115,7 +126,7 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
           const isActive = pathname === href || pathname.startsWith(`${href}/`)
           const sections = MODULE_SECTIONS[mod.slug as ModuleSlug]
           const hasSections = sections && sections.length > 0
-          const isExpanded = isActive || expandedModules.has(mod.slug)
+          const isExpanded = collapsedModules.has(mod.slug) ? false : (isActive || expandedModules.has(mod.slug))
           const progress = moduleProgress[mod.slug] ?? 0
 
           return (
@@ -193,7 +204,7 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
                         style={{
                           fontSize: '9.5px',
                           fontWeight: 600,
-                          color: 'var(--dimmer)',
+                          color: progress === 100 ? 'var(--green-text)' : 'var(--dimmer)',
                           whiteSpace: 'nowrap',
                           minWidth: '24px',
                           textAlign: 'right',
@@ -249,8 +260,7 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
                   {sections.filter(s => s.slug !== 'overview').map(section => {
                     const sectionHref = `/modules/${mod.slug}/${section.slug}`
                     const isSectionActive = pathname === sectionHref
-                    // TODO: wire to real per-section completion from ProgressContext
-                    const sectionPercent: number = 0
+                    const sectionPercent: number = sectionProgress[mod.slug]?.[section.slug] ?? 0
 
                     // 3 states: 0% = outline circle + gray text, >0% = filled circle + white text, 100% = green circle + green text
                     const isStarted = sectionPercent > 0

@@ -4,6 +4,9 @@ import './globals.css'
 
 export const metadata: Metadata = {
   title: "FSCreative\u2122 \u2014 The Brand Launch Playbook\u2122",
+  icons: {
+    icon: '/logo.png',
+  },
 }
 
 export default async function RootLayout({

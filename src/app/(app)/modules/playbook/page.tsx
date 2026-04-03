@@ -6,6 +6,7 @@ import { useAuth } from '@/context/AuthContext'
 type ResponsesByModule = Record<string, Record<string, unknown>>
 
 // Human-readable labels for all field keys — derived from MODULE_SECTIONS field key conventions
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const FIELD_LABELS: Record<string, string> = {
   // Brand Foundation — Brand Journey
   bf_journey_outcome:   'Desired Outcome',
@@ -280,7 +281,7 @@ const FIELD_LABELS: Record<string, string> = {
   la_goal_accountability:    'Accountability Partner',
 }
 
-// Fields to display as highlights (large, orange-tinted cards)
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const HIGHLIGHT_FIELDS = new Set([
   'bf_journey_statement',
   'bf_av1_statement',
@@ -299,7 +300,7 @@ const HIGHLIGHT_FIELDS = new Set([
   'la_goal_offer',
 ])
 
-// Fields to skip in generic rendering (handled with special logic)
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const SKIP_FIELDS = new Set([
   // Avatar 2 fields are in their own sub-section
   'bf_av2_age', 'bf_av2_gender', 'bf_av2_occupation', 'bf_av2_income',
@@ -491,6 +492,7 @@ function ChapterHeader({ num, moduleLabel, title }: { num: string; moduleLabel: 
   )
 }
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 function EmptyChapter({ moduleSlug }: { moduleSlug: string }) {
   return (
     <div style={{
@@ -793,6 +795,7 @@ export default function PlaybookPage() {
   const handle    = getStr(la, 'la_bio_username')  || ''
   const knownFor  = getStr(bf, 'bf_journey_known') || ''
   const goal90    = getStr(la, 'la_goal_content')  || getStr(la, 'la_goal_audience') || getStr(la, 'la_goal_revenue') || ''
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const today     = new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })
 
   function MetaCell({ label, value, placeholder }: { label: string; value: string; placeholder: string }) {

@@ -129,12 +129,10 @@ export default function OriginStory() {
       </div>
       <h1
         style={{
-          fontFamily: 'var(--font-num)',
-          fontSize: 'clamp(2.2rem, 5vw, 3.2rem)',
-          fontWeight: 900,
-          letterSpacing: '-.01em',
-          lineHeight: 1.05,
-          textTransform: 'uppercase',
+          fontSize: '26px',
+          fontWeight: 700,
+          letterSpacing: '-0.4px',
+          lineHeight: 1.2,
           marginBottom: '1rem',
         }}
       >
@@ -292,7 +290,7 @@ export default function OriginStory() {
               opacity: isGenerating === 'bf_origin_story' ? 0.6 : 1,
             }}
           >
-            {isGenerating === 'bf_origin_story' ? 'Generating...' : '✦ Generate'}
+            {isGenerating === 'bf_origin_story' ? 'Generating...' : '✦ Write My Origin Story'}
           </button>
         </div>
         <WorkshopTextarea

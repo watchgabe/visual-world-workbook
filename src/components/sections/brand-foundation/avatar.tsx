@@ -119,12 +119,10 @@ export default function Avatar() {
       </div>
       <h1
         style={{
-          fontFamily: 'var(--font-num)',
-          fontSize: 'clamp(2.2rem, 5vw, 3.2rem)',
-          fontWeight: 900,
-          letterSpacing: '-.01em',
-          lineHeight: 1.05,
-          textTransform: 'uppercase',
+          fontSize: '26px',
+          fontWeight: 700,
+          letterSpacing: '-0.4px',
+          lineHeight: 1.2,
           marginBottom: '1rem',
         }}
       >
@@ -412,7 +410,7 @@ export default function Avatar() {
               opacity: isGenerating === 'bf_av1_statement' ? 0.6 : 1,
             }}
           >
-            {isGenerating === 'bf_av1_statement' ? 'Generating...' : '✦ Generate'}
+            {isGenerating === 'bf_av1_statement' ? 'Generating...' : '✦ Generate Avatar'}
           </button>
         </div>
         <WorkshopTextarea
@@ -662,7 +660,7 @@ export default function Avatar() {
               opacity: isGenerating === 'bf_av2_statement' ? 0.6 : 1,
             }}
           >
-            {isGenerating === 'bf_av2_statement' ? 'Generating...' : '✦ Generate'}
+            {isGenerating === 'bf_av2_statement' ? 'Generating...' : '✦ Generate Avatar 2'}
           </button>
         </div>
         <WorkshopTextarea

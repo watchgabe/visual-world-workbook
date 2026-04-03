@@ -104,12 +104,10 @@ export default function LaunchLeadMagnet() {
       </div>
       <h1
         style={{
-          fontFamily: 'var(--font-num)',
-          fontSize: 'clamp(2.2rem, 5vw, 3.2rem)',
-          fontWeight: 900,
-          letterSpacing: '-.01em',
-          lineHeight: 1.05,
-          textTransform: 'uppercase',
+          fontSize: '26px',
+          fontWeight: 700,
+          letterSpacing: '-0.4px',
+          lineHeight: 1.2,
           marginBottom: '1rem',
         }}
       >
@@ -284,7 +282,7 @@ export default function LaunchLeadMagnet() {
               opacity: isGenerating === 'la_lm_outline' ? 0.6 : 1,
             }}
           >
-            {isGenerating === 'la_lm_outline' ? 'Generating...' : '✦ Generate'}
+            {isGenerating === 'la_lm_outline' ? 'Generating...' : '✦ Generate Outline'}
           </button>
         </div>
         <WorkshopTextarea

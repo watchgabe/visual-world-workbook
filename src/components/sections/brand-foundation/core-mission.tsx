@@ -110,12 +110,10 @@ export default function CoreMission() {
       </div>
       <h1
         style={{
-          fontFamily: 'var(--font-num)',
-          fontSize: 'clamp(2.2rem, 5vw, 3.2rem)',
-          fontWeight: 900,
-          letterSpacing: '-.01em',
-          lineHeight: 1.05,
-          textTransform: 'uppercase',
+          fontSize: '26px',
+          fontWeight: 700,
+          letterSpacing: '-0.4px',
+          lineHeight: 1.2,
           marginBottom: '1rem',
         }}
       >
@@ -345,7 +343,7 @@ export default function CoreMission() {
               opacity: isGenerating === 'bf_ikigai_center' ? 0.6 : 1,
             }}
           >
-            {isGenerating === 'bf_ikigai_center' ? 'Generating...' : '✦ Generate'}
+            {isGenerating === 'bf_ikigai_center' ? 'Generating...' : '✦ Find My Ikigai'}
           </button>
         </div>
         <WorkshopTextarea

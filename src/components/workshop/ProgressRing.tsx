@@ -36,7 +36,7 @@ export function ProgressRing({ percent = 0, size = 44, showLabel = true }: Progr
         cy="22"
         r={RADIUS}
         fill="none"
-        stroke="var(--orange)"
+        stroke={clampedPercent === 100 ? 'var(--green-text)' : 'var(--orange)'}
         strokeWidth="3"
         strokeDasharray={CIRCUMFERENCE}
         strokeDashoffset={offset}

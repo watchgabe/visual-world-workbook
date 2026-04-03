@@ -162,7 +162,6 @@ export default function ColorPalette() {
   function addImages(category: MBCategory, files: File[]) {
     const images = files.filter(f => f.type.startsWith('image/'))
     if (!images.length) return
-    let loaded = 0
     images.forEach(file => {
       const reader = new FileReader()
       reader.onload = () => {
@@ -170,7 +169,6 @@ export default function ColorPalette() {
           ...prev,
           [category]: [...prev[category], reader.result as string],
         }))
-        loaded++
       }
       reader.readAsDataURL(file)
     })
@@ -300,12 +298,10 @@ export default function ColorPalette() {
       </div>
       <h1
         style={{
-          fontFamily: 'var(--font-num)',
-          fontSize: 'clamp(2.2rem, 5vw, 3.2rem)',
-          fontWeight: 900,
-          letterSpacing: '-.01em',
-          lineHeight: 1.05,
-          textTransform: 'uppercase',
+          fontSize: '26px',
+          fontWeight: 700,
+          letterSpacing: '-0.4px',
+          lineHeight: 1.2,
           marginBottom: '1rem',
         }}
       >

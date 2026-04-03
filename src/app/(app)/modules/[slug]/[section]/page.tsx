@@ -3,6 +3,7 @@
 import dynamic from 'next/dynamic'
 import { notFound } from 'next/navigation'
 import { MODULES, MODULE_SECTIONS } from '@/lib/modules'
+import { SectionNavBar } from '@/components/workshop/SectionNavBar'
 import type { ModuleSlug } from '@/types/database'
 
 interface SectionPageProps {
@@ -67,5 +68,17 @@ export default async function SectionPage({ params }: SectionPageProps) {
   const Component = SECTION_REGISTRY[key]
   if (!Component) notFound()
 
-  return <Component />
+  return (
+    <>
+      <Component />
+      {section !== 'overview' && (
+        <div style={{ maxWidth: '700px', margin: '0 auto', padding: '0 2rem 3rem' }}>
+          <SectionNavBar
+            moduleSlug={slug as ModuleSlug}
+            currentSectionSlug={section}
+          />
+        </div>
+      )}
+    </>
+  )
 }

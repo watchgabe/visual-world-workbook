@@ -1,3 +1,5 @@
+import Link from 'next/link'
+
 export default function WelcomePage() {
   return (
     <div style={{ maxWidth: '700px', margin: '0 auto', padding: '2rem 2rem 5rem' }}>
@@ -268,6 +270,8 @@ export default function WelcomePage() {
           lineHeight: 1.5,
           color: 'var(--text)',
           marginBottom: '1.5rem',
+          fontFamily: 'var(--font)',
+          textTransform: 'none',
         }}
       >
         &#8220;Building a premium personal brand is not about being perfect. It&#8217;s about showing up intentionally. Consistently. With a clear point of view and a genuine desire to help the people you serve. The creators who win are the most consistent. Your personal brand already exists &#8212; we just need to add some clarity and systems to amplify it. Let&#8217;s get after it.&#8221;
@@ -342,6 +346,29 @@ export default function WelcomePage() {
         >
           Let&#8217;s build this together.
         </a>
+      </div>
+
+      {/* Begin Module 01 CTA */}
+      <div style={{ textAlign: 'center', marginTop: '1rem' }}>
+        <Link
+          href="/modules/brand-foundation"
+          style={{
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: '6px',
+            padding: '12px 24px',
+            background: 'var(--orange)',
+            color: '#fff',
+            borderRadius: 'var(--radius-md)',
+            fontSize: '14px',
+            fontWeight: 600,
+            fontFamily: 'var(--font)',
+            textDecoration: 'none',
+            cursor: 'pointer',
+          }}
+        >
+          Begin Module 01 &#8594;
+        </Link>
       </div>
     </div>
   )

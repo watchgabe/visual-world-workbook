@@ -1,23 +1,27 @@
 'use client'
-import { createContext, useCallback, useContext, useMemo, useState } from 'react'
+import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import { useAuth } from '@/context/AuthContext'
+import { MODULE_SECTIONS } from '@/lib/modules'
 import type { BlpResponse, ModuleSlug } from '@/types/database'
 
 interface ProgressContextValue {
   moduleProgress: Record<string, number>
+  sectionProgress: Record<string, Record<string, number>>
   refreshProgress: (slug: ModuleSlug) => Promise<void>
   overallProgress: number
 }
 
 const ProgressContext = createContext<ProgressContextValue>({
   moduleProgress: {},
+  sectionProgress: {},
   refreshProgress: async () => {},
   overallProgress: 0,
 })
 
 export function ProgressProvider({ children }: { children: React.ReactNode }) {
   const [moduleProgress, setModuleProgress] = useState<Record<string, number>>({})
+  const [sectionProgress, setSectionProgress] = useState<Record<string, Record<string, number>>>({})
   const { user } = useAuth()
 
   const refreshProgress = useCallback(async (slug: ModuleSlug) => {
@@ -33,23 +37,46 @@ export function ProgressProvider({ children }: { children: React.ReactNode }) {
 
     // Cast through unknown to handle Supabase generic type narrowing on union columns
     const data = rawData as BlpResponse | null
+    const sections = MODULE_SECTIONS[slug]
 
-    if (!data) {
+    if (!sections) return
+
+    // Count total required fields across ALL sections of this module
+    const allRequiredFields = sections.flatMap(s => s.fields.filter(f => f.required).map(f => f.key))
+    const totalRequired = allRequiredFields.length
+
+    if (totalRequired === 0) {
       setModuleProgress(prev => ({ ...prev, [slug]: 0 }))
       return
     }
 
-    const responses = data.responses as Record<string, unknown>
-    const keys = Object.keys(responses)
-    if (keys.length === 0) {
-      setModuleProgress(prev => ({ ...prev, [slug]: 0 }))
-      return
-    }
+    const responses = (data?.responses ?? {}) as Record<string, unknown>
 
-    const filled = keys.filter(k => typeof responses[k] === 'string' && (responses[k] as string).trim() !== '').length
-    const pct = Math.round((filled / keys.length) * 100)
+    // Module-level progress: filled required fields / total required fields
+    const filledRequired = allRequiredFields.filter(k => typeof responses[k] === 'string' && (responses[k] as string).trim() !== '').length
+    const pct = Math.round((filledRequired / totalRequired) * 100)
     setModuleProgress(prev => ({ ...prev, [slug]: pct }))
+
+    // Per-section progress
+    const secProg: Record<string, number> = {}
+    for (const section of sections) {
+      const reqFields = section.fields.filter(f => f.required)
+      if (reqFields.length === 0) {
+        secProg[section.slug] = 0
+        continue
+      }
+      const filled = reqFields.filter(f => typeof responses[f.key] === 'string' && (responses[f.key] as string).trim() !== '').length
+      secProg[section.slug] = Math.round((filled / reqFields.length) * 100)
+    }
+    setSectionProgress(prev => ({ ...prev, [slug]: secProg }))
   }, [user])
+
+  // Load progress for all modules on mount
+  useEffect(() => {
+    if (!user) return
+    const slugs: ModuleSlug[] = ['brand-foundation', 'visual-world', 'content', 'launch']
+    slugs.forEach(slug => refreshProgress(slug))
+  }, [user, refreshProgress])
 
   const overallProgress = useMemo(() => {
     const values = Object.values(moduleProgress)
@@ -59,7 +86,7 @@ export function ProgressProvider({ children }: { children: React.ReactNode }) {
   }, [moduleProgress])
 
   return (
-    <ProgressContext.Provider value={{ moduleProgress, refreshProgress, overallProgress }}>
+    <ProgressContext.Provider value={{ moduleProgress, sectionProgress, refreshProgress, overallProgress }}>
       {children}
     </ProgressContext.Provider>
   )
