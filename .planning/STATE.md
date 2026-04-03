@@ -2,15 +2,15 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-status: verifying
-stopped_at: "Checkpoint: Task 2 of 07-01 — awaiting Vercel deploy and Supabase redirect URL config"
-last_updated: "2026-04-03T05:05:35.196Z"
+status: executing
+stopped_at: Completed 08-01-PLAN.md
+last_updated: "2026-04-03T18:29:35.693Z"
 last_activity: 2026-04-03
 progress:
-  total_phases: 8
+  total_phases: 9
   completed_phases: 8
-  total_plans: 23
-  completed_plans: 23
+  total_plans: 25
+  completed_plans: 24
   percent: 0
 ---
 
@@ -21,14 +21,14 @@ progress:
 See: .planning/PROJECT.md (updated 2026-04-01)
 
 **Core value:** Students can work through all course modules with their progress reliably saved, synced, and accessible — without data loss or auth confusion.
-**Current focus:** Phase 07 — deployment
+**Current focus:** Phase 08 — audit-cleanup
 
 ## Current Position
 
-Phase: 07 (deployment) — EXECUTING
-Plan: 1 of 1
-Status: Phase complete — ready for verification
-Last activity: 2026-04-03 - Completed quick task 260403-esz: Add optional name field to login form
+Phase: 08 (audit-cleanup) — EXECUTING
+Plan: 2 of 2
+Status: Ready to execute
+Last activity: 2026-04-03
 
 Progress: [░░░░░░░░░░] 0%
 
@@ -77,6 +77,7 @@ Progress: [░░░░░░░░░░] 0%
 | Phase 06-admin-dashboard P01 | 15 | 2 tasks | 9 files |
 | Phase 06-admin-dashboard P02 | 4 | 2 tasks | 5 files |
 | Phase 07-deployment P01 | 10 | 1 tasks | 1 files |
+| Phase 08-audit-cleanup P01 | 15 | 2 tasks | 4 files |
 
 ## Accumulated Context
 
@@ -140,6 +141,7 @@ Recent decisions affecting current work:
 - [Phase 06-admin-dashboard]: Admin layout is standalone (not inside (app) route group) — no sidebar, own ThemeProvider wrapping
 - [Phase 06-admin-dashboard]: signOut in AdminHeader calls createBrowserClient directly (not AuthContext) — admin layout has no AuthProvider
 - [Phase 07-deployment]: SUPABASE_SERVICE_ROLE_KEY must never use NEXT_PUBLIC_ prefix — server-side only
+- [Phase 08-audit-cleanup]: EmptyChapter function retained (IS used at 4 call sites) — only the unused moduleSlug prop and its eslint-disable comment removed
 
 ### Roadmap Evolution
 
@@ -162,6 +164,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-04-03T05:05:35.193Z
-Stopped at: Checkpoint: Task 2 of 07-01 — awaiting Vercel deploy and Supabase redirect URL config
+Last session: 2026-04-03T18:29:35.689Z
+Stopped at: Completed 08-01-PLAN.md
 Resume file: None

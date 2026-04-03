@@ -56,7 +56,7 @@ Requirements for initial release. Each maps to roadmap phases.
 
 - [x] **API-01**: Next.js API route wrapping claude-proxy edge function (API keys server-side)
 - [x] **API-02**: Next.js API route wrapping circle-proxy edge function (API keys server-side)
-- [ ] **API-03**: ~~Next.js API route wrapping waterfall-analyzer edge function (API keys server-side)~~ — DEFERRED to v2 (waterfall feature was never fully built in old app; route removed in Phase 8)
+- [x] **API-03**: ~~Next.js API route wrapping waterfall-analyzer edge function (API keys server-side)~~ — DEFERRED to v2 (waterfall feature was never fully built in old app; route removed in Phase 8)
 
 ### Admin
 
