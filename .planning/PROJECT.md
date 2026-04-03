@@ -27,17 +27,17 @@ Students can work through all course modules with their progress reliably saved,
 
 - ✓ Supabase Auth with magic link (replace localStorage email system) — Phase 2
 - ✓ Middleware for auth redirects on protected routes — Phase 2
-- [ ] Server-side protected admin route (replace client-side password check)
-- [ ] Single Supabase service module replacing 4 scattered implementations
+- ✓ Server-side protected admin route (replace client-side password check) — Phase 6
+- ✓ Single Supabase service module replacing 4 scattered implementations — Phase 1
 - ✓ React Context for shared state (progress, theme, user) — Phase 3
 - ✓ Auto-save hook with debounce (one implementation for all modules) — Phase 3
 - ✓ Next.js App Router with direct routing (replace iframe loading) — Phase 5
 - ✓ Reusable component library (WorkshopTextarea, WorkshopInput, OptionSelector, SectionNav, ProgressRing) — Phase 3
 - ✓ Section wrapper with unified completion tracking — Phase 3
-- ✓ Next.js API routes wrapping edge function calls (claude-proxy, circle-proxy, waterfall-analyzer) — Phase 4
-- [ ] App layout with sidebar, topbar, progress bar shared across pages
-- [ ] TypeScript throughout
-- [ ] Deploy to Vercel with environment variables
+- ✓ Next.js API routes wrapping edge function calls (claude-proxy, circle-proxy) — Phase 4 (waterfall deferred to v2)
+- ✓ App layout with sidebar, topbar, progress bar shared across pages — Phase 1
+- ✓ TypeScript throughout — Phase 1
+- ✓ Deploy to Vercel with environment variables — Phase 7
 
 ### Out of Scope
 
@@ -93,4 +93,4 @@ This document evolves at phase transitions and milestone boundaries.
 4. Update Context with current state
 
 ---
-*Last updated: 2026-04-02 after Phase 5 completion*
+*Last updated: 2026-04-03 after Phase 8 (Audit Cleanup) completion — all v1.0 phases complete*
