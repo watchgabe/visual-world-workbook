@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: verifying
-stopped_at: Phase 7 planned and verified
-last_updated: "2026-04-03T04:43:20.274Z"
+stopped_at: "Checkpoint: Task 2 of 07-01 — awaiting Vercel deploy and Supabase redirect URL config"
+last_updated: "2026-04-03T05:05:35.196Z"
 last_activity: 2026-04-03
 progress:
   total_phases: 8
-  completed_phases: 7
+  completed_phases: 8
   total_plans: 23
-  completed_plans: 22
+  completed_plans: 23
   percent: 0
 ---
 
@@ -21,12 +21,12 @@ progress:
 See: .planning/PROJECT.md (updated 2026-04-01)
 
 **Core value:** Students can work through all course modules with their progress reliably saved, synced, and accessible — without data loss or auth confusion.
-**Current focus:** Phase 06 — admin-dashboard
+**Current focus:** Phase 07 — deployment
 
 ## Current Position
 
-Phase: 7
-Plan: Not started
+Phase: 07 (deployment) — EXECUTING
+Plan: 1 of 1
 Status: Phase complete — ready for verification
 Last activity: 2026-04-03
 
@@ -76,6 +76,7 @@ Progress: [░░░░░░░░░░] 0%
 | Phase 05.1-module-migration-remediation P06 | 9 | 2 tasks | 2 files |
 | Phase 06-admin-dashboard P01 | 15 | 2 tasks | 9 files |
 | Phase 06-admin-dashboard P02 | 4 | 2 tasks | 5 files |
+| Phase 07-deployment P01 | 10 | 1 tasks | 1 files |
 
 ## Accumulated Context
 
@@ -138,6 +139,7 @@ Recent decisions affecting current work:
 - [Phase 06-admin-dashboard]: blp_config has RLS enabled with no user policies — all access via service role API routes only (admin-only table)
 - [Phase 06-admin-dashboard]: Admin layout is standalone (not inside (app) route group) — no sidebar, own ThemeProvider wrapping
 - [Phase 06-admin-dashboard]: signOut in AdminHeader calls createBrowserClient directly (not AuthContext) — admin layout has no AuthProvider
+- [Phase 07-deployment]: SUPABASE_SERVICE_ROLE_KEY must never use NEXT_PUBLIC_ prefix — server-side only
 
 ### Roadmap Evolution
 
@@ -154,6 +156,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-04-03T04:43:20.267Z
-Stopped at: Phase 7 planned and verified
-Resume file: .planning/phases/07-deployment/07-01-PLAN.md
+Last session: 2026-04-03T05:05:35.193Z
+Stopped at: Checkpoint: Task 2 of 07-01 — awaiting Vercel deploy and Supabase redirect URL config
+Resume file: None

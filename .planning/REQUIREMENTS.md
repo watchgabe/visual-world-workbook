@@ -68,9 +68,9 @@ Requirements for initial release. Each maps to roadmap phases.
 
 ### Deployment
 
-- [ ] **DEPLOY-01**: Vercel deployment with environment variables (no hardcoded keys)
+- [x] **DEPLOY-01**: Vercel deployment with environment variables (no hardcoded keys)
 - [x] **DEPLOY-02**: TypeScript throughout the codebase
-- [ ] **DEPLOY-03**: Magic link redirect URLs configured for both localhost and production
+- [x] **DEPLOY-03**: Magic link redirect URLs configured for both localhost and production
 
 ## v2 Requirements
 
@@ -153,9 +153,9 @@ Which phases cover which requirements. Updated during roadmap creation.
 | ADMIN-03 | Phase 6 | Complete |
 | ADMIN-04 | Phase 6 | Complete |
 | ADMIN-05 | Phase 6 | Complete |
-| DEPLOY-01 | Phase 7 | Pending |
+| DEPLOY-01 | Phase 7 | Complete |
 | DEPLOY-02 | Phase 1 | Complete |
-| DEPLOY-03 | Phase 7 | Pending |
+| DEPLOY-03 | Phase 7 | Complete |
 
 **Coverage:**
 - v1 requirements: 30 total

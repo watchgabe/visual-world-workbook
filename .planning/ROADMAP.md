@@ -19,7 +19,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [x] **Phase 5: Module Migration** - All six course module pages migrated 1:1 with full content, URL routing, and progress tracking (completed 2026-04-02)
 - [ ] **Phase 5.1: Module Migration Remediation** - Restore missing features, content, and AI integrations for true 1:1 feature parity (INSERTED)
 - [ ] **Phase 6: Admin Dashboard** - Server-side protected admin with user list, progress viewer, badge award, and delete
-- [ ] **Phase 7: Deployment** - Vercel environment variables, Supabase production URL config, and production verification
+- [x] **Phase 7: Deployment** - Vercel environment variables, Supabase production URL config, and production verification (completed 2026-04-03)
 
 ## Phase Details
 
@@ -154,9 +154,9 @@ Plans:
   1. The application is deployed to Vercel and loads at the production URL with no hardcoded keys in the client bundle
   2. A magic link email sent in production contains the correct production callback URL (not localhost)
   3. A full end-to-end smoke test passes: sign in → complete a form field → verify save → view playbook → sign out
-**Plans:** 1 plan
+**Plans:** 1/1 plans complete
 Plans:
-- [ ] 07-01-PLAN.md — Production readiness check, Vercel deployment, Supabase redirect URL config
+- [x] 07-01-PLAN.md — Production readiness check, Vercel deployment, Supabase redirect URL config
 
 ## Progress
 
@@ -172,4 +172,4 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 5.1 → 6 → 7
 | 5. Module Migration | 6/6 | Complete   | 2026-04-02 |
 | 5.1 Module Migration Remediation | 0/6 | Not started | - |
 | 6. Admin Dashboard | 1/2 | In Progress|  |
-| 7. Deployment | 0/1 | Not started | - |
+| 7. Deployment | 1/1 | Complete   | 2026-04-03 |
