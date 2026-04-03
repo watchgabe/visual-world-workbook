@@ -15,6 +15,7 @@ const AUTH_ERRORS: Record<string, string> = {
 }
 
 export function LoginForm({ redirectPath, errorParam }: LoginFormProps) {
+  const [name, setName] = useState('')
   const [email, setEmail] = useState('')
   const [sent, setSent] = useState(false)
   const [loading, setLoading] = useState(false)
@@ -56,6 +57,7 @@ export function LoginForm({ redirectPath, errorParam }: LoginFormProps) {
       email: emailToSend,
       options: {
         emailRedirectTo: `${window.location.origin}/auth/callback?next=${encodeURIComponent(redirectPath)}`,
+        data: name.trim() ? { full_name: name.trim() } : undefined,
       },
     })
 
@@ -181,6 +183,50 @@ export function LoginForm({ redirectPath, errorParam }: LoginFormProps) {
           {errorMessage}
         </div>
       )}
+
+      {/* Name input */}
+      <div style={{ marginBottom: '0.875rem' }}>
+        <label
+          htmlFor="name"
+          style={{
+            display: 'block',
+            fontSize: '12px',
+            fontWeight: 600,
+            color: 'var(--dim)',
+            marginBottom: '6px',
+            letterSpacing: '0.03em',
+            textTransform: 'uppercase',
+          }}
+        >
+          Your name <span style={{ fontWeight: 400, textTransform: 'none', letterSpacing: 0 }}>(optional)</span>
+        </label>
+        <input
+          id="name"
+          type="text"
+          value={name}
+          onChange={e => setName(e.target.value)}
+          placeholder="Your name (optional)"
+          autoComplete="name"
+          style={{
+            width: '100%',
+            background: 'var(--card)',
+            border: '1px solid var(--border)',
+            borderRadius: 'var(--radius-md)',
+            color: 'var(--text)',
+            padding: '12px 16px',
+            fontSize: '15px',
+            fontFamily: 'var(--font)',
+            outline: 'none',
+            boxSizing: 'border-box',
+          }}
+          onFocus={e => {
+            e.currentTarget.style.borderColor = 'var(--orange-border)'
+          }}
+          onBlur={e => {
+            e.currentTarget.style.borderColor = 'var(--border)'
+          }}
+        />
+      </div>
 
       {/* Email input */}
       <div style={{ marginBottom: '0.875rem' }}>
