@@ -20,7 +20,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [ ] **Phase 5.1: Module Migration Remediation** - Restore missing features, content, and AI integrations for true 1:1 feature parity (INSERTED)
 - [ ] **Phase 6: Admin Dashboard** - Server-side protected admin with user list, progress viewer, badge award, and delete
 - [x] **Phase 7: Deployment** - Vercel environment variables, Supabase production URL config, and production verification (completed 2026-04-03)
-- [ ] **Phase 8: Audit Cleanup** - Remove dead code, align DATA-05 annotation, remove unwired waterfall route, verify deployment phase (gap closure)
+- [x] **Phase 8: Audit Cleanup** - Remove dead code, align DATA-05 annotation, remove unwired waterfall route, verify deployment phase (gap closure) (completed 2026-04-03)
 
 ## Phase Details
 
@@ -169,10 +169,10 @@ Plans:
   2. DATA-05 in REQUIREMENTS.md is annotated to reflect D-01 error-only design decision
   3. /api/waterfall route removed (feature deferred to v2) and API-03 marked as deferred
   4. Phase 7 has a VERIFICATION.md confirming deployment readiness artifacts
-**Plans:** 1/2 plans executed
+**Plans:** 2/2 plans complete
 Plans:
 - [x] 08-01-PLAN.md — Dead code removal: delete SectionNav, waterfall route/test, playbook dead constants; verify REQUIREMENTS.md annotations
-- [ ] 08-02-PLAN.md — Create Phase 7 VERIFICATION.md with deployment readiness evidence
+- [x] 08-02-PLAN.md — Create Phase 7 VERIFICATION.md with deployment readiness evidence
 
 ## Progress
 
@@ -189,4 +189,4 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 5.1 → 6 → 7 �
 | 5.1 Module Migration Remediation | 6/6 | Complete   | 2026-04-02 |
 | 6. Admin Dashboard | 2/2 | Complete   | 2026-04-02 |
 | 7. Deployment | 1/1 | Complete   | 2026-04-03 |
-| 8. Audit Cleanup | 1/2 | In Progress|  |
+| 8. Audit Cleanup | 2/2 | Complete   | 2026-04-03 |
