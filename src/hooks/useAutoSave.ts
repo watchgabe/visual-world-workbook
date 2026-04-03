@@ -107,10 +107,26 @@ export function useAutoSave(opts: UseAutoSaveOptions): UseAutoSaveReturn {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user, opts.moduleSlug, opts.fieldKey, refreshProgress])
 
+  // Track whether the user has interacted with this field (focus then change)
+  const userTouchedRef = useRef(false)
+  // Track the last saved/loaded value to detect real changes
+  const lastSavedValueRef = useRef(opts.value)
+
   // Debounce effect: 5s debounce OR blur, whichever first (per D-02)
+  // Only saves when the value actually differs from what was loaded/last saved
   useEffect(() => {
+    // Skip if value matches what was loaded or last saved (no real change)
+    if (opts.value === lastSavedValueRef.current) return
+    // Skip saving empty values unless the user has explicitly interacted
+    if (!opts.value && !userTouchedRef.current) {
+      lastSavedValueRef.current = opts.value
+      return
+    }
     cancelPending()
-    timerRef.current = setTimeout(doSave, 5000)
+    timerRef.current = setTimeout(() => {
+      doSave()
+      lastSavedValueRef.current = latestValueRef.current
+    }, 5000)
     return cancelPending  // cleanup on unmount or value change
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [opts.value])
@@ -118,13 +134,18 @@ export function useAutoSave(opts: UseAutoSaveOptions): UseAutoSaveReturn {
   // handleBlur: save immediately, clear timer, update focused state
   const handleBlur = useCallback(() => {
     cancelPending()
-    doSave()
+    // Only save on blur if value actually changed from last saved
+    if (latestValueRef.current !== lastSavedValueRef.current) {
+      doSave()
+      lastSavedValueRef.current = latestValueRef.current
+    }
     setIsFocused(false)
   }, [cancelPending, doSave])
 
   // handleFocus: mark focused, clear error (user re-engaging)
   const handleFocus = useCallback(() => {
     setIsFocused(true)
+    userTouchedRef.current = true
     setSaveError(null)
   }, [])
 
