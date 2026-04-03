@@ -5,330 +5,6 @@ import { createClient } from '@/lib/supabase/client'
 import { useAuth } from '@/context/AuthContext'
 type ResponsesByModule = Record<string, Record<string, unknown>>
 
-// Human-readable labels for all field keys — derived from MODULE_SECTIONS field key conventions
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-const FIELD_LABELS: Record<string, string> = {
-  // Brand Foundation — Brand Journey
-  bf_journey_outcome:   'Desired Outcome',
-  bf_journey_why:       'Why This Matters',
-  bf_journey_known:     'Known For',
-  bf_journey_do:        'Actions',
-  bf_journey_learn:     'Learning Priority',
-  bf_journey_statement: 'Brand Journey Statement',
-  // Brand Foundation — Avatar 1
-  bf_av1_age:        'Age',
-  bf_av1_gender:     'Gender',
-  bf_av1_occupation: 'Occupation',
-  bf_av1_income:     'Income',
-  bf_av1_situation:  'Situation',
-  bf_av1_who:        'Who They Are',
-  bf_av1_look:       'How They Look',
-  bf_av1_story:      'Their Story',
-  bf_av1_goals:      'Goals',
-  bf_av1_passions:   'Passions',
-  bf_av1_struggle:   'Struggle',
-  bf_av1_tried:      'What They\'ve Tried',
-  bf_av1_desired:    'Desired Outcome',
-  bf_av1_fears:      'Fears',
-  bf_av1_platforms:  'Where They Hang Out',
-  bf_av1_connection: 'How You Connect',
-  bf_av1_statement:  'Avatar Statement',
-  // Brand Foundation — Avatar 2
-  bf_av2_age:        'Age',
-  bf_av2_gender:     'Gender',
-  bf_av2_occupation: 'Occupation',
-  bf_av2_income:     'Income',
-  bf_av2_situation:  'Situation',
-  bf_av2_who:        'Who They Are',
-  bf_av2_look:       'How They Look',
-  bf_av2_story:      'Their Story',
-  bf_av2_goals:      'Goals',
-  bf_av2_passions:   'Passions',
-  bf_av2_struggle:   'Struggle',
-  bf_av2_tried:      'What They\'ve Tried',
-  bf_av2_desired:    'Desired Outcome',
-  bf_av2_fears:      'Fears',
-  bf_av2_platforms:  'Where They Hang Out',
-  bf_av2_connection: 'How You Connect',
-  bf_av2_statement:  'Avatar 2 Statement',
-  // Brand Foundation — Core Mission
-  bf_ikigai_love:    'What You Love',
-  bf_ikigai_good:    'What You\'re Good At',
-  bf_ikigai_world:   'What the World Needs',
-  bf_ikigai_paid:    'What You Can Be Paid For',
-  bf_ikigai_center:  'Ikigai Center',
-  bf_mission_avatar: 'I Help (Avatar)',
-  bf_mission_outcome:'Achieve (Outcome)',
-  bf_mission_method: 'Through (Method)',
-  bf_mission_why:    'So They Can (Why)',
-  bf_core_mission:   'Core Mission',
-  // Brand Foundation — Core Values
-  bf_val1_name:     'Value 1',
-  bf_val1_practice: 'Practice',
-  bf_val2_name:     'Value 2',
-  bf_val2_practice: 'Practice',
-  bf_val3_name:     'Value 3',
-  bf_val3_practice: 'Practice',
-  bf_val4_name:     'Value 4',
-  bf_val4_practice: 'Practice',
-  bf_val5_name:     'Value 5',
-  bf_val5_practice: 'Practice',
-  bf_val6_name:     'Value 6',
-  bf_val6_practice: 'Practice',
-  // Brand Foundation — Content Pillars
-  bf_pillar_discover1: 'Discovery Topic 1',
-  bf_pillar_discover2: 'Discovery Topic 2',
-  bf_pillar_discover3: 'Discovery Topic 3',
-  bf_pillar1_name:  'Pillar 1',
-  bf_pillar1_sub:   'Subtopics',
-  bf_pillar1_avatar:'Target Avatar',
-  bf_pillar1_offer: 'Offer Connection',
-  bf_pillar1_test:  'Test Idea',
-  bf_pillar2_name:  'Pillar 2',
-  bf_pillar2_sub:   'Subtopics',
-  bf_pillar2_avatar:'Target Avatar',
-  bf_pillar2_offer: 'Offer Connection',
-  bf_pillar2_test:  'Test Idea',
-  bf_pillar3_name:  'Pillar 3',
-  bf_pillar3_sub:   'Subtopics',
-  bf_pillar3_avatar:'Target Avatar',
-  bf_pillar3_offer: 'Offer Connection',
-  bf_pillar3_test:  'Test Idea',
-  bf_pillar4_name:  'Pillar 4',
-  bf_pillar4_sub:   'Subtopics',
-  bf_pillar4_avatar:'Target Avatar',
-  bf_pillar4_offer: 'Offer Connection',
-  bf_pillar4_test:  'Test Idea',
-  bf_pillar5_name:  'Pillar 5',
-  bf_pillar5_sub:   'Subtopics',
-  bf_pillar5_avatar:'Target Avatar',
-  bf_pillar5_offer: 'Offer Connection',
-  bf_pillar5_test:  'Test Idea',
-  // Brand Foundation — Origin Story
-  bf_story1:       'Chapter 1 — Before',
-  bf_story2:       'Chapter 2 — The Turning Point',
-  bf_story3:       'Chapter 3 — The Transformation',
-  bf_story4:       'Chapter 4 — The New Life',
-  bf_origin_story: 'Origin Story',
-  // Brand Foundation — Brand Vision
-  bf_vision_3yr:    '3-Year Vision',
-  bf_vision_day:    'A Day in Your Life',
-  bf_vision_impact: 'Impact',
-  bf_vision_legacy: 'Legacy',
-  bf_brand_vision:  'Brand Vision',
-  // Visual World — Creator Analysis
-  vw_ca_patterns:  'Patterns You Notice',
-  vw_ca_different: 'What Makes You Different',
-  vw_ca_own:       'What You Own',
-  vw_ca_gap:       'The Gap',
-  // Visual World — Color Palette (Mood Board)
-  vw_mb_link:     'Mood Board Link',
-  vw_mb_colors:   'Color Vibes',
-  vw_mb_lighting: 'Lighting',
-  vw_mb_mood:     'Mood',
-  vw_mb_textures: 'Textures',
-  vw_mb_movie:    'Movie Inspiration',
-  vw_mb_time:     'Time of Day',
-  vw_mb_place:    'Place',
-  // Visual World — Color Palette (actual colors)
-  vw_color_primary:   'Primary Color',
-  vw_color_secondary: 'Secondary Color',
-  vw_color_accent:    'Accent Color',
-  vw_color_neutral:   'Neutral Color',
-  vw_color_name:      'Palette Name',
-  // Visual World — Typography
-  vw_typo_primary: 'Primary Font',
-  vw_typo_body:    'Body Font',
-  // Visual World — Shot System
-  vw_shot_e1_location:    'Setting Location',
-  vw_shot_e1_vibe:        'Environment Vibe',
-  vw_shot_e1_communicate: 'What It Communicates',
-  vw_shot_e1_statement:   'Setting Statement',
-  vw_shot_e2_mood:        'Primary Mood',
-  vw_shot_e2_lighting:    'Lighting Style',
-  vw_shot_e2_time:        'Time of Day',
-  vw_shot_e2_statement:   'Mood Statement',
-  vw_shot_e3_grade:       'Color Grade',
-  vw_shot_e3_ref:         'Color Reference',
-  vw_shot_e4_objects:     'Signature Objects',
-  vw_shot_e4_textures:    'Textures',
-  vw_shot_e4_wardrobe:    'Wardrobe',
-  vw_shot_e4_never:       'Never On Camera',
-  // Content — Content Strategy
-  ct_strategy_goal:         'Strategy Goal',
-  ct_strategy_next_step:    'Next Step',
-  ct_strategy_pain_problem: 'Painful Problem',
-  ct_strategy_unique_sol:   'Unique Solution',
-  ct_strategy_credibility:  'Contextual Credibility',
-  // Content — Sustainability
-  ct_sustain_week_hours: 'Weekly Hours Available',
-  ct_sustain_energize:   'What Energizes You',
-  ct_sustain_drain:      'What Drains You',
-  ct_sustain_sharp:      'When You\'re Sharpest',
-  ct_sustain_cadence:    'Content Cadence',
-  ct_sustain_medium:     'Preferred Medium',
-  ct_sustain_audience:   'Audience Platform',
-  ct_sustain_enjoy:      'Platforms You Enjoy',
-  ct_sustain_freq:       'Posting Frequency',
-  ct_sustain_platgoal:   'Platform Goal',
-  ct_sustain_primary:    'Primary Platform',
-  ct_sustain_secondary:  'Secondary Platform',
-  ct_sustain_focus:      'Content Focus',
-  ct_batch_film_day:     'Film Day',
-  ct_batch_count:        'Batch Count',
-  ct_batch_setup:        'Setup Notes',
-  ct_batch_commit:       'Commitment',
-  // Content — Trust & Money
-  ct_tm_free:      'Free Content Offer',
-  ct_tm_lead:      'Lead Magnet',
-  ct_tm_low:       'Low-Ticket Offer',
-  ct_tm_mid:       'Mid-Ticket Offer',
-  ct_tm_high:      'High-Ticket Offer',
-  ct_tm_conv:      'Conversion Strategy',
-  ct_tm_cta_strat: 'CTA Strategy',
-  // Content — Idea Generation fields (abbreviated)
-  ct_ig_pillar1: 'Content Pillar 1',
-  ct_ig_pillar2: 'Content Pillar 2',
-  ct_ig_pillar3: 'Content Pillar 3',
-  ct_ig_pillar4: 'Content Pillar 4',
-  ct_ig_pillar5: 'Content Pillar 5',
-  // Content — Storytelling
-  ct_story_idea:    'Story Idea',
-  ct_story_hook:    'Hook',
-  ct_story_prob:    'Problem',
-  ct_story_journey: 'Journey',
-  ct_story_lesson:  'Lesson',
-  ct_story_cta:     'CTA',
-  // Launch — Funnel
-  la_funnel_platforms:       'Content Platforms',
-  la_funnel_lead_magnet:     'Lead Magnet',
-  la_funnel_email_platform:  'Email Platform',
-  la_funnel_newsletter_freq: 'Newsletter Frequency',
-  la_funnel_cta:             'Primary CTA',
-  la_funnel_offer:           'Core Offer',
-  la_funnel_price:           'Price',
-  la_funnel_conversion:      'Conversion Strategy',
-  la_funnel_has_lm:          'Has Lead Magnet',
-  la_funnel_has_email:       'Has Email List',
-  la_funnel_has_offer:       'Has Offer',
-  la_funnel_broken:          'What\'s Broken',
-  // Launch — Lead Magnet
-  la_lm_name:         'Lead Magnet Name',
-  la_lm_topic:        'Topic',
-  la_lm_offer_bridge: 'Offer Bridge',
-  la_lm_format:       'Format',
-  la_lm_big_win:      'The Big Win',
-  la_lm_outline:      'Outline',
-  la_lm_cta:          'CTA',
-  la_lm_tool:         'Tool',
-  la_lm_delivery:     'Delivery Method',
-  // Launch — Bio
-  la_bio_link:          'Link in Bio',
-  la_bio_username:      'Username',
-  la_bio_ig_name:       'Instagram Name',
-  la_bio_pfp_visibility:'Profile Pic Visibility',
-  la_bio_pfp_bg:        'Background',
-  la_bio_pfp_notes:     'Profile Pic Notes',
-  la_bio_line1:         'Bio Line 1',
-  la_bio_line2:         'Bio Line 2',
-  la_bio_line3:         'Bio Line 3',
-  la_bio_line4:         'Bio Line 4',
-  // Launch — Launch Content
-  la_lc_story_why:       'Why You Do This',
-  la_lc_story_challenge: 'The Challenge',
-  la_lc_story_turning:   'The Turning Point',
-  la_lc_story_learned:   'What You Learned',
-  la_lc_story_hook:      'Hook',
-  la_lc_story_examples:  'Examples',
-  la_lc_story_cta:       'CTA',
-  la_lc_pos_belief:      'Core Belief',
-  la_lc_pos_claim:       'Core Claim',
-  la_lc_pos_b1:          'Belief 1',
-  la_lc_pos_b2:          'Belief 2',
-  la_lc_pos_b3:          'Belief 3',
-  la_lc_pos_b4:          'Belief 4',
-  la_lc_pos_b5:          'Belief 5',
-  la_lc_pos_stop:        'Stop Doing',
-  la_lc_pos_oldbelief:   'Old Belief',
-  la_lc_pos_start:       'Start Doing',
-  la_lc_pos_newbelief:   'New Belief',
-  la_lc_pos_anchor:      'Anchor Statement',
-  la_lc_mc_subject:      'Masterclass Subject',
-  la_lc_mc_audience:     'Target Audience',
-  la_lc_mc_authority:    'Your Authority',
-  la_lc_mc_s1:           'Section 1',
-  la_lc_mc_s2:           'Section 2',
-  la_lc_mc_s3:           'Section 3',
-  la_lc_mc_s4:           'Section 4',
-  la_lc_mc_s5:           'Section 5',
-  la_lc_mc_s6:           'Section 6',
-  la_lc_mc_s7:           'Section 7',
-  la_lc_mc_hook:         'Masterclass Hook',
-  la_lc_mc_waterfall:    'Waterfall Repurpose',
-  // Launch — Goals
-  la_goal_content_freq:      'Content Frequency',
-  la_goal_content_platforms: 'Content Platforms',
-  la_goal_content:           'Content Goal',
-  la_goal_followers:         'Followers Goal',
-  la_goal_email:             'Email Subscribers Goal',
-  la_goal_audience:          'Audience Goal',
-  la_goal_offer:             'Offer Goal',
-  la_goal_sales:             'Sales Goal',
-  la_goal_revenue:           'Revenue Goal',
-  la_goal_system_priority:   'System Priority',
-  la_goal_system:            'System Goal',
-  la_goal_review_date:       'Review Date',
-  la_goal_accountability:    'Accountability Partner',
-}
-
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-const HIGHLIGHT_FIELDS = new Set([
-  'bf_journey_statement',
-  'bf_av1_statement',
-  'bf_ikigai_center',
-  'bf_core_mission',
-  'bf_origin_story',
-  'bf_brand_vision',
-  'ct_strategy_pain_problem',
-  'ct_strategy_unique_sol',
-  'ct_strategy_credibility',
-  'la_lm_name',
-  'la_lc_story_hook',
-  'la_lc_pos_claim',
-  'la_lc_pos_anchor',
-  'la_goal_content',
-  'la_goal_offer',
-])
-
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-const SKIP_FIELDS = new Set([
-  // Avatar 2 fields are in their own sub-section
-  'bf_av2_age', 'bf_av2_gender', 'bf_av2_occupation', 'bf_av2_income',
-  'bf_av2_situation', 'bf_av2_who', 'bf_av2_look', 'bf_av2_story',
-  'bf_av2_goals', 'bf_av2_passions', 'bf_av2_struggle', 'bf_av2_tried',
-  'bf_av2_desired', 'bf_av2_fears', 'bf_av2_platforms', 'bf_av2_connection',
-  'bf_av2_statement',
-  // Idea generation angle fields — noisy in playbook
-  'ct_ig_p1i1_angles', 'ct_ig_p1i2_angles', 'ct_ig_p1i3_angles', 'ct_ig_p1i4_angles',
-  'ct_ig_p2i1_angles', 'ct_ig_p2i2_angles', 'ct_ig_p2i3_angles', 'ct_ig_p2i4_angles',
-  'ct_ig_p3i1_angles', 'ct_ig_p3i2_angles', 'ct_ig_p3i3_angles', 'ct_ig_p3i4_angles',
-  'ct_ig_p4i1_angles', 'ct_ig_p4i2_angles', 'ct_ig_p4i3_angles', 'ct_ig_p4i4_angles',
-  'ct_ig_p5i1_angles', 'ct_ig_p5i2_angles', 'ct_ig_p5i3_angles', 'ct_ig_p5i4_angles',
-  // Idea sub-fields — granular, skip from playbook
-  'ct_ig_p1i1', 'ct_ig_p1i2', 'ct_ig_p1i3', 'ct_ig_p1i4',
-  'ct_ig_p2i1', 'ct_ig_p2i2', 'ct_ig_p2i3', 'ct_ig_p2i4',
-  'ct_ig_p3i1', 'ct_ig_p3i2', 'ct_ig_p3i3', 'ct_ig_p3i4',
-  'ct_ig_p4i1', 'ct_ig_p4i2', 'ct_ig_p4i3', 'ct_ig_p4i4',
-  'ct_ig_p5i1', 'ct_ig_p5i2', 'ct_ig_p5i3', 'ct_ig_p5i4',
-  // Launch calendar day-by-day fields
-  'la_cal1_platform', 'la_cal1_type', 'la_cal1_hook', 'la_cal1_date', 'la_cal1_done',
-  'la_cal2_platform', 'la_cal2_type', 'la_cal2_hook', 'la_cal2_date', 'la_cal2_done',
-  'la_cal3_platform', 'la_cal3_type', 'la_cal3_hook', 'la_cal3_date', 'la_cal3_done',
-  'la_cal4_platform', 'la_cal4_type', 'la_cal4_hook', 'la_cal4_date', 'la_cal4_done',
-  'la_cal5_platform', 'la_cal5_type', 'la_cal5_hook', 'la_cal5_date', 'la_cal5_done',
-  'la_cal6_platform', 'la_cal6_type', 'la_cal6_hook', 'la_cal6_date', 'la_cal6_done',
-  'la_cal7_platform', 'la_cal7_type', 'la_cal7_hook', 'la_cal7_date', 'la_cal7_done',
-])
 
 function getStr(responses: Record<string, unknown>, key: string): string {
   const v = responses[key]
@@ -492,8 +168,7 @@ function ChapterHeader({ num, moduleLabel, title }: { num: string; moduleLabel: 
   )
 }
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-function EmptyChapter({ moduleSlug }: { moduleSlug: string }) {
+function EmptyChapter() {
   return (
     <div style={{
       background: 'var(--surface)', border: '1px solid var(--border)',
@@ -795,8 +470,6 @@ export default function PlaybookPage() {
   const handle    = getStr(la, 'la_bio_username')  || ''
   const knownFor  = getStr(bf, 'bf_journey_known') || ''
   const goal90    = getStr(la, 'la_goal_content')  || getStr(la, 'la_goal_audience') || getStr(la, 'la_goal_revenue') || ''
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const today     = new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })
 
   function MetaCell({ label, value, placeholder }: { label: string; value: string; placeholder: string }) {
     return (
@@ -888,22 +561,22 @@ export default function PlaybookPage() {
           {c.slug === 'brand-foundation' && (
             Object.keys(c.data).length > 0
               ? <BrandFoundationChapter r={c.data} />
-              : <EmptyChapter moduleSlug={c.slug} />
+              : <EmptyChapter />
           )}
           {c.slug === 'visual-world' && (
             Object.keys(c.data).length > 0
               ? <VisualWorldChapter r={c.data} />
-              : <EmptyChapter moduleSlug={c.slug} />
+              : <EmptyChapter />
           )}
           {c.slug === 'content' && (
             Object.keys(c.data).length > 0
               ? <ContentChapter r={c.data} />
-              : <EmptyChapter moduleSlug={c.slug} />
+              : <EmptyChapter />
           )}
           {c.slug === 'launch' && (
             Object.keys(c.data).length > 0
               ? <LaunchChapter r={c.data} />
-              : <EmptyChapter moduleSlug={c.slug} />
+              : <EmptyChapter />
           )}
         </div>
       ))}
