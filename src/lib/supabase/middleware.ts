@@ -43,6 +43,13 @@ export async function updateSession(request: NextRequest) {
     return NextResponse.redirect(loginUrl)
   }
 
+  // Gate 1: Admin route protection — authenticated non-admins redirected to app root
+  // Gate 2 is in the admin page server component (Plan 02)
+  const isAdminRoute = pathname.startsWith('/admin')
+  if (isAdminRoute && user && user.app_metadata?.role !== 'admin') {
+    return NextResponse.redirect(new URL('/', request.url))
+  }
+
   // If user is authenticated and hits /login, redirect to app root
   if (user && pathname === '/login') {
     return NextResponse.redirect(new URL('/', request.url))
