@@ -72,18 +72,6 @@ export const LABELS: Record<string, string> = {
   bf_val6_name: 'Value 6',
   bf_val6_practice: 'Value 6 — Description',
   // Values Audit
-  bf_audit_vc1: 'Values Check 1',
-  bf_audit_vc2: 'Values Check 2',
-  bf_audit_vc3: 'Values Check 3',
-  bf_audit_pc1: 'Pillar Check 1',
-  bf_audit_pc2: 'Pillar Check 2',
-  bf_audit_pc3: 'Pillar Check 3',
-  bf_audit_cq1: 'Content Quality 1',
-  bf_audit_cq2: 'Content Quality 2',
-  bf_audit_cq3: 'Content Quality 3',
-  bf_audit_ts1: 'Trust Score 1',
-  bf_audit_ts2: 'Trust Score 2',
-  bf_audit_ts3: 'Trust Score 3',
   // Pillars
   bf_pillar_discover1: 'Pillar Brainstorm',
   bf_pillar_discover2: 'Avatar Problems',

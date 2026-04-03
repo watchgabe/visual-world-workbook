@@ -7,6 +7,7 @@ import { useAuth } from '@/context/AuthContext'
 import { WorkshopTextarea } from '@/components/workshop/WorkshopTextarea'
 import { SectionWrapper } from '@/components/workshop/SectionWrapper'
 import { MODULE_SECTIONS } from '@/lib/modules'
+import { saveField } from '@/lib/saveField'
 
 const MODULE_SLUG = 'brand-foundation' as const
 const SECTION_INDEX = 6
@@ -98,7 +99,9 @@ export default function OriginStory() {
       })
       const data = await res.json()
       if (data.error) throw new Error(data.error)
-      ;(setValue as (k: string, v: string) => void)('bf_origin_story', data.text || '')
+      const text = data.text || ''
+      ;(setValue as (k: string, v: string) => void)('bf_origin_story', text)
+      if (user) saveField(user.id, MODULE_SLUG, 'bf_origin_story', text)
     } catch {
       // silent error
     } finally {
@@ -165,12 +168,10 @@ export default function OriginStory() {
 
       <h2
         style={{
-          fontSize: '11px',
-          fontWeight: 700,
-          letterSpacing: '.1em',
-          textTransform: 'uppercase',
-          color: 'var(--dimmer)',
-          marginBottom: '1rem',
+          fontSize: '16px',
+          fontWeight: 600,
+          color: 'var(--text)',
+          margin: '1.75rem 0 8px',
         }}
       >
         The Four-Part Story Arc

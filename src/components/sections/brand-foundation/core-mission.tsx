@@ -8,6 +8,7 @@ import { WorkshopTextarea } from '@/components/workshop/WorkshopTextarea'
 import { WorkshopInput } from '@/components/workshop/WorkshopInput'
 import { SectionWrapper } from '@/components/workshop/SectionWrapper'
 import { MODULE_SECTIONS } from '@/lib/modules'
+import { saveField } from '@/lib/saveField'
 
 const MODULE_SLUG = 'brand-foundation' as const
 const SECTION_INDEX = 3
@@ -69,7 +70,9 @@ export default function CoreMission() {
       })
       const data = await res.json()
       if (data.error) throw new Error(data.error)
-      ;(setValue as (k: string, v: string) => void)('bf_ikigai_center', data.text || '')
+      const text = data.text || ''
+      ;(setValue as (k: string, v: string) => void)('bf_ikigai_center', text)
+      if (user) saveField(user.id, MODULE_SLUG, 'bf_ikigai_center', text)
     } catch {
       // silent error
     } finally {
@@ -144,12 +147,10 @@ export default function CoreMission() {
 
       <h2
         style={{
-          fontSize: '11px',
-          fontWeight: 700,
-          letterSpacing: '.1em',
-          textTransform: 'uppercase',
-          color: 'var(--dimmer)',
-          marginBottom: '1rem',
+          fontSize: '16px',
+          fontWeight: 600,
+          color: 'var(--text)',
+          margin: '1.75rem 0 8px',
         }}
       >
         The Ikigai Exercise
@@ -163,7 +164,7 @@ export default function CoreMission() {
           marginBottom: '1rem',
         }}
       >
-        <p style={{ fontSize: '13.5px', color: 'var(--dim)', lineHeight: 1.7 }}>
+        <p style={{ fontSize: '13.5px', color: 'var(--text)', lineHeight: 1.7 }}>
           Answer each quadrant honestly. The more specific your answers, the
           clearer your Ikigai becomes. Avoid generic answers — go deep.
         </p>
@@ -189,7 +190,7 @@ export default function CoreMission() {
             style={{
               fontSize: '11px',
               fontWeight: 700,
-              color: 'var(--text)',
+              color: '#f0601b',
               marginBottom: '8px',
               textTransform: 'uppercase',
               letterSpacing: '.08em',
@@ -219,7 +220,7 @@ export default function CoreMission() {
             style={{
               fontSize: '11px',
               fontWeight: 700,
-              color: 'var(--text)',
+              color: '#4a9ede',
               marginBottom: '8px',
               textTransform: 'uppercase',
               letterSpacing: '.08em',
@@ -249,7 +250,7 @@ export default function CoreMission() {
             style={{
               fontSize: '11px',
               fontWeight: 700,
-              color: 'var(--text)',
+              color: '#5dcaa5',
               marginBottom: '8px',
               textTransform: 'uppercase',
               letterSpacing: '.08em',
@@ -279,7 +280,7 @@ export default function CoreMission() {
             style={{
               fontSize: '11px',
               fontWeight: 700,
-              color: 'var(--text)',
+              color: '#a97de8',
               marginBottom: '8px',
               textTransform: 'uppercase',
               letterSpacing: '.08em',
@@ -359,12 +360,10 @@ export default function CoreMission() {
 
       <h2
         style={{
-          fontSize: '11px',
-          fontWeight: 700,
-          letterSpacing: '.1em',
-          textTransform: 'uppercase',
-          color: 'var(--dimmer)',
-          marginBottom: '1rem',
+          fontSize: '16px',
+          fontWeight: 600,
+          color: 'var(--text)',
+          margin: '1.75rem 0 8px',
         }}
       >
         Your Core Mission Statement

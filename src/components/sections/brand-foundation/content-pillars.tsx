@@ -143,12 +143,10 @@ export default function ContentPillars() {
       {/* Pillar Discovery */}
       <h2
         style={{
-          fontSize: '11px',
-          fontWeight: 700,
-          letterSpacing: '.1em',
-          textTransform: 'uppercase',
-          color: 'var(--dimmer)',
-          marginBottom: '1rem',
+          fontSize: '16px',
+          fontWeight: 600,
+          color: 'var(--text)',
+          margin: '1.75rem 0 8px',
         }}
       >
         Pillar Discovery
@@ -218,12 +216,10 @@ export default function ContentPillars() {
       {/* Content Pillars */}
       <h2
         style={{
-          fontSize: '11px',
-          fontWeight: 700,
-          letterSpacing: '.1em',
-          textTransform: 'uppercase',
-          color: 'var(--dimmer)',
-          marginBottom: '1rem',
+          fontSize: '16px',
+          fontWeight: 600,
+          color: 'var(--text)',
+          margin: '1.75rem 0 8px',
         }}
       >
         Your Content Pillars

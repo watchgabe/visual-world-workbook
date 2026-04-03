@@ -612,12 +612,10 @@ export default function ColorPalette() {
       {/* Identify Patterns */}
       <h2
         style={{
-          fontSize: '11px',
-          fontWeight: 700,
-          letterSpacing: '.1em',
-          textTransform: 'uppercase',
-          color: 'var(--dimmer)',
-          marginBottom: '1rem',
+          fontSize: '16px',
+          fontWeight: 600,
+          color: 'var(--text)',
+          margin: '1.75rem 0 8px',
         }}
       >
         Identify Patterns
@@ -781,12 +779,10 @@ export default function ColorPalette() {
       {/* ── Extract Colors From a Photo ──────────────────── */}
       <h2
         style={{
-          fontSize: '11px',
-          fontWeight: 700,
-          letterSpacing: '.1em',
-          textTransform: 'uppercase',
-          color: 'var(--dimmer)',
-          marginBottom: '.75rem',
+          fontSize: '16px',
+          fontWeight: 600,
+          color: 'var(--text)',
+          margin: '1.75rem 0 8px',
         }}
       >
         Extract Colors From a Photo
@@ -1198,12 +1194,10 @@ export default function ColorPalette() {
       {/* Color Psychology Primer */}
       <h2
         style={{
-          fontSize: '11px',
-          fontWeight: 700,
-          letterSpacing: '.1em',
-          textTransform: 'uppercase',
-          color: 'var(--dimmer)',
-          marginBottom: '1rem',
+          fontSize: '16px',
+          fontWeight: 600,
+          color: 'var(--text)',
+          margin: '1.75rem 0 8px',
         }}
       >
         Color Psychology Primer

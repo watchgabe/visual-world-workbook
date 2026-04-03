@@ -7,6 +7,7 @@ import { useAuth } from '@/context/AuthContext'
 import { WorkshopTextarea } from '@/components/workshop/WorkshopTextarea'
 import { SectionWrapper } from '@/components/workshop/SectionWrapper'
 import { MODULE_SECTIONS } from '@/lib/modules'
+import { saveField } from '@/lib/saveField'
 
 const MODULE_SLUG = 'brand-foundation' as const
 const SECTION_INDEX = 1
@@ -67,7 +68,9 @@ export default function BrandJourney() {
       })
       const data = await res.json()
       if (data.error) throw new Error(data.error)
-      ;(setValue as (k: string, v: string) => void)('bf_journey_statement', data.text || '')
+      const text = data.text || ''
+      ;(setValue as (k: string, v: string) => void)('bf_journey_statement', text)
+      if (user) saveField(user.id, MODULE_SLUG, 'bf_journey_statement', text)
     } catch {
       // silent error — user can retry
     } finally {
@@ -332,12 +335,10 @@ export default function BrandJourney() {
       {/* Brand Journey Statement */}
       <h2
         style={{
-          fontSize: '11px',
-          fontWeight: 700,
-          letterSpacing: '.1em',
-          textTransform: 'uppercase',
-          color: 'var(--dimmer)',
-          marginBottom: '1rem',
+          fontSize: '16px',
+          fontWeight: 600,
+          color: 'var(--text)',
+          margin: '1.75rem 0 8px',
         }}
       >
         Brand Journey Statement

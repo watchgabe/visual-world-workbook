@@ -9,6 +9,7 @@ import { WorkshopInput } from '@/components/workshop/WorkshopInput'
 import { OptionSelector } from '@/components/workshop/OptionSelector'
 import { SectionWrapper } from '@/components/workshop/SectionWrapper'
 import { MODULE_SECTIONS } from '@/lib/modules'
+import { saveField } from '@/lib/saveField'
 
 const MODULE_SLUG = 'launch' as const
 const SECTION_INDEX = 3
@@ -73,7 +74,9 @@ export default function LaunchLeadMagnet() {
       })
       const data = await res.json()
       if (data.error) throw new Error(data.error)
-      ;(setValue as (k: string, v: string) => void)('la_lm_outline', data.text || '')
+      const text = data.text || ''
+      ;(setValue as (k: string, v: string) => void)('la_lm_outline', text)
+      if (user) saveField(user.id, MODULE_SLUG, 'la_lm_outline', text)
     } catch {
       // silent error
     } finally {

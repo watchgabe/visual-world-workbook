@@ -7,6 +7,7 @@ import { useAuth } from '@/context/AuthContext'
 import { WorkshopInput } from '@/components/workshop/WorkshopInput'
 import { SectionWrapper } from '@/components/workshop/SectionWrapper'
 import { MODULE_SECTIONS } from '@/lib/modules'
+import { saveField } from '@/lib/saveField'
 
 const MODULE_SLUG = 'visual-world' as const
 const SECTION_INDEX = 3
@@ -387,6 +388,10 @@ export default function Typography() {
   function applyPairing(p: Pairing) {
     ;(setValue as (k: string, v: string) => void)('vw_typo_primary', p.header.f)
     ;(setValue as (k: string, v: string) => void)('vw_typo_body', p.body.f)
+    if (user) {
+      saveField(user.id, MODULE_SLUG, 'vw_typo_primary', p.header.f)
+      saveField(user.id, MODULE_SLUG, 'vw_typo_body', p.body.f)
+    }
   }
 
   const currentPairings = selectedMood ? (TYP_PAIRINGS[selectedMood] || []).slice(pairingOffset, pairingOffset + 3) : []
@@ -432,12 +437,10 @@ export default function Typography() {
       {/* ── 1. AI Font Identifier ── */}
       <h2
         style={{
-          fontSize: '11px',
-          fontWeight: 700,
-          letterSpacing: '.1em',
-          textTransform: 'uppercase',
-          color: 'var(--dimmer)',
-          marginBottom: '.5rem',
+          fontSize: '16px',
+          fontWeight: 600,
+          color: 'var(--text)',
+          margin: '1.75rem 0 8px',
         }}
       >
         AI Font Identifier
@@ -579,6 +582,7 @@ export default function Typography() {
                   onClick={() => {
                     const field = f.role === 'body' ? 'vw_typo_body' : 'vw_typo_primary'
                     ;(setValue as (k: string, v: string) => void)(field, f.googleFontName)
+                    if (user) saveField(user.id, MODULE_SLUG, field, f.googleFontName)
                   }}
                   style={{
                     background: 'var(--surface)',
@@ -614,6 +618,10 @@ export default function Typography() {
               onClick={() => {
                 ;(setValue as (k: string, v: string) => void)('vw_typo_primary', identifyResult.primary)
                 ;(setValue as (k: string, v: string) => void)('vw_typo_body', identifyResult.body)
+                if (user) {
+                  saveField(user.id, MODULE_SLUG, 'vw_typo_primary', identifyResult.primary)
+                  saveField(user.id, MODULE_SLUG, 'vw_typo_body', identifyResult.body)
+                }
               }}
               style={{
                 marginTop: '12px',
@@ -637,12 +645,10 @@ export default function Typography() {
       {/* ── 2. Font Pairing Suggestions (mood cards) ── */}
       <h2
         style={{
-          fontSize: '11px',
-          fontWeight: 700,
-          letterSpacing: '.1em',
-          textTransform: 'uppercase',
-          color: 'var(--dimmer)',
-          marginBottom: '.5rem',
+          fontSize: '16px',
+          fontWeight: 600,
+          color: 'var(--text)',
+          margin: '1.75rem 0 8px',
         }}
       >
         Font Finder
@@ -841,12 +847,10 @@ export default function Typography() {
       {/* ── 3 + 4 + 5. Font inputs + preview + autocomplete + toggles ── */}
       <h2
         style={{
-          fontSize: '11px',
-          fontWeight: 700,
-          letterSpacing: '.1em',
-          textTransform: 'uppercase',
-          color: 'var(--dimmer)',
-          marginBottom: '.75rem',
+          fontSize: '16px',
+          fontWeight: 600,
+          color: 'var(--text)',
+          margin: '1.75rem 0 8px',
         }}
       >
         Your Fonts

@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useRef, useState } from 'react'
+import { useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import { createClient } from '@/lib/supabase/client'
 import { useAuth } from '@/context/AuthContext'
@@ -14,57 +14,8 @@ const SECTION_DEF = MODULE_SECTIONS['brand-foundation']![SECTION_INDEX]
 
 const VALUES_COUNT = 6
 
-// Audit categories
-const AUDIT_CATEGORIES = [
-  {
-    id: 'vc',
-    label: 'Values Check',
-    scoreId: 'vcScore',
-    items: [
-      { key: 'bf_audit_vc1', question: 'My stated core values are clearly visible in my content and how I show up online.' },
-      { key: 'bf_audit_vc2', question: 'I make decisions in my brand work that reflect my values, even when it costs me reach or revenue.' },
-      { key: 'bf_audit_vc3', question: 'My audience could describe my values based on what they see from me — without me ever naming them.' },
-    ],
-  },
-  {
-    id: 'pc',
-    label: 'Principles Check',
-    scoreId: 'pcScore',
-    items: [
-      { key: 'bf_audit_pc1', question: 'My content creation principles (how, when, and why I create) are consistent and intentional.' },
-      { key: 'bf_audit_pc2', question: 'I hold myself to the same standards I teach or advocate for in my niche.' },
-      { key: 'bf_audit_pc3', question: 'The way I operate my brand (collaboration, communication, quality) aligns with my stated principles.' },
-    ],
-  },
-  {
-    id: 'cq',
-    label: 'Content Questions',
-    scoreId: 'cqScore',
-    items: [
-      { key: 'bf_audit_cq1', question: 'My content topics directly reflect the values and principles I have identified for my brand.' },
-      { key: 'bf_audit_cq2', question: 'I regularly create content that challenges my audience to think or act in alignment with the values I stand for.' },
-      { key: 'bf_audit_cq3', question: 'Looking at my last 10 posts, a stranger could identify my core values from the themes alone.' },
-    ],
-  },
-  {
-    id: 'ts',
-    label: 'Tough Situations',
-    scoreId: 'tsScore',
-    items: [
-      { key: 'bf_audit_ts1', question: 'When a trending topic conflicts with my values, I hold my ground rather than chase engagement.' },
-      { key: 'bf_audit_ts2', question: 'I have navigated criticism or controversy in a way that stayed true to my brand values.' },
-      { key: 'bf_audit_ts3', question: 'Under pressure (launch season, burnout, controversy), my content and decisions still reflect who I say I am.' },
-    ],
-  },
-] as const
-
-const SCORE_OPTIONS = [0, 2, 4] as const
-const CATEGORY_MAX = 10 // displayed max per category (matching old app)
-
 export default function CoreValues() {
   const { user } = useAuth()
-  const [auditOpen, setAuditOpen] = useState(false)
-  const saveTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
   const { watch, setValue, getValues } = useForm({
     defaultValues: Object.fromEntries(
       SECTION_DEF.fields.map(f => [f.key, ''])
@@ -93,42 +44,7 @@ export default function CoreValues() {
     return () => { cancelled = true }
   }, [user, setValue])
 
-  // responses typed as Record<string, string> via cast for dynamic key access
-  const responses = watch() as Record<string, string>
-
-  // Watch audit fields for auto-save (immediate on selection)
-  // Read via responses (already typed as Record<string, string>)
-  const auditValues = AUDIT_CATEGORIES.flatMap(cat => cat.items.map(item => responses[item.key] ?? ''))
-
-  useEffect(() => {
-    if (!user) return
-    if (saveTimerRef.current) clearTimeout(saveTimerRef.current)
-    saveTimerRef.current = setTimeout(() => {
-      const allResponses = getValues() as Record<string, string>
-      const supabase = createClient()
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      ;(supabase as any)
-        .from('blp_responses')
-        .upsert(
-          { user_id: user.id, module_slug: MODULE_SLUG, responses: allResponses },
-          { onConflict: 'user_id,module_slug' }
-        )
-        .then(() => {/* silent save */})
-    }, 500)
-    return () => {
-      if (saveTimerRef.current) clearTimeout(saveTimerRef.current)
-    }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [user, ...auditValues])
-
-  // Compute category scores via responses (Record<string, string> — dynamic key safe)
-  const vcScore = ['vc1', 'vc2', 'vc3'].reduce((sum, k) => sum + (Number(responses[`bf_audit_${k}`]) || 0), 0)
-  const pcScore = ['pc1', 'pc2', 'pc3'].reduce((sum, k) => sum + (Number(responses[`bf_audit_${k}`]) || 0), 0)
-  const cqScore = ['cq1', 'cq2', 'cq3'].reduce((sum, k) => sum + (Number(responses[`bf_audit_${k}`]) || 0), 0)
-  const tsScore = ['ts1', 'ts2', 'ts3'].reduce((sum, k) => sum + (Number(responses[`bf_audit_${k}`]) || 0), 0)
-  const totalScore = vcScore + pcScore + cqScore + tsScore
-
-  const categoryScores = { vc: vcScore, pc: pcScore, cq: cqScore, ts: tsScore }
+  const responses = watch()
 
   return (
     <SectionWrapper
@@ -245,12 +161,10 @@ export default function CoreValues() {
 
       <h2
         style={{
-          fontSize: '11px',
-          fontWeight: 700,
-          letterSpacing: '.1em',
-          textTransform: 'uppercase',
-          color: 'var(--dimmer)',
-          marginBottom: '1rem',
+          fontSize: '16px',
+          fontWeight: 600,
+          color: 'var(--text)',
+          margin: '1.75rem 0 8px',
         }}
       >
         Your Values{' '}
@@ -357,276 +271,6 @@ export default function CoreValues() {
         </div>
       </div>
 
-      {/* Values Audit */}
-      <div
-        style={{
-          border: '1px solid var(--border)',
-          borderRadius: 'var(--radius-lg)',
-          overflow: 'hidden',
-          marginBottom: '1.75rem',
-        }}
-      >
-        {/* Audit header / toggle */}
-        <button
-          onClick={() => setAuditOpen(o => !o)}
-          style={{
-            width: '100%',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            padding: '1rem 1.25rem',
-            background: 'var(--card)',
-            border: 'none',
-            cursor: 'pointer',
-            textAlign: 'left' as const,
-          }}
-        >
-          <div>
-            <div
-              style={{
-                fontSize: '10px',
-                fontWeight: 700,
-                letterSpacing: '0.12em',
-                textTransform: 'uppercase',
-                color: 'var(--orange)',
-                marginBottom: '3px',
-              }}
-            >
-              Self-Assessment
-            </div>
-            <div
-              style={{
-                fontSize: '14px',
-                fontWeight: 700,
-                color: 'var(--text)',
-              }}
-            >
-              Values Audit
-            </div>
-            <div
-              style={{
-                fontSize: '12px',
-                color: 'var(--dim)',
-                marginTop: '2px',
-              }}
-            >
-              Score how well your brand currently lives your values — 4 categories, 12 questions
-            </div>
-          </div>
-          <div
-            style={{
-              display: 'flex',
-              flexDirection: 'column' as const,
-              alignItems: 'center',
-              gap: '2px',
-              flexShrink: 0,
-              marginLeft: '1rem',
-            }}
-          >
-            <div
-              style={{
-                fontFamily: 'var(--font-num)',
-                fontSize: '1.75rem',
-                fontWeight: 900,
-                color: totalScore > 0 ? 'var(--orange)' : 'var(--dimmer)',
-                lineHeight: 1,
-              }}
-            >
-              {totalScore}
-            </div>
-            <div style={{ fontSize: '10px', color: 'var(--dimmer)' }}>/40</div>
-            <div
-              style={{
-                fontSize: '18px',
-                color: 'var(--dimmer)',
-                marginTop: '4px',
-                transform: auditOpen ? 'rotate(180deg)' : 'none',
-                transition: 'transform 0.2s ease',
-              }}
-            >
-              ▾
-            </div>
-          </div>
-        </button>
-
-        {/* Audit body */}
-        {auditOpen && (
-          <div style={{ borderTop: '1px solid var(--border)' }}>
-            {/* Category cards */}
-            {AUDIT_CATEGORIES.map(cat => {
-              const catScore = categoryScores[cat.id as keyof typeof categoryScores]
-              return (
-                <div
-                  key={cat.id}
-                  style={{
-                    borderBottom: '1px solid var(--border)',
-                    background: 'var(--surface)',
-                  }}
-                >
-                  {/* Category header */}
-                  <div
-                    style={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'space-between',
-                      padding: '0.75rem 1.25rem',
-                      borderBottom: '1px solid var(--border)',
-                    }}
-                  >
-                    <div style={{ fontSize: '12px', fontWeight: 700, color: 'var(--text)', letterSpacing: '0.02em' }}>
-                      {cat.label}
-                    </div>
-                    <div style={{ fontSize: '12px', fontWeight: 700, color: 'var(--orange)' }}>
-                      {catScore}/{CATEGORY_MAX}
-                    </div>
-                  </div>
-
-                  {/* Questions */}
-                  <div style={{ padding: '0.75rem 1.25rem', display: 'flex', flexDirection: 'column' as const, gap: '12px' }}>
-                    {cat.items.map(item => {
-                      const currentVal = String(responses[item.key] || '')
-                      return (
-                        <div key={item.key} style={{ display: 'flex', flexDirection: 'column' as const, gap: '6px' }}>
-                          <div style={{ fontSize: '13px', color: 'var(--dim)', lineHeight: 1.6 }}>
-                            {item.question}
-                          </div>
-                          <div style={{ display: 'flex', gap: '6px', alignItems: 'center', flexWrap: 'wrap' as const }}>
-                            {SCORE_OPTIONS.map(pts => (
-                              <button
-                                key={pts}
-                                onClick={() => (setValue as (k: string, v: string) => void)(item.key, String(pts))}
-                                style={{
-                                  padding: '4px 14px',
-                                  borderRadius: '4px',
-                                  border: '1px solid',
-                                  borderColor: currentVal === String(pts) ? 'var(--orange)' : 'var(--border)',
-                                  background: currentVal === String(pts) ? 'var(--orange)' : 'transparent',
-                                  color: currentVal === String(pts) ? '#fff' : 'var(--dim)',
-                                  fontWeight: 700,
-                                  fontSize: '13px',
-                                  cursor: 'pointer',
-                                  transition: 'all 0.15s ease',
-                                }}
-                                title={pts === 0 ? 'Not at all' : pts === 2 ? 'Sometimes' : 'Consistently'}
-                              >
-                                {pts}
-                              </button>
-                            ))}
-                            <div style={{ fontSize: '11px', color: 'var(--dimmer)', marginLeft: '4px' }}>
-                              0 = Not at all &nbsp;·&nbsp; 2 = Sometimes &nbsp;·&nbsp; 4 = Consistently
-                            </div>
-                          </div>
-                        </div>
-                      )
-                    })}
-                  </div>
-                </div>
-              )
-            })}
-
-            {/* SVG Bar Chart Summary */}
-            <div
-              style={{
-                padding: '1.25rem',
-                background: 'var(--card)',
-              }}
-            >
-              <div style={{ fontSize: '10px', fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase', color: 'var(--dimmer)', marginBottom: '1rem' }}>
-                Your Score Summary
-              </div>
-
-              <svg
-                width="100%"
-                viewBox="0 0 400 120"
-                style={{ display: 'block', overflow: 'visible' }}
-                aria-label="Values Audit score chart"
-              >
-                {AUDIT_CATEGORIES.map((cat, idx) => {
-                  const catScore = categoryScores[cat.id as keyof typeof categoryScores]
-                  const barMaxWidth = 270
-                  const barWidth = Math.min(catScore / CATEGORY_MAX, 1) * barMaxWidth
-                  const y = idx * 28
-                  return (
-                    <g key={cat.id}>
-                      {/* Label */}
-                      <text
-                        x={0}
-                        y={y + 14}
-                        fontSize={11}
-                        fill="var(--dim)"
-                        fontWeight={600}
-                      >
-                        {cat.label}
-                      </text>
-                      {/* Bar background */}
-                      <rect
-                        x={120}
-                        y={y + 4}
-                        width={barMaxWidth}
-                        height={14}
-                        rx={4}
-                        fill="var(--border)"
-                      />
-                      {/* Bar fill */}
-                      <rect
-                        x={120}
-                        y={y + 4}
-                        width={barWidth}
-                        height={14}
-                        rx={4}
-                        fill="var(--orange)"
-                        style={{ transition: 'width 0.3s ease' }}
-                      />
-                      {/* Score label */}
-                      <text
-                        x={400}
-                        y={y + 14}
-                        fontSize={11}
-                        fill="var(--orange)"
-                        fontWeight={700}
-                        textAnchor="end"
-                      >
-                        {catScore}/{CATEGORY_MAX}
-                      </text>
-                    </g>
-                  )
-                })}
-              </svg>
-
-              {/* Total */}
-              <div
-                style={{
-                  display: 'flex',
-                  alignItems: 'baseline',
-                  gap: '6px',
-                  marginTop: '1rem',
-                  paddingTop: '1rem',
-                  borderTop: '1px solid var(--border)',
-                }}
-              >
-                <span
-                  style={{
-                    fontFamily: 'var(--font-num)',
-                    fontSize: '2.5rem',
-                    fontWeight: 900,
-                    color: 'var(--orange)',
-                    lineHeight: 1,
-                  }}
-                >
-                  {totalScore}
-                </span>
-                <span style={{ fontSize: '14px', color: 'var(--dimmer)' }}>/40</span>
-                <span style={{ fontSize: '12px', color: 'var(--dim)', marginLeft: '8px' }}>
-                  {totalScore >= 32 ? 'Strong alignment — your values show up in your brand.' :
-                   totalScore >= 20 ? 'Good foundation — some areas to strengthen.' :
-                   totalScore >= 8 ? 'Room to grow — focus on consistency first.' :
-                   'Just starting — your values audit score will rise as you build.'}
-                </span>
-              </div>
-            </div>
-          </div>
-        )}
-      </div>
     </SectionWrapper>
   )
 }

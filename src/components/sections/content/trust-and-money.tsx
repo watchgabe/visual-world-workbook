@@ -90,9 +90,21 @@ export default function TrustAndMoney() {
         // D-06: setValue triggers useAutoSave 5s debounce naturally.
         // Parse into 4 individual angle fields.
         const lines = text.split('\n').filter((l: string) => l.trim())
+        const updates: Record<string, string> = {}
         for (let a = 0; a < 4; a++) {
           const angleKey = `ct_ig_p${pillarIdx}i${ideaIdx}a${a + 1}`
-          ;(setValue as (k: string, v: string) => void)(angleKey, lines[a] || '')
+          const val = lines[a] || ''
+          ;(setValue as (k: string, v: string) => void)(angleKey, val)
+          updates[angleKey] = val
+        }
+        if (user) {
+          const supabase = createClient()
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          ;(supabase as any).rpc('merge_responses', {
+            p_user_id: user.id,
+            p_module_slug: MODULE_SLUG,
+            p_data: updates,
+          })
         }
       }
     } catch (err) {
