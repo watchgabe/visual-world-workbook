@@ -390,12 +390,17 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
                 e.currentTarget.style.color = 'var(--dim)'
               }}
             >
-              {user.email ? user.email[0].toUpperCase() : '?'}
+              {user.user_metadata?.full_name
+                ? user.user_metadata.full_name[0].toUpperCase()
+                : user.email
+                  ? user.email[0].toUpperCase()
+                  : '?'}
             </button>
 
             {modalOpen && (
               <UserModal
                 email={user.email ?? ''}
+                name={user.user_metadata?.full_name ?? undefined}
                 onSignOut={signOut}
                 onClose={() => setModalOpen(false)}
               />

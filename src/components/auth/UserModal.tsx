@@ -2,11 +2,12 @@
 
 interface UserModalProps {
   email: string
+  name?: string
   onSignOut: () => void
   onClose: () => void
 }
 
-export function UserModal({ email, onSignOut, onClose }: UserModalProps) {
+export function UserModal({ email, name, onSignOut, onClose }: UserModalProps) {
   return (
     <>
       {/* Full-screen overlay — click outside to close */}
@@ -39,20 +40,52 @@ export function UserModal({ email, onSignOut, onClose }: UserModalProps) {
           zIndex: 300,
         }}
       >
-        {/* User email */}
-        <p
-          style={{
-            fontSize: '13px',
-            color: 'var(--text)',
-            margin: 0,
-            overflow: 'hidden',
-            textOverflow: 'ellipsis',
-            whiteSpace: 'nowrap',
-          }}
-          title={email}
-        >
-          {email}
-        </p>
+        {/* User identity */}
+        {name ? (
+          <>
+            <p
+              style={{
+                fontSize: '13px',
+                fontWeight: 600,
+                color: 'var(--text)',
+                margin: 0,
+                overflow: 'hidden',
+                textOverflow: 'ellipsis',
+                whiteSpace: 'nowrap',
+              }}
+              title={name}
+            >
+              {name}
+            </p>
+            <p
+              style={{
+                fontSize: '12px',
+                color: 'var(--dim)',
+                margin: '2px 0 0',
+                overflow: 'hidden',
+                textOverflow: 'ellipsis',
+                whiteSpace: 'nowrap',
+              }}
+              title={email}
+            >
+              {email}
+            </p>
+          </>
+        ) : (
+          <p
+            style={{
+              fontSize: '13px',
+              color: 'var(--text)',
+              margin: 0,
+              overflow: 'hidden',
+              textOverflow: 'ellipsis',
+              whiteSpace: 'nowrap',
+            }}
+            title={email}
+          >
+            {email}
+          </p>
+        )}
 
         {/* Divider */}
         <div
