@@ -169,7 +169,10 @@ Plans:
   2. DATA-05 in REQUIREMENTS.md is annotated to reflect D-01 error-only design decision
   3. /api/waterfall route removed (feature deferred to v2) and API-03 marked as deferred
   4. Phase 7 has a VERIFICATION.md confirming deployment readiness artifacts
-**Plans:** 0/1 plans
+**Plans:** 2 plans
+Plans:
+- [ ] 08-01-PLAN.md — Dead code removal: delete SectionNav, waterfall route/test, playbook dead constants; verify REQUIREMENTS.md annotations
+- [ ] 08-02-PLAN.md — Create Phase 7 VERIFICATION.md with deployment readiness evidence
 
 ## Progress
 
@@ -186,4 +189,4 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 5.1 → 6 → 7 �
 | 5.1 Module Migration Remediation | 6/6 | Complete   | 2026-04-02 |
 | 6. Admin Dashboard | 2/2 | Complete   | 2026-04-02 |
 | 7. Deployment | 1/1 | Complete   | 2026-04-03 |
-| 8. Audit Cleanup | 0/1 | Not started | - |
+| 8. Audit Cleanup | 0/2 | Not started | - |
