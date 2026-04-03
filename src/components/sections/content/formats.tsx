@@ -97,7 +97,7 @@ export default function ContentFormats() {
           rather than a polished take.
         </p>
         <p style={{ fontSize: '13px', color: 'var(--dim)', lineHeight: 1.7, margin: 0 }}>
-          The transformation is authentic. Sharing something you genuinely struggled with builds
+          The transformation is authentic. Sharing something I genuinely struggled with builds
           relatability fast — people trust you more when you admit the hard part, not just the
           result. Vulnerability + a clear before/after = one of the highest-performing short-form
           formats.
@@ -122,9 +122,9 @@ export default function ContentFormats() {
       >
         <ul style={{ paddingLeft: '1.1rem', margin: '0 0 .75rem' }}>
           <li><strong style={{ color: 'var(--text)' }}>Slide 1 — Hook Slide:</strong> Your thumbnail. Bold headline, clear value proposition, visual that creates curiosity. If slide 1 doesn&apos;t stop the scroll, no one sees slide 2.</li>
-          <li><strong style={{ color: 'var(--text)' }}>Slide 2 — Promise Slide:</strong> Tell them exactly what they&apos;ll get. Sets expectations and gives them a reason to keep swiping.</li>
+          <li><strong style={{ color: 'var(--text)' }}>Slide 2 — Promise Slide:</strong> Tell them exactly what they&apos;ll get. &quot;In this carousel you&apos;ll learn X, Y, and Z.&quot; Sets expectations and gives them a reason to keep swiping.</li>
           <li><strong style={{ color: 'var(--text)' }}>Slides 3–8 — Value Slides:</strong> One idea per slide. Clean, simple, scannable. Bold text for main point, supporting text for context. Don&apos;t crowd.</li>
-          <li><strong style={{ color: 'var(--text)' }}>Slide 9 — Summary Slide:</strong> Recap key points. This is for people who swiped to the end first.</li>
+          <li><strong style={{ color: 'var(--text)' }}>Slide 9 — Summary Slide:</strong> Recap key points. This is for people who swiped to the end first — and there are a lot of them.</li>
           <li><strong style={{ color: 'var(--text)' }}>Slide 10 — CTA Slide:</strong> Tell them what to do next. One CTA only — save, share, follow, or link in bio.</li>
         </ul>
         <p style={{ margin: '0 0 .75rem' }}>

@@ -523,12 +523,28 @@ export default function ContentSustainability() {
       <h2 style={{ fontSize: '16px', fontWeight: 600, color: 'var(--text)', margin: '1.75rem 0 8px' }}>
         The weekly batching rhythm
       </h2>
+      <div
+        style={{
+          background: 'var(--surface)',
+          border: '1px solid var(--border)',
+          borderRadius: 'var(--radius-md)',
+          padding: '1rem 1.1rem',
+          marginBottom: '1.25rem',
+          fontSize: '13px',
+          color: 'var(--dim)',
+          lineHeight: 1.7,
+        }}
+      >
+        Protect your maker time. The moment a calendar notification interrupts a creative session,
+        the session is over. Film in the same outfit to batch 2–3 weeks of content at once. Run your
+        week on this system and content stops feeling like a grind.
+      </div>
       <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', marginBottom: '1.25rem' }}>
         {[
           { num: '01', day: 'Monday — Research & Ideation', desc: 'Find your topic, research angles, write rough outlines. This is pure thinking time. No camera, no filming — just building the foundation everything else runs on.' },
           { num: '02', day: 'Tuesday — Writing & Hooks', desc: 'Write your script or talking points. Draft 3 hook versions using the 3-step formula. Lock your structure before you touch the camera.' },
           { num: '03', day: 'Wednesday — Filming', desc: 'All A-roll in one session. Change outfits to batch 2–3 weeks at once. Capture B-roll after you finish talking head. Treat it like a shoot, not a recording.' },
-          { num: '04', day: 'Thursday — Editing & Post', desc: 'Cut, color grade, add music, create thumbnails. Review for pacing — kill every moment that loses energy. Export everything in the same session.' },
+          { num: '04', day: 'Thursday — Editing & Post', desc: 'Cut, color grade, add music, create thumbnails. Review for pacing — kill every moment that loses energy. Export everything in the same session. Or send to your editor if you have one.' },
           { num: '05', day: 'Friday — Publishing & Engagement', desc: 'Schedule or publish. Reply to every comment in the first hour — the algorithm rewards it and so does your audience. Track what lands, kill what doesn\'t.' },
         ].map(({ num, day, desc }) => (
           <div

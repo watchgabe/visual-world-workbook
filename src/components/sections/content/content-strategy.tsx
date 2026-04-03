@@ -162,7 +162,7 @@ export default function ContentStrategy() {
           <li><strong style={{ color: 'var(--text)' }}>Painful Problem:</strong> What specific problem does this content solve?</li>
           <li><strong style={{ color: 'var(--text)' }}>Unique Solution:</strong> How do you solve it differently than everyone else?</li>
           <li><strong style={{ color: 'var(--text)' }}>Contextual Credibility:</strong> Why should they believe you on this specific topic — not general credentials, direct experience with this problem.</li>
-          <li><strong style={{ color: 'var(--text)' }}>Proven Wrapper:</strong> How are you packaging it to get attention?</li>
+          <li><strong style={{ color: 'var(--text)' }}>Proven Wrapper:</strong> How are you packaging it to get attention? (Covered in Part 3.)</li>
         </ul>
       </div>
 

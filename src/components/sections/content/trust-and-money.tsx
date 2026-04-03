@@ -179,7 +179,7 @@ export default function TrustAndMoney() {
       >
         Give away everything you know for free. Charge for the implementation. When people go to
         act on what you&apos;ve taught them, they realize execution is overwhelming. That&apos;s
-        exactly where your offer comes in.
+        exactly where your offer comes in. The knowledge is free. The execution is what you sell.
       </div>
       <div
         style={{
@@ -598,9 +598,9 @@ export default function TrustAndMoney() {
         }}
       >
         <ul style={{ paddingLeft: '1.1rem', margin: 0 }}>
-          <li><strong style={{ color: 'var(--text)' }}>Call Out:</strong> Who is this for? Make it explicit.</li>
+          <li><strong style={{ color: 'var(--text)' }}>Call Out:</strong> Who is this for? Make it explicit. &quot;If you&apos;re a creator who&apos;s been posting for months without results, this is for you.&quot;</li>
           <li><strong style={{ color: 'var(--text)' }}>Credibility:</strong> Why should they listen to you on this specific topic? Contextual credibility — not general credentials.</li>
-          <li><strong style={{ color: 'var(--text)' }}>Compass:</strong> Give them the roadmap. Tell them exactly what they&apos;ll learn in this piece.</li>
+          <li><strong style={{ color: 'var(--text)' }}>Compass:</strong> Give them the roadmap. &quot;In this video I&apos;m going to show you the three things making your content look amateur and exactly how to fix them.&quot; Tell them exactly what they&apos;ll learn in this piece.</li>
           <li><strong style={{ color: 'var(--text)' }}>Core Learning:</strong> Give a valuable insight in the first 60 seconds. If they learn something immediately, they&apos;ll assume the rest is just as valuable.</li>
         </ul>
       </div>
@@ -713,7 +713,7 @@ export default function TrustAndMoney() {
           lineHeight: 1.7,
         }}
       >
-        Every great piece of content follows a structure. The hook grabs attention. The problem sets
+        Every great piece of content follows a structure. The hook (using your 3-step formula) grabs attention. The problem sets
         the stakes. The journey is the messy middle most creators skip. The lesson is your expertise
         made actionable. The CTA tells them what&apos;s next. Build one complete story below.
       </div>

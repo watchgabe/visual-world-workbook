@@ -16,13 +16,13 @@ const SECTION_DEF = MODULE_SECTIONS[MODULE_SLUG]![SECTION_INDEX]
 
 // Calendar day definitions from old HTML
 const CALENDAR_DAYS = [
-  { num: '01', title: 'The Tease', sub: 'Build anticipation. Create curiosity.' },
-  { num: '02', title: 'The Why', sub: 'The honest story behind the decision.' },
-  { num: '03', title: 'The Before/After', sub: 'Show the transformation. Visual proof.' },
-  { num: '04', title: 'The Announcement', sub: 'Official relaunch. New brand. Same mission.' },
-  { num: '05', title: 'Premium Content #1', sub: 'Let the new brand speak for itself. Pure value.' },
-  { num: '06', title: 'Premium Content #2', sub: 'Continue building trust. Show your expertise.' },
-  { num: '07', title: 'Premium Content #3 + Offer CTA', sub: 'End launch week with your strongest content. Close with a clear offer.' },
+  { num: '01', title: 'The Tease', sub: 'Build anticipation. Create curiosity.', hookPh: 'Something\'s changing...', datePh: 'e.g. Mon March 24, 7am' },
+  { num: '02', title: 'The Why', sub: 'The honest story behind the decision.', hookPh: 'Why I\'m rebuilding my brand from scratch', datePh: 'e.g. Tue March 25, 7am' },
+  { num: '03', title: 'The Before/After', sub: 'Show the transformation. Visual proof.', hookPh: 'This is what 30 days of intentional brand work looks like', datePh: 'e.g. Wed March 26, 7am' },
+  { num: '04', title: 'The Announcement', sub: 'Official relaunch. New brand. Same mission.', hookPh: 'Introducing [your brand name] — the new chapter', datePh: 'e.g. Thu March 27, 7am' },
+  { num: '05', title: 'Premium Content #1', sub: 'Let the new brand speak for itself. Pure value.', hookPh: 'Your strongest value-first hook...', datePh: 'e.g. Fri March 28, 7am' },
+  { num: '06', title: 'Premium Content #2', sub: 'Continue building trust. Show your expertise.', hookPh: 'Your second strongest hook...', datePh: 'e.g. Sat March 29, 7am' },
+  { num: '07', title: 'Premium Content #3 + Offer CTA', sub: 'End launch week with your strongest content. Close with a clear offer.', hookPh: 'Your most powerful hook for the week...', datePh: 'e.g. Sun March 30, 7am' },
 ] as const
 
 export default function LaunchGoals() {
@@ -204,7 +204,7 @@ export default function LaunchGoals() {
                       value={watch(hookKey)}
                       onChange={val => setValue(hookKey, val)}
                       getFullResponses={getValues}
-                      placeholder="Your hook..."
+                      placeholder={day.hookPh}
                     />
                     <div style={{ fontSize: '12px', fontWeight: 500, color: 'var(--text)', margin: '8px 0 4px' }}>
                       Schedule for
@@ -215,7 +215,7 @@ export default function LaunchGoals() {
                       value={watch(dateKey)}
                       onChange={val => setValue(dateKey, val)}
                       getFullResponses={getValues}
-                      placeholder="e.g. Mon March 24, 7am"
+                      placeholder={day.datePh}
                     />
                   </div>
                 </div>
@@ -533,7 +533,7 @@ export default function LaunchGoals() {
               flexShrink: 0,
             }}
           >
-            Set My Date (90 Days)
+            Set My Date
           </button>
         </div>
 

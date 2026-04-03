@@ -168,7 +168,7 @@ function ChapterHeader({ num, moduleLabel, title }: { num: string; moduleLabel: 
   )
 }
 
-function EmptyChapter() {
+function EmptyChapter({ moduleNum }: { moduleNum: string }) {
   return (
     <div style={{
       background: 'var(--surface)', border: '1px solid var(--border)',
@@ -176,7 +176,7 @@ function EmptyChapter() {
       marginBottom: '1rem',
     }}>
       <div style={{ fontSize: '13px', color: 'var(--dimmer)', lineHeight: 1.6 }}>
-        No answers yet — open this module to get started.
+        No answers yet — open Module {moduleNum} to get started.
       </div>
     </div>
   )
@@ -227,7 +227,7 @@ function BrandFoundationChapter({ r }: { r: Record<string, unknown> }) {
       </div>
 
       <FieldCard label="Core Mission" value={r.bf_core_mission} highlight />
-      <FieldCard label="Ikigai Center" value={r.bf_ikigai_center} highlight />
+      <FieldCard label="Ikigai" value={r.bf_ikigai_center} highlight />
       <FieldCard label="Avatar Statement" value={r.bf_av1_statement} highlight />
 
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', marginBottom: '10px' }}>
@@ -283,11 +283,6 @@ function VisualWorldChapter({ r }: { r: Record<string, unknown> }) {
 
   return (
     <>
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', marginBottom: '10px' }}>
-        <FieldCard label="What Makes You Different" value={r.vw_ca_different} />
-        <FieldCard label="What You Own" value={r.vw_ca_own} />
-      </div>
-
       {hasColors && (
         <div style={{
           background: 'var(--surface)',
@@ -317,8 +312,13 @@ function VisualWorldChapter({ r }: { r: Record<string, unknown> }) {
       <SectionLabel label="Mood &amp; Setting" />
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '10px', marginBottom: '10px' }}>
         <FieldCard label="Setting"      value={r.vw_shot_e1_location} />
+        <FieldCard label="Environment"  value={r.vw_shot_e1_vibe}     />
         <FieldCard label="Primary Mood" value={r.vw_shot_e2_mood}     />
+      </div>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '10px', marginBottom: '10px' }}>
         <FieldCard label="Lighting"     value={r.vw_shot_e2_lighting} />
+        <FieldCard label="Time of Day"  value={r.vw_shot_e2_time}     />
+        <FieldCard label="Color Grade"  value={r.vw_shot_e3_grade}    />
       </div>
       <FieldCard label="Setting Statement" value={r.vw_shot_e1_statement} highlight />
       <FieldCard label="Mood Statement"    value={r.vw_shot_e2_statement} highlight />
@@ -329,6 +329,11 @@ function VisualWorldChapter({ r }: { r: Record<string, unknown> }) {
         <FieldCard label="Wardrobe"          value={r.vw_shot_e4_wardrobe} />
       </div>
       <FieldCard label="Never On Camera" value={r.vw_shot_e4_never} />
+
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', marginBottom: '10px' }}>
+        <FieldCard label="What Makes You Different" value={r.vw_ca_different} />
+        <FieldCard label="What You Own" value={r.vw_ca_own} />
+      </div>
     </>
   )
 }
@@ -340,7 +345,7 @@ function ContentChapter({ r }: { r: Record<string, unknown> }) {
     <>
       <FieldCard label="The Painful Problem"     value={r.ct_strategy_pain_problem} highlight />
       <FieldCard label="My Unique Solution"      value={r.ct_strategy_unique_sol}   highlight />
-      <FieldCard label="Contextual Credibility"  value={r.ct_strategy_credibility}  highlight />
+      <FieldCard label="My Contextual Credibility"  value={r.ct_strategy_credibility}  highlight />
 
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '10px', marginBottom: '10px' }}>
         <FieldCard label="Primary Platform"  value={r.ct_sustain_primary}    />
@@ -358,12 +363,13 @@ function ContentChapter({ r }: { r: Record<string, unknown> }) {
 
       <SectionLabel label="Story Framework" />
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', marginBottom: '10px' }}>
+        <FieldCard label="Identity (I Am)" value={r.ct_story_idea} />
         <FieldCard label="Hook"    value={r.ct_story_hook}    />
         <FieldCard label="Problem" value={r.ct_story_prob}    />
         <FieldCard label="Journey" value={r.ct_story_journey} />
         <FieldCard label="Lesson"  value={r.ct_story_lesson}  />
+        <FieldCard label="CTA"     value={r.ct_story_cta}     />
       </div>
-      <FieldCard label="CTA" value={r.ct_story_cta} />
 
       <SectionLabel label="Offer Ladder" />
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', marginBottom: '10px' }}>
@@ -374,6 +380,9 @@ function ContentChapter({ r }: { r: Record<string, unknown> }) {
         <FieldCard label="High-Ticket"   value={r.ct_tm_high} />
         <FieldCard label="Conversion Strategy" value={r.ct_tm_conv} />
       </div>
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', marginBottom: '10px' }}>
+        <FieldCard label="CTA Strategy" value={r.ct_tm_cta_strat} />
+      </div>
     </>
   )
 }
@@ -381,6 +390,8 @@ function ContentChapter({ r }: { r: Record<string, unknown> }) {
 function LaunchChapter({ r }: { r: Record<string, unknown> }) {
   const g = (k: string) => getStr(r, k)
   const bioFull = [g('la_bio_line1'), g('la_bio_line2'), g('la_bio_line3'), g('la_bio_line4')].filter(Boolean).join('\n')
+  const offerPrice = [g('la_funnel_offer'), g('la_funnel_price')].filter(Boolean).join(' — ')
+  const formatDelivery = [g('la_lm_format'), g('la_lm_delivery')].filter(Boolean).join(' · ')
 
   return (
     <>
@@ -396,35 +407,44 @@ function LaunchChapter({ r }: { r: Record<string, unknown> }) {
         <FieldCard label="Content Platforms" value={r.la_funnel_platforms}      />
         <FieldCard label="Email Platform"    value={r.la_funnel_email_platform} />
         <FieldCard label="Primary CTA"       value={r.la_funnel_cta}            />
-        <FieldCard label="Core Offer"        value={r.la_funnel_offer}          />
+        <FieldCard label="Core Offer + Price" value={offerPrice || g('la_funnel_offer') || null} />
       </div>
 
       <SectionLabel label="Lead Magnet" />
       <FieldCard label="Lead Magnet Name" value={r.la_lm_name} highlight />
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', marginBottom: '10px' }}>
-        <FieldCard label="The Big Win" value={r.la_lm_big_win} />
-        <FieldCard label="Format"      value={r.la_lm_format}  />
+        <FieldCard label="The One Big Win"    value={r.la_lm_big_win} />
+        <FieldCard label="Format + Delivery"  value={formatDelivery || g('la_lm_format') || null} />
       </div>
+      <FieldCard label="CTA" value={r.la_lm_cta} />
+
+      <SectionLabel label="Launch Videos" />
 
       <SectionLabel label="Video 1 — Your Story" />
       <FieldCard label="Hook" value={r.la_lc_story_hook} highlight />
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', marginBottom: '10px' }}>
         <FieldCard label="Why You Do This" value={r.la_lc_story_why}       />
         <FieldCard label="The Challenge"   value={r.la_lc_story_challenge} />
-        <FieldCard label="Turning Point"   value={r.la_lc_story_turning}   />
+        <FieldCard label="The Turn"        value={r.la_lc_story_turning}   />
         <FieldCard label="What You Learned" value={r.la_lc_story_learned}  />
       </div>
+      <FieldCard label="CTA" value={r.la_lc_story_cta} />
 
-      <SectionLabel label="Video 2 — Positioning" />
-      <FieldCard label="Core Claim"     value={r.la_lc_pos_claim}   highlight />
-      <FieldCard label="Anchor Statement" value={r.la_lc_pos_anchor} highlight />
+      <SectionLabel label="Video 2 — Positioning Deep Dive" />
+      <FieldCard label="Core Claim"       value={r.la_lc_pos_claim}   highlight />
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', marginBottom: '10px' }}>
+        <FieldCard label="Core Belief"      value={r.la_lc_pos_belief} />
+        <FieldCard label="Anchor Statement" value={r.la_lc_pos_anchor} />
+      </div>
 
       <SectionLabel label="90-Day Goals" />
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', marginBottom: '10px' }}>
-        <FieldCard label="Followers Goal"        value={r.la_goal_followers} />
-        <FieldCard label="Email Subscribers"     value={r.la_goal_email}     />
-        <FieldCard label="Revenue Goal"          value={r.la_goal_revenue}   />
-        <FieldCard label="Review Date"           value={r.la_goal_review_date} />
+        <FieldCard label="Followers Goal"    value={r.la_goal_followers}   />
+        <FieldCard label="Email Subscribers" value={r.la_goal_email}       />
+        <FieldCard label="Revenue Goal"      value={r.la_goal_revenue}     />
+        <FieldCard label="Review Date"       value={r.la_goal_review_date} />
+        <FieldCard label="Audience Goal"     value={r.la_goal_audience}    />
+        <FieldCard label="System Goal"       value={r.la_goal_system}      />
       </div>
       <FieldCard label="Content Goal" value={r.la_goal_content} highlight />
       <FieldCard label="Offer Goal"   value={r.la_goal_offer}   highlight />
@@ -533,7 +553,14 @@ export default function PlaybookPage() {
           display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)',
           columnGap: '1rem', marginTop: '1.25rem', marginBottom: '3rem',
         }}>
-          {chapters.map(c => (
+          {chapters.map(c => {
+            const navLabels: Record<string, string> = {
+              'brand-foundation': 'Foundation',
+              'visual-world': 'Visuals',
+              'content': 'Content',
+              'launch': 'Launch',
+            }
+            return (
             <a
               key={c.slug}
               href={`#ch${c.num}`}
@@ -545,12 +572,12 @@ export default function PlaybookPage() {
                 borderBottom: '1.5px solid var(--dimmer)',
               }}
             >
-              {c.title.split(' ')[0]}
+              {navLabels[c.slug] || c.title}
               <span style={{ color: 'var(--orange)', fontSize: '11px', flexShrink: 0, marginLeft: '4px' }}>
                 &#8599;
               </span>
             </a>
-          ))}
+          )})}
         </div>
       </div>
 
@@ -561,22 +588,22 @@ export default function PlaybookPage() {
           {c.slug === 'brand-foundation' && (
             Object.keys(c.data).length > 0
               ? <BrandFoundationChapter r={c.data} />
-              : <EmptyChapter />
+              : <EmptyChapter moduleNum={c.num} />
           )}
           {c.slug === 'visual-world' && (
             Object.keys(c.data).length > 0
               ? <VisualWorldChapter r={c.data} />
-              : <EmptyChapter />
+              : <EmptyChapter moduleNum={c.num} />
           )}
           {c.slug === 'content' && (
             Object.keys(c.data).length > 0
               ? <ContentChapter r={c.data} />
-              : <EmptyChapter />
+              : <EmptyChapter moduleNum={c.num} />
           )}
           {c.slug === 'launch' && (
             Object.keys(c.data).length > 0
               ? <LaunchChapter r={c.data} />
-              : <EmptyChapter />
+              : <EmptyChapter moduleNum={c.num} />
           )}
         </div>
       ))}
@@ -627,7 +654,7 @@ export default function PlaybookPage() {
           cursor: 'pointer', fontFamily: 'var(--font)', marginTop: '2rem',
         }}
       >
-        Print Playbook
+        Print / Save as PDF
       </button>
     </div>
   )
