@@ -143,7 +143,7 @@ Plans:
 **Plans:** 1/2 plans executed
 Plans:
 - [x] 06-01-PLAN.md — Infrastructure: service-role client, middleware admin gate, labels module (200+ entries), API routes (delete-user, circle-config), blp_config schema
-- [ ] 06-02-PLAN.md — Admin dashboard UI: standalone layout, server component data fetch, stat cards, user table with expandable rows, answer grid, Circle integration, delete
+- [x] 06-02-PLAN.md — Admin dashboard UI: standalone layout, server component data fetch, stat cards, user table with expandable rows, answer grid, Circle integration, delete
 **UI hint**: yes
 
 ### Phase 7: Deployment
