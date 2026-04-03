@@ -60,11 +60,11 @@ Requirements for initial release. Each maps to roadmap phases.
 
 ### Admin
 
-- [ ] **ADMIN-01**: Server-side protected admin route (role-based, not client-side password)
-- [ ] **ADMIN-02**: Admin can view list of all users
-- [ ] **ADMIN-03**: Admin can view any user's progress across all modules
-- [ ] **ADMIN-04**: Admin can trigger Circle.so badge award for a user
-- [ ] **ADMIN-05**: Admin can delete a user account
+- [x] **ADMIN-01**: Server-side protected admin route (role-based, not client-side password)
+- [x] **ADMIN-02**: Admin can view list of all users
+- [x] **ADMIN-03**: Admin can view any user's progress across all modules
+- [x] **ADMIN-04**: Admin can trigger Circle.so badge award for a user
+- [x] **ADMIN-05**: Admin can delete a user account
 
 ### Deployment
 
@@ -148,11 +148,11 @@ Which phases cover which requirements. Updated during roadmap creation.
 | API-01 | Phase 4 | Complete |
 | API-02 | Phase 4 | Complete |
 | API-03 | Phase 4 | Complete |
-| ADMIN-01 | Phase 6 | Pending |
-| ADMIN-02 | Phase 6 | Pending |
-| ADMIN-03 | Phase 6 | Pending |
-| ADMIN-04 | Phase 6 | Pending |
-| ADMIN-05 | Phase 6 | Pending |
+| ADMIN-01 | Phase 6 | Complete |
+| ADMIN-02 | Phase 6 | Complete |
+| ADMIN-03 | Phase 6 | Complete |
+| ADMIN-04 | Phase 6 | Complete |
+| ADMIN-05 | Phase 6 | Complete |
 | DEPLOY-01 | Phase 7 | Pending |
 | DEPLOY-02 | Phase 1 | Complete |
 | DEPLOY-03 | Phase 7 | Pending |
