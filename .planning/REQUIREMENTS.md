@@ -21,7 +21,7 @@ Requirements for initial release. Each maps to roadmap phases.
 - [x] **DATA-02**: Well-structured database schema (new tables/columns designed for scalability)
 - [x] **DATA-03**: Auto-save hook with debounce used by all form fields across all modules
 - [x] **DATA-04**: Auto-save uses AbortController to prevent race condition overwrites
-- [x] **DATA-05**: Save error indicator visible to user on blur (error-only by design — D-01)
+- [x] **DATA-05**: Save error indicator visible to user on blur (error-only by design — D-01; syncing/saved states intentionally omitted per research decision D-01 to avoid distracting flicker UX)
 - [x] **DATA-06**: React Context provides user state, progress state, and theme state
 
 ### Navigation & Layout
@@ -56,7 +56,7 @@ Requirements for initial release. Each maps to roadmap phases.
 
 - [x] **API-01**: Next.js API route wrapping claude-proxy edge function (API keys server-side)
 - [x] **API-02**: Next.js API route wrapping circle-proxy edge function (API keys server-side)
-- [x] **API-03**: Next.js API route wrapping waterfall-analyzer edge function (API keys server-side)
+- [ ] **API-03**: ~~Next.js API route wrapping waterfall-analyzer edge function (API keys server-side)~~ — DEFERRED to v2 (waterfall feature was never fully built in old app; route removed in Phase 8)
 
 ### Admin
 
@@ -147,7 +147,7 @@ Which phases cover which requirements. Updated during roadmap creation.
 | MOD-07 | Phase 5 | Complete |
 | API-01 | Phase 4 | Complete |
 | API-02 | Phase 4 | Complete |
-| API-03 | Phase 4 | Complete |
+| API-03 | Phase 8 | Deferred to v2 |
 | ADMIN-01 | Phase 6 | Complete |
 | ADMIN-02 | Phase 6 | Complete |
 | ADMIN-03 | Phase 6 | Complete |
@@ -159,6 +159,8 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 **Coverage:**
 - v1 requirements: 30 total
+- Satisfied: 29
+- Deferred to v2: 1 (API-03 — waterfall feature never completed in old app)
 - Mapped to phases: 30
 - Unmapped: 0 ✓
 

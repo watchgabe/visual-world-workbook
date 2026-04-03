@@ -20,6 +20,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [ ] **Phase 5.1: Module Migration Remediation** - Restore missing features, content, and AI integrations for true 1:1 feature parity (INSERTED)
 - [ ] **Phase 6: Admin Dashboard** - Server-side protected admin with user list, progress viewer, badge award, and delete
 - [x] **Phase 7: Deployment** - Vercel environment variables, Supabase production URL config, and production verification (completed 2026-04-03)
+- [ ] **Phase 8: Audit Cleanup** - Remove dead code, align DATA-05 annotation, remove unwired waterfall route, verify deployment phase (gap closure)
 
 ## Phase Details
 
@@ -158,10 +159,22 @@ Plans:
 Plans:
 - [x] 07-01-PLAN.md — Production readiness check, Vercel deployment, Supabase redirect URL config
 
+### Phase 8: Audit Cleanup
+**Goal**: Close all gaps identified in the v1.0 milestone audit — remove dead code, align DATA-05 requirement annotation, remove unwired waterfall route, and verify deployment phase
+**Depends on**: Phase 7
+**Requirements**: API-03, DATA-05, DEPLOY-01, DEPLOY-03
+**Gap Closure**: Closes gaps from v1.0-MILESTONE-AUDIT.md
+**Success Criteria** (what must be TRUE):
+  1. No orphaned components or dead code in src/ (SectionNav removed, playbook dead constants removed)
+  2. DATA-05 in REQUIREMENTS.md is annotated to reflect D-01 error-only design decision
+  3. /api/waterfall route removed (feature deferred to v2) and API-03 marked as deferred
+  4. Phase 7 has a VERIFICATION.md confirming deployment readiness artifacts
+**Plans:** 0/1 plans
+
 ## Progress
 
 **Execution Order:**
-Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 5.1 → 6 → 7
+Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 5.1 → 6 → 7 → 8
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
@@ -170,6 +183,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 5.1 → 6 → 7
 | 3. Component Library & Data Hooks | 3/3 | Complete   | 2026-04-02 |
 | 4. API Security | 1/1 | Complete   | 2026-04-02 |
 | 5. Module Migration | 6/6 | Complete   | 2026-04-02 |
-| 5.1 Module Migration Remediation | 0/6 | Not started | - |
-| 6. Admin Dashboard | 1/2 | In Progress|  |
+| 5.1 Module Migration Remediation | 6/6 | Complete   | 2026-04-02 |
+| 6. Admin Dashboard | 2/2 | Complete   | 2026-04-02 |
 | 7. Deployment | 1/1 | Complete   | 2026-04-03 |
+| 8. Audit Cleanup | 0/1 | Not started | - |
