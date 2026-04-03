@@ -140,7 +140,10 @@ Plans:
   3. Admin can click any user and view their completion status for each module and section
   4. Admin can trigger a Circle.so badge award for a user and receive confirmation
   5. Admin can delete a user account and the user no longer appears in the list
-**Plans**: TBD
+**Plans:** 2 plans
+Plans:
+- [ ] 06-01-PLAN.md — Infrastructure: service-role client, middleware admin gate, labels module (200+ entries), API routes (delete-user, circle-config), blp_config schema
+- [ ] 06-02-PLAN.md — Admin dashboard UI: standalone layout, server component data fetch, stat cards, user table with expandable rows, answer grid, Circle integration, delete
 **UI hint**: yes
 
 ### Phase 7: Deployment
@@ -166,5 +169,5 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 5.1 → 6 → 7
 | 4. API Security | 1/1 | Complete   | 2026-04-02 |
 | 5. Module Migration | 6/6 | Complete   | 2026-04-02 |
 | 5.1 Module Migration Remediation | 0/6 | Not started | - |
-| 6. Admin Dashboard | 0/TBD | Not started | - |
+| 6. Admin Dashboard | 0/2 | Not started | - |
 | 7. Deployment | 0/TBD | Not started | - |
