@@ -267,11 +267,12 @@ export default function WelcomePage() {
         style={{
           fontSize: '18px',
           fontWeight: 700,
-          lineHeight: 1.5,
+          lineHeight: 1.75,
+          letterSpacing: '0.04em',
           color: 'var(--text)',
           marginBottom: '1.5rem',
           fontFamily: 'var(--font)',
-          textTransform: 'none',
+          textTransform: 'uppercase',
         }}
       >
         &#8220;Building a premium personal brand is not about being perfect. It&#8217;s about showing up intentionally. Consistently. With a clear point of view and a genuine desire to help the people you serve. The creators who win are the most consistent. Your personal brand already exists &#8212; we just need to add some clarity and systems to amplify it. Let&#8217;s get after it.&#8221;
@@ -349,7 +350,7 @@ export default function WelcomePage() {
       </div>
 
       {/* Begin Module 01 CTA */}
-      <div style={{ textAlign: 'center', marginTop: '1rem' }}>
+      <div style={{ textAlign: 'right', marginTop: '1rem' }}>
         <Link
           href="/modules/brand-foundation"
           style={{

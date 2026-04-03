@@ -213,6 +213,9 @@ export default function AdminDashboard({
                   Email
                 </th>
                 <th className="text-[10.5px] font-semibold uppercase tracking-[.07em] text-[var(--dimmer)] text-left px-3 py-2 border-b border-[var(--border)]">
+                  Instagram
+                </th>
+                <th className="text-[10.5px] font-semibold uppercase tracking-[.07em] text-[var(--dimmer)] text-left px-3 py-2 border-b border-[var(--border)]">
                   Modules
                 </th>
                 <th className="text-[10.5px] font-semibold uppercase tracking-[.07em] text-[var(--dimmer)] text-left px-3 py-2 border-b border-[var(--border)]">
@@ -251,6 +254,20 @@ export default function AdminDashboard({
                       </td>
                       <td className="px-3 py-2.5 border-b border-[var(--border)] align-middle text-[13px]">
                         <div className="text-[11.5px] text-[var(--dimmer)]">{user.email ?? '—'}</div>
+                      </td>
+                      <td className="px-3 py-2.5 border-b border-[var(--border)] align-middle text-[11.5px]" onClick={e => e.stopPropagation()}>
+                        {(user.user_metadata?.ig_handle as string) ? (
+                          <a
+                            href={`https://instagram.com/${(user.user_metadata.ig_handle as string).replace(/^@/, '')}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-[var(--orange)] hover:underline"
+                          >
+                            {user.user_metadata.ig_handle as string}
+                          </a>
+                        ) : (
+                          <span className="text-[var(--dimmer)]">—</span>
+                        )}
                       </td>
                       <td className="px-3 py-2.5 border-b border-[var(--border)] align-middle text-[13px]">
                         <div className="flex gap-1 flex-wrap">
@@ -326,7 +343,7 @@ export default function AdminDashboard({
                     {isExpanded && (
                       <tr key={`detail-${user.id}`}>
                         <td
-                          colSpan={7}
+                          colSpan={8}
                           className="p-0 border-b-2 border-[var(--orange-border)] bg-[var(--card)]"
                         >
                           <div className="p-6 px-8">

@@ -22,29 +22,10 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
   const { user, signOut } = useAuth()
   const { moduleProgress, sectionProgress, overallProgress } = useProgress()
   const [modalOpen, setModalOpen] = useState(false)
-  const [expandedModules, setExpandedModules] = useState<Set<string>>(new Set())
-  const [collapsedModules, setCollapsedModules] = useState<Set<string>>(new Set())
+  const [expandedSlug, setExpandedSlug] = useState<string | null>(null)
 
   const toggleExpand = (slug: string) => {
-    setExpandedModules(prev => {
-      const next = new Set(prev)
-      if (next.has(slug)) {
-        next.delete(slug)
-      } else {
-        next.add(slug)
-      }
-      return next
-    })
-    // If it's the active module, track explicit collapse
-    setCollapsedModules(prev => {
-      const next = new Set(prev)
-      if (next.has(slug)) {
-        next.delete(slug)
-      } else {
-        next.add(slug)
-      }
-      return next
-    })
+    setExpandedSlug(prev => prev === slug ? null : slug)
   }
 
   return (
@@ -126,7 +107,7 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
           const isActive = pathname === href || pathname.startsWith(`${href}/`)
           const sections = MODULE_SECTIONS[mod.slug as ModuleSlug]
           const hasSections = sections && sections.length > 0
-          const isExpanded = collapsedModules.has(mod.slug) ? false : (isActive || expandedModules.has(mod.slug))
+          const isExpanded = expandedSlug === mod.slug || (isActive && expandedSlug === null)
           const progress = moduleProgress[mod.slug] ?? 0
 
           return (
@@ -342,74 +323,119 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
         })}
       </nav>
 
-      {/* Sidebar footer — progress bar + user trigger + theme toggle */}
+      {/* Sidebar footer */}
       <div
         style={{
-          padding: '1rem 1.25rem',
           borderTop: '1px solid var(--border)',
           flexShrink: 0,
-          display: 'flex',
-          alignItems: 'center',
-          gap: '10px',
         }}
       >
-        <div style={{ flex: 1 }}>
-          <ProgressBar percent={overallProgress} />
-        </div>
-
+        {/* User card row */}
         {user && (
-          <div style={{ position: 'relative' }}>
-            <button
-              type="button"
-              onClick={() => setModalOpen(prev => !prev)}
-              aria-label="Account options"
-              aria-expanded={modalOpen}
+          <button
+            type="button"
+            onClick={() => setModalOpen(prev => !prev)}
+            aria-label="Account options"
+            aria-expanded={modalOpen}
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '12px',
+              width: '100%',
+              padding: '1rem 1.25rem',
+              background: 'transparent',
+              border: 'none',
+              borderBottom: '1px solid var(--border)',
+              cursor: 'pointer',
+              textAlign: 'left',
+              fontFamily: 'var(--font)',
+              transition: 'background .12s',
+            }}
+            onMouseEnter={e => {
+              e.currentTarget.style.background = 'var(--card)'
+            }}
+            onMouseLeave={e => {
+              e.currentTarget.style.background = 'transparent'
+            }}
+          >
+            <div
               style={{
-                width: '28px',
-                height: '28px',
+                width: '40px',
+                height: '40px',
                 borderRadius: '50%',
-                background: 'var(--border2)',
-                color: 'var(--dim)',
+                background: 'var(--bg)',
+                border: '2px solid var(--orange)',
+                color: 'var(--orange)',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                fontSize: '11px',
+                fontSize: '15px',
                 fontWeight: 700,
-                cursor: 'pointer',
-                border: 'none',
-                fontFamily: 'var(--font)',
-                transition: 'background .12s, color .12s',
                 flexShrink: 0,
-              }}
-              onMouseEnter={e => {
-                e.currentTarget.style.background = 'var(--orange-tint)'
-                e.currentTarget.style.color = 'var(--orange)'
-              }}
-              onMouseLeave={e => {
-                e.currentTarget.style.background = 'var(--border2)'
-                e.currentTarget.style.color = 'var(--dim)'
               }}
             >
               {user.user_metadata?.full_name
-                ? user.user_metadata.full_name[0].toUpperCase()
+                ? (user.user_metadata.full_name as string)[0].toUpperCase()
                 : user.email
                   ? user.email[0].toUpperCase()
                   : '?'}
-            </button>
-
-            {modalOpen && (
-              <UserModal
-                email={user.email ?? ''}
-                name={user.user_metadata?.full_name ?? undefined}
-                onSignOut={signOut}
-                onClose={() => setModalOpen(false)}
-              />
-            )}
-          </div>
+            </div>
+            <div style={{ flex: 1, minWidth: 0 }}>
+              {user.user_metadata?.full_name && (
+                <div
+                  style={{
+                    fontSize: '13px',
+                    fontWeight: 600,
+                    color: 'var(--text)',
+                    overflow: 'hidden',
+                    textOverflow: 'ellipsis',
+                    whiteSpace: 'nowrap',
+                  }}
+                >
+                  {user.user_metadata.full_name as string}
+                </div>
+              )}
+              <div
+                style={{
+                  fontSize: '11px',
+                  color: 'var(--dimmer)',
+                  overflow: 'hidden',
+                  textOverflow: 'ellipsis',
+                  whiteSpace: 'nowrap',
+                }}
+              >
+                {user.email}
+              </div>
+            </div>
+          </button>
         )}
 
-        <ThemeToggle />
+        {/* Progress bar + theme toggle row */}
+        <div
+          style={{
+            padding: '1rem 1.25rem',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '10px',
+          }}
+        >
+          <div style={{ flex: 1 }}>
+            <ProgressBar percent={overallProgress} />
+          </div>
+          <ThemeToggle />
+        </div>
       </div>
+
+      {/* User modal — centered on screen */}
+      {modalOpen && user && (
+        <UserModal
+          email={user.email ?? ''}
+          name={user.user_metadata?.full_name as string | undefined}
+          handle={user.user_metadata?.ig_handle as string | undefined}
+          onSignOut={signOut}
+          onClose={() => setModalOpen(false)}
+        />
+      )}
     </aside>
   )
 }
