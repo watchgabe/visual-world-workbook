@@ -14,6 +14,11 @@ export interface BlpResponse {
   updated_at: string
 }
 
+export interface BlpConfig {
+  key: string
+  value: string
+}
+
 export interface Database {
   public: {
     Tables: {
@@ -21,6 +26,12 @@ export interface Database {
         Row: BlpResponse
         Insert: Omit<BlpResponse, 'id' | 'updated_at'> & { id?: string; updated_at?: string }
         Update: Partial<Omit<BlpResponse, 'id'>>
+        Relationships: []
+      }
+      blp_config: {
+        Row: BlpConfig
+        Insert: BlpConfig
+        Update: Partial<BlpConfig>
         Relationships: []
       }
     }

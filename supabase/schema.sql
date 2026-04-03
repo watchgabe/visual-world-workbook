@@ -43,3 +43,11 @@ $$ language plpgsql;
 create trigger blp_responses_updated_at
   before update on public.blp_responses
   for each row execute function public.set_updated_at();
+
+-- Circle config persistence (Phase 6, D-05) — admin-only via service role
+create table if not exists public.blp_config (
+  key   text primary key,
+  value text not null
+);
+alter table public.blp_config enable row level security;
+-- No user-facing RLS policies — all access via service role in API routes
