@@ -28,7 +28,7 @@ See: .planning/PROJECT.md (updated 2026-04-01)
 Phase: 07 (deployment) — EXECUTING
 Plan: 1 of 1
 Status: Phase complete — ready for verification
-Last activity: 2026-04-03
+Last activity: 2026-04-03 - Completed quick task 260403-esz: Add optional name field to login form
 
 Progress: [░░░░░░░░░░] 0%
 
@@ -153,6 +153,12 @@ None yet.
 
 - Phase 5 Data layer: `vww_progress` schema must be reviewed before auto-save hook is finalized; existing table structure may not support new unified pattern without migration
 - Phase 3: AbortController + react-hook-form watch() integration may need a brief spike during implementation
+
+### Quick Tasks Completed
+
+| # | Description | Date | Commit | Directory |
+|---|-------------|------|--------|-----------|
+| 260403-esz | Add optional name field to login form, pass full_name via signInWithOtp data to user_metadata, update Sidebar and UserModal to display name | 2026-04-03 | 0ac74b4 | [260403-esz-add-optional-name-field-to-login-form-pa](./quick/260403-esz-add-optional-name-field-to-login-form-pa/) |
 
 ## Session Continuity
 
