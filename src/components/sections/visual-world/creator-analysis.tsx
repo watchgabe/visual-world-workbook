@@ -330,17 +330,18 @@ export default function CreatorAnalysis() {
       {/* Instruction box */}
       <div
         style={{
-          background: 'var(--card)',
-          border: '1px solid var(--border)',
-          borderRadius: 'var(--radius-lg)',
-          padding: '12px 16px',
-          marginBottom: '1.5rem',
-          fontSize: '13px',
-          color: 'var(--dim)',
+          borderLeft: '3px solid var(--orange)',
+          padding: '11px 15px',
+          background: 'var(--orange-tint)',
+          marginBottom: '1.1rem',
+          borderRadius: '0 var(--radius-md) var(--radius-md) 0',
+          fontSize: '13.5px',
+          color: 'var(--orange-dark)',
           lineHeight: 1.7,
+          fontWeight: 500,
         }}
       >
-        The goal is to find <strong style={{ color: 'var(--text)' }}>your gap</strong>. After
+        The goal is to find <strong>your gap</strong>. After
         studying premium creators, you&apos;ll have a clear picture of what&apos;s already being done —
         and where the opportunity is for you to be different.
       </div>
