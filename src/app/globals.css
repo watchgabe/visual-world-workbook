@@ -182,3 +182,14 @@ body::before {
     page-break-inside: avoid;
   }
 }
+
+/* ─── MOOD BOARD PANELS ─── */
+@media (max-width: 600px) {
+  .mb-panels-grid {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+.mb-thumb-wrap:hover .mb-del-btn {
+  display: flex !important;
+}

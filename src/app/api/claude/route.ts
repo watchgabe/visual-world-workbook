@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
 
-const MAX_BODY_CHARS = 50_000
+const MAX_BODY_CHARS = 10_000_000
 
 export async function POST(request: NextRequest) {
   try {

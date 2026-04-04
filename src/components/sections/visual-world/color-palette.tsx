@@ -36,6 +36,31 @@ export default function ColorPalette() {
   const [extractError, setExtractError] = useState<string | null>(null)
   const [extractDragOver, setExtractDragOver] = useState(false)
   const extractFileInputRef = useRef<HTMLInputElement | null>(null)
+  const paletteFrameworkRef = useRef<HTMLDivElement | null>(null)
+
+  const CP_PHOTO_KEY = 'vww-cp-photo'
+
+  // ── Load extract photo from localStorage on mount ────
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem(CP_PHOTO_KEY)
+      if (saved) {
+        const d = JSON.parse(saved)
+        if (d.base64 && d.mime && d.preview) setExtractPhoto(d)
+      }
+    } catch {}
+  }, [])
+
+  // ── Save extract photo to localStorage on change ─────
+  useEffect(() => {
+    try {
+      if (extractPhoto) {
+        localStorage.setItem(CP_PHOTO_KEY, JSON.stringify(extractPhoto))
+      } else {
+        localStorage.removeItem(CP_PHOTO_KEY)
+      }
+    } catch {}
+  }, [extractPhoto])
 
   // ── Load from Supabase on mount ───────────────────────
   useEffect(() => {
@@ -136,6 +161,9 @@ export default function ColorPalette() {
     if (palette.name) {
       ;(setValue as (k: string, v: string) => void)('vw_color_name', palette.name)
     }
+    setTimeout(() => {
+      paletteFrameworkRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    }, 100)
   }
 
   const responses = watch()
@@ -160,19 +188,17 @@ export default function ColorPalette() {
       >
         Workshop 3
       </div>
-      <h2
+      <h1
         style={{
-          fontFamily: 'var(--font-num)',
-          fontSize: 'clamp(1.6rem, 3vw, 2.2rem)',
-          fontWeight: 900,
-          letterSpacing: '-.01em',
-          lineHeight: 1.1,
-          textTransform: 'uppercase',
+          fontSize: '26px',
+          fontWeight: 700,
+          letterSpacing: '-0.4px',
+          lineHeight: 1.2,
           marginBottom: '1rem',
         }}
       >
         Define Your Color Palette
-      </h2>
+      </h1>
       <p style={{ fontSize: '14px', color: 'var(--dim)', lineHeight: 1.8, marginBottom: '1.25rem' }}>
         Color is emotion. Before someone reads a single word of your content, before they hear your
         voice — they feel your color palette. Your colors communicate who you are, who you&apos;re for,
@@ -365,8 +391,21 @@ export default function ColorPalette() {
         </div>
       )}
 
+      {/* Your Color Palette heading */}
+      <h2
+        style={{
+          fontSize: '16px',
+          fontWeight: 600,
+          color: 'var(--text)',
+          margin: '1.75rem 0 8px',
+        }}
+      >
+        Your Color Palette
+      </h2>
+
       {/* Color Palette Framework */}
       <div
+        ref={paletteFrameworkRef}
         style={{
           background: 'var(--card)',
           border: '1px solid var(--border)',

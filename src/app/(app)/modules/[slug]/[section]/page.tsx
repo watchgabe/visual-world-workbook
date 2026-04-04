@@ -50,7 +50,7 @@ const SECTION_REGISTRY: Record<string, React.ComponentType<any>> = {
   'visual-world/color-palette':    dynamic(() => import('@/components/sections/visual-world/color-palette'), { loading: () => <SectionSkeleton /> }),
   'visual-world/typography':       dynamic(() => import('@/components/sections/visual-world/typography'), { loading: () => <SectionSkeleton /> }),
   'visual-world/shot-system':      dynamic(() => import('@/components/sections/visual-world/shot-system'), { loading: () => <SectionSkeleton /> }),
-  'visual-world/visual-world-doc': dynamic(() => import('@/components/sections/visual-world/visual-world-doc'), { loading: () => <SectionSkeleton /> }),
+
 
   // Content sections — Plan 04
   'content/overview':          dynamic(() => import('@/components/sections/content/overview'), { loading: () => <SectionSkeleton /> }),

@@ -190,7 +190,6 @@ export const MODULE_SECTIONS: Partial<Record<ModuleSlug, SectionDef[]>> = {
       { key: 'vw_shot_e4_wardrobe',    required: false },
       { key: 'vw_shot_e4_never',       required: false },
     ]},
-    { slug: 'visual-world-doc', name: 'Visual World Doc', fields: [] },
   ],
   'content': [
     { slug: 'overview',          name: 'Overview',          fields: [] },
