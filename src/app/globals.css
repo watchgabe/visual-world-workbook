@@ -88,6 +88,25 @@ body::before {
   }
 }
 
+/* ─── iOS: prevent zoom on input focus (font-size must be >= 16px) ─── */
+@media (max-width: 768px) {
+  input, textarea, select {
+    font-size: 16px !important;
+  }
+}
+
+/* ─── Playbook: single column on mobile ─── */
+@media (max-width: 768px) {
+  .playbook-grid-responsive {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+/* ─── Loading spinner ─── */
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
 /* ─── STORY PART WATERMARK NUMBER ─── */
 .story-part::after {
   content: attr(data-n);

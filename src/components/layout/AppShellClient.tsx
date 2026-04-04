@@ -1,6 +1,7 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
+import { usePathname } from 'next/navigation'
 import { Sidebar } from './Sidebar'
 import { MobileTopbar } from './MobileTopbar'
 
@@ -10,6 +11,13 @@ interface AppShellClientProps {
 
 export function AppShellClient({ children }: AppShellClientProps) {
   const [sidebarOpen, setSidebarOpen] = useState(false)
+  const mainRef = useRef<HTMLDivElement>(null)
+  const pathname = usePathname()
+
+  // Scroll to top of main content container on route change
+  useEffect(() => {
+    mainRef.current?.scrollTo(0, 0)
+  }, [pathname])
 
   return (
     <>
@@ -33,11 +41,12 @@ export function AppShellClient({ children }: AppShellClientProps) {
       />
 
       <main
+        ref={mainRef}
         className="ml-0 md:ml-[280px] min-h-screen overflow-y-auto"
         style={{ height: '100vh' }}
       >
-        {/* Mobile: add top padding for mobile topbar. Desktop: no topbar, no padding needed */}
-        <div className="pt-[var(--topbar-h)] md:pt-0 p-6">
+        {/* Mobile: top padding clears topbar + small gap. Desktop: standard padding, no topbar. */}
+        <div className="pt-[calc(var(--topbar-h)+0.75rem)] pb-4 px-3 md:pt-6 md:pb-6 md:px-6">
           {children}
         </div>
       </main>
