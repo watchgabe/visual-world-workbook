@@ -40,7 +40,6 @@ export default function TrustAndMoney() {
         if (cancelled || !data?.responses) return
         const saved = data.responses as Record<string, string>
         Object.entries(saved).forEach(([key, val]) => {
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           if (typeof val === 'string') (setValue as (k: string, v: string) => void)(key, val)
         })
       })

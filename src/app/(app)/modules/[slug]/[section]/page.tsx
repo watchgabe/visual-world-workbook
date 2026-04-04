@@ -1,5 +1,3 @@
-// dynamic is imported when Plans 02-05 populate the registry below.
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import dynamic from 'next/dynamic'
 import { notFound } from 'next/navigation'
 import { MODULES, MODULE_SECTIONS } from '@/lib/modules'
