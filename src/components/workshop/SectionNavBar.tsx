@@ -1,7 +1,7 @@
 'use client'
 
 import Link from 'next/link'
-import { MODULE_SECTIONS } from '@/lib/modules'
+import { MODULES, MODULE_SECTIONS } from '@/lib/modules'
 import type { ModuleSlug } from '@/types/database'
 
 interface SectionNavBarProps {
@@ -21,6 +21,9 @@ export function SectionNavBar({ moduleSlug, currentSectionSlug }: SectionNavBarP
 
   const prevSection = currentIndex > 0 ? workshopSections[currentIndex - 1] : null
   const nextSection = currentIndex < workshopSections.length - 1 ? workshopSections[currentIndex + 1] : null
+  const moduleIndex = MODULES.findIndex(m => m.slug === moduleSlug)
+  const nextModule = moduleIndex !== -1 ? MODULES[moduleIndex + 1] : null
+  const finishHref = nextModule ? `/modules/${nextModule.slug}` : `/modules/playbook`
   const overviewHref = `/modules/${moduleSlug}`
   const sectionLabel = `${currentIndex + 1}/${workshopSections.length}`
 
@@ -106,7 +109,7 @@ export function SectionNavBar({ moduleSlug, currentSectionSlug }: SectionNavBarP
         </Link>
       ) : (
         <Link
-          href={overviewHref}
+          href={finishHref}
           style={{
             padding: '9px 18px',
             borderRadius: 'var(--radius-md)',
@@ -120,7 +123,7 @@ export function SectionNavBar({ moduleSlug, currentSectionSlug }: SectionNavBarP
             textDecoration: 'none',
           }}
         >
-          Complete &#10003;
+          Finish Module &#10003;
         </Link>
       )}
     </div>

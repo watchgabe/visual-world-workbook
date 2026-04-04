@@ -94,11 +94,10 @@ export function UserModal({ email, name: initialName, handle: initialHandle, onS
           role="dialog"
           aria-modal="true"
           aria-label="Your account"
-          className="w-full sm:max-w-[560px] sm:my-auto sm:rounded-[var(--radius-lg)]"
+          className="w-full min-h-dvh sm:min-h-0 sm:max-w-[560px] sm:my-auto sm:rounded-[var(--radius-lg)] overflow-y-auto"
           style={{
             background: 'var(--surface)',
             border: '1px solid var(--border2)',
-            minHeight: '100dvh',
           }}
         >
           {/* Header */}

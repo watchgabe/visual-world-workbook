@@ -18,7 +18,7 @@ export default function BrandJourney() {
   const [isGenerating, setIsGenerating] = useState<string | null>(null)
   const { watch, setValue, getValues } = useForm({
     defaultValues: Object.fromEntries(
-      SECTION_DEF.fields.map(f => [f.key, ''])
+      SECTION_DEF.fields.map((f) => [f.key, '']),
     ),
   })
 
@@ -33,14 +33,19 @@ export default function BrandJourney() {
       .eq('user_id', user.id)
       .eq('module_slug', MODULE_SLUG)
       .maybeSingle()
-      .then(({ data }: { data: { responses: Record<string, string> } | null }) => {
-        if (cancelled || !data?.responses) return
-        const saved = data.responses as Record<string, string>
-        Object.entries(saved).forEach(([key, val]) => {
-          if (typeof val === "string") (setValue as (k: string, v: string) => void)(key, val)
-        })
-      })
-    return () => { cancelled = true }
+      .then(
+        ({ data }: { data: { responses: Record<string, string> } | null }) => {
+          if (cancelled || !data?.responses) return
+          const saved = data.responses as Record<string, string>
+          Object.entries(saved).forEach(([key, val]) => {
+            if (typeof val === 'string')
+              (setValue as (k: string, v: string) => void)(key, val)
+          })
+        },
+      )
+    return () => {
+      cancelled = true
+    }
   }, [user, setValue])
 
   async function handleGenerateJourney() {
@@ -48,7 +53,8 @@ export default function BrandJourney() {
     const known = getValues('bf_journey_known')
     const doField = getValues('bf_journey_do')
     const learn = getValues('bf_journey_learn')
-    if (!outcome.trim() || !known.trim() || !doField.trim() || !learn.trim()) return
+    if (!outcome.trim() || !known.trim() || !doField.trim() || !learn.trim())
+      return
     setIsGenerating('bf_journey_statement')
     try {
       const prompt =
@@ -68,7 +74,10 @@ export default function BrandJourney() {
       const data = await res.json()
       if (data.error) throw new Error(data.error)
       const text = data.text || ''
-      ;(setValue as (k: string, v: string) => void)('bf_journey_statement', text)
+      ;(setValue as (k: string, v: string) => void)(
+        'bf_journey_statement',
+        text,
+      )
       if (user) saveField(user.id, MODULE_SLUG, 'bf_journey_statement', text)
     } catch {
       // silent error — user can retry
@@ -118,13 +127,14 @@ export default function BrandJourney() {
         }}
       >
         <strong style={{ color: 'var(--text)' }}>Why this comes first.</strong>{' '}
-        Most creators start building without knowing where they&apos;re going (I did).
-        They post content because they think they should. Six months later they&apos;re
-        exhausted, scattered, in the same place — and they quit.
-        <br /><br />
-        These four questions work backwards from your desired outcome to give you
-        complete clarity on what you need to do today. This is your North Star —
-        come back to it whenever you feel lost.
+        Most creators start building without knowing where they&apos;re going (I
+        did). They post content because they think they should. Six months later
+        they&apos;re exhausted, scattered, in the same place — and they quit.
+        <br />
+        <br />
+        These four questions work backwards from your desired outcome to give
+        you complete clarity on what you need to do today. This is your North
+        Star — come back to it whenever you feel lost.
       </p>
 
       {/* Question 1 */}
@@ -160,27 +170,41 @@ export default function BrandJourney() {
         >
           What is my desired outcome?
         </div>
-        <div style={{ fontSize: '13px', color: 'var(--dim)', marginBottom: '10px', lineHeight: 1.6 }}>
-          What do you actually want to happen? Not &ldquo;grow my brand.&rdquo; What&apos;s the
-          real, specific goal in 12 months?
+        <div
+          style={{
+            fontSize: '13px',
+            color: 'var(--dim)',
+            marginBottom: '10px',
+            lineHeight: 1.6,
+          }}
+        >
+          What do you actually want to happen? Not &ldquo;grow my brand.&rdquo;
+          What&apos;s the real, specific goal in 12 months?
         </div>
         <WorkshopTextarea
           moduleSlug={MODULE_SLUG}
           fieldKey="bf_journey_outcome"
           value={watch('bf_journey_outcome')}
-          onChange={val => setValue('bf_journey_outcome', val)}
+          onChange={(val) => setValue('bf_journey_outcome', val)}
           getFullResponses={getValues}
           rows={3}
           placeholder="e.g. I want to sign 5 high-ticket clients per month at $5K each and replace my 9-to-5 income within 12 months."
         />
-        <div style={{ fontSize: '13px', fontWeight: 500, color: 'var(--text)', margin: '10px 0 6px' }}>
+        <div
+          style={{
+            fontSize: '13px',
+            fontWeight: 500,
+            color: 'var(--text)',
+            margin: '10px 0 6px',
+          }}
+        >
           Why does this outcome matter to you?
         </div>
         <WorkshopTextarea
           moduleSlug={MODULE_SLUG}
           fieldKey="bf_journey_why"
           value={watch('bf_journey_why')}
-          onChange={val => setValue('bf_journey_why', val)}
+          onChange={(val) => setValue('bf_journey_why', val)}
           getFullResponses={getValues}
           rows={2}
           placeholder="The real reason behind the goal — go deeper than the surface answer."
@@ -220,15 +244,22 @@ export default function BrandJourney() {
         >
           What do I need to be known for?
         </div>
-        <div style={{ fontSize: '13px', color: 'var(--dim)', marginBottom: '10px', lineHeight: 1.6 }}>
-          In order for that outcome to happen, what must people believe about you?
-          What expertise must you demonstrate?
+        <div
+          style={{
+            fontSize: '13px',
+            color: 'var(--dim)',
+            marginBottom: '10px',
+            lineHeight: 1.6,
+          }}
+        >
+          In order for that outcome to happen, what must people believe about
+          you? What expertise must you demonstrate?
         </div>
         <WorkshopTextarea
           moduleSlug={MODULE_SLUG}
           fieldKey="bf_journey_known"
           value={watch('bf_journey_known')}
-          onChange={val => setValue('bf_journey_known', val)}
+          onChange={(val) => setValue('bf_journey_known', val)}
           getFullResponses={getValues}
           rows={3}
           placeholder="e.g. I need to be known for helping creators build premium personal brands that attract high-quality clients."
@@ -268,15 +299,22 @@ export default function BrandJourney() {
         >
           What do I need to do?
         </div>
-        <div style={{ fontSize: '13px', color: 'var(--dim)', marginBottom: '10px', lineHeight: 1.6 }}>
-          You can&apos;t just say you&apos;re an expert. You have to demonstrate it. What
-          actions do you need to take consistently?
+        <div
+          style={{
+            fontSize: '13px',
+            color: 'var(--dim)',
+            marginBottom: '10px',
+            lineHeight: 1.6,
+          }}
+        >
+          You can&apos;t just say you&apos;re an expert. You have to demonstrate
+          it. What actions do you need to take consistently?
         </div>
         <WorkshopTextarea
           moduleSlug={MODULE_SLUG}
           fieldKey="bf_journey_do"
           value={watch('bf_journey_do')}
-          onChange={val => setValue('bf_journey_do', val)}
+          onChange={(val) => setValue('bf_journey_do', val)}
           getFullResponses={getValues}
           rows={4}
           placeholder={`Post educational content 3–5x per week\nShare client results regularly\nDocument my process publicly\nShow up consistently for 6+ months without stopping`}
@@ -316,15 +354,22 @@ export default function BrandJourney() {
         >
           What do I need to learn?
         </div>
-        <div style={{ fontSize: '13px', color: 'var(--dim)', marginBottom: '10px', lineHeight: 1.6 }}>
-          This is your starting point today. What skills or knowledge do you need to
-          develop right now?
+        <div
+          style={{
+            fontSize: '13px',
+            color: 'var(--dim)',
+            marginBottom: '10px',
+            lineHeight: 1.6,
+          }}
+        >
+          This is your starting point today. What skills or knowledge do you
+          need to develop right now?
         </div>
         <WorkshopTextarea
           moduleSlug={MODULE_SLUG}
           fieldKey="bf_journey_learn"
           value={watch('bf_journey_learn')}
-          onChange={val => setValue('bf_journey_learn', val)}
+          onChange={(val) => setValue('bf_journey_learn', val)}
           getFullResponses={getValues}
           rows={3}
           placeholder={`How to write hooks that stop the scroll\nHow to show up on camera confidently\nHow to build a monetization funnel`}
@@ -351,9 +396,16 @@ export default function BrandJourney() {
           marginBottom: '1rem',
         }}
       >
-        <p style={{ fontSize: '13.5px', color: 'var(--dim)', lineHeight: 1.7, marginBottom: '0.6rem' }}>
-          Your Brand Journey Statement is your North Star. It puts everything in one
-          sentence so you always know where you&apos;re going and why.
+        <p
+          style={{
+            fontSize: '13.5px',
+            color: 'var(--dim)',
+            lineHeight: 1.7,
+            marginBottom: '0.6rem',
+          }}
+        >
+          Your Brand Journey Statement is your North Star. It puts everything in
+          one sentence so you always know where you&apos;re going and why.
         </p>
         <p
           style={{
@@ -365,10 +417,17 @@ export default function BrandJourney() {
             paddingLeft: '0.85rem',
           }}
         >
-          &ldquo;I want to [desired outcome] by being known for [known for] through [actions]
-          starting with [learning].&rdquo;
+          &ldquo;I want to [desired outcome] by being known for [known for]
+          through [actions] starting with [learning].&rdquo;
         </p>
-        <p style={{ marginTop: '0.6rem', fontSize: '13.5px', color: 'var(--dim)', lineHeight: 1.7 }}>
+        <p
+          style={{
+            marginTop: '0.6rem',
+            fontSize: '13.5px',
+            color: 'var(--dim)',
+            lineHeight: 1.7,
+          }}
+        >
           Synthesize your four answers into this one sentence. Print it. Put it
           somewhere you&apos;ll see it every day. Shoot towards it every day.
         </p>
@@ -393,9 +452,16 @@ export default function BrandJourney() {
             marginBottom: '.5rem',
           }}
         >
-          Brand Journey Statement
+          AI — Generate My Brand Journey Statement
         </div>
-        <div style={{ fontSize: '13px', color: 'var(--dim)', marginBottom: '10px', lineHeight: 1.6 }}>
+        <div
+          style={{
+            fontSize: '13px',
+            color: 'var(--dim)',
+            marginBottom: '10px',
+            lineHeight: 1.6,
+          }}
+        >
           Fill in all four questions above, then write your statement here.
         </div>
         <div style={{ marginBottom: '8px' }}>
@@ -410,25 +476,33 @@ export default function BrandJourney() {
               padding: '8px 14px',
               fontSize: '12px',
               fontWeight: 600,
-              color: isGenerating === 'bf_journey_statement' ? 'var(--dimmer)' : 'var(--orange)',
+              color:
+                isGenerating === 'bf_journey_statement'
+                  ? 'var(--dimmer)'
+                  : 'var(--orange)',
               background: 'var(--orange-tint)',
               borderWidth: '1px',
               borderStyle: 'solid',
               borderColor: 'var(--orange-border)',
               borderRadius: 'var(--radius-md)',
-              cursor: isGenerating === 'bf_journey_statement' ? 'not-allowed' : 'pointer',
+              cursor:
+                isGenerating === 'bf_journey_statement'
+                  ? 'not-allowed'
+                  : 'pointer',
               fontFamily: 'var(--font)',
               opacity: isGenerating === 'bf_journey_statement' ? 0.6 : 1,
             }}
           >
-            {isGenerating === 'bf_journey_statement' ? 'Generating...' : '✦ Generate Statement'}
+            {isGenerating === 'bf_journey_statement'
+              ? 'Generating...'
+              : '✦ Generate Statement'}
           </button>
         </div>
         <WorkshopTextarea
           moduleSlug={MODULE_SLUG}
           fieldKey="bf_journey_statement"
           value={watch('bf_journey_statement')}
-          onChange={val => setValue('bf_journey_statement', val)}
+          onChange={(val) => setValue('bf_journey_statement', val)}
           getFullResponses={getValues}
           rows={4}
           placeholder="Generate and write your Brand Journey Statement here..."

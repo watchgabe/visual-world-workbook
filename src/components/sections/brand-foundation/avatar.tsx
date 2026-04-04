@@ -509,50 +509,67 @@ export default function Avatar() {
               />
             </div>
 
-            <div style={{ marginBottom: '6px' }}>
-              <button
-                type="button"
-                onClick={() => handleGenerateAvatar(1)}
-                disabled={isGenerating === 'bf_av1_statement'}
+            <div
+              style={{
+                background: 'var(--bg)',
+                border: '1px solid var(--border)',
+                borderRadius: 'var(--radius-lg)',
+                padding: '1.2rem',
+                marginBottom: '0.5rem',
+              }}
+            >
+              <div
                 style={{
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  gap: '6px',
-                  padding: '8px 14px',
-                  fontSize: '12px',
-                  fontWeight: 600,
-                  color:
-                    isGenerating === 'bf_av1_statement'
-                      ? 'var(--dimmer)'
-                      : 'var(--orange)',
-                  background: 'var(--orange-tint)',
-                  borderWidth: '1px',
-                  borderStyle: 'solid',
-                  borderColor: 'var(--orange-border)',
-                  borderRadius: 'var(--radius-md)',
-                  cursor:
-                    isGenerating === 'bf_av1_statement'
-                      ? 'not-allowed'
-                      : 'pointer',
-                  fontFamily: 'var(--font)',
-                  opacity: isGenerating === 'bf_av1_statement' ? 0.6 : 1,
+                  fontSize: '10px',
+                  fontWeight: 700,
+                  textTransform: 'uppercase',
+                  letterSpacing: '0.1em',
+                  color: 'var(--orange)',
+                  marginBottom: '12px',
                 }}
               >
-                {isGenerating === 'bf_av1_statement'
-                  ? 'Generating...'
-                  : '✦ Generate Avatar'}
-              </button>
+                AI — Generate My Avatar
+              </div>
+              <div style={{ fontSize: '13px', color: 'var(--dim)', marginBottom: '10px', lineHeight: 1.6 }}>
+                Fill in the fields above, then click Generate.
+              </div>
+              <div style={{ marginBottom: '12px' }}>
+                <button
+                  type="button"
+                  onClick={() => handleGenerateAvatar(1)}
+                  disabled={isGenerating === 'bf_av1_statement'}
+                  style={{
+                    padding: '8px 14px',
+                    borderRadius: 'var(--radius-md)',
+                    fontSize: '12px',
+                    cursor: isGenerating === 'bf_av1_statement' ? 'not-allowed' : 'pointer',
+                    transition: 'all 0.15s',
+                    borderWidth: '1px',
+                    borderStyle: 'solid',
+                    borderColor: 'var(--orange-border)',
+                    background: 'var(--orange-tint)',
+                    color: 'var(--orange-dark)',
+                    fontFamily: 'var(--font)',
+                    fontWeight: 600,
+                    whiteSpace: 'nowrap',
+                    opacity: isGenerating === 'bf_av1_statement' ? 0.5 : 1,
+                  }}
+                >
+                  {isGenerating === 'bf_av1_statement'
+                    ? 'Generating...'
+                    : '✦ Generate Avatar'}
+                </button>
+              </div>
+              <WorkshopTextarea
+                moduleSlug={MODULE_SLUG}
+                fieldKey="bf_av1_statement"
+                value={watch('bf_av1_statement')}
+                onChange={(val) => setValue('bf_av1_statement', val)}
+                getFullResponses={getValues}
+                rows={5}
+                placeholder="Generated avatar statement — edit freely..."
+              />
             </div>
-            <WorkshopTextarea
-              moduleSlug={MODULE_SLUG}
-              fieldKey="bf_av1_statement"
-              value={watch('bf_av1_statement')}
-              onChange={(val) => setValue('bf_av1_statement', val)}
-              getFullResponses={getValues}
-              rows={5}
-              label="Avatar Statement"
-              placeholder="Generated avatar statement — edit freely..."
-            />
           </div>
         )}
       </div>
@@ -843,50 +860,67 @@ export default function Avatar() {
               />
             </div>
 
-            <div style={{ marginBottom: '6px' }}>
-              <button
-                type="button"
-                onClick={() => handleGenerateAvatar(2)}
-                disabled={isGenerating === 'bf_av2_statement'}
+            <div
+              style={{
+                background: 'var(--bg)',
+                border: '1px solid var(--border)',
+                borderRadius: 'var(--radius-lg)',
+                padding: '1.2rem',
+                marginBottom: '0.5rem',
+              }}
+            >
+              <div
                 style={{
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  gap: '6px',
-                  padding: '8px 14px',
-                  fontSize: '12px',
-                  fontWeight: 600,
-                  color:
-                    isGenerating === 'bf_av2_statement'
-                      ? 'var(--dimmer)'
-                      : 'var(--orange)',
-                  background: 'var(--orange-tint)',
-                  borderWidth: '1px',
-                  borderStyle: 'solid',
-                  borderColor: 'var(--orange-border)',
-                  borderRadius: 'var(--radius-md)',
-                  cursor:
-                    isGenerating === 'bf_av2_statement'
-                      ? 'not-allowed'
-                      : 'pointer',
-                  fontFamily: 'var(--font)',
-                  opacity: isGenerating === 'bf_av2_statement' ? 0.6 : 1,
+                  fontSize: '10px',
+                  fontWeight: 700,
+                  textTransform: 'uppercase',
+                  letterSpacing: '0.1em',
+                  color: 'var(--orange)',
+                  marginBottom: '12px',
                 }}
               >
-                {isGenerating === 'bf_av2_statement'
-                  ? 'Generating...'
-                  : '✦ Generate Avatar 2'}
-              </button>
+                AI — Generate My Avatar
+              </div>
+              <div style={{ fontSize: '13px', color: 'var(--dim)', marginBottom: '10px', lineHeight: 1.6 }}>
+                Fill in the fields above, then click Generate.
+              </div>
+              <div style={{ marginBottom: '12px' }}>
+                <button
+                  type="button"
+                  onClick={() => handleGenerateAvatar(2)}
+                  disabled={isGenerating === 'bf_av2_statement'}
+                  style={{
+                    padding: '8px 14px',
+                    borderRadius: 'var(--radius-md)',
+                    fontSize: '12px',
+                    cursor: isGenerating === 'bf_av2_statement' ? 'not-allowed' : 'pointer',
+                    transition: 'all 0.15s',
+                    borderWidth: '1px',
+                    borderStyle: 'solid',
+                    borderColor: 'var(--orange-border)',
+                    background: 'var(--orange-tint)',
+                    color: 'var(--orange-dark)',
+                    fontFamily: 'var(--font)',
+                    fontWeight: 600,
+                    whiteSpace: 'nowrap',
+                    opacity: isGenerating === 'bf_av2_statement' ? 0.5 : 1,
+                  }}
+                >
+                  {isGenerating === 'bf_av2_statement'
+                    ? 'Generating...'
+                    : '✦ Generate Avatar 2'}
+                </button>
+              </div>
+              <WorkshopTextarea
+                moduleSlug={MODULE_SLUG}
+                fieldKey="bf_av2_statement"
+                value={watch('bf_av2_statement')}
+                onChange={(val) => setValue('bf_av2_statement', val)}
+                getFullResponses={getValues}
+                rows={5}
+                placeholder="Generated avatar statement — edit freely..."
+              />
             </div>
-            <WorkshopTextarea
-              moduleSlug={MODULE_SLUG}
-              fieldKey="bf_av2_statement"
-              value={watch('bf_av2_statement')}
-              onChange={(val) => setValue('bf_av2_statement', val)}
-              getFullResponses={getValues}
-              rows={5}
-              label="Avatar 2 Statement"
-              placeholder="Write your secondary avatar statement here — edit freely..."
-            />
           </div>
         )}
       </div>

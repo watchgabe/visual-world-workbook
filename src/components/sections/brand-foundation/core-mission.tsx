@@ -17,6 +17,7 @@ const SECTION_DEF = MODULE_SECTIONS['brand-foundation']![SECTION_INDEX]
 export default function CoreMission() {
   const { user } = useAuth()
   const [isGenerating, setIsGenerating] = useState<string | null>(null)
+  const [ikigaiError, setIkigaiError] = useState<string | null>(null)
   const { watch, setValue, getValues } = useForm({
     defaultValues: Object.fromEntries(
       SECTION_DEF.fields.map(f => [f.key, ''])
@@ -49,7 +50,11 @@ export default function CoreMission() {
     const good = getValues('bf_ikigai_good')
     const world = getValues('bf_ikigai_world')
     const paid = getValues('bf_ikigai_paid')
-    if (!love.trim() || !good.trim() || !world.trim() || !paid.trim()) return
+    if (!love.trim() || !good.trim() || !world.trim() || !paid.trim()) {
+      setIkigaiError('Fill in all four quadrants above first.')
+      return
+    }
+    setIkigaiError(null)
     setIsGenerating('bf_ikigai_center')
     try {
       const prompt =
@@ -73,7 +78,7 @@ export default function CoreMission() {
       ;(setValue as (k: string, v: string) => void)('bf_ikigai_center', text)
       if (user) saveField(user.id, MODULE_SLUG, 'bf_ikigai_center', text)
     } catch {
-      // silent error
+      setIkigaiError('Error — check connection and try again.')
     } finally {
       setIsGenerating(null)
     }
@@ -344,9 +349,14 @@ export default function CoreMission() {
               opacity: isGenerating === 'bf_ikigai_center' ? 0.6 : 1,
             }}
           >
-            {isGenerating === 'bf_ikigai_center' ? 'Generating...' : '✦ Find My Ikigai'}
+            {isGenerating === 'bf_ikigai_center' ? 'Discovering your Ikigai...' : '✦ Find My Ikigai'}
           </button>
         </div>
+        {ikigaiError && (
+          <div style={{ fontSize: '12px', color: '#e05555', marginBottom: '8px' }}>
+            {ikigaiError}
+          </div>
+        )}
         <WorkshopTextarea
           moduleSlug={MODULE_SLUG}
           fieldKey="bf_ikigai_center"
@@ -458,12 +468,12 @@ export default function CoreMission() {
 
         <div
           style={{
-            background: 'var(--bg)',
-            border: '1px solid var(--border)',
+            background: 'var(--orange-tint)',
+            border: '1px solid var(--orange-border)',
             borderRadius: 'var(--radius-md)',
             padding: '0.85rem 1rem',
             fontSize: '13.5px',
-            color: 'var(--dim)',
+            color: 'var(--text)',
             fontStyle: 'italic',
             lineHeight: 1.7,
             margin: '0.75rem 0',
