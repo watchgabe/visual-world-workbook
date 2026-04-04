@@ -46,6 +46,7 @@ const SECTION_REGISTRY: Record<string, React.ComponentType<any>> = {
   // Visual World sections — Plan 03
   'visual-world/overview':         dynamic(() => import('@/components/sections/visual-world/overview'), { loading: () => <SectionSkeleton /> }),
   'visual-world/creator-analysis': dynamic(() => import('@/components/sections/visual-world/creator-analysis'), { loading: () => <SectionSkeleton /> }),
+  'visual-world/mood-board':        dynamic(() => import('@/components/sections/visual-world/mood-board'), { loading: () => <SectionSkeleton /> }),
   'visual-world/color-palette':    dynamic(() => import('@/components/sections/visual-world/color-palette'), { loading: () => <SectionSkeleton /> }),
   'visual-world/typography':       dynamic(() => import('@/components/sections/visual-world/typography'), { loading: () => <SectionSkeleton /> }),
   'visual-world/shot-system':      dynamic(() => import('@/components/sections/visual-world/shot-system'), { loading: () => <SectionSkeleton /> }),

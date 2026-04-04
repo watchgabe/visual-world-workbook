@@ -11,7 +11,7 @@ import { SectionWrapper } from '@/components/workshop/SectionWrapper'
 import { MODULE_SECTIONS } from '@/lib/modules'
 
 const MODULE_SLUG = 'visual-world' as const
-const SECTION_INDEX = 4
+const SECTION_INDEX = 5
 const SECTION_DEF = MODULE_SECTIONS['visual-world']![SECTION_INDEX]
 
 const VIBE_OPTIONS = [

@@ -10,7 +10,7 @@ import { MODULE_SECTIONS } from '@/lib/modules'
 import { saveField } from '@/lib/saveField'
 
 const MODULE_SLUG = 'visual-world' as const
-const SECTION_INDEX = 3
+const SECTION_INDEX = 4
 const SECTION_DEF = MODULE_SECTIONS['visual-world']![SECTION_INDEX]
 
 // ── Static pairing data (from old app) ────────────────────

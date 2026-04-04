@@ -145,8 +145,7 @@ export const MODULE_SECTIONS: Partial<Record<ModuleSlug, SectionDef[]>> = {
       { key: 'vw_ca_own',        required: false },
       { key: 'vw_ca_gap',        required: false },
     ]},
-    { slug: 'color-palette',    name: 'Color Palette',    fields: [
-      // Mood Board section fields
+    { slug: 'mood-board',        name: 'Mood Board',       fields: [
       { key: 'vw_mb_link',       required: false },
       { key: 'vw_mb_colors',     required: false },
       { key: 'vw_mb_lighting',   required: false },
@@ -155,7 +154,8 @@ export const MODULE_SECTIONS: Partial<Record<ModuleSlug, SectionDef[]>> = {
       { key: 'vw_mb_movie',      required: false },
       { key: 'vw_mb_time',       required: false },
       { key: 'vw_mb_place',      required: false },
-      // Color Palette fields
+    ]},
+    { slug: 'color-palette',    name: 'Color Palette',    fields: [
       { key: 'vw_color_primary',   required: false },
       { key: 'vw_color_secondary', required: false },
       { key: 'vw_color_accent',    required: false },
