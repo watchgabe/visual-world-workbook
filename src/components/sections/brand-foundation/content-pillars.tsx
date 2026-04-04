@@ -37,7 +37,7 @@ export default function ContentPillars() {
       .select('responses')
       .eq('user_id', user.id)
       .eq('module_slug', MODULE_SLUG)
-      .single()
+      .maybeSingle()
       .then(({ data }: { data: { responses: Record<string, string> } | null }) => {
         if (cancelled || !data?.responses) return
         const saved = data.responses as Record<string, string>
@@ -236,14 +236,23 @@ export default function ContentPillars() {
             marginBottom: '1rem',
           }}
         >
-          <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '12px' }}>
+          <div style={{ display: 'flex', alignItems: 'flex-start', gap: '10px', marginBottom: '12px' }}>
             <div
               style={{
+                width: '28px',
+                height: '28px',
+                borderRadius: '50%',
+                background: 'var(--orange-tint)',
+                border: '1px solid var(--orange-border)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
                 fontFamily: 'var(--font-num)',
-                fontSize: '1.5rem',
+                fontSize: '14px',
                 fontWeight: 900,
-                color: n <= 3 ? 'var(--orange)' : 'var(--dimmer)',
-                lineHeight: 1,
+                color: 'var(--orange-dark)',
+                flexShrink: 0,
+                marginTop: '5px',
               }}
             >
               {n}
@@ -259,11 +268,11 @@ export default function ContentPillars() {
               />
             </div>
             {n > 3 && (
-              <span style={{ fontSize: '10px', color: 'var(--dimmer)', flexShrink: 0 }}>Optional</span>
+              <span style={{ fontSize: '10px', color: 'var(--dimmer)', flexShrink: 0, alignSelf: 'flex-end' }}>Optional</span>
             )}
           </div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
+          <div className="grid-form" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
             <div>
               <div style={{ fontSize: '11px', fontWeight: 600, color: 'var(--dim)', marginBottom: '6px' }}>
                 Sub-topics (3–5 angles)

@@ -43,7 +43,7 @@ export default function LaunchGoals() {
       .select('responses')
       .eq('user_id', user.id)
       .eq('module_slug', MODULE_SLUG)
-      .single()
+      .maybeSingle()
       .then(({ data }: { data: { responses: Record<string, string> } | null }) => {
         if (cancelled || !data?.responses) return
         const saved = data.responses as Record<string, string>
@@ -169,7 +169,7 @@ export default function LaunchGoals() {
 
               {/* Day body */}
               <div style={{ padding: '.85rem 1rem', background: 'var(--card)' }}>
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px' }}>
+                <div className="grid-form" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px' }}>
                   <div>
                     <div style={{ fontSize: '12px', fontWeight: 500, color: 'var(--text)', marginBottom: '4px' }}>
                       Platform
@@ -245,6 +245,7 @@ export default function LaunchGoals() {
         Your 90-Day Goals
       </h2>
       <div
+        className="grid-form"
         style={{
           display: 'grid',
           gridTemplateColumns: '1fr 1fr',

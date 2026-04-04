@@ -148,7 +148,7 @@ export default function VisualWorldDoc() {
       .select('responses')
       .eq('user_id', user.id)
       .eq('module_slug', MODULE_SLUG)
-      .single()
+      .maybeSingle()
       .then(({ data }: { data: { responses: VisualWorldResponses } | null }) => {
         if (data?.responses) setResponses(data.responses)
         setLoading(false)

@@ -33,7 +33,7 @@ export default function CoreMission() {
       .select('responses')
       .eq('user_id', user.id)
       .eq('module_slug', MODULE_SLUG)
-      .single()
+      .maybeSingle()
       .then(({ data }: { data: { responses: Record<string, string> } | null }) => {
         if (cancelled || !data?.responses) return
         const saved = data.responses as Record<string, string>
@@ -171,6 +171,7 @@ export default function CoreMission() {
       </div>
 
       <div
+        className="grid-form"
         style={{
           display: 'grid',
           gridTemplateColumns: 'repeat(2, 1fr)',

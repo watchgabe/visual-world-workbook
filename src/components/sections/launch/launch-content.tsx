@@ -31,7 +31,7 @@ export default function LaunchContent() {
       .select('responses')
       .eq('user_id', user.id)
       .eq('module_slug', MODULE_SLUG)
-      .single()
+      .maybeSingle()
       .then(({ data }: { data: { responses: Record<string, string> } | null }) => {
         if (cancelled || !data?.responses) return
         const saved = data.responses as Record<string, string>
@@ -342,7 +342,7 @@ export default function LaunchContent() {
         <div style={{ fontSize: '13px', fontWeight: 500, color: 'var(--text)', margin: '10px 0 6px' }}>
           Step 4 — Make Their Life Easier (the mindset shift)
         </div>
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px', marginTop: '6px' }}>
+        <div className="grid-form" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px', marginTop: '6px' }}>
           <div>
             <div
               style={{

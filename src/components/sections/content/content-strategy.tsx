@@ -31,7 +31,7 @@ export default function ContentStrategy() {
       .select('responses')
       .eq('user_id', user.id)
       .eq('module_slug', MODULE_SLUG)
-      .single()
+      .maybeSingle()
       .then(({ data }: { data: { responses: Record<string, string> } | null }) => {
         if (cancelled || !data?.responses) return
         const saved = data.responses as Record<string, string>

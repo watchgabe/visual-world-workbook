@@ -33,7 +33,7 @@ export function ProgressProvider({ children }: { children: React.ReactNode }) {
       .select('*')
       .eq('user_id', user.id)
       .eq('module_slug', slug as string)
-      .single()
+      .maybeSingle()
 
     // Cast through unknown to handle Supabase generic type narrowing on union columns
     const data = rawData as BlpResponse | null

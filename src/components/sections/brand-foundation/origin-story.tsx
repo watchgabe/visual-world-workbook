@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { createClient } from '@/lib/supabase/client'
 import { useAuth } from '@/context/AuthContext'
@@ -8,6 +8,94 @@ import { WorkshopTextarea } from '@/components/workshop/WorkshopTextarea'
 import { SectionWrapper } from '@/components/workshop/SectionWrapper'
 import { MODULE_SECTIONS } from '@/lib/modules'
 import { saveField } from '@/lib/saveField'
+
+const CLOCK_ICON = (
+  <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+    <circle cx="12" cy="12" r="10" />
+    <polyline points="12 6 12 12 16 14" />
+  </svg>
+)
+const CHECK_ICON = (
+  <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+    <polyline points="20 6 9 17 4 12" />
+  </svg>
+)
+
+function TimerButton() {
+  const [status, setStatus] = useState<'idle' | 'running' | 'done'>('idle')
+  const [secs, setSecs] = useState(600)
+  const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null)
+
+  const stop = useCallback(() => {
+    if (intervalRef.current) {
+      clearInterval(intervalRef.current)
+      intervalRef.current = null
+    }
+  }, [])
+
+  useEffect(() => () => stop(), [stop])
+
+  function handleClick() {
+    if (status === 'running') {
+      stop()
+      setStatus('idle')
+      setSecs(600)
+      return
+    }
+    if (status === 'done') {
+      setStatus('idle')
+      setSecs(600)
+      return
+    }
+    setStatus('running')
+    setSecs(600)
+    intervalRef.current = setInterval(() => {
+      setSecs(prev => {
+        if (prev <= 1) {
+          stop()
+          setStatus('done')
+          return 0
+        }
+        return prev - 1
+      })
+    }, 1000)
+  }
+
+  const m = Math.floor(secs / 60)
+  const s = secs % 60
+  const label =
+    status === 'done' ? 'Done!' :
+    status === 'running' ? `${m}:${s < 10 ? '0' : ''}${s}` :
+    '10 min'
+
+  return (
+    <button
+      type="button"
+      onClick={handleClick}
+      style={{
+        position: 'absolute',
+        bottom: '0.65rem',
+        right: '0.65rem',
+        zIndex: 2,
+        background: status === 'running' ? 'var(--orange-tint)' : status === 'done' ? 'var(--green-bg)' : 'var(--surface)',
+        border: `1px solid ${status === 'running' ? 'var(--orange-border)' : status === 'done' ? 'var(--green-border)' : 'var(--border2)'}`,
+        borderRadius: 'var(--radius-md)',
+        padding: '4px 8px',
+        cursor: 'pointer',
+        fontSize: '10px',
+        color: status === 'running' ? 'var(--orange)' : status === 'done' ? 'var(--green-text)' : 'var(--dimmer)',
+        fontFamily: 'var(--font)',
+        display: 'flex',
+        alignItems: 'center',
+        gap: '4px',
+        transition: 'all 0.15s',
+      }}
+    >
+      {status === 'done' ? CHECK_ICON : CLOCK_ICON}
+      {label}
+    </button>
+  )
+}
 
 const MODULE_SLUG = 'brand-foundation' as const
 const SECTION_INDEX = 6
@@ -63,7 +151,7 @@ export default function OriginStory() {
       .select('responses')
       .eq('user_id', user.id)
       .eq('module_slug', MODULE_SLUG)
-      .single()
+      .maybeSingle()
       .then(({ data }: { data: { responses: Record<string, string> } | null }) => {
         if (cancelled || !data?.responses) return
         const saved = data.responses as Record<string, string>
@@ -178,6 +266,7 @@ export default function OriginStory() {
       </h2>
 
       <div
+        className="grid-form"
         style={{
           display: 'grid',
           gridTemplateColumns: 'repeat(2, 1fr)',
@@ -185,35 +274,38 @@ export default function OriginStory() {
           marginBottom: '1.5rem',
         }}
       >
-        {STORY_PARTS.map(({ part, title, subtitle, fieldKey, placeholder }) => (
+        {STORY_PARTS.map(({ part, title, subtitle, fieldKey, placeholder }, i) => (
           <div
             key={fieldKey}
+            className="story-part"
+            data-n={i + 1}
             style={{
-              background: 'var(--card)',
+              background: 'var(--bg)',
               border: '1px solid var(--border)',
-              borderRadius: 'var(--radius-lg)',
-              padding: '1rem',
+              borderRadius: 'var(--radius-md)',
+              padding: '0.9rem 1rem',
+              position: 'relative',
+              overflow: 'hidden',
             }}
           >
             <div
               style={{
                 fontSize: '9px',
                 fontWeight: 700,
-                letterSpacing: '.13em',
+                letterSpacing: '.1em',
                 textTransform: 'uppercase',
                 color: 'var(--orange)',
-                marginBottom: '4px',
+                marginBottom: '2px',
               }}
             >
               {part}
             </div>
             <div
               style={{
-                fontSize: '14px',
-                fontWeight: 700,
+                fontSize: '13px',
+                fontWeight: 600,
                 color: 'var(--text)',
-                marginBottom: '2px',
-                lineHeight: 1.3,
+                marginBottom: '0.65rem',
               }}
             >
               {title}
@@ -222,77 +314,78 @@ export default function OriginStory() {
                 {subtitle}
               </small>
             </div>
-            <WorkshopTextarea
-              moduleSlug={MODULE_SLUG}
-              fieldKey={fieldKey}
-              value={watch(fieldKey as keyof ReturnType<typeof watch>)}
-              onChange={val => setValue(fieldKey as keyof ReturnType<typeof watch>, val)}
-              getFullResponses={getValues}
-              rows={6}
-              placeholder={placeholder}
-            />
+            <div style={{ position: 'relative', zIndex: 1 }}>
+              <WorkshopTextarea
+                moduleSlug={MODULE_SLUG}
+                fieldKey={fieldKey}
+                value={watch(fieldKey as keyof ReturnType<typeof watch>)}
+                onChange={val => setValue(fieldKey as keyof ReturnType<typeof watch>, val)}
+                getFullResponses={getValues}
+                rows={6}
+                placeholder={placeholder}
+              />
+            </div>
+            <TimerButton />
           </div>
         ))}
       </div>
 
       <div
         style={{
-          background: 'var(--card)',
+          background: 'var(--bg)',
           border: '1px solid var(--border)',
           borderRadius: 'var(--radius-lg)',
-          padding: '1.1rem 1.25rem',
-          marginBottom: '1.5rem',
+          padding: '1.2rem',
+          marginBottom: '1.1rem',
         }}
       >
         <div
           style={{
-            fontSize: '9px',
+            fontSize: '10px',
             fontWeight: 700,
-            letterSpacing: '.13em',
             textTransform: 'uppercase',
+            letterSpacing: '0.1em',
             color: 'var(--orange)',
-            marginBottom: '.5rem',
+            marginBottom: '12px',
           }}
         >
-          Your Complete Origin Story
+          AI — Write My Origin Story
         </div>
         <div style={{ fontSize: '13px', color: 'var(--dim)', marginBottom: '10px', lineHeight: 1.6 }}>
-          Fill in all four parts above, then use this space to write or generate your
-          complete origin story. The AI will piece together exactly what you wrote —
-          it won&apos;t fill in gaps or assume anything. If something is unclear it will
-          flag it with [???] for you to fill in.
+          Fill in all four parts above, then click Generate. The AI will piece together
+          exactly what you wrote — it won&apos;t fill in gaps or assume anything. If
+          something is unclear it will flag it with [???] for you to fill in.
         </div>
-        <div style={{ fontSize: '13px', fontWeight: 500, color: 'var(--text)', marginBottom: '6px' }}>
-          Your Complete Origin Story
-        </div>
-        <div style={{ fontSize: '12px', color: 'var(--dim)', marginBottom: '8px' }}>
-          Use the AI output as a starting point and refine in your own voice.
-        </div>
-        <div style={{ marginBottom: '8px' }}>
+        <div style={{ marginBottom: '12px' }}>
           <button
             type="button"
             onClick={handleGenerateOriginStory}
             disabled={isGenerating === 'bf_origin_story'}
             style={{
-              display: 'inline-flex',
-              alignItems: 'center',
-              gap: '6px',
               padding: '8px 14px',
+              borderRadius: 'var(--radius-md)',
               fontSize: '12px',
-              fontWeight: 600,
-              color: isGenerating === 'bf_origin_story' ? 'var(--dimmer)' : 'var(--orange)',
-              background: 'var(--orange-tint)',
+              cursor: isGenerating === 'bf_origin_story' ? 'not-allowed' : 'pointer',
+              transition: 'all 0.15s',
               borderWidth: '1px',
               borderStyle: 'solid',
               borderColor: 'var(--orange-border)',
-              borderRadius: 'var(--radius-md)',
-              cursor: isGenerating === 'bf_origin_story' ? 'not-allowed' : 'pointer',
+              background: 'var(--orange-tint)',
+              color: 'var(--orange-dark)',
               fontFamily: 'var(--font)',
-              opacity: isGenerating === 'bf_origin_story' ? 0.6 : 1,
+              fontWeight: 600,
+              whiteSpace: 'nowrap',
+              opacity: isGenerating === 'bf_origin_story' ? 0.5 : 1,
             }}
           >
-            {isGenerating === 'bf_origin_story' ? 'Generating...' : '✦ Write My Origin Story'}
+            {isGenerating === 'bf_origin_story' ? 'Writing your origin story...' : '✦ Write My Origin Story'}
           </button>
+        </div>
+        <div style={{ fontSize: '13.5px', color: 'var(--text)', marginBottom: '5px', lineHeight: 1.5 }}>
+          Your Complete Origin Story
+        </div>
+        <div style={{ fontSize: '12px', color: 'var(--dim)', marginBottom: '8px' }}>
+          Use the AI output as a starting point and refine in your own voice.
         </div>
         <WorkshopTextarea
           moduleSlug={MODULE_SLUG}

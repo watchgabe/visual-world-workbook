@@ -32,7 +32,7 @@ export default function LaunchFunnel() {
       .select('responses')
       .eq('user_id', user.id)
       .eq('module_slug', MODULE_SLUG)
-      .single()
+      .maybeSingle()
       .then(({ data }: { data: { responses: Record<string, string> } | null }) => {
         if (cancelled || !data?.responses) return
         const saved = data.responses as Record<string, string>
@@ -202,7 +202,7 @@ export default function LaunchFunnel() {
         >
           Document Your Complete Funnel
         </div>
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px' }}>
+        <div className="grid-form" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px' }}>
           <div>
             <div style={{ fontSize: '13px', fontWeight: 500, color: 'var(--text)', marginBottom: '6px' }}>
               Content platform(s)

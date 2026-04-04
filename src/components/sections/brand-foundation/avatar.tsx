@@ -34,7 +34,7 @@ export default function Avatar() {
       .select('responses')
       .eq('user_id', user.id)
       .eq('module_slug', MODULE_SLUG)
-      .single()
+      .maybeSingle()
       .then(
         ({ data }: { data: { responses: Record<string, string> } | null }) => {
           if (cancelled || !data?.responses) return
@@ -330,6 +330,7 @@ export default function Avatar() {
         {expandedAvatar === 1 && (
           <div style={{ padding: '0 1.25rem 1.25rem' }}>
             <div
+              className="grid-form"
               style={{
                 display: 'grid',
                 gridTemplateColumns: '1fr 1fr',
@@ -481,6 +482,7 @@ export default function Avatar() {
             />
 
             <div
+              className="grid-form"
               style={{
                 display: 'grid',
                 gridTemplateColumns: '1fr 1fr',
@@ -662,6 +664,7 @@ export default function Avatar() {
         {expandedAvatar === 2 && (
           <div style={{ padding: '0 1.25rem 1.25rem' }}>
             <div
+              className="grid-form"
               style={{
                 display: 'grid',
                 gridTemplateColumns: '1fr 1fr',
@@ -813,6 +816,7 @@ export default function Avatar() {
             />
 
             <div
+              className="grid-form"
               style={{
                 display: 'grid',
                 gridTemplateColumns: '1fr 1fr',

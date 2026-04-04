@@ -30,7 +30,7 @@ export default function BrandVision() {
       .select('responses')
       .eq('user_id', user.id)
       .eq('module_slug', MODULE_SLUG)
-      .single()
+      .maybeSingle()
       .then(({ data }: { data: { responses: Record<string, string> } | null }) => {
         if (cancelled || !data?.responses) return
         const saved = data.responses as Record<string, string>
@@ -187,28 +187,18 @@ export default function BrandVision() {
       </div>
 
       {/* Brand Vision Statement */}
-      <div
-        style={{
-          background: 'var(--card)',
-          border: '1px solid var(--border)',
-          borderRadius: 'var(--radius-lg)',
-          padding: '1.1rem 1.25rem',
-          marginBottom: '1.5rem',
-        }}
-      >
-        <div style={{ fontSize: '13px', fontWeight: 500, color: 'var(--text)', marginBottom: '8px' }}>
-          Brand Vision Statement
-        </div>
-        <WorkshopTextarea
-          moduleSlug={MODULE_SLUG}
-          fieldKey="bf_brand_vision"
-          value={watch('bf_brand_vision')}
-          onChange={val => setValue('bf_brand_vision', val)}
-          getFullResponses={getValues}
-          rows={3}
-          placeholder="Write your brand vision statement here..."
-        />
+      <div style={{ fontSize: '13px', fontWeight: 500, color: 'var(--text)', marginBottom: '8px', marginTop: '1rem' }}>
+        Brand Vision Statement
       </div>
+      <WorkshopTextarea
+        moduleSlug={MODULE_SLUG}
+        fieldKey="bf_brand_vision"
+        value={watch('bf_brand_vision')}
+        onChange={val => setValue('bf_brand_vision', val)}
+        getFullResponses={getValues}
+        rows={3}
+        placeholder="Write your brand vision statement here..."
+      />
     </SectionWrapper>
   )
 }
