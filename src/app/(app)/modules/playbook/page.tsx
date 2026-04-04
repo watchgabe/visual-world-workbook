@@ -6,10 +6,51 @@ import { useAuth } from '@/context/AuthContext'
 type ResponsesByModule = Record<string, Record<string, unknown>>
 
 
+/** Map of stored option values → human-readable labels */
+const OPTION_LABELS: Record<string, string> = {
+  // vw_shot_e1_vibe
+  'calm-minimal': 'Calm and minimal',
+  'creative-eclectic': 'Creative and eclectic',
+  'professional-polished': 'Professional and polished',
+  'luxurious-elevated': 'Luxurious and elevated',
+  'energetic-dynamic': 'Energetic and dynamic',
+  'raw-authentic': 'Raw and authentic',
+  // vw_shot_e2_mood
+  'warm-approachable': 'Warm and approachable',
+  'cool-authoritative': 'Cool and authoritative',
+  'energetic-motivating': 'Energetic and motivating',
+  'calm-contemplative': 'Calm and contemplative',
+  'bold-challenging': 'Bold and challenging',
+  'authentic-raw': 'Authentic and raw',
+  // vw_shot_e2_lighting
+  'warm-golden': 'Warm golden natural light',
+  'bright-studio': 'Bright even studio light',
+  'high-contrast': 'High contrast dramatic',
+  'soft-diffused': 'Soft diffused light',
+  // vw_shot_e3_grade
+  'warm': 'Warm tones',
+  'cool': 'Cool tones',
+  'desaturated': 'Desaturated / film-like',
+  'natural': 'Natural / ungraded',
+  'mixed': 'Mixed by content type',
+  // vw_shot_e4_textures
+  'vintage': 'Vintage (leather, aged wood, film grain)',
+  'modern': 'Modern (concrete, metal, glass)',
+  // bf_pillar{n}_test
+  'yes': 'Yes, easily',
+  'maybe': 'Maybe 20–30',
+}
+
 function getStr(responses: Record<string, unknown>, key: string): string {
   const v = responses[key]
   if (typeof v === 'string' && v.trim()) return v.trim()
   return ''
+}
+
+/** Get a field value, resolving option keys to readable labels */
+function getLabel(responses: Record<string, unknown>, key: string): string {
+  const raw = getStr(responses, key)
+  return OPTION_LABELS[raw] || raw
 }
 
 function FieldCard({ label, value, highlight: isHighlight }: {
@@ -312,13 +353,13 @@ function VisualWorldChapter({ r }: { r: Record<string, unknown> }) {
       <SectionLabel label="Mood &amp; Setting" />
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '10px', marginBottom: '10px' }}>
         <FieldCard label="Setting"      value={r.vw_shot_e1_location} />
-        <FieldCard label="Environment"  value={r.vw_shot_e1_vibe}     />
-        <FieldCard label="Primary Mood" value={r.vw_shot_e2_mood}     />
+        <FieldCard label="Environment"  value={getLabel(r, 'vw_shot_e1_vibe')}     />
+        <FieldCard label="Primary Mood" value={getLabel(r, 'vw_shot_e2_mood')}     />
       </div>
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '10px', marginBottom: '10px' }}>
-        <FieldCard label="Lighting"     value={r.vw_shot_e2_lighting} />
+        <FieldCard label="Lighting"     value={getLabel(r, 'vw_shot_e2_lighting')} />
         <FieldCard label="Time of Day"  value={r.vw_shot_e2_time}     />
-        <FieldCard label="Color Grade"  value={r.vw_shot_e3_grade}    />
+        <FieldCard label="Color Grade"  value={getLabel(r, 'vw_shot_e3_grade')}    />
       </div>
       <FieldCard label="Setting Statement" value={r.vw_shot_e1_statement} highlight />
       <FieldCard label="Mood Statement"    value={r.vw_shot_e2_statement} highlight />
@@ -327,6 +368,7 @@ function VisualWorldChapter({ r }: { r: Record<string, unknown> }) {
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', marginBottom: '10px' }}>
         <FieldCard label="Signature Objects" value={r.vw_shot_e4_objects}  />
         <FieldCard label="Wardrobe"          value={r.vw_shot_e4_wardrobe} />
+        <FieldCard label="Textures"          value={getLabel(r, 'vw_shot_e4_textures')} />
       </div>
       <FieldCard label="Never On Camera" value={r.vw_shot_e4_never} />
 
