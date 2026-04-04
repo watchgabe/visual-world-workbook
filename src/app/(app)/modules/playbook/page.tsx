@@ -258,11 +258,11 @@ function BrandFoundationChapter({ r }: { r: Record<string, unknown> }) {
   return (
     <>
       <FieldCard label="Brand Journey Statement" value={r.bf_journey_statement} highlight />
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', marginBottom: '10px' }}>
+      <div className="playbook-grid-responsive" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', marginBottom: '10px' }}>
         <FieldCard label="Desired Outcome" value={r.bf_journey_outcome} />
         <FieldCard label="Known For" value={r.bf_journey_known} />
       </div>
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', marginBottom: '10px' }}>
+      <div className="playbook-grid-responsive" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', marginBottom: '10px' }}>
         <FieldCard label="Actions" value={r.bf_journey_do} />
         <FieldCard label="Learning Priority" value={r.bf_journey_learn} />
       </div>
@@ -271,11 +271,11 @@ function BrandFoundationChapter({ r }: { r: Record<string, unknown> }) {
       <FieldCard label="Ikigai" value={r.bf_ikigai_center} highlight />
       <FieldCard label="Avatar Statement" value={r.bf_av1_statement} highlight />
 
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', marginBottom: '10px' }}>
+      <div className="playbook-grid-responsive" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', marginBottom: '10px' }}>
         <FieldCard label="Demographics" value={[g('bf_av1_age'), g('bf_av1_occupation')].filter(Boolean).join(' · ') || null} />
         <FieldCard label="Struggle" value={r.bf_av1_struggle} />
       </div>
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', marginBottom: '10px' }}>
+      <div className="playbook-grid-responsive" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', marginBottom: '10px' }}>
         <FieldCard label="Desired Outcome" value={r.bf_av1_desired} />
         <FieldCard label="Where They Hang Out" value={r.bf_av1_platforms} />
       </div>
@@ -283,7 +283,7 @@ function BrandFoundationChapter({ r }: { r: Record<string, unknown> }) {
       {values.length > 0 && (
         <>
           <SectionLabel label="Core Values" />
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '8px', marginBottom: '1rem' }}>
+          <div className="playbook-grid-responsive" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '8px', marginBottom: '1rem' }}>
             {values.map((v, i) => (
               <PillarCard key={i} number={`0${i + 1}`} name={v.name} sub={v.practice} />
             ))}
@@ -294,7 +294,7 @@ function BrandFoundationChapter({ r }: { r: Record<string, unknown> }) {
       {pillars.length > 0 && (
         <>
           <SectionLabel label="Content Pillars" />
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '8px', marginBottom: '1rem' }}>
+          <div className="playbook-grid-responsive" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '8px', marginBottom: '1rem' }}>
             {pillars.map((p, i) => (
               <PillarCard key={i} number={`0${i + 1}`} name={p.name} sub={p.sub} />
             ))}
@@ -303,7 +303,7 @@ function BrandFoundationChapter({ r }: { r: Record<string, unknown> }) {
       )}
 
       <FieldCard label="Origin Story" value={r.bf_origin_story} highlight />
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', marginBottom: '10px' }}>
+      <div className="playbook-grid-responsive" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', marginBottom: '10px' }}>
         <FieldCard label="3-Year Vision" value={r.bf_vision_3yr} />
         <FieldCard label="Impact" value={r.bf_vision_impact} />
       </div>
@@ -345,18 +345,18 @@ function VisualWorldChapter({ r }: { r: Record<string, unknown> }) {
         </div>
       )}
 
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', marginBottom: '10px' }}>
+      <div className="playbook-grid-responsive" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', marginBottom: '10px' }}>
         <FieldCard label="Primary Font" value={r.vw_typo_primary} />
         <FieldCard label="Body Font"    value={r.vw_typo_body}    />
       </div>
 
       <SectionLabel label="Mood &amp; Setting" />
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '10px', marginBottom: '10px' }}>
+      <div className="playbook-grid-responsive" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '10px', marginBottom: '10px' }}>
         <FieldCard label="Setting"      value={r.vw_shot_e1_location} />
         <FieldCard label="Environment"  value={getLabel(r, 'vw_shot_e1_vibe')}     />
         <FieldCard label="Primary Mood" value={getLabel(r, 'vw_shot_e2_mood')}     />
       </div>
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '10px', marginBottom: '10px' }}>
+      <div className="playbook-grid-responsive" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '10px', marginBottom: '10px' }}>
         <FieldCard label="Lighting"     value={getLabel(r, 'vw_shot_e2_lighting')} />
         <FieldCard label="Time of Day"  value={r.vw_shot_e2_time}     />
         <FieldCard label="Color Grade"  value={getLabel(r, 'vw_shot_e3_grade')}    />
@@ -365,14 +365,14 @@ function VisualWorldChapter({ r }: { r: Record<string, unknown> }) {
       <FieldCard label="Mood Statement"    value={r.vw_shot_e2_statement} highlight />
 
       <SectionLabel label="Design Details" />
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', marginBottom: '10px' }}>
+      <div className="playbook-grid-responsive" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', marginBottom: '10px' }}>
         <FieldCard label="Signature Objects" value={r.vw_shot_e4_objects}  />
         <FieldCard label="Wardrobe"          value={r.vw_shot_e4_wardrobe} />
         <FieldCard label="Textures"          value={getLabel(r, 'vw_shot_e4_textures')} />
       </div>
       <FieldCard label="Never On Camera" value={r.vw_shot_e4_never} />
 
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', marginBottom: '10px' }}>
+      <div className="playbook-grid-responsive" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', marginBottom: '10px' }}>
         <FieldCard label="What Makes You Different" value={r.vw_ca_different} />
         <FieldCard label="What You Own" value={r.vw_ca_own} />
       </div>
@@ -389,7 +389,7 @@ function ContentChapter({ r }: { r: Record<string, unknown> }) {
       <FieldCard label="My Unique Solution"      value={r.ct_strategy_unique_sol}   highlight />
       <FieldCard label="My Contextual Credibility"  value={r.ct_strategy_credibility}  highlight />
 
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '10px', marginBottom: '10px' }}>
+      <div className="playbook-grid-responsive" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '10px', marginBottom: '10px' }}>
         <FieldCard label="Primary Platform"  value={r.ct_sustain_primary}    />
         <FieldCard label="Weekly Hours"      value={r.ct_sustain_week_hours} />
         <FieldCard label="Content Cadence"   value={r.ct_sustain_cadence}    />
@@ -404,7 +404,7 @@ function ContentChapter({ r }: { r: Record<string, unknown> }) {
       </div>
 
       <SectionLabel label="Story Framework" />
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', marginBottom: '10px' }}>
+      <div className="playbook-grid-responsive" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', marginBottom: '10px' }}>
         <FieldCard label="Identity (I Am)" value={r.ct_story_idea} />
         <FieldCard label="Hook"    value={r.ct_story_hook}    />
         <FieldCard label="Problem" value={r.ct_story_prob}    />
@@ -414,7 +414,7 @@ function ContentChapter({ r }: { r: Record<string, unknown> }) {
       </div>
 
       <SectionLabel label="Offer Ladder" />
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', marginBottom: '10px' }}>
+      <div className="playbook-grid-responsive" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', marginBottom: '10px' }}>
         <FieldCard label="Free Content"  value={r.ct_tm_free} />
         <FieldCard label="Lead Magnet"   value={r.ct_tm_lead} />
         <FieldCard label="Low-Ticket"    value={r.ct_tm_low}  />
@@ -422,7 +422,7 @@ function ContentChapter({ r }: { r: Record<string, unknown> }) {
         <FieldCard label="High-Ticket"   value={r.ct_tm_high} />
         <FieldCard label="Conversion Strategy" value={r.ct_tm_conv} />
       </div>
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', marginBottom: '10px' }}>
+      <div className="playbook-grid-responsive" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', marginBottom: '10px' }}>
         <FieldCard label="CTA Strategy" value={r.ct_tm_cta_strat} />
       </div>
     </>
@@ -438,14 +438,14 @@ function LaunchChapter({ r }: { r: Record<string, unknown> }) {
   return (
     <>
       <SectionLabel label="Bio" />
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', marginBottom: '10px' }}>
+      <div className="playbook-grid-responsive" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', marginBottom: '10px' }}>
         <FieldCard label="Username"    value={r.la_bio_username} />
         <FieldCard label="Link in Bio" value={r.la_bio_link}     />
       </div>
       {bioFull && <FieldCard label="Instagram Bio" value={bioFull} highlight />}
 
       <SectionLabel label="Your Funnel" />
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', marginBottom: '10px' }}>
+      <div className="playbook-grid-responsive" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', marginBottom: '10px' }}>
         <FieldCard label="Content Platforms" value={r.la_funnel_platforms}      />
         <FieldCard label="Email Platform"    value={r.la_funnel_email_platform} />
         <FieldCard label="Primary CTA"       value={r.la_funnel_cta}            />
@@ -454,7 +454,7 @@ function LaunchChapter({ r }: { r: Record<string, unknown> }) {
 
       <SectionLabel label="Lead Magnet" />
       <FieldCard label="Lead Magnet Name" value={r.la_lm_name} highlight />
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', marginBottom: '10px' }}>
+      <div className="playbook-grid-responsive" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', marginBottom: '10px' }}>
         <FieldCard label="The One Big Win"    value={r.la_lm_big_win} />
         <FieldCard label="Format + Delivery"  value={formatDelivery || g('la_lm_format') || null} />
       </div>
@@ -464,7 +464,7 @@ function LaunchChapter({ r }: { r: Record<string, unknown> }) {
 
       <SectionLabel label="Video 1 — Your Story" />
       <FieldCard label="Hook" value={r.la_lc_story_hook} highlight />
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', marginBottom: '10px' }}>
+      <div className="playbook-grid-responsive" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', marginBottom: '10px' }}>
         <FieldCard label="Why You Do This" value={r.la_lc_story_why}       />
         <FieldCard label="The Challenge"   value={r.la_lc_story_challenge} />
         <FieldCard label="The Turn"        value={r.la_lc_story_turning}   />
@@ -474,13 +474,13 @@ function LaunchChapter({ r }: { r: Record<string, unknown> }) {
 
       <SectionLabel label="Video 2 — Positioning Deep Dive" />
       <FieldCard label="Core Claim"       value={r.la_lc_pos_claim}   highlight />
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', marginBottom: '10px' }}>
+      <div className="playbook-grid-responsive" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', marginBottom: '10px' }}>
         <FieldCard label="Core Belief"      value={r.la_lc_pos_belief} />
         <FieldCard label="Anchor Statement" value={r.la_lc_pos_anchor} />
       </div>
 
       <SectionLabel label="90-Day Goals" />
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', marginBottom: '10px' }}>
+      <div className="playbook-grid-responsive" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', marginBottom: '10px' }}>
         <FieldCard label="Followers Goal"    value={r.la_goal_followers}   />
         <FieldCard label="Email Subscribers" value={r.la_goal_email}       />
         <FieldCard label="Revenue Goal"      value={r.la_goal_revenue}     />
@@ -583,7 +583,7 @@ export default function PlaybookPage() {
         </div>
 
         {/* Metadata row */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', columnGap: '1.5rem' }}>
+        <div className="playbook-grid-responsive" style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', columnGap: '1.5rem' }}>
           <MetaCell label="Creator"    value={brandName} placeholder="Your Name"                  />
           <MetaCell label="Handle"     value={handle}    placeholder="Not set"                     />
           <MetaCell label="Known For"  value={knownFor}  placeholder="Complete Brand Foundation"   />
@@ -591,7 +591,7 @@ export default function PlaybookPage() {
         </div>
 
         {/* Chapter nav */}
-        <div style={{
+        <div className="playbook-grid-responsive" style={{
           display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)',
           columnGap: '1rem', marginTop: '1.25rem', marginBottom: '3rem',
         }}>
