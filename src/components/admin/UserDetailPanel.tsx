@@ -15,10 +15,12 @@ interface CircleMember {
 
 interface UserDetailPanelProps {
   user: AdminUser
+  currentUserId: string
   userResponses: Record<string, Record<string, unknown>>
   circleApiKey: string
   circleCommunityId: string
   onDeleted: () => void
+  onRoleToggled: () => void
 }
 
 const MODULE_DEFS = [
@@ -44,16 +46,19 @@ function countNonEmpty(responses: Record<string, unknown>): number {
 
 export default function UserDetailPanel({
   user,
+  currentUserId,
   userResponses,
   circleApiKey,
   circleCommunityId,
   onDeleted,
+  onRoleToggled,
 }: UserDetailPanelProps) {
   const [circleMember, setCircleMember] = useState<CircleMember | null | 'loading'>('loading')
   const [badgeStatus, setBadgeStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle')
   const [badgeMessage, setBadgeMessage] = useState('')
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
   const [isDeleting, setIsDeleting] = useState(false)
+  const [togglingRole, setTogglingRole] = useState(false)
 
   const initials = (user.email ?? '?').charAt(0).toUpperCase()
 
@@ -143,6 +148,23 @@ export default function UserDetailPanel({
     }
   }
 
+  const isAdmin = user.app_metadata?.role === 'admin'
+  const isSelf = user.id === currentUserId
+
+  async function handleToggleRole() {
+    setTogglingRole(true)
+    try {
+      const res = await fetch('/api/admin/toggle-role', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ userId: user.id, makeAdmin: !isAdmin }),
+      })
+      if (res.ok) onRoleToggled()
+    } finally {
+      setTogglingRole(false)
+    }
+  }
+
   return (
     <div>
       {/* Progress Summary */}
@@ -157,6 +179,35 @@ export default function UserDetailPanel({
               {(user.user_metadata?.full_name as string) || '—'}
             </div>
             <div className="text-[11px] text-[var(--dimmer)] mt-0.5">{user.email}</div>
+            <div className="mt-1.5 flex items-center gap-2">
+              {isAdmin ? (
+                <>
+                  <span className="text-[9px] font-bold uppercase tracking-[.08em] bg-[var(--orange-tint)] text-[var(--orange)] border border-[var(--orange-border)] px-2 py-0.5 rounded-full">
+                    Admin
+                  </span>
+                  {!isSelf && (
+                    <button
+                      onClick={handleToggleRole}
+                      disabled={togglingRole}
+                      className="text-[10px] text-[var(--dimmer)] hover:text-[#e05555] transition-colors disabled:opacity-50"
+                    >
+                      {togglingRole ? '...' : 'Remove'}
+                    </button>
+                  )}
+                  {isSelf && (
+                    <span className="text-[9px] text-[var(--dimmer)] italic">you</span>
+                  )}
+                </>
+              ) : (
+                <button
+                  onClick={handleToggleRole}
+                  disabled={togglingRole}
+                  className="text-[10px] text-[var(--dimmer)] hover:text-[var(--orange)] transition-colors disabled:opacity-50"
+                >
+                  {togglingRole ? '...' : 'Make admin'}
+                </button>
+              )}
+            </div>
           </div>
         </div>
 

@@ -63,8 +63,6 @@ export default function AdminDashboard({
   const [circleCommunityId, setCircleCommunityId] = useState(initialCircleConfig.circle_community_id)
   const [configSaved, setConfigSaved] = useState(false)
   const [configSaving, setConfigSaving] = useState(false)
-  const [togglingRole, setTogglingRole] = useState<string | null>(null)
-
   // Stat calculations
   const total = users.length
   const weekAgo = Date.now() - 7 * 24 * 60 * 60 * 1000
@@ -108,22 +106,6 @@ export default function AdminDashboard({
     setExpandedUserId(null)
     router.refresh()
   }, [router])
-
-  async function handleToggleRole(userId: string, makeAdmin: boolean) {
-    setTogglingRole(userId)
-    try {
-      const res = await fetch('/api/admin/toggle-role', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ userId, makeAdmin }),
-      })
-      if (res.ok) {
-        router.refresh()
-      }
-    } finally {
-      setTogglingRole(null)
-    }
-  }
 
   return (
     <div className="px-8 py-8 max-w-[1200px] mx-auto">
@@ -221,9 +203,6 @@ export default function AdminDashboard({
                 <th className="text-[10.5px] font-semibold uppercase tracking-[.07em] text-[var(--dimmer)] text-left px-3 py-2 border-b border-[var(--border)]">
                   Last Seen
                 </th>
-                <th className="text-[10.5px] font-semibold uppercase tracking-[.07em] text-[var(--dimmer)] text-left px-3 py-2 border-b border-[var(--border)]">
-                  Role
-                </th>
                 <th className="text-[10.5px] font-semibold uppercase tracking-[.07em] text-[var(--dimmer)] text-left px-3 py-2 border-b border-[var(--border)] w-8" />
               </tr>
             </thead>
@@ -291,46 +270,6 @@ export default function AdminDashboard({
                       <td className="px-3 py-2.5 border-b border-[var(--border)] align-middle text-[11.5px] text-[var(--dimmer)]">
                         {lastSeen}
                       </td>
-                      <td className="px-3 py-2.5 border-b border-[var(--border)] align-middle" onClick={e => e.stopPropagation()}>
-                        {(() => {
-                          const isAdmin = user.app_metadata?.role === 'admin'
-                          const isSelf = user.id === currentUserId
-                          const isToggling = togglingRole === user.id
-
-                          if (isAdmin) {
-                            return (
-                              <div className="flex items-center gap-2">
-                                <span className="text-[9px] font-bold uppercase tracking-[.08em] bg-[var(--orange-tint)] text-[var(--orange)] border border-[var(--orange-border)] px-2 py-0.5 rounded-full">
-                                  Admin
-                                </span>
-                                {!isSelf && (
-                                  <button
-                                    onClick={() => handleToggleRole(user.id, false)}
-                                    disabled={isToggling}
-                                    className="text-[10px] text-[var(--dimmer)] hover:text-[#e05555] transition-colors disabled:opacity-50"
-                                    title="Remove admin role"
-                                  >
-                                    {isToggling ? '...' : 'Remove'}
-                                  </button>
-                                )}
-                                {isSelf && (
-                                  <span className="text-[9px] text-[var(--dimmer)] italic">you</span>
-                                )}
-                              </div>
-                            )
-                          }
-
-                          return (
-                            <button
-                              onClick={() => handleToggleRole(user.id, true)}
-                              disabled={isToggling}
-                              className="text-[10px] text-[var(--dimmer)] hover:text-[var(--orange)] transition-colors disabled:opacity-50"
-                            >
-                              {isToggling ? '...' : 'Make admin'}
-                            </button>
-                          )
-                        })()}
-                      </td>
                       <td className="px-3 py-2.5 border-b border-[var(--border)] align-middle text-center">
                         <span
                           className="text-[var(--dimmer)] inline-block transition-transform duration-200"
@@ -349,10 +288,12 @@ export default function AdminDashboard({
                           <div className="p-6 px-8">
                             <UserDetailPanel
                               user={user}
+                              currentUserId={currentUserId}
                               userResponses={userResps}
                               circleApiKey={circleApiKey}
                               circleCommunityId={circleCommunityId}
                               onDeleted={handleUserDeleted}
+                              onRoleToggled={handleUserDeleted}
                             />
                           </div>
                         </td>

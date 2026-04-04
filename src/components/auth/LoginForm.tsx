@@ -30,9 +30,19 @@ export function LoginForm({ redirectPath, errorParam }: LoginFormProps) {
     }
   }, [errorParam])
 
+  const passwordTooWeak =
+    mode === 'signup' &&
+    password.length > 0 &&
+    (password.length < 6 || !/[a-zA-Z]/.test(password) || !/[0-9]/.test(password))
+
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
     if (!email.trim() || !password) return
+
+    if (mode === 'signup' && (password.length < 6 || !/[a-zA-Z]/.test(password) || !/[0-9]/.test(password))) {
+      setErrorMessage('Password must be at least 6 characters with at least one letter and one number.')
+      return
+    }
 
     setLoading(true)
     setErrorMessage(null)
@@ -94,7 +104,7 @@ export function LoginForm({ redirectPath, errorParam }: LoginFormProps) {
     }
   }
 
-  const isDisabled = loading || !email.trim() || !password
+  const isDisabled = loading || !email.trim() || !password || passwordTooWeak
 
   return (
     <form onSubmit={handleSubmit} noValidate>
@@ -253,6 +263,18 @@ export function LoginForm({ redirectPath, errorParam }: LoginFormProps) {
             e.currentTarget.style.borderColor = 'var(--border)'
           }}
         />
+        {mode === 'signup' && (
+          <p
+            style={{
+              margin: '6px 0 0',
+              fontSize: '12px',
+              color: passwordTooWeak ? 'var(--orange-dark)' : 'var(--dim)',
+              lineHeight: 1.4,
+            }}
+          >
+            At least 6 characters, one letter and one number.
+          </p>
+        )}
       </div>
 
       {/* Submit button */}

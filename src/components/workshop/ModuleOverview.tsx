@@ -80,6 +80,7 @@ export function ModuleOverview({
 
       {/* Stats cards */}
       <div
+        className="grid-form"
         style={{
           display: 'grid',
           gridTemplateColumns: 'repeat(3, 1fr)',
@@ -143,6 +144,7 @@ export function ModuleOverview({
       </h2>
 
       <div
+        className="grid-form"
         style={{
           display: 'grid',
           gridTemplateColumns: 'repeat(2, 1fr)',

@@ -81,6 +81,28 @@ body::before {
   color: var(--dimmer);
 }
 
+/* ─── RESPONSIVE: single column on mobile ─── */
+@media (max-width: 768px) {
+  .grid-form {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+/* ─── STORY PART WATERMARK NUMBER ─── */
+.story-part::after {
+  content: attr(data-n);
+  position: absolute;
+  top: -0.2rem;
+  right: 0.6rem;
+  font-family: var(--font-num);
+  font-size: 72px;
+  font-weight: 900;
+  color: var(--border2);
+  line-height: 1;
+  pointer-events: none;
+  user-select: none;
+}
+
 /* ── Print styles for Playbook (MOD-07) ── */
 @media print {
   /* Force light theme variables for print */

@@ -81,7 +81,7 @@ export function OptionSelector({
           {label}
         </label>
       )}
-      <div style={gridStyle} onFocus={handleFocus}>
+      <div className="grid-form" style={gridStyle} onFocus={handleFocus}>
         {options.map(option => {
           const isSelected = value === option.value
           return (

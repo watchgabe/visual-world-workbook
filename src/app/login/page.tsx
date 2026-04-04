@@ -99,17 +99,6 @@ export default async function LoginPage({
           <LoginForm redirectPath={redirectPath} errorParam={errorParam} />
         </div>
 
-        {/* Footer credit */}
-        <p
-          style={{
-            textAlign: 'center',
-            fontSize: '12px',
-            color: 'var(--dimmer)',
-            marginTop: '1.25rem',
-          }}
-        >
-          Secured by Supabase Auth
-        </p>
       </div>
     </main>
   )

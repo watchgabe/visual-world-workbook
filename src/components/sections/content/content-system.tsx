@@ -311,6 +311,7 @@ export default function ContentSystem() {
             Sample weekly calendar
           </div>
           <div
+            className="grid-form"
             style={{
               display: 'grid',
               gridTemplateColumns: 'repeat(5,1fr)',
