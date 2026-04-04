@@ -91,7 +91,7 @@ export default async function LoginPage({
                 lineHeight: 1.6,
               }}
             >
-              Enter your email to receive a magic link and sign in.
+              Sign in or create an account to continue.
             </p>
           </div>
 
