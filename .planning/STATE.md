@@ -163,6 +163,7 @@ None yet.
 | # | Description | Date | Commit | Directory |
 |---|-------------|------|--------|-----------|
 | 260403-esz | Add optional name field to login form, pass full_name via signInWithOtp data to user_metadata, update Sidebar and UserModal to display name | 2026-04-03 | 0ac74b4 | [260403-esz-add-optional-name-field-to-login-form-pa](./quick/260403-esz-add-optional-name-field-to-login-form-pa/) |
+| 260403-njm | Replace magic link auth with email+password (signUp/signInWithPassword), mode toggle, delete auth callback route | 2026-04-03 | 2a72afc | [260403-njm-replace-magic-link-auth-with-email-passw](./quick/260403-njm-replace-magic-link-auth-with-email-passw/) |
 
 ## Session Continuity
 
