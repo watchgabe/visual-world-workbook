@@ -294,6 +294,9 @@ export default function Typography() {
   const bodyItalic    = watch('vw_typo_body_italic')    === 'true'
   const bodyBold      = watch('vw_typo_body_bold')      === 'true'
 
+  // ── Custom fonts toggle ──────────────────────────────
+  const [customFontsChecked, setCustomFontsChecked] = useState(false)
+
   function toggleStyle(field: string) {
     const current = (getValues() as Record<string, string>)[field]
     ;(setValue as (k: string, v: string) => void)(field, current === 'true' ? '' : 'true')
@@ -433,7 +436,13 @@ export default function Typography() {
         the right pairing for your brand aesthetic — or drop in any image to identify fonts you love.
       </p>
 
-      {/* ── 1. AI Font Identifier ── */}
+      {/* Preload mood card preview fonts */}
+      <link
+        rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700&family=Inter:wght@700&family=Montserrat:wght@900&family=Lora:wght@700&family=Playfair+Display:ital,wght@1,700&family=Abril+Fatface&display=swap"
+      />
+
+      {/* ── 1. Font Finder (mood cards) ── */}
       <h2
         style={{
           fontSize: '16px',
@@ -442,9 +451,208 @@ export default function Typography() {
           margin: '1.75rem 0 8px',
         }}
       >
-        AI Font Identifier
+        Font Finder
       </h2>
       <p style={{ fontSize: '13.5px', color: 'var(--dim)', lineHeight: 1.7, marginBottom: '1rem' }}>
+        Which of these feels closest to your brand world? Pick the aesthetic that matches your mood board.
+      </p>
+
+      {/* Aesthetic mood grid */}
+      <style>{`@media(max-width:600px){.typ-mood-grid{grid-template-columns:repeat(2,1fr) !important;}}`}</style>
+      <div
+        className="typ-mood-grid"
+        style={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(3, 1fr)',
+          gap: '10px',
+          marginBottom: '1.5rem',
+        }}
+      >
+        {AESTHETIC_MOODS.map(mood => (
+          <div
+            key={mood.key}
+            role="button"
+            tabIndex={0}
+            onClick={() => selectMood(mood.key)}
+            onKeyDown={e => e.key === 'Enter' && selectMood(mood.key)}
+            style={{
+              background: selectedMood === mood.key ? 'var(--orange-tint)' : 'var(--surface)',
+              border: `2px solid ${selectedMood === mood.key ? 'var(--orange)' : 'var(--border)'}`,
+              borderRadius: 'var(--radius-lg)',
+              padding: '1rem',
+              cursor: 'pointer',
+              transition: 'all .2s',
+            }}
+          >
+            <div
+              style={{
+                fontSize: '9.5px',
+                fontWeight: 700,
+                letterSpacing: '.1em',
+                textTransform: 'uppercase',
+                color: 'var(--orange)',
+                marginBottom: '6px',
+              }}
+            >
+              {mood.label}
+            </div>
+            <div style={{ fontSize: '24px', fontWeight: 700, color: 'var(--text)', lineHeight: 1.1, marginBottom: '8px', minHeight: '32px', ...mood.previewStyle }}>
+              {mood.preview}
+            </div>
+            <div style={{ display: 'flex', gap: '4px', flexWrap: 'wrap' }}>
+              {mood.tags.map(tag => (
+                <span
+                  key={tag}
+                  style={{
+                    fontSize: '9px',
+                    color: 'var(--dimmer)',
+                    border: '1px solid var(--border)',
+                    borderRadius: '20px',
+                    padding: '2px 7px',
+                  }}
+                >
+                  {tag}
+                </span>
+              ))}
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* Pairing results */}
+      {selectedMood && currentPairings.length > 0 && (
+        <div
+          style={{
+            background: 'var(--card)',
+            border: '1px solid var(--border)',
+            borderRadius: 'var(--radius-lg)',
+            padding: '14px 16px',
+            marginBottom: '1.5rem',
+          }}
+        >
+          <h2 style={{ fontSize: '16px', fontWeight: 600, color: 'var(--text)', marginBottom: '.5rem', marginTop: 0 }}>
+            Recommended Pairings
+          </h2>
+          <p style={{ fontSize: '13.5px', color: 'var(--dim)', lineHeight: 1.7, marginBottom: '1rem' }}>
+            Click <strong>Use This Pairing</strong> to auto-fill your fonts.
+          </p>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+            {currentPairings.map((p, i) => (
+              <div
+                key={i}
+                style={{
+                  background: 'var(--surface)',
+                  border: '1px solid var(--border)',
+                  borderRadius: 'var(--radius-md)',
+                  padding: '12px 14px',
+                }}
+              >
+                <div style={{ fontSize: '12px', fontWeight: 700, color: 'var(--text)', marginBottom: '8px' }}>{p.name}</div>
+                <div style={{ marginBottom: '6px' }}>
+                  <div
+                    style={{
+                      fontFamily: `'${p.header.f}', serif, sans-serif`,
+                      fontWeight: Number(p.header.w) || 700,
+                      fontSize: '18px',
+                      color: 'var(--text)',
+                      lineHeight: 1.2,
+                    }}
+                  >
+                    Your Brand
+                  </div>
+                  <div
+                    style={{
+                      fontFamily: `'${p.body.f}', sans-serif`,
+                      fontWeight: Number(p.body.w) || 400,
+                      fontSize: '12.5px',
+                      color: 'var(--dim)',
+                      lineHeight: 1.6,
+                      marginTop: '4px',
+                    }}
+                  >
+                    {p.previewBody}
+                  </div>
+                </div>
+                <div className="grid-form" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '6px', marginBottom: '8px' }}>
+                  <div>
+                    <div style={{ fontSize: '9px', color: 'var(--dimmer)', textTransform: 'uppercase', letterSpacing: '.08em' }}>Primary Font</div>
+                    <div style={{ fontSize: '12px', color: 'var(--text)', fontWeight: 600 }}>{p.header.f}</div>
+                    <div style={{ fontSize: '10px', color: 'var(--dimmer)' }}>{p.header.s}</div>
+                  </div>
+                  <div>
+                    <div style={{ fontSize: '9px', color: 'var(--dimmer)', textTransform: 'uppercase', letterSpacing: '.08em' }}>Body Font</div>
+                    <div style={{ fontSize: '12px', color: 'var(--text)', fontWeight: 600 }}>{p.body.f}</div>
+                    <div style={{ fontSize: '10px', color: 'var(--dimmer)' }}>{p.body.s}</div>
+                  </div>
+                </div>
+                <div style={{ fontSize: '12.5px', color: 'var(--dim)', lineHeight: 1.6, marginBottom: '10px', fontStyle: 'italic' }}>{p.why}</div>
+                <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+                  <button
+                    type="button"
+                    onClick={() => applyPairing(p)}
+                    style={{
+                      background: 'var(--orange)',
+                      color: '#fff',
+                      border: 'none',
+                      borderRadius: 'var(--radius-md)',
+                      padding: '7px 14px',
+                      fontSize: '12.5px',
+                      fontWeight: 600,
+                      cursor: 'pointer',
+                    }}
+                  >
+                    Use This Pairing
+                  </button>
+                  <a
+                    href={p.gf}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    style={{ fontSize: '11px', color: 'var(--orange)', textDecoration: 'none' }}
+                  >
+                    View on Google Fonts →
+                  </a>
+                </div>
+              </div>
+            ))}
+          </div>
+          {totalPairings > 3 && (
+            <button
+              type="button"
+              onClick={() => {
+                const next = pairingOffset + 3
+                setPairingOffset(next >= totalPairings ? 0 : next)
+              }}
+              style={{
+                width: '100%',
+                marginTop: '8px',
+                padding: '9px',
+                border: '1px dashed var(--border)',
+                borderRadius: 'var(--radius-md)',
+                background: 'transparent',
+                color: 'var(--dim)',
+                fontSize: '12.5px',
+                cursor: 'pointer',
+              }}
+            >
+              {pairingOffset + 3 >= totalPairings ? 'See First 3 Again →' : 'See 3 More Options →'}
+            </button>
+          )}
+        </div>
+      )}
+
+      {/* ── 2. AI Font Identifier ── */}
+      <h2
+        style={{
+          fontSize: '16px',
+          fontWeight: 600,
+          color: 'var(--text)',
+          marginTop: '1rem',
+          marginBottom: '8px',
+        }}
+      >
+        AI Font Identifier
+      </h2>
+      <p style={{ fontSize: '13.5px', color: 'var(--dim)', lineHeight: 1.7, marginBottom: '.85rem' }}>
         Drop in a screenshot or image with fonts you love — a brand, a poster, a design. AI will
         identify the fonts and suggest free Google Fonts alternatives.
       </p>
@@ -461,17 +669,15 @@ export default function Typography() {
         }}
         onClick={() => document.getElementById('fi-file-input')?.click()}
         style={{
-          border: `2px dashed ${fontIdDragOver ? 'var(--orange)' : 'var(--border)'}`,
+          border: `2px dashed ${fontIdDragOver ? 'var(--orange)' : 'var(--border2, var(--border))'}`,
           borderRadius: 'var(--radius-lg)',
-          padding: fontIdPhoto ? '12px' : '28px 16px',
+          padding: fontIdPhoto ? '12px' : '2rem',
           marginBottom: '1rem',
           cursor: 'pointer',
-          background: fontIdDragOver ? 'var(--orange-tint)' : 'var(--surface)',
-          transition: 'all .15s',
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          gap: '8px',
+          background: fontIdDragOver ? 'var(--orange-tint)' : 'var(--bg, var(--surface))',
+          transition: 'all .2s',
+          textAlign: 'center' as const,
+          position: 'relative' as const,
         }}
       >
         {fontIdPhoto ? (
@@ -482,13 +688,12 @@ export default function Typography() {
           />
         ) : (
           <>
-            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" style={{ color: 'var(--dimmer)' }}>
-              <rect x="3" y="3" width="18" height="18" rx="2" />
-              <circle cx="8.5" cy="8.5" r="1.5" />
-              <polyline points="21 15 16 10 5 21" />
-            </svg>
-            <div style={{ fontSize: '13px', color: 'var(--dim)' }}>Click or drop an image here</div>
-            <div style={{ fontSize: '11px', color: 'var(--dimmer)' }}>Supports PNG, JPG, WEBP</div>
+            <div style={{ fontSize: '28px', marginBottom: '8px' }}>🔍</div>
+            <div style={{ fontSize: '13px', color: 'var(--dim)', lineHeight: 1.6 }}>
+              <strong style={{ color: 'var(--text)' }}>Drop an image here</strong> or click to upload
+              <br />
+              <span style={{ fontSize: '11px', color: 'var(--dimmer)' }}>Brand screenshots, magazine pages, logos — anything with type</span>
+            </div>
           </>
         )}
       </div>
@@ -501,32 +706,26 @@ export default function Typography() {
       />
 
       {fontIdPhoto && (
-        <div style={{ display: 'flex', gap: '8px', marginBottom: '1rem', alignItems: 'center' }}>
-          <button
-            type="button"
-            onClick={runFontIdentification}
-            disabled={isIdentifying}
-            style={{
-              background: isIdentifying ? 'var(--border)' : 'var(--orange)',
-              color: isIdentifying ? 'var(--dimmer)' : '#fff',
-              border: 'none',
-              borderRadius: 'var(--radius-md)',
-              padding: '8px 16px',
-              fontSize: '13px',
-              fontWeight: 600,
-              cursor: isIdentifying ? 'not-allowed' : 'pointer',
-            }}
-          >
-            {isIdentifying ? 'Identifying...' : 'Identify Fonts'}
-          </button>
-          <button
-            type="button"
-            onClick={() => { setFontIdPhoto(null); setIdentifyResult(null); setFontSuggestions([]) }}
-            style={{ background: 'transparent', border: 'none', color: 'var(--dimmer)', fontSize: '12px', cursor: 'pointer' }}
-          >
-            Remove image
-          </button>
-        </div>
+        <button
+          type="button"
+          onClick={runFontIdentification}
+          disabled={isIdentifying}
+          style={{
+            display: isIdentifying ? 'block' : 'block',
+            marginBottom: '1rem',
+            width: '100%',
+            padding: '11px',
+            background: isIdentifying ? 'var(--border)' : 'var(--orange)',
+            color: isIdentifying ? 'var(--dimmer)' : '#fff',
+            border: 'none',
+            borderRadius: 'var(--radius-md)',
+            fontSize: '13px',
+            fontWeight: 600,
+            cursor: isIdentifying ? 'not-allowed' : 'pointer',
+          }}
+        >
+          {isIdentifying ? 'Identifying...' : 'Identify Fonts with AI →'}
+        </button>
       )}
 
       {identifyError && (
@@ -641,229 +840,20 @@ export default function Typography() {
         </div>
       )}
 
-      {/* ── 2. Font Pairing Suggestions (mood cards) ── */}
+      {/* ── 3. Manual Entry ── */}
       <h2
         style={{
           fontSize: '16px',
           fontWeight: 600,
           color: 'var(--text)',
-          margin: '1.75rem 0 8px',
+          marginTop: '1.5rem',
+          marginBottom: '8px',
         }}
       >
-        Font Finder
+        Already Know Your Fonts?
       </h2>
       <p style={{ fontSize: '13.5px', color: 'var(--dim)', lineHeight: 1.7, marginBottom: '1rem' }}>
-        Which of these feels closest to your brand world? Pick the aesthetic that matches your mood board.
-      </p>
-
-      {/* Aesthetic mood grid */}
-      <div
-        style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))',
-          gap: '6px',
-          marginBottom: '1rem',
-        }}
-      >
-        {AESTHETIC_MOODS.map(mood => (
-          <div
-            key={mood.key}
-            role="button"
-            tabIndex={0}
-            onClick={() => selectMood(mood.key)}
-            onKeyDown={e => e.key === 'Enter' && selectMood(mood.key)}
-            style={{
-              background: selectedMood === mood.key ? 'var(--orange-tint)' : 'var(--card)',
-              border: `1px solid ${selectedMood === mood.key ? 'var(--orange)' : 'var(--border)'}`,
-              borderRadius: 'var(--radius-lg)',
-              padding: '12px',
-              cursor: 'pointer',
-              transition: 'all .15s',
-            }}
-          >
-            <div
-              style={{
-                fontSize: '9px',
-                fontWeight: 700,
-                letterSpacing: '.1em',
-                textTransform: 'uppercase',
-                color: 'var(--orange)',
-                marginBottom: '4px',
-              }}
-            >
-              {mood.num}
-            </div>
-            <div style={{ fontSize: '13px', fontWeight: 600, color: 'var(--text)', marginBottom: '4px' }}>
-              {mood.label}
-            </div>
-            <div style={{ fontSize: '14px', color: 'var(--dim)', marginBottom: '6px', ...mood.previewStyle }}>
-              {mood.preview}
-            </div>
-            <div style={{ display: 'flex', gap: '4px', flexWrap: 'wrap' }}>
-              {mood.tags.map(tag => (
-                <span
-                  key={tag}
-                  style={{
-                    fontSize: '10px',
-                    color: 'var(--dimmer)',
-                    background: 'var(--surface)',
-                    borderWidth: '1px',
-                    borderStyle: 'solid',
-                    borderColor: 'var(--border)',
-                    borderRadius: '3px',
-                    padding: '1px 5px',
-                  }}
-                >
-                  {tag}
-                </span>
-              ))}
-            </div>
-          </div>
-        ))}
-      </div>
-
-      {/* Pairing results */}
-      {selectedMood && currentPairings.length > 0 && (
-        <div
-          style={{
-            background: 'var(--card)',
-            border: '1px solid var(--border)',
-            borderRadius: 'var(--radius-lg)',
-            padding: '14px 16px',
-            marginBottom: '1.5rem',
-          }}
-        >
-          <div style={{ fontSize: '11px', fontWeight: 700, letterSpacing: '.1em', textTransform: 'uppercase', color: 'var(--orange)', marginBottom: '2px' }}>
-            {AESTHETIC_MOODS.find(m => m.key === selectedMood)?.label} — Pairings
-          </div>
-          <p style={{ fontSize: '12.5px', color: 'var(--dim)', marginBottom: '12px' }}>
-            Click <strong>Use This Pairing</strong> to auto-fill your fonts below.
-          </p>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-            {currentPairings.map((p, i) => (
-              <div
-                key={i}
-                style={{
-                  background: 'var(--surface)',
-                  border: '1px solid var(--border)',
-                  borderRadius: 'var(--radius-md)',
-                  padding: '12px 14px',
-                }}
-              >
-                <div style={{ fontSize: '12px', fontWeight: 700, color: 'var(--text)', marginBottom: '8px' }}>{p.name}</div>
-                <div style={{ marginBottom: '6px' }}>
-                  <div
-                    style={{
-                      fontFamily: `'${p.header.f}', serif, sans-serif`,
-                      fontWeight: Number(p.header.w) || 700,
-                      fontSize: '18px',
-                      color: 'var(--text)',
-                      lineHeight: 1.2,
-                    }}
-                  >
-                    Your Brand
-                  </div>
-                  <div
-                    style={{
-                      fontFamily: `'${p.body.f}', sans-serif`,
-                      fontWeight: Number(p.body.w) || 400,
-                      fontSize: '12.5px',
-                      color: 'var(--dim)',
-                      lineHeight: 1.6,
-                      marginTop: '4px',
-                    }}
-                  >
-                    {p.previewBody}
-                  </div>
-                </div>
-                <div className="grid-form" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '6px', marginBottom: '8px' }}>
-                  <div>
-                    <div style={{ fontSize: '9px', color: 'var(--dimmer)', textTransform: 'uppercase', letterSpacing: '.08em' }}>Primary Font</div>
-                    <div style={{ fontSize: '12px', color: 'var(--text)', fontWeight: 600 }}>{p.header.f}</div>
-                    <div style={{ fontSize: '10px', color: 'var(--dimmer)' }}>{p.header.s}</div>
-                  </div>
-                  <div>
-                    <div style={{ fontSize: '9px', color: 'var(--dimmer)', textTransform: 'uppercase', letterSpacing: '.08em' }}>Body Font</div>
-                    <div style={{ fontSize: '12px', color: 'var(--text)', fontWeight: 600 }}>{p.body.f}</div>
-                    <div style={{ fontSize: '10px', color: 'var(--dimmer)' }}>{p.body.s}</div>
-                  </div>
-                </div>
-                <div style={{ fontSize: '12.5px', color: 'var(--dim)', lineHeight: 1.6, marginBottom: '10px', fontStyle: 'italic' }}>{p.why}</div>
-                <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
-                  <button
-                    type="button"
-                    onClick={() => applyPairing(p)}
-                    style={{
-                      background: 'var(--orange)',
-                      color: '#fff',
-                      border: 'none',
-                      borderRadius: 'var(--radius-md)',
-                      padding: '7px 14px',
-                      fontSize: '12.5px',
-                      fontWeight: 600,
-                      cursor: 'pointer',
-                    }}
-                  >
-                    Use This Pairing
-                  </button>
-                  <a
-                    href={p.gf}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    style={{ fontSize: '11px', color: 'var(--orange)', textDecoration: 'none' }}
-                  >
-                    View on Google Fonts →
-                  </a>
-                </div>
-              </div>
-            ))}
-          </div>
-          {totalPairings > 3 && (
-            <button
-              type="button"
-              onClick={() => {
-                const next = pairingOffset + 3
-                setPairingOffset(next >= totalPairings ? 0 : next)
-              }}
-              style={{
-                width: '100%',
-                marginTop: '8px',
-                padding: '9px',
-                border: '1px dashed var(--border)',
-                borderRadius: 'var(--radius-md)',
-                background: 'transparent',
-                color: 'var(--dim)',
-                fontSize: '12.5px',
-                cursor: 'pointer',
-              }}
-            >
-              {pairingOffset + 3 >= totalPairings ? 'See First 3 Again →' : 'See 3 More Options →'}
-            </button>
-          )}
-        </div>
-      )}
-
-      {/* ── 3 + 4 + 5. Font inputs + preview + autocomplete + toggles ── */}
-      <h2
-        style={{
-          fontSize: '16px',
-          fontWeight: 600,
-          color: 'var(--text)',
-          margin: '1.75rem 0 8px',
-        }}
-      >
-        Your Fonts
-      </h2>
-      <p style={{ fontSize: '13.5px', color: 'var(--dim)', lineHeight: 1.7, marginBottom: '1rem' }}>
-        Enter them directly below. Suggestions appear as you type.{' '}
-        <a
-          href="https://fonts.google.com"
-          target="_blank"
-          rel="noopener noreferrer"
-          style={{ color: 'var(--orange)', textDecoration: 'none' }}
-        >
-          Browse Google Fonts →
-        </a>
+        Enter them directly below. You can also search Google Fonts to preview and pick from thousands of options.
       </p>
 
       <div
@@ -890,66 +880,62 @@ export default function Typography() {
 
         {/* Primary Font */}
         <div style={{ marginBottom: '1.5rem' }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '4px' }}>
-            <div style={{ fontSize: '13.5px', fontWeight: 600, color: 'var(--text)' }}>
-              Primary Font — headlines, hooks, title cards
-            </div>
-            <div style={{ display: 'flex', gap: '4px' }}>
-              <button
-                type="button"
-                title="Italic"
-                onClick={() => toggleStyle('vw_typo_primary_italic')}
-                style={{
-                  width: '28px',
-                  height: '28px',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  border: '1px solid var(--border)',
-                  borderRadius: '4px',
-                  background: primaryItalic ? 'var(--orange)' : 'var(--surface)',
-                  color: primaryItalic ? '#fff' : 'var(--text)',
-                  cursor: 'pointer',
-                  fontStyle: 'italic',
-                  fontWeight: 700,
-                  fontSize: '13px',
-                }}
-              >
-                I
-              </button>
-              <button
-                type="button"
-                title="Bold"
-                onClick={() => toggleStyle('vw_typo_primary_bold')}
-                style={{
-                  width: '28px',
-                  height: '28px',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  border: '1px solid var(--border)',
-                  borderRadius: '4px',
-                  background: primaryBold ? 'var(--orange)' : 'var(--surface)',
-                  color: primaryBold ? '#fff' : 'var(--text)',
-                  cursor: 'pointer',
-                  fontWeight: 900,
-                  fontSize: '13px',
-                }}
-              >
-                B
-              </button>
-            </div>
+          <div style={{ fontSize: '13.5px', fontWeight: 600, color: 'var(--text)', marginTop: 0, marginBottom: '6px' }}>
+            Primary Font — headlines, hooks, title cards
           </div>
-          <div style={{ fontSize: '12px', color: 'var(--dim)', marginBottom: '6px' }}>
-            This is what people see in your thumbnails, title cards, and major hooks.
+          <div style={{ display: 'flex', gap: '6px', alignItems: 'flex-start', marginBottom: '4px' }}>
+            <div style={{ flex: 1 }}>
+              {/* Autocomplete input for primary */}
+              <FontAutocomplete
+                value={watch('vw_typo_primary')}
+                onChange={val => (setValue as (k: string, v: string) => void)('vw_typo_primary', val)}
+                placeholder="e.g. Bebas Neue, Playfair Display, Montserrat..."
+              />
+            </div>
+            <button
+              type="button"
+              title="Italic"
+              onClick={() => toggleStyle('vw_typo_primary_italic')}
+              style={{
+                width: '28px',
+                height: '28px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                border: '1px solid var(--border)',
+                borderRadius: '4px',
+                background: primaryItalic ? 'var(--orange)' : 'var(--surface)',
+                color: primaryItalic ? '#fff' : 'var(--text)',
+                cursor: 'pointer',
+                fontStyle: 'italic',
+                fontWeight: 700,
+                fontSize: '13px',
+              }}
+            >
+              I
+            </button>
+            <button
+              type="button"
+              title="Bold"
+              onClick={() => toggleStyle('vw_typo_primary_bold')}
+              style={{
+                width: '28px',
+                height: '28px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                border: '1px solid var(--border)',
+                borderRadius: '4px',
+                background: primaryBold ? 'var(--orange)' : 'var(--surface)',
+                color: primaryBold ? '#fff' : 'var(--text)',
+                cursor: 'pointer',
+                fontWeight: 900,
+                fontSize: '13px',
+              }}
+            >
+              B
+            </button>
           </div>
-
-          {/* Autocomplete input for primary */}
-          <FontAutocomplete
-            value={watch('vw_typo_primary')}
-            onChange={val => (setValue as (k: string, v: string) => void)('vw_typo_primary', val)}
-            placeholder="e.g. Bebas Neue, Playfair Display, Montserrat..."
-          />
 
           {/* Also save via WorkshopInput (hidden) for autosave trigger */}
           <div style={{ display: 'none' }}>
@@ -967,115 +953,104 @@ export default function Typography() {
           {watch('vw_typo_primary') && watch('vw_typo_primary').length >= 2 && (
             <div
               style={{
-                marginTop: '10px',
-                background: 'var(--surface)',
                 border: '1px solid var(--border)',
                 borderRadius: 'var(--radius-md)',
-                padding: '10px 12px',
+                padding: '1rem 1.25rem',
+                marginBottom: '.75rem',
+                marginTop: '10px',
+                background: 'var(--card)',
               }}
             >
-              <div style={{ fontSize: '9px', color: 'var(--dimmer)', textTransform: 'uppercase', letterSpacing: '.08em', marginBottom: '6px' }}>Preview</div>
+              <div style={{ fontSize: '9.5px', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '.1em', color: 'var(--orange)', marginBottom: '.5rem' }}>
+                {watch('vw_typo_primary')}
+              </div>
               <div
                 style={{
                   fontFamily: `'${watch('vw_typo_primary')}', sans-serif`,
                   fontStyle: primaryItalic ? 'italic' : 'normal',
                   fontWeight: primaryBold ? 700 : 400,
-                  fontSize: '20px',
+                  fontSize: '26px',
+                  lineHeight: 1.15,
                   color: 'var(--text)',
-                  marginBottom: '4px',
+                  marginBottom: '.35rem',
                 }}
               >
-                The quick brown fox jumps over the lazy dog
+                Your Brand Headline
               </div>
-              <div
-                style={{
-                  fontFamily: `'${watch('vw_typo_primary')}', sans-serif`,
-                  fontStyle: 'italic',
-                  fontWeight: primaryBold ? 700 : 400,
-                  fontSize: '14px',
-                  color: 'var(--dim)',
-                  marginBottom: '2px',
-                }}
-              >
-                Italic — The quick brown fox
-              </div>
-              <div
-                style={{
-                  fontFamily: `'${watch('vw_typo_primary')}', sans-serif`,
-                  fontStyle: 'normal',
-                  fontWeight: 700,
-                  fontSize: '14px',
-                  color: 'var(--dim)',
-                }}
-              >
-                Bold — The quick brown fox
+              <div style={{ fontSize: '11px', color: 'var(--dimmer)' }}>
+                Primary · Used for headlines, title cards, hooks
               </div>
             </div>
           )}
+          <a
+            href="https://fonts.google.com"
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{ fontSize: '11px', color: 'var(--orange)', textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: '4px', marginBottom: '.85rem' }}
+          >
+            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+            Browse Google Fonts →
+          </a>
         </div>
 
         {/* Body Font */}
         <div>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '4px' }}>
-            <div style={{ fontSize: '13.5px', fontWeight: 600, color: 'var(--text)' }}>
-              Body Font — captions, supporting copy, longer text
-            </div>
-            <div style={{ display: 'flex', gap: '4px' }}>
-              <button
-                type="button"
-                title="Italic"
-                onClick={() => toggleStyle('vw_typo_body_italic')}
-                style={{
-                  width: '28px',
-                  height: '28px',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  border: '1px solid var(--border)',
-                  borderRadius: '4px',
-                  background: bodyItalic ? 'var(--orange)' : 'var(--surface)',
-                  color: bodyItalic ? '#fff' : 'var(--text)',
-                  cursor: 'pointer',
-                  fontStyle: 'italic',
-                  fontWeight: 700,
-                  fontSize: '13px',
-                }}
-              >
-                I
-              </button>
-              <button
-                type="button"
-                title="Bold"
-                onClick={() => toggleStyle('vw_typo_body_bold')}
-                style={{
-                  width: '28px',
-                  height: '28px',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  border: '1px solid var(--border)',
-                  borderRadius: '4px',
-                  background: bodyBold ? 'var(--orange)' : 'var(--surface)',
-                  color: bodyBold ? '#fff' : 'var(--text)',
-                  cursor: 'pointer',
-                  fontWeight: 900,
-                  fontSize: '13px',
-                }}
-              >
-                B
-              </button>
-            </div>
+          <div style={{ fontSize: '13.5px', fontWeight: 600, color: 'var(--text)', marginBottom: '6px' }}>
+            Body Font — captions, supporting copy, longer text
           </div>
-          <div style={{ fontSize: '12px', color: 'var(--dim)', marginBottom: '6px' }}>
-            Used for captions, supporting text, and any longer copy in your content.
+          <div style={{ display: 'flex', gap: '6px', alignItems: 'flex-start', marginBottom: '4px' }}>
+            <div style={{ flex: 1 }}>
+              {/* Autocomplete input for body */}
+              <FontAutocomplete
+                value={watch('vw_typo_body')}
+                onChange={val => (setValue as (k: string, v: string) => void)('vw_typo_body', val)}
+                placeholder="e.g. Inter, DM Sans, Source Sans Pro..."
+              />
+            </div>
+            <button
+              type="button"
+              title="Italic"
+              onClick={() => toggleStyle('vw_typo_body_italic')}
+              style={{
+                width: '28px',
+                height: '28px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                border: '1px solid var(--border)',
+                borderRadius: '4px',
+                background: bodyItalic ? 'var(--orange)' : 'var(--surface)',
+                color: bodyItalic ? '#fff' : 'var(--text)',
+                cursor: 'pointer',
+                fontStyle: 'italic',
+                fontWeight: 700,
+                fontSize: '13px',
+              }}
+            >
+              I
+            </button>
+            <button
+              type="button"
+              title="Bold"
+              onClick={() => toggleStyle('vw_typo_body_bold')}
+              style={{
+                width: '28px',
+                height: '28px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                border: '1px solid var(--border)',
+                borderRadius: '4px',
+                background: bodyBold ? 'var(--orange)' : 'var(--surface)',
+                color: bodyBold ? '#fff' : 'var(--text)',
+                cursor: 'pointer',
+                fontWeight: 900,
+                fontSize: '13px',
+              }}
+            >
+              B
+            </button>
           </div>
-
-          {/* Autocomplete input for body */}
-          <FontAutocomplete
-            value={watch('vw_typo_body')}
-            onChange={val => (setValue as (k: string, v: string) => void)('vw_typo_body', val)}
-            placeholder="e.g. Inter, DM Sans, Source Sans Pro..."
-          />
 
           {/* Also save via WorkshopInput (hidden) for autosave trigger */}
           <div style={{ display: 'none' }}>
@@ -1093,71 +1068,97 @@ export default function Typography() {
           {watch('vw_typo_body') && watch('vw_typo_body').length >= 2 && (
             <div
               style={{
-                marginTop: '10px',
-                background: 'var(--surface)',
                 border: '1px solid var(--border)',
                 borderRadius: 'var(--radius-md)',
-                padding: '10px 12px',
+                padding: '1rem 1.25rem',
+                marginBottom: '.75rem',
+                marginTop: '10px',
+                background: 'var(--card)',
               }}
             >
-              <div style={{ fontSize: '9px', color: 'var(--dimmer)', textTransform: 'uppercase', letterSpacing: '.08em', marginBottom: '6px' }}>Preview</div>
+              <div style={{ fontSize: '9.5px', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '.1em', color: 'var(--orange)', marginBottom: '.5rem' }}>
+                {watch('vw_typo_body')}
+              </div>
               <div
                 style={{
                   fontFamily: `'${watch('vw_typo_body')}', sans-serif`,
                   fontStyle: bodyItalic ? 'italic' : 'normal',
                   fontWeight: bodyBold ? 700 : 400,
-                  fontSize: '15px',
-                  color: 'var(--text)',
-                  marginBottom: '4px',
-                }}
-              >
-                The quick brown fox jumps over the lazy dog
-              </div>
-              <div
-                style={{
-                  fontFamily: `'${watch('vw_typo_body')}', sans-serif`,
-                  fontStyle: 'italic',
-                  fontWeight: bodyBold ? 700 : 400,
-                  fontSize: '13px',
+                  fontSize: '14px',
+                  lineHeight: 1.75,
                   color: 'var(--dim)',
-                  marginBottom: '2px',
+                  marginBottom: '.35rem',
                 }}
               >
-                Italic — The quick brown fox
+                This is how your body copy and captions will look. Clean, readable, and consistent across every piece of content you create.
               </div>
-              <div
-                style={{
-                  fontFamily: `'${watch('vw_typo_body')}', sans-serif`,
-                  fontStyle: 'normal',
-                  fontWeight: 700,
-                  fontSize: '13px',
-                  color: 'var(--dim)',
-                }}
-              >
-                Bold — The quick brown fox
+              <div style={{ fontSize: '11px', color: 'var(--dimmer)' }}>
+                Body · Used for captions, supporting text, longer copy
               </div>
             </div>
           )}
+          <a
+            href="https://fonts.google.com"
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{ fontSize: '11px', color: 'var(--orange)', textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: '4px', marginBottom: '.85rem' }}
+          >
+            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+            Browse Google Fonts →
+          </a>
         </div>
-      </div>
 
-      {/* Custom fonts note */}
-      <div
-        style={{
-          background: 'var(--orange-tint)',
-          borderWidth: '1px',
-          borderStyle: 'solid',
-          borderColor: 'var(--orange-border)',
-          borderRadius: 'var(--radius-md)',
-          padding: '.75rem 1rem',
-          marginBottom: '1.5rem',
-        }}
-      >
-        <div style={{ fontSize: '12px', color: 'var(--orange-dark)', lineHeight: 1.6 }}>
-          If you use custom / brand fonts (not on Google Fonts), type the font name exactly as it
-          appears in your design tool (Figma, Canva, Adobe). Your style guide will reference it —
-          just make sure you have the license.
+        {/* Custom fonts toggle */}
+        <div
+          onClick={() => setCustomFontsChecked(!customFontsChecked)}
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '10px',
+            padding: '10px 12px',
+            border: '1px solid var(--border)',
+            borderRadius: 'var(--radius-md)',
+            background: 'var(--surface)',
+            marginBottom: '.85rem',
+            cursor: 'pointer',
+          }}
+        >
+          <div
+            style={{
+              width: '16px',
+              height: '16px',
+              borderRadius: '3px',
+              border: `1.5px solid ${customFontsChecked ? 'var(--orange)' : 'var(--dimmer)'}`,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              transition: 'all .15s',
+              flexShrink: 0,
+              background: customFontsChecked ? 'var(--orange)' : 'transparent',
+              color: '#fff',
+              fontSize: '11px',
+              fontWeight: 700,
+            }}
+          >
+            {customFontsChecked ? '✓' : ''}
+          </div>
+          <span style={{ fontSize: '13px', color: 'var(--dim)' }}>I use custom / brand fonts (not on Google Fonts)</span>
         </div>
+        {customFontsChecked && (
+          <div
+            style={{
+              background: 'var(--orange-tint)',
+              border: '1px solid var(--orange-border)',
+              borderRadius: 'var(--radius-md)',
+              padding: '.75rem 1rem',
+              marginBottom: '.85rem',
+            }}
+          >
+            <div style={{ fontSize: '12px', color: 'var(--orange-dark)', lineHeight: 1.6 }}>
+              Type the font name above exactly as it appears in your design tool (Figma, Canva, Adobe). Your style guide will reference it — just make sure you have the license.
+            </div>
+          </div>
+        )}
       </div>
     </SectionWrapper>
   )

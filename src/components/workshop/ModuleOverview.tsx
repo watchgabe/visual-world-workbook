@@ -24,6 +24,7 @@ interface ModuleOverviewProps {
   description: string
   stats: [StatCard, StatCard]
   roadmap: RoadmapCard[]
+  footer?: React.ReactNode
 }
 
 export function ModuleOverview({
@@ -33,6 +34,7 @@ export function ModuleOverview({
   description,
   stats,
   roadmap,
+  footer,
 }: ModuleOverviewProps) {
   const { moduleProgress } = useProgress()
   const sections = MODULE_SECTIONS[moduleSlug] ?? []
@@ -155,7 +157,7 @@ export function ModuleOverview({
       >
         {roadmap.map(card => (
           <Link
-            key={card.slug}
+            key={card.num}
             href={`/modules/${moduleSlug}/${card.slug}`}
             style={{ textDecoration: 'none', display: 'flex' }}
           >
@@ -219,6 +221,7 @@ export function ModuleOverview({
           Begin Workshop 1 →
         </Link>
       </div>
+      {footer}
     </section>
   )
 }
