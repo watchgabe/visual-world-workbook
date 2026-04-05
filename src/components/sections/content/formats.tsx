@@ -12,6 +12,7 @@ export default function ContentFormats() {
   useEffect(() => {
     const existing = document.querySelector('script[src*="instagram.com/embed"]')
     if (existing) {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       (window as any).instgrm?.Embeds?.process()
       return
     }
