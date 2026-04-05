@@ -1,3 +1,4 @@
+import Link from 'next/link'
 import { ModuleOverview } from '@/components/workshop/ModuleOverview'
 
 export default function ContentOverview() {
@@ -43,7 +44,7 @@ export default function ContentOverview() {
           <span style={{ fontSize: '12.5px', color: 'var(--dim)' }}>
             Prefer pen &amp; paper? Print the full workbook and complete it by hand.
           </span>
-          <a
+          <Link
             href="/modules/content/print"
             style={{
               marginLeft: 'auto',
@@ -58,7 +59,7 @@ export default function ContentOverview() {
             }}
           >
             Print Full Workbook
-          </a>
+          </Link>
         </div>
       }
     />
