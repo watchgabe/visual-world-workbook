@@ -11,7 +11,7 @@ import { SectionWrapper } from '@/components/workshop/SectionWrapper'
 import { MODULE_SECTIONS } from '@/lib/modules'
 
 const MODULE_SLUG = 'content' as const
-const SECTION_INDEX = 7
+const SECTION_INDEX = 11
 const SECTION_DEF = MODULE_SECTIONS[MODULE_SLUG]![SECTION_INDEX]
 
 const MOOD_VIBE_OPTIONS = [

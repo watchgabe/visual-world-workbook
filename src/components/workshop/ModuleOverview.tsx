@@ -24,6 +24,7 @@ interface ModuleOverviewProps {
   description: string
   stats: [StatCard, StatCard]
   roadmap: RoadmapCard[]
+  beginLabel?: string
   footer?: React.ReactNode
 }
 
@@ -34,6 +35,7 @@ export function ModuleOverview({
   description,
   stats,
   roadmap,
+  beginLabel,
   footer,
 }: ModuleOverviewProps) {
   const { moduleProgress } = useProgress()
@@ -218,7 +220,7 @@ export function ModuleOverview({
             textDecoration: 'none',
           }}
         >
-          Begin Workshop 1 →
+          {beginLabel || 'Begin Workshop 1 →'}
         </Link>
       </div>
       {footer}

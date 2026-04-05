@@ -192,7 +192,9 @@ export const MODULE_SECTIONS: Partial<Record<ModuleSlug, SectionDef[]>> = {
     ]},
   ],
   'content': [
+    // INDEX 0
     { slug: 'overview',          name: 'Overview',          fields: [] },
+    // INDEX 1
     { slug: 'content-strategy',  name: 'Strategy',          fields: [
       { key: 'ct_strategy_goal',         required: false },
       { key: 'ct_strategy_next_step',    required: false },
@@ -200,6 +202,7 @@ export const MODULE_SECTIONS: Partial<Record<ModuleSlug, SectionDef[]>> = {
       { key: 'ct_strategy_unique_sol',   required: true  },
       { key: 'ct_strategy_credibility',  required: false },
     ]},
+    // INDEX 2
     { slug: 'sustainability',    name: 'Sustainability',     fields: [
       // Workshop 2 — Sustainable foundation
       { key: 'ct_sustain_week_hours', required: false },
@@ -216,14 +219,20 @@ export const MODULE_SECTIONS: Partial<Record<ModuleSlug, SectionDef[]>> = {
       { key: 'ct_sustain_primary',    required: true  },
       { key: 'ct_sustain_secondary',  required: false },
       { key: 'ct_sustain_focus',      required: false },
+    ]},
+    // INDEX 3
+    { slug: 'batching',          name: 'Batching System',   fields: [
       // Workshop 3 — Batching System
       { key: 'ct_batch_film_day', required: false },
       { key: 'ct_batch_count',    required: false },
       { key: 'ct_batch_setup',    required: false },
       { key: 'ct_batch_commit',   required: false },
     ]},
+    // INDEX 4
     { slug: 'formats',           name: 'Formats',           fields: [] },
-    { slug: 'content-system',    name: 'Content System',   fields: [] },
+    // INDEX 5
+    { slug: 'content-system',    name: 'Content System',    fields: [] },
+    // INDEX 6
     { slug: 'trust-and-money',   name: 'Trust & Money',     fields: [
       // Workshop 6 — Trust & Money
       { key: 'ct_tm_free',       required: false },
@@ -233,6 +242,9 @@ export const MODULE_SECTIONS: Partial<Record<ModuleSlug, SectionDef[]>> = {
       { key: 'ct_tm_high',       required: false },
       { key: 'ct_tm_conv',       required: false },
       { key: 'ct_tm_cta_strat',  required: false },
+    ]},
+    // INDEX 7
+    { slug: 'idea-generation',   name: 'Idea Generation',   fields: [
       // Workshop 7 — Idea Generation (pillar names)
       { key: 'ct_ig_pillar1',     required: false },
       { key: 'ct_ig_pillar2',     required: false },
@@ -268,6 +280,9 @@ export const MODULE_SECTIONS: Partial<Record<ModuleSlug, SectionDef[]>> = {
           )
         )
       ).flat(2),
+    ]},
+    // INDEX 8
+    { slug: 'storytelling',      name: 'Storytelling',      fields: [
       // Workshop 8 — Storytelling
       { key: 'ct_story_idea',   required: false },
       { key: 'ct_story_hook',   required: false },
@@ -276,9 +291,11 @@ export const MODULE_SECTIONS: Partial<Record<ModuleSlug, SectionDef[]>> = {
       { key: 'ct_story_lesson', required: false },
       { key: 'ct_story_cta',    required: false },
     ]},
-    // SECTION_INDEX = 6 (appended after trust-and-money at index 5)
+    // INDEX 9
+    { slug: 'starter-kit',       name: 'Starter Kit',       fields: [] },
+    // INDEX 10
     { slug: 'cinematic-content', name: 'Cinematic Content', fields: [] },
-    // SECTION_INDEX = 7 (appended after cinematic-content at index 6)
+    // INDEX 11
     { slug: 'content-blueprint', name: 'Content Blueprint', fields: [
       { key: 'ct_bp_color1',             required: false },
       { key: 'ct_bp_color2',             required: false },

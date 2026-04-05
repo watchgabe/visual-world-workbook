@@ -53,14 +53,18 @@ const SECTION_REGISTRY: Record<string, React.ComponentType<any>> = {
 
 
   // Content sections — Plan 04
-  'content/overview':          dynamic(() => import('@/components/sections/content/overview'), { loading: () => <SectionSkeleton /> }),
-  'content/content-strategy':  dynamic(() => import('@/components/sections/content/content-strategy'), { loading: () => <SectionSkeleton /> }),
-  'content/sustainability':    dynamic(() => import('@/components/sections/content/sustainability'), { loading: () => <SectionSkeleton /> }),
-  'content/formats':           dynamic(() => import('@/components/sections/content/formats'), { loading: () => <SectionSkeleton /> }),
-  'content/content-system':    dynamic(() => import('@/components/sections/content/content-system'), { loading: () => <SectionSkeleton /> }),
-  'content/trust-and-money':      dynamic(() => import('@/components/sections/content/trust-and-money'), { loading: () => <SectionSkeleton /> }),
-  'content/cinematic-content':    dynamic(() => import('@/components/sections/content/cinematic-content'), { loading: () => <SectionSkeleton /> }),
-  'content/content-blueprint':    dynamic(() => import('@/components/sections/content/content-blueprint'), { loading: () => <SectionSkeleton /> }),
+  'content/overview':           dynamic(() => import('@/components/sections/content/overview'), { loading: () => <SectionSkeleton /> }),
+  'content/content-strategy':   dynamic(() => import('@/components/sections/content/content-strategy'), { loading: () => <SectionSkeleton /> }),
+  'content/sustainability':     dynamic(() => import('@/components/sections/content/sustainability'), { loading: () => <SectionSkeleton /> }),
+  'content/batching':           dynamic(() => import('@/components/sections/content/batching'), { loading: () => <SectionSkeleton /> }),
+  'content/formats':            dynamic(() => import('@/components/sections/content/formats'), { loading: () => <SectionSkeleton /> }),
+  'content/content-system':     dynamic(() => import('@/components/sections/content/content-system'), { loading: () => <SectionSkeleton /> }),
+  'content/trust-and-money':    dynamic(() => import('@/components/sections/content/trust-and-money'), { loading: () => <SectionSkeleton /> }),
+  'content/idea-generation':    dynamic(() => import('@/components/sections/content/idea-generation'), { loading: () => <SectionSkeleton /> }),
+  'content/storytelling':       dynamic(() => import('@/components/sections/content/storytelling'), { loading: () => <SectionSkeleton /> }),
+  'content/starter-kit':        dynamic(() => import('@/components/sections/content/starter-kit'), { loading: () => <SectionSkeleton /> }),
+  'content/cinematic-content':  dynamic(() => import('@/components/sections/content/cinematic-content'), { loading: () => <SectionSkeleton /> }),
+  'content/content-blueprint':  dynamic(() => import('@/components/sections/content/content-blueprint'), { loading: () => <SectionSkeleton /> }),
 
   // Launch sections — Plan 05
   'launch/overview':        dynamic(() => import('@/components/sections/launch/overview'), { loading: () => <SectionSkeleton /> }),

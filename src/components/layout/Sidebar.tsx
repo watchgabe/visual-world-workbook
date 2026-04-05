@@ -62,42 +62,68 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
       {/* Sidebar header */}
       <div
         style={{
-          padding: '1.25rem 1.25rem 1rem',
+          padding: '1.35rem 1.25rem 1.1rem',
           borderBottom: '1px solid var(--border)',
           flexShrink: 0,
         }}
       >
-        <div
-          style={{
-            fontSize: '10px',
-            fontWeight: 700,
-            color: 'var(--orange)',
-            letterSpacing: '.12em',
-            textTransform: 'uppercase',
-            marginBottom: '4px',
-          }}
-        >
-          FSCreative&#8482;
-        </div>
-        <div
-          style={{
-            fontSize: '13px',
-            fontWeight: 700,
-            color: 'var(--text)',
-            lineHeight: 1.35,
-          }}
-        >
-          The Brand Launch Playbook&#8482;
-        </div>
-        <div
-          style={{
-            height: '2px',
-            background: 'var(--orange)',
-            borderRadius: '1px',
-            marginTop: '10px',
-            opacity: 0.7,
-          }}
-        />
+        {(() => {
+          const activeModule = MODULES.find(m => pathname.startsWith(`/modules/${m.slug}`))
+          if (activeModule && activeModule.slug !== 'welcome') {
+            return (
+              <>
+                <div
+                  style={{
+                    fontSize: '11px',
+                    fontWeight: 700,
+                    color: 'var(--orange)',
+                    letterSpacing: '.1em',
+                    textTransform: 'uppercase',
+                    marginBottom: '3px',
+                  }}
+                >
+                  FSCreative&#8482; &#8212; Module {activeModule.number}
+                </div>
+                <div
+                  style={{
+                    fontSize: '12px',
+                    fontWeight: 500,
+                    color: 'var(--dim)',
+                    lineHeight: 1.45,
+                  }}
+                >
+                  {activeModule.title}&#8482;
+                </div>
+              </>
+            )
+          }
+          return (
+            <>
+              <div
+                style={{
+                  fontSize: '10px',
+                  fontWeight: 700,
+                  color: 'var(--orange)',
+                  letterSpacing: '.12em',
+                  textTransform: 'uppercase',
+                  marginBottom: '4px',
+                }}
+              >
+                FSCreative&#8482;
+              </div>
+              <div
+                style={{
+                  fontSize: '13px',
+                  fontWeight: 700,
+                  color: 'var(--text)',
+                  lineHeight: 1.35,
+                }}
+              >
+                The Brand Launch Playbook&#8482;
+              </div>
+            </>
+          )
+        })()}
       </div>
 
       {/* Module navigation */}
@@ -130,7 +156,18 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
                   alignItems: 'center',
                   borderLeft: `2px solid ${isActive ? 'var(--orange)' : 'transparent'}`,
                   background: isActive ? 'var(--orange-tint)' : undefined,
-                  transition: 'background .15s, border-color .15s',
+                  transition: 'all .15s',
+                  cursor: 'pointer',
+                }}
+                onMouseEnter={e => {
+                  if (!isActive) {
+                    e.currentTarget.style.background = 'var(--card)'
+                  }
+                }}
+                onMouseLeave={e => {
+                  if (!isActive) {
+                    e.currentTarget.style.background = ''
+                  }
                 }}
               >
                 <Link
@@ -150,7 +187,7 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
                       fontFamily: 'var(--font-num)',
                       fontSize: '22px',
                       fontWeight: 900,
-                      color: 'var(--orange)',
+                      color: isActive ? 'var(--orange)' : 'var(--orange)',
                       lineHeight: 1,
                       marginRight: '10px',
                       flexShrink: 0,
@@ -164,7 +201,7 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
                       style={{
                         fontSize: '12.5px',
                         fontWeight: 700,
-                        color: 'var(--text)',
+                        color: isActive ? 'var(--orange)' : 'var(--text)',
                         lineHeight: 1.3,
                         overflow: 'hidden',
                         textOverflow: 'ellipsis',
@@ -266,8 +303,19 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
                           alignItems: 'center',
                           padding: '6px 1rem 6px 3.5rem',
                           textDecoration: 'none',
+                          borderLeft: `2px solid ${isSectionActive ? 'var(--orange)' : 'transparent'}`,
                           background: isSectionActive ? 'var(--orange-tint)' : undefined,
-                          transition: 'background .12s',
+                          transition: 'all .15s',
+                        }}
+                        onMouseEnter={e => {
+                          if (!isSectionActive) {
+                            e.currentTarget.style.background = 'var(--card)'
+                          }
+                        }}
+                        onMouseLeave={e => {
+                          if (!isSectionActive) {
+                            e.currentTarget.style.background = ''
+                          }
                         }}
                       >
                         <span
@@ -275,8 +323,8 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
                             width: '7px',
                             height: '7px',
                             borderRadius: '50%',
-                            background: dotColor,
-                            border: dotBorder,
+                            background: isSectionActive ? 'var(--orange)' : dotColor,
+                            border: isSectionActive ? '1.5px solid var(--orange)' : dotBorder,
                             marginRight: '10px',
                             flexShrink: 0,
                           }}
@@ -284,7 +332,7 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
                         <span
                           style={{
                             fontSize: '12px',
-                            color: textColor,
+                            color: isSectionActive ? 'var(--orange)' : textColor,
                             fontWeight: isSectionActive ? 600 : 400,
                             flex: 1,
                             overflow: 'hidden',
