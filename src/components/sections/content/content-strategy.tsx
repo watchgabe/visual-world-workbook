@@ -129,21 +129,16 @@ export default function ContentStrategy() {
       </h2>
       <div
         style={{
-          background: 'var(--surface)',
-          borderWidth: '1px',
-          borderStyle: 'solid',
-          borderColor: 'var(--orange-border)',
-          borderRadius: 'var(--radius-md)',
-          padding: '1rem 1.1rem',
-          marginBottom: '1rem',
-          fontSize: '13px',
-          color: 'var(--text)',
-          fontWeight: 500,
-          lineHeight: 1.7,
+          border: '1px solid var(--orange-border)',
+          borderRadius: 'var(--radius-lg)',
+          padding: '.9rem 1.2rem',
+          background: 'var(--orange-tint)',
+          marginBottom: '1.1rem',
         }}
       >
-        Painful Problem + Unique Solution × Contextual Credibility + Proven Wrapper = Content That
-        Gets Customers
+        <p style={{ fontSize: '13px', fontWeight: 600, color: 'var(--orange-dark)', lineHeight: 1.75, margin: 0 }}>
+          Painful Problem + Unique Solution × Contextual Credibility + Proven Wrapper = Content That Gets Customers
+        </p>
       </div>
       <div
         style={{
@@ -157,7 +152,7 @@ export default function ContentStrategy() {
           lineHeight: 1.7,
         }}
       >
-        <ul style={{ paddingLeft: '1.1rem', margin: 0 }}>
+        <ul style={{ paddingLeft: '1.1rem', margin: 0, listStyleType: 'disc' }}>
           <li><strong style={{ color: 'var(--text)' }}>Painful Problem:</strong> What specific problem does this content solve?</li>
           <li><strong style={{ color: 'var(--text)' }}>Unique Solution:</strong> How do you solve it differently than everyone else?</li>
           <li><strong style={{ color: 'var(--text)' }}>Contextual Credibility:</strong> Why should they believe you on this specific topic — not general credentials, direct experience with this problem.</li>

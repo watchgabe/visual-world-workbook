@@ -11,7 +11,7 @@
   --border: #1f1f1f;
   --border2: #2a2a2a;
   --text: #ffffff;
-  --dim: #a0a0a0;
+  --dim: #b0b0b0;
   --dimmer: #555555;
   --orange: #F0601B;
   --orange-hover: #ff6d28;
@@ -58,6 +58,28 @@ body {
   overflow: hidden;
   transition: background .25s, color .25s;
 }
+
+/* ─── Idea Generation accordion ─── */
+.ig-inline-input > div { margin-bottom: 0; display: flex; align-items: center; }
+.ig-inline-input input.workshop-field {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  outline: none !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  font-size: 13.5px !important;
+  font-weight: 500 !important;
+  line-height: 1 !important;
+  height: auto !important;
+  min-width: 0;
+}
+.ig-pacc > summary::-webkit-details-marker { display: none; }
+.ig-pacc > summary::after { content: '＋'; font-size: 14px; color: var(--dimmer); flex-shrink: 0; }
+.ig-pacc[open] > summary::after { content: '－'; }
+.ig-iacc > summary::-webkit-details-marker { display: none; }
+.ig-iacc > summary::after { content: '＋'; font-size: 12px; color: var(--dimmer); flex-shrink: 0; }
+.ig-iacc[open] > summary::after { content: '－'; }
 
 /* ─── GRAIN OVERLAY (D-09) ─── */
 body::before {

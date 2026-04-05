@@ -295,28 +295,6 @@ export const MODULE_SECTIONS: Partial<Record<ModuleSlug, SectionDef[]>> = {
     { slug: 'starter-kit',       name: 'Starter Kit',       fields: [] },
     // INDEX 10
     { slug: 'cinematic-content', name: 'Cinematic Content', fields: [] },
-    // INDEX 11
-    { slug: 'content-blueprint', name: 'Content Blueprint', fields: [
-      { key: 'ct_bp_color1',             required: false },
-      { key: 'ct_bp_color2',             required: false },
-      { key: 'ct_bp_color3',             required: false },
-      { key: 'ct_bp_mood_vibe',          required: false },
-      { key: 'ct_bp_narrative',          required: false },
-      { key: 'ct_bp_objects',            required: false },
-      { key: 'ct_bp_references',         required: false },
-      { key: 'ct_bp_creator1_name',      required: false },
-      { key: 'ct_bp_creator1_why',       required: false },
-      { key: 'ct_bp_creator1_takeaway',  required: false },
-      { key: 'ct_bp_creator1_difference',required: false },
-      { key: 'ct_bp_creator2_name',      required: false },
-      { key: 'ct_bp_creator2_why',       required: false },
-      { key: 'ct_bp_creator2_takeaway',  required: false },
-      { key: 'ct_bp_creator2_difference',required: false },
-      { key: 'ct_bp_creator3_name',      required: false },
-      { key: 'ct_bp_creator3_why',       required: false },
-      { key: 'ct_bp_creator3_takeaway',  required: false },
-      { key: 'ct_bp_creator3_difference',required: false },
-    ]},
   ],
   'launch': [
     { slug: 'overview',       name: 'Overview',       fields: [] },

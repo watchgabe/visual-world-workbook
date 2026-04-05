@@ -358,20 +358,19 @@ export default function ContentSystem() {
 
       <div
         style={{
-          padding: '.75rem 1rem',
-          background: 'var(--surface)',
           borderLeft: '3px solid var(--orange)',
+          padding: '11px 15px',
+          background: 'var(--orange-tint)',
+          marginBottom: '1.1rem',
           borderRadius: '0 var(--radius-md) var(--radius-md) 0',
-          marginBottom: '1.25rem',
-          fontSize: '13px',
-          color: 'var(--dim)',
-          lineHeight: 1.6,
         }}
       >
-        <strong style={{ color: 'var(--text)' }}>Why this works:</strong> You don&apos;t waste
-        content. Your audience sees the same message multiple times in different formats. You stay
-        top of mind. Repetition reinforces brand associations. One pillar piece — done right —
-        fuels an entire week of content without a single new idea.
+        <p style={{ fontSize: '13.5px', color: 'var(--orange-dark)', lineHeight: 1.7, margin: 0, fontWeight: 500 }}>
+          <strong style={{ fontWeight: 700 }}>Why this works:</strong> You don&apos;t waste
+          content. Your audience sees the same message multiple times in different formats. You stay
+          top of mind. Repetition reinforces brand associations. One pillar piece — done right —
+          fuels an entire week of content without a single new idea.
+        </p>
       </div>
 
       <div

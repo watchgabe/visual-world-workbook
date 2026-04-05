@@ -64,7 +64,6 @@ const SECTION_REGISTRY: Record<string, React.ComponentType<any>> = {
   'content/storytelling':       dynamic(() => import('@/components/sections/content/storytelling'), { loading: () => <SectionSkeleton /> }),
   'content/starter-kit':        dynamic(() => import('@/components/sections/content/starter-kit'), { loading: () => <SectionSkeleton /> }),
   'content/cinematic-content':  dynamic(() => import('@/components/sections/content/cinematic-content'), { loading: () => <SectionSkeleton /> }),
-  'content/content-blueprint':  dynamic(() => import('@/components/sections/content/content-blueprint'), { loading: () => <SectionSkeleton /> }),
 
   // Launch sections — Plan 05
   'launch/overview':        dynamic(() => import('@/components/sections/launch/overview'), { loading: () => <SectionSkeleton /> }),

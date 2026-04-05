@@ -123,20 +123,16 @@ export default function TrustAndMoney() {
       </div>
       <div
         style={{
-          background: 'var(--surface)',
-          borderWidth: '1px',
-          borderStyle: 'solid',
-          borderColor: 'var(--orange-border)',
-          borderRadius: 'var(--radius-md)',
-          padding: '1rem 1.1rem',
-          marginBottom: '1.25rem',
-          fontSize: '13px',
-          color: 'var(--text)',
-          fontWeight: 500,
-          lineHeight: 1.7,
+          border: '1px solid var(--orange-border)',
+          borderRadius: 'var(--radius-lg)',
+          padding: '.9rem 1.2rem',
+          background: 'var(--orange-tint)',
+          marginBottom: '1.1rem',
         }}
       >
-        Free Content → builds awareness + trust → Lead Magnet → captures email, delivers quick win → Low-Ticket ($10–$100) → removes barrier to entry → Mid-Ticket ($500–$5K) → committed buyers → High-Ticket ($10K+) → done-with-you or done-for-you
+        <p style={{ fontSize: '13px', fontWeight: 600, color: 'var(--orange-dark)', lineHeight: 1.75, margin: 0 }}>
+          Free Content → builds awareness + trust → Lead Magnet → captures email, delivers quick win → Low-Ticket ($10–$100) → removes barrier to entry → Mid-Ticket ($500–$5K) → committed buyers → High-Ticket ($10K+) → done-with-you or done-for-you
+        </p>
       </div>
 
       <h2 style={{ fontSize: '16px', fontWeight: 600, color: 'var(--text)', margin: '1.75rem 0 8px' }}>

@@ -21,7 +21,6 @@ const PRINT_SECTIONS: Record<string, Array<{ title: string; component: React.Com
     { title: 'Content System', component: dynamic(() => import('@/components/sections/content/content-system'), { loading: () => <SectionSkeleton /> }) },
     { title: 'Trust & Money', component: dynamic(() => import('@/components/sections/content/trust-and-money'), { loading: () => <SectionSkeleton /> }) },
     { title: 'Cinematic Content', component: dynamic(() => import('@/components/sections/content/cinematic-content'), { loading: () => <SectionSkeleton /> }) },
-    { title: 'Content Blueprint', component: dynamic(() => import('@/components/sections/content/content-blueprint'), { loading: () => <SectionSkeleton /> }) },
   ],
 }
 

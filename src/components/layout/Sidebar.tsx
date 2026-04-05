@@ -303,18 +303,18 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
                           alignItems: 'center',
                           padding: '6px 1rem 6px 3.5rem',
                           textDecoration: 'none',
-                          borderLeft: `2px solid ${isSectionActive ? 'var(--orange)' : 'transparent'}`,
-                          background: isSectionActive ? 'var(--orange-tint)' : undefined,
+                          borderLeft: `2px solid ${isSectionActive ? 'var(--orange)' : isComplete ? 'var(--green-text)' : 'transparent'}`,
+                          background: isSectionActive ? 'var(--orange-tint)' : isComplete ? 'var(--green-bg)' : undefined,
                           transition: 'all .15s',
                         }}
                         onMouseEnter={e => {
                           if (!isSectionActive) {
-                            e.currentTarget.style.background = 'var(--card)'
+                            e.currentTarget.style.background = isComplete ? 'var(--green-bg)' : 'var(--card)'
                           }
                         }}
                         onMouseLeave={e => {
                           if (!isSectionActive) {
-                            e.currentTarget.style.background = ''
+                            e.currentTarget.style.background = isComplete ? 'var(--green-bg)' : ''
                           }
                         }}
                       >
@@ -342,18 +342,16 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
                         >
                           {section.name}
                         </span>
-                        {sectionPercent > 0 && (
-                          <span
-                            style={{
-                              fontSize: '10px',
-                              fontWeight: 600,
-                              color: isComplete ? 'var(--green-text)' : 'var(--dimmer)',
-                              marginLeft: '6px',
-                            }}
-                          >
-                            {sectionPercent}%
-                          </span>
-                        )}
+                        <span
+                          style={{
+                            fontSize: '10px',
+                            fontWeight: 600,
+                            color: isComplete ? 'var(--green-text)' : (isSectionActive && sectionPercent === 0) ? 'var(--orange)' : 'var(--dimmer)',
+                            marginLeft: '6px',
+                          }}
+                        >
+                          {sectionPercent > 0 ? `${sectionPercent}%` : isSectionActive ? '–' : ''}
+                        </span>
                       </Link>
                     )
                   })}

@@ -1,6 +1,7 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useCallback } from 'react'
+import Link from 'next/link'
 import { useForm } from 'react-hook-form'
 import { createClient } from '@/lib/supabase/client'
 import { useAuth } from '@/context/AuthContext'
@@ -20,9 +21,7 @@ export default function IdeaGeneration() {
     ),
   })
 
-  // AI generation state — tracks which idea is being generated (e.g. "1_1" = pillar 1, idea 1)
-  const [isGenerating, setIsGenerating] = useState<string | null>(null)
-  const [generateError, setGenerateError] = useState<string | null>(null)
+  const [refreshStatus, setRefreshStatus] = useState<string | null>(null)
 
   useEffect(() => {
     if (!user) return
@@ -45,72 +44,43 @@ export default function IdeaGeneration() {
     return () => { cancelled = true }
   }, [user, setValue])
 
-  /**
-   * AI generation handler — generates 4 content angles for a given idea.
-   * Calls /api/claude, populates individual angle fields a1–a4.
-   * Auto-save fires naturally on each setValue call per D-06.
-   *
-   * @param pillarIdx — 1-5
-   * @param ideaIdx   — 1-4
-   */
-  async function handleGenerateAngles(pillarIdx: number, ideaIdx: number) {
-    const ideaKey = `ct_ig_p${pillarIdx}i${ideaIdx}`
-    const pillarKey = `ct_ig_pillar${pillarIdx}`
-    const generateKey = `${pillarIdx}_${ideaIdx}`
-
-    const idea = (getValues() as Record<string, string>)[ideaKey] || ''
-    const pillarName = (getValues() as Record<string, string>)[pillarKey] || ''
-
-    if (!idea.trim()) {
-      setGenerateError('Add an idea title first, then generate angles for it.')
-      return
-    }
-
-    setIsGenerating(generateKey)
-    setGenerateError(null)
-
+  const handleRefreshPillars = useCallback(async () => {
+    if (!user) return
+    setRefreshStatus(null)
     try {
-      const ctx = pillarName ? ` (pillar: "${pillarName}")` : ''
-      const prompt = `You are a social media content strategist. Generate EXACTLY 4 specific content angles for this idea: "${idea}"${ctx}. Each angle should be a punchy hook or take under 10 words — specific enough to film. Output ONLY 4 lines, one angle per line, no numbers, no headers, no explanations.`
+      const supabase = createClient()
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const { data } = await (supabase as any)
+        .from('blp_responses')
+        .select('responses')
+        .eq('user_id', user.id)
+        .eq('module_slug', 'brand-foundation')
+        .maybeSingle()
 
-      const res = await fetch('/api/claude', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ prompt, maxTokens: 300 }),
-      })
+      if (!data?.responses) {
+        setRefreshStatus('Brand Foundation not found. Enter your pillars below, or complete the Brand Foundation module first for auto-fill.')
+        return
+      }
 
-      if (!res.ok) throw new Error('Generation failed')
-      const data = await res.json()
-      if (data.error) throw new Error(data.error)
-
-      const text: string = data.text || data.content || ''
-      if (text) {
-        // D-06: setValue triggers useAutoSave 5s debounce naturally.
-        // Parse into 4 individual angle fields.
-        const lines = text.split('\n').filter((l: string) => l.trim())
-        const updates: Record<string, string> = {}
-        for (let a = 0; a < 4; a++) {
-          const angleKey = `ct_ig_p${pillarIdx}i${ideaIdx}a${a + 1}`
-          const val = lines[a] || ''
-          ;(setValue as (k: string, v: string) => void)(angleKey, val)
-          updates[angleKey] = val
-        }
-        if (user) {
-          const supabase = createClient()
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          ;(supabase as any).rpc('merge_responses', {
-            p_user_id: user.id,
-            p_module_slug: MODULE_SLUG,
-            p_data: updates,
-          })
+      const inp = data.responses as Record<string, string>
+      let found = 0
+      for (let i = 1; i <= 5; i++) {
+        const v = inp[`pillar${i}name`] || ''
+        if (v) {
+          ;(setValue as (k: string, v: string) => void)(`ct_ig_pillar${i}`, v)
+          found++
         }
       }
-    } catch (err) {
-      setGenerateError(err instanceof Error ? err.message : 'Generation failed')
-    } finally {
-      setIsGenerating(null)
+
+      if (found > 0) {
+        setRefreshStatus(`✓ ${found} pillar${found === 1 ? '' : 's'} loaded from your Brand Foundation. Edit any below if needed.`)
+      } else {
+        setRefreshStatus('Brand Foundation found but no pillars defined yet. Enter them in Brand Foundation or type them below.')
+      }
+    } catch {
+      setRefreshStatus('Could not read Brand Foundation data.')
     }
-  }
+  }, [user, setValue])
 
   const responses = watch()
 
@@ -146,199 +116,264 @@ export default function IdeaGeneration() {
         Idea Generation
       </h1>
       <p style={{ fontSize: '14px', color: 'var(--dim)', lineHeight: 1.8, marginBottom: '1rem' }}>
-        For each pillar, add 4 ideas — then generate 10 specific content angles for any idea with
-        AI. One session fills your entire content calendar.
+        For each pillar, add 4 ideas — then expand any idea into 4 specific angles you could
+        actually film. One session fills your entire content calendar.
       </p>
+
+      {/* .ins block */}
       <div
         style={{
-          padding: '.55rem .85rem',
-          borderRadius: '0 6px 6px 0',
           borderLeft: '3px solid var(--orange)',
-          background: 'rgba(241,96,27,.08)',
-          marginBottom: '1.25rem',
-          fontSize: '12.5px',
-          color: 'var(--dim)',
-          lineHeight: 1.5,
+          padding: '11px 15px',
+          background: 'var(--orange-tint)',
+          marginBottom: '1.1rem',
+          borderRadius: '0 var(--radius-md) var(--radius-md) 0',
         }}
       >
-        Pillar names can be filled in from your Brand Foundation module. Enter each pillar name
-        below, then add 4 ideas per pillar. Use the <strong style={{ color: 'var(--orange)' }}>Generate angles with AI</strong> button
-        on any idea to get 10 specific content angles instantly.
+        <p style={{ fontSize: '13.5px', color: 'var(--orange-dark)', lineHeight: 1.7, margin: 0, fontWeight: 500 }}>
+          Pillar names auto-load from <Link href="/modules/brand-foundation" style={{ color: 'var(--orange-dark)', textDecoration: 'underline', fontWeight: 700 }}>Brand Foundation</Link> if
+          you&apos;ve completed it. Hit ↻ Refresh to pull them in, or type them directly into each
+          pillar below.
+        </p>
       </div>
 
-      {/* AI error display */}
-      {generateError && (
+      {/* Refresh status */}
+      {refreshStatus && (
         <div
           style={{
-            padding: '.65rem .85rem',
-            borderRadius: 'var(--radius-md)',
-            background: 'rgba(239,68,68,.1)',
-            borderWidth: '1px',
-            borderStyle: 'solid',
-            borderColor: 'rgba(239,68,68,.25)',
-            marginBottom: '1rem',
             fontSize: '12.5px',
-            color: '#ef4444',
+            padding: '.55rem .85rem',
+            borderRadius: '0 6px 6px 0',
+            borderLeft: '3px solid var(--orange)',
+            background: 'rgba(241,96,27,.08)',
+            marginBottom: '.85rem',
+            lineHeight: 1.5,
+            color: 'var(--dim)',
           }}
-        >
-          {generateError}
-        </div>
+          dangerouslySetInnerHTML={{ __html: refreshStatus }}
+        />
       )}
 
-      {/* Pillars 1–5 */}
+      {/* Refresh button */}
+      <button
+        type="button"
+        onClick={handleRefreshPillars}
+        style={{
+          fontSize: '11.5px',
+          padding: '5px 13px',
+          marginBottom: '1rem',
+          background: 'var(--card)',
+          border: '1px solid var(--border)',
+          borderRadius: 'var(--radius-md)',
+          color: 'var(--text)',
+          cursor: 'pointer',
+          fontFamily: 'var(--font)',
+          fontWeight: 500,
+        }}
+      >
+        ↻ Refresh from Brand Foundation
+      </button>
+
+      {/* Pillars 1–5 — collapsible accordions */}
       {[1, 2, 3, 4, 5].map(pillarIdx => (
-        <div
+        <PillarAccordion
           key={pillarIdx}
-          style={{
-            background: 'var(--card)',
-            border: '1px solid var(--border)',
-            borderRadius: 'var(--radius-lg)',
-            padding: '1rem 1.25rem',
-            marginBottom: '1rem',
-          }}
-        >
-          {/* Pillar header */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '.75rem' }}>
-            <span
-              style={{
-                fontFamily: 'var(--font-num)',
-                fontSize: '22px',
-                fontWeight: 900,
-                color: 'var(--orange)',
-                opacity: 0.6,
-                lineHeight: 1,
-                flexShrink: 0,
-              }}
-            >
-              {String(pillarIdx).padStart(2, '0')}
-            </span>
-            <WorkshopInput
-              moduleSlug={MODULE_SLUG}
-              fieldKey={`ct_ig_pillar${pillarIdx}`}
-              // eslint-disable-next-line @typescript-eslint/no-explicit-any
-              value={(watch as any)(`ct_ig_pillar${pillarIdx}`) as string}
-              // eslint-disable-next-line @typescript-eslint/no-explicit-any
-              onChange={val => (setValue as any)(`ct_ig_pillar${pillarIdx}`, val)}
-              getFullResponses={getValues}
-              placeholder="Pillar name…"
-            />
-          </div>
-
-          {/* Ideas A–D */}
-          {[1, 2, 3, 4].map(ideaIdx => {
-            const ideaKey = `ct_ig_p${pillarIdx}i${ideaIdx}` as Parameters<typeof setValue>[0]
-            const genKey = `${pillarIdx}_${ideaIdx}`
-            const isThisGenerating = isGenerating === genKey
-            const ideaLabel = ['A', 'B', 'C', 'D'][ideaIdx - 1]
-
-            return (
-              <div
-                key={ideaIdx}
-                style={{
-                  background: 'var(--surface)',
-                  border: '1px solid var(--border)',
-                  borderRadius: 'var(--radius-md)',
-                  padding: '.85rem 1rem',
-                  marginBottom: ideaIdx < 4 ? '8px' : 0,
-                }}
-              >
-                {/* Idea label + input */}
-                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '6px' }}>
-                  <span
-                    style={{
-                      fontSize: '10px',
-                      fontWeight: 700,
-                      color: 'var(--orange)',
-                      textTransform: 'uppercase',
-                      letterSpacing: '.06em',
-                      flexShrink: 0,
-                      width: '14px',
-                    }}
-                  >
-                    {ideaLabel}
-                  </span>
-                  <WorkshopInput
-                    moduleSlug={MODULE_SLUG}
-                    fieldKey={ideaKey}
-                    value={watch(ideaKey)}
-                    onChange={val => setValue(ideaKey, val)}
-                    getFullResponses={getValues}
-                    placeholder={`Idea ${ideaLabel}…`}
-                  />
-                </div>
-
-                {/* Generate angles with AI button */}
-                <div style={{ marginBottom: '8px' }}>
-                  <button
-                    type="button"
-                    onClick={() => handleGenerateAngles(pillarIdx, ideaIdx)}
-                    disabled={isThisGenerating}
-                    style={{
-                      display: 'inline-flex',
-                      alignItems: 'center',
-                      gap: '6px',
-                      padding: '8px 14px',
-                      fontSize: '12px',
-                      fontWeight: 600,
-                      color: isThisGenerating ? 'var(--dimmer)' : 'var(--orange)',
-                      background: 'var(--orange-tint)',
-                      borderWidth: '1px',
-                      borderStyle: 'solid',
-                      borderColor: 'var(--orange-border)',
-                      borderRadius: 'var(--radius-md)',
-                      cursor: isThisGenerating ? 'not-allowed' : 'pointer',
-                      fontFamily: 'var(--font)',
-                    }}
-                  >
-                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                      <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" />
-                    </svg>
-                    {isThisGenerating ? 'Generating…' : 'Generate angles with AI'}
-                  </button>
-                </div>
-
-                {/* 4 individual angle inputs in a 2x2 grid */}
-                <div
-                  className="grid-form"
-                  style={{
-                    display: 'grid',
-                    gridTemplateColumns: '1fr 1fr',
-                    gap: '6px',
-                  }}
-                >
-                  {[1, 2, 3, 4].map(angleIdx => {
-                    const angleKey = `ct_ig_p${pillarIdx}i${ideaIdx}a${angleIdx}` as Parameters<typeof setValue>[0]
-                    return (
-                      <div key={angleIdx}>
-                        <div
-                          style={{
-                            fontSize: '9px',
-                            fontWeight: 700,
-                            color: 'var(--dimmer)',
-                            textTransform: 'uppercase',
-                            letterSpacing: '.08em',
-                            marginBottom: '3px',
-                          }}
-                        >
-                          Angle {angleIdx}
-                        </div>
-                        <WorkshopInput
-                          moduleSlug={MODULE_SLUG}
-                          fieldKey={angleKey}
-                          value={(watch as (k: string) => string)(angleKey)}
-                          onChange={val => (setValue as (k: string, v: string) => void)(angleKey, val)}
-                          getFullResponses={getValues}
-                          placeholder={`Angle ${angleIdx}…`}
-                        />
-                      </div>
-                    )
-                  })}
-                </div>
-              </div>
-            )
-          })}
-        </div>
+          pillarIdx={pillarIdx}
+          watch={watch}
+          setValue={setValue}
+          getValues={getValues}
+        />
       ))}
     </SectionWrapper>
+  )
+}
+
+/* ─── Pillar Accordion ─── */
+function PillarAccordion({
+  pillarIdx,
+  watch,
+  setValue,
+  getValues,
+}: {
+  pillarIdx: number
+  watch: ReturnType<typeof useForm>['watch']
+  setValue: ReturnType<typeof useForm>['setValue']
+  getValues: ReturnType<typeof useForm>['getValues']
+}) {
+  const pillarKey = `ct_ig_pillar${pillarIdx}`
+
+  return (
+    <details
+      open
+      className="ig-pacc"
+      style={{
+        background: 'var(--surface)',
+        border: '1px solid var(--border)',
+        borderRadius: 'var(--radius-lg)',
+        marginBottom: '8px',
+        overflow: 'hidden',
+      }}
+    >
+      <summary
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          gap: '10px',
+          padding: '10px 14px',
+          cursor: 'pointer',
+          listStyle: 'none',
+          userSelect: 'none',
+        }}
+      >
+        <span
+          style={{
+            fontFamily: 'var(--font-num)',
+            fontSize: '28px',
+            fontWeight: 900,
+            color: 'var(--orange)',
+            opacity: 0.45,
+            flexShrink: 0,
+            lineHeight: 1,
+            minWidth: '36px',
+          }}
+        >
+          {String(pillarIdx).padStart(2, '0')}
+        </span>
+        <div style={{ flex: 1, minWidth: 0 }} className="ig-inline-input">
+          <WorkshopInput
+            moduleSlug={MODULE_SLUG}
+            fieldKey={pillarKey}
+            value={(watch as (k: string) => string)(pillarKey)}
+            onChange={val => (setValue as (k: string, v: string) => void)(pillarKey, val)}
+            getFullResponses={getValues}
+            placeholder="Pillar name…"
+          />
+        </div>
+        <span
+          style={{
+            fontSize: '10px',
+            color: 'var(--dimmer)',
+            flexShrink: 0,
+            marginLeft: 'auto',
+            marginRight: '4px',
+          }}
+        >
+          4 ideas
+        </span>
+      </summary>
+
+      <div style={{ padding: '4px 10px 10px' }}>
+        {[1, 2, 3, 4].map(ideaIdx => (
+          <IdeaAccordion
+            key={ideaIdx}
+            pillarIdx={pillarIdx}
+            ideaIdx={ideaIdx}
+            watch={watch}
+            setValue={setValue}
+            getValues={getValues}
+          />
+        ))}
+      </div>
+    </details>
+  )
+}
+
+/* ─── Idea Accordion ─── */
+function IdeaAccordion({
+  pillarIdx,
+  ideaIdx,
+  watch,
+  setValue,
+  getValues,
+}: {
+  pillarIdx: number
+  ideaIdx: number
+  watch: ReturnType<typeof useForm>['watch']
+  setValue: ReturnType<typeof useForm>['setValue']
+  getValues: ReturnType<typeof useForm>['getValues']
+}) {
+  const ideaKey = `ct_ig_p${pillarIdx}i${ideaIdx}`
+  const ideaLabel = ['A', 'B', 'C', 'D'][ideaIdx - 1]
+
+  return (
+    <details
+      className="ig-iacc"
+      style={{
+        background: 'var(--bg)',
+        border: '1px solid var(--border)',
+        borderRadius: 'var(--radius-md)',
+        marginBottom: '5px',
+        overflow: 'hidden',
+      }}
+    >
+      <summary
+        style={{
+          display: 'flex',
+          alignItems: 'baseline',
+          gap: '8px',
+          padding: '8px 11px',
+          cursor: 'pointer',
+          listStyle: 'none',
+          userSelect: 'none',
+        }}
+      >
+        <span
+          style={{
+            fontSize: '13.5px',
+            fontWeight: 700,
+            color: 'var(--orange)',
+            flexShrink: 0,
+            minWidth: '13px',
+          }}
+        >
+          {ideaLabel}
+        </span>
+        <div style={{ flex: 1, minWidth: 0 }} className="ig-inline-input">
+          <WorkshopInput
+            moduleSlug={MODULE_SLUG}
+            fieldKey={ideaKey}
+            value={(watch as (k: string) => string)(ideaKey)}
+            onChange={val => (setValue as (k: string, v: string) => void)(ideaKey, val)}
+            getFullResponses={getValues}
+            placeholder={`Idea ${ideaLabel}…`}
+          />
+        </div>
+        <span
+          style={{
+            fontSize: '10px',
+            color: 'var(--dimmer)',
+            flexShrink: 0,
+            marginLeft: 'auto',
+            marginRight: '4px',
+          }}
+        >
+          4 angles
+        </span>
+      </summary>
+
+      <div
+        style={{
+          padding: '6px 10px 10px',
+          display: 'flex',
+          flexDirection: 'column',
+          gap: '4px',
+        }}
+      >
+        {[1, 2, 3, 4].map(angleIdx => {
+          const angleKey = `ct_ig_p${pillarIdx}i${ideaIdx}a${angleIdx}`
+          return (
+            <WorkshopInput
+              key={angleIdx}
+              moduleSlug={MODULE_SLUG}
+              fieldKey={angleKey}
+              value={(watch as (k: string) => string)(angleKey)}
+              onChange={val => (setValue as (k: string, v: string) => void)(angleKey, val)}
+              getFullResponses={getValues}
+              placeholder={`Angle ${angleIdx}…`}
+            />
+          )
+        })}
+      </div>
+    </details>
   )
 }

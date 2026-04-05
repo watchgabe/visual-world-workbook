@@ -71,23 +71,22 @@ export default function StarterKit() {
 
       <div
         style={{
-          padding: '.75rem 1rem',
-          background: 'var(--surface)',
           borderLeft: '3px solid var(--orange)',
+          padding: '11px 15px',
+          background: 'var(--orange-tint)',
+          marginBottom: '1.1rem',
           borderRadius: '0 var(--radius-md) var(--radius-md) 0',
-          marginBottom: '1.25rem',
-          fontSize: '13px',
-          color: 'var(--dim)',
-          lineHeight: 1.6,
         }}
       >
-        Upgrade order when you have budget:{' '}
-        <strong style={{ color: 'var(--text)' }}>
-          Audio first. Lighting second. Lens third. Camera body last.
-        </strong>{' '}
-        Most people do this backwards — they buy a new camera body before they&apos;ve sorted
-        audio and lighting. Viewers will forgive bad visuals before they forgive bad audio. The
-        body matters least.
+        <p style={{ fontSize: '13.5px', color: 'var(--orange-dark)', lineHeight: 1.7, margin: 0, fontWeight: 500 }}>
+          Upgrade order when you have budget:{' '}
+          <strong style={{ fontWeight: 700 }}>
+            Audio first. Lighting second. Lens third. Camera body last.
+          </strong>{' '}
+          Most people do this backwards — they buy a new camera body before they&apos;ve sorted
+          audio and lighting. Viewers will forgive bad visuals before they forgive bad audio. The
+          body matters least.
+        </p>
       </div>
 
       {/* Gear grid */}

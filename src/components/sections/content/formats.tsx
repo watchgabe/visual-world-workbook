@@ -1,3 +1,6 @@
+'use client'
+
+import { useEffect } from 'react'
 import { MODULE_SECTIONS } from '@/lib/modules'
 
 const MODULE_SLUG = 'content' as const
@@ -6,6 +9,17 @@ const SECTION_INDEX = 4
 const _SECTION_DEF = MODULE_SECTIONS[MODULE_SLUG]![SECTION_INDEX]
 
 export default function ContentFormats() {
+  useEffect(() => {
+    const existing = document.querySelector('script[src*="instagram.com/embed"]')
+    if (existing) {
+      (window as any).instgrm?.Embeds?.process()
+      return
+    }
+    const script = document.createElement('script')
+    script.src = 'https://www.instagram.com/embed.js'
+    script.async = true
+    document.body.appendChild(script)
+  }, [])
   return (
     <div>
       <div
@@ -91,17 +105,40 @@ export default function ContentFormats() {
         >
           Example — Short-Form Reel
         </div>
-        <p style={{ fontSize: '13px', color: 'var(--text)', lineHeight: 1.7, margin: '0 0 8px' }}>
-          This reel works because it immediately strikes a nerve with anyone who&apos;s felt stuck
-          in the same situation. The hook is personal and vulnerable — it leads with a real struggle
-          rather than a polished take.
-        </p>
-        <p style={{ fontSize: '13px', color: 'var(--dim)', lineHeight: 1.7, margin: 0 }}>
-          The transformation is authentic. Sharing something I genuinely struggled with builds
-          relatability fast — people trust you more when you admit the hard part, not just the
-          result. Vulnerability + a clear before/after = one of the highest-performing short-form
-          formats.
-        </p>
+        <div style={{ display: 'flex', gap: '20px', alignItems: 'flex-start', flexWrap: 'wrap' }}>
+          <div style={{ flexShrink: 0, width: '260px', maxWidth: '100%', overflow: 'hidden', borderRadius: '4px', height: '295px', boxShadow: '0 0 1px rgba(0,0,0,.5), 0 1px 10px rgba(0,0,0,.15)' }}>
+            <div style={{ transform: 'scale(0.8)', transformOrigin: 'top left', width: '326px' }}>
+              <blockquote
+                className="instagram-media"
+                data-instgrm-permalink="https://www.instagram.com/reel/DSIM0x0Eb7S/"
+                data-instgrm-version="14"
+                style={{ background: '#FFF', border: 0, borderRadius: 0, boxShadow: 'none', margin: 0, minWidth: '326px', padding: 0, width: '326px' }}
+              />
+            </div>
+          </div>
+          <div style={{ flex: 1, minWidth: '200px', paddingTop: '4px' }}>
+            <p style={{ fontSize: '13px', color: 'var(--text)', lineHeight: 1.7, margin: '0 0 8px' }}>
+              This reel works because it immediately strikes a nerve with anyone who&apos;s felt stuck
+              in the same situation. The hook is personal and vulnerable — it leads with a real struggle
+              rather than a polished take.
+            </p>
+            <p style={{ fontSize: '13px', color: 'var(--dim)', lineHeight: 1.7, margin: '0 0 12px' }}>
+              The transformation is authentic. Sharing something I genuinely struggled with builds
+              relatability fast — people trust you more when you admit the hard part, not just the
+              result. Vulnerability + a clear before/after = one of the highest-performing short-form
+              formats.
+            </p>
+            <a
+              href="https://www.instagram.com/reel/DSIM0x0Eb7S/"
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', background: 'var(--card)', border: '1px solid var(--border2)', borderRadius: '8px', padding: '7px 12px', fontSize: '12px', fontWeight: 600, color: 'var(--text)', textDecoration: 'none' }}
+            >
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+              Open on Instagram &rarr;
+            </a>
+          </div>
+        </div>
       </div>
 
       {/* Carousels */}
@@ -175,16 +212,39 @@ export default function ContentFormats() {
         >
           Example — Carousel Post
         </div>
-        <p style={{ fontSize: '13px', color: 'var(--text)', lineHeight: 1.7, margin: '0 0 8px' }}>
-          This post is purely informative — it teaches something valuable and gets plenty of views
-          because the content delivers on the hook&apos;s promise across every slide.
-        </p>
-        <p style={{ fontSize: '13px', color: 'var(--dim)', lineHeight: 1.7, margin: 0 }}>
-          Notice the CTA: it asks people to <em>comment</em> to receive more information. This is
-          intentional — comments are one of the strongest engagement signals, and using a
-          comment-gated CTA trains the algorithm to push your content further while simultaneously
-          growing your DM conversations.
-        </p>
+        <div style={{ display: 'flex', gap: '20px', alignItems: 'flex-start', flexWrap: 'wrap' }}>
+          <div style={{ flexShrink: 0, width: '260px', maxWidth: '100%', overflow: 'hidden', borderRadius: '4px', height: '295px', boxShadow: '0 0 1px rgba(0,0,0,.5), 0 1px 10px rgba(0,0,0,.15)' }}>
+            <div style={{ transform: 'scale(0.8)', transformOrigin: 'top left', width: '326px' }}>
+              <blockquote
+                className="instagram-media"
+                data-instgrm-permalink="https://www.instagram.com/p/DV4Nr3vEQhE/"
+                data-instgrm-version="14"
+                style={{ background: '#FFF', border: 0, borderRadius: 0, boxShadow: 'none', margin: 0, minWidth: '326px', padding: 0, width: '326px' }}
+              />
+            </div>
+          </div>
+          <div style={{ flex: 1, minWidth: '200px', paddingTop: '4px' }}>
+            <p style={{ fontSize: '13px', color: 'var(--text)', lineHeight: 1.7, margin: '0 0 8px' }}>
+              This post is purely informative — it teaches something valuable and gets plenty of views
+              because the content delivers on the hook&apos;s promise across every slide.
+            </p>
+            <p style={{ fontSize: '13px', color: 'var(--dim)', lineHeight: 1.7, margin: '0 0 12px' }}>
+              Notice the CTA: it asks people to <em>comment</em> to receive more information. This is
+              intentional — comments are one of the strongest engagement signals, and using a
+              comment-gated CTA trains the algorithm to push your content further while simultaneously
+              growing your DM conversations.
+            </p>
+            <a
+              href="https://www.instagram.com/p/DV4Nr3vEQhE/?img_index=1"
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', background: 'var(--card)', border: '1px solid var(--border2)', borderRadius: '8px', padding: '7px 12px', fontSize: '12px', fontWeight: 600, color: 'var(--text)', textDecoration: 'none' }}
+            >
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+              Open on Instagram &rarr;
+            </a>
+          </div>
+        </div>
       </div>
 
       {/* Long-form */}

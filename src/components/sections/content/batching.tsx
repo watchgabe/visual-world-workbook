@@ -92,7 +92,7 @@ export default function ContentBatching() {
           padding: '1rem 1.1rem',
           marginBottom: '.85rem',
           fontSize: '13px',
-          color: 'var(--dim)',
+          color: 'var(--text)',
           lineHeight: 1.7,
         }}
       >
@@ -110,18 +110,17 @@ export default function ContentBatching() {
       </div>
       <div
         style={{
-          padding: '.75rem 1rem',
-          background: 'var(--surface)',
           borderLeft: '3px solid var(--orange)',
+          padding: '11px 15px',
+          background: 'var(--orange-tint)',
+          marginBottom: '1.1rem',
           borderRadius: '0 var(--radius-md) var(--radius-md) 0',
-          marginBottom: '1.25rem',
-          fontSize: '13px',
-          color: 'var(--dim)',
-          lineHeight: 1.6,
         }}
       >
-        Maker time is sacred. Deep work, no meetings, no notifications. Your best creative output
-        happens in uninterrupted blocks — protect them like your income depends on it. It does.
+        <p style={{ fontSize: '13.5px', color: 'var(--orange-dark)', lineHeight: 1.7, margin: 0, fontWeight: 500 }}>
+          Maker time is sacred. Deep work, no meetings, no notifications. Your best creative output
+          happens in uninterrupted blocks — protect them like your income depends on it. It does.
+        </p>
       </div>
 
       <h2 style={{ fontSize: '16px', fontWeight: 600, color: 'var(--text)', margin: '1.75rem 0 8px' }}>
@@ -135,7 +134,7 @@ export default function ContentBatching() {
           padding: '1rem 1.1rem',
           marginBottom: '1.25rem',
           fontSize: '13px',
-          color: 'var(--dim)',
+          color: 'var(--text)',
           lineHeight: 1.7,
         }}
       >

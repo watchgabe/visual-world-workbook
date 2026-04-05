@@ -160,40 +160,34 @@ export default function Storytelling() {
 
       <div
         style={{
-          background: 'var(--surface)',
-          borderWidth: '1px',
-          borderStyle: 'solid',
-          borderColor: 'var(--orange-border)',
-          borderRadius: 'var(--radius-md)',
-          padding: '1rem 1.1rem',
-          marginBottom: '1rem',
-          fontSize: '13px',
-          color: 'var(--text)',
-          fontWeight: 500,
-          lineHeight: 1.7,
-          fontStyle: 'italic',
+          border: '1px solid var(--orange-border)',
+          borderRadius: 'var(--radius-lg)',
+          padding: '.9rem 1.2rem',
+          background: 'var(--orange-tint)',
+          marginBottom: '1.1rem',
         }}
       >
-        &ldquo;Most creators spend hours on content that gets zero engagement... BUT it&apos;s not
-        because their content is bad. It&apos;s because they&apos;re solving the wrong problem.&rdquo;
+        <p style={{ fontSize: '13px', fontWeight: 600, color: 'var(--orange-dark)', lineHeight: 1.75, margin: 0 }}>
+          &ldquo;Most creators spend hours on content that gets zero engagement... BUT it&apos;s not
+          because their content is bad. It&apos;s because they&apos;re solving the wrong problem.&rdquo;
+        </p>
       </div>
 
       <div
         style={{
-          padding: '.75rem 1rem',
-          background: 'var(--surface)',
           borderLeft: '3px solid var(--orange)',
+          padding: '11px 15px',
+          background: 'var(--orange-tint)',
+          marginBottom: '1.1rem',
           borderRadius: '0 var(--radius-md) var(--radius-md) 0',
-          marginBottom: '1.25rem',
-          fontSize: '13px',
-          color: 'var(--dim)',
-          lineHeight: 1.6,
         }}
       >
-        Visual hooks are 100× more powerful than spoken hooks alone. Motion + text on screen +
-        spoken word = three simultaneous pattern interrupts.{' '}
-        <strong style={{ color: 'var(--text)' }}>Rule:</strong>{' '}
-        3–5 words max on screen, bold sans-serif, high contrast, first 2 seconds.
+        <p style={{ fontSize: '13.5px', color: 'var(--orange-dark)', lineHeight: 1.7, margin: 0, fontWeight: 500 }}>
+          Visual hooks are 100× more powerful than spoken hooks alone. Motion + text on screen +
+          spoken word = three simultaneous pattern interrupts.{' '}
+          <strong style={{ fontWeight: 700 }}>Rule:</strong>{' '}
+          3–5 words max on screen, bold sans-serif, high contrast, first 2 seconds.
+        </p>
       </div>
 
       <h2 style={{ fontSize: '16px', fontWeight: 600, color: 'var(--text)', margin: '1.75rem 0 8px' }}>
