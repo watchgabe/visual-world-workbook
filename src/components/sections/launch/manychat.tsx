@@ -1,7 +1,7 @@
 import { MODULE_SECTIONS } from '@/lib/modules'
 
 const MODULE_SLUG = 'launch' as const
-const SECTION_INDEX = 2
+const SECTION_INDEX = 3
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const _SECTION_DEF = MODULE_SECTIONS[MODULE_SLUG]![SECTION_INDEX]
 

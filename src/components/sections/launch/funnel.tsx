@@ -11,7 +11,7 @@ import { SectionWrapper } from '@/components/workshop/SectionWrapper'
 import { MODULE_SECTIONS } from '@/lib/modules'
 
 const MODULE_SLUG = 'launch' as const
-const SECTION_INDEX = 1
+const SECTION_INDEX = 2
 const SECTION_DEF = MODULE_SECTIONS[MODULE_SLUG]![SECTION_INDEX]
 
 export default function LaunchFunnel() {

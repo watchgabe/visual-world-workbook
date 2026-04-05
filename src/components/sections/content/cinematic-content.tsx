@@ -278,17 +278,15 @@ export default function CinematicContent() {
             <div style={{ padding: '.75rem .85rem' }}>
               <div
                 style={{
-                  fontSize: '11px',
-                  fontWeight: 700,
-                  textTransform: 'uppercase',
-                  letterSpacing: '.08em',
-                  color: 'var(--orange)',
+                  fontSize: '12px',
+                  fontWeight: 600,
+                  color: 'var(--text)',
                   marginBottom: '4px',
                 }}
               >
                 {num}
               </div>
-              <div style={{ fontSize: '12.5px', color: 'var(--dim)', lineHeight: 1.6 }}>
+              <div style={{ fontSize: '11.5px', color: 'var(--dim)', lineHeight: 1.65 }}>
                 {desc}
               </div>
             </div>
@@ -395,7 +393,7 @@ export default function CinematicContent() {
             style={{
               display: 'flex',
               gap: '12px',
-              alignItems: 'flex-start',
+              alignItems: 'center',
               padding: '10px 14px',
               background: 'var(--surface)',
               border: '1px solid var(--border)',

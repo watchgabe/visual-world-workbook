@@ -298,6 +298,21 @@ export const MODULE_SECTIONS: Partial<Record<ModuleSlug, SectionDef[]>> = {
   ],
   'launch': [
     { slug: 'overview',       name: 'Overview',       fields: [] },
+    { slug: 'bio',            name: 'Bio',            fields: [
+      // Link & Username
+      { key: 'la_bio_link',          required: false },
+      { key: 'la_bio_username',      required: false },
+      { key: 'la_bio_ig_name',       required: false },
+      // Profile Picture
+      { key: 'la_bio_pfp_visibility', required: false },
+      { key: 'la_bio_pfp_bg',        required: false },
+      { key: 'la_bio_pfp_notes',     required: false },
+      // Bio Lines
+      { key: 'la_bio_line1',         required: false },
+      { key: 'la_bio_line2',         required: false },
+      { key: 'la_bio_line3',         required: false },
+      { key: 'la_bio_line4',         required: false },
+    ]},
     { slug: 'funnel',         name: 'Your Funnel',    fields: [
       // Funnel Map
       { key: 'la_funnel_platforms',       required: false },
@@ -325,21 +340,6 @@ export const MODULE_SECTIONS: Partial<Record<ModuleSlug, SectionDef[]>> = {
       { key: 'la_lm_cta',          required: false },
       { key: 'la_lm_tool',         required: false },
       { key: 'la_lm_delivery',     required: false },
-    ]},
-    { slug: 'bio',            name: 'Bio',            fields: [
-      // Link & Username
-      { key: 'la_bio_link',          required: false },
-      { key: 'la_bio_username',      required: false },
-      { key: 'la_bio_ig_name',       required: false },
-      // Profile Picture
-      { key: 'la_bio_pfp_visibility', required: false },
-      { key: 'la_bio_pfp_bg',        required: false },
-      { key: 'la_bio_pfp_notes',     required: false },
-      // Bio Lines
-      { key: 'la_bio_line1',         required: false },
-      { key: 'la_bio_line2',         required: false },
-      { key: 'la_bio_line3',         required: false },
-      { key: 'la_bio_line4',         required: false },
     ]},
     { slug: 'launch-content', name: 'Launch Content', fields: [
       // Post 1 — Your Story
@@ -378,42 +378,6 @@ export const MODULE_SECTIONS: Partial<Record<ModuleSlug, SectionDef[]>> = {
       { key: 'la_lc_mc_waterfall',   required: false },
     ]},
     { slug: 'goals',          name: 'Goals',          fields: [
-      // Launch week calendar (7 days)
-      { key: 'la_cal1_platform', required: false },
-      { key: 'la_cal1_type',     required: false },
-      { key: 'la_cal1_hook',     required: false },
-      { key: 'la_cal1_date',     required: false },
-      { key: 'la_cal1_done',     required: false },
-      { key: 'la_cal2_platform', required: false },
-      { key: 'la_cal2_type',     required: false },
-      { key: 'la_cal2_hook',     required: false },
-      { key: 'la_cal2_date',     required: false },
-      { key: 'la_cal2_done',     required: false },
-      { key: 'la_cal3_platform', required: false },
-      { key: 'la_cal3_type',     required: false },
-      { key: 'la_cal3_hook',     required: false },
-      { key: 'la_cal3_date',     required: false },
-      { key: 'la_cal3_done',     required: false },
-      { key: 'la_cal4_platform', required: false },
-      { key: 'la_cal4_type',     required: false },
-      { key: 'la_cal4_hook',     required: false },
-      { key: 'la_cal4_date',     required: false },
-      { key: 'la_cal4_done',     required: false },
-      { key: 'la_cal5_platform', required: false },
-      { key: 'la_cal5_type',     required: false },
-      { key: 'la_cal5_hook',     required: false },
-      { key: 'la_cal5_date',     required: false },
-      { key: 'la_cal5_done',     required: false },
-      { key: 'la_cal6_platform', required: false },
-      { key: 'la_cal6_type',     required: false },
-      { key: 'la_cal6_hook',     required: false },
-      { key: 'la_cal6_date',     required: false },
-      { key: 'la_cal6_done',     required: false },
-      { key: 'la_cal7_platform', required: false },
-      { key: 'la_cal7_type',     required: false },
-      { key: 'la_cal7_hook',     required: false },
-      { key: 'la_cal7_date',     required: false },
-      { key: 'la_cal7_done',     required: false },
       // 90-day goals
       { key: 'la_goal_content_freq',       required: false },
       { key: 'la_goal_content_platforms',  required: false },

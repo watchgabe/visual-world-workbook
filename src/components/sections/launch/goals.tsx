@@ -6,7 +6,6 @@ import { createClient } from '@/lib/supabase/client'
 import { useAuth } from '@/context/AuthContext'
 import { WorkshopTextarea } from '@/components/workshop/WorkshopTextarea'
 import { WorkshopInput } from '@/components/workshop/WorkshopInput'
-import { OptionSelector } from '@/components/workshop/OptionSelector'
 import { SectionWrapper } from '@/components/workshop/SectionWrapper'
 import { MODULE_SECTIONS } from '@/lib/modules'
 
@@ -14,16 +13,6 @@ const MODULE_SLUG = 'launch' as const
 const SECTION_INDEX = 6
 const SECTION_DEF = MODULE_SECTIONS[MODULE_SLUG]![SECTION_INDEX]
 
-// Calendar day definitions from old HTML
-const CALENDAR_DAYS = [
-  { num: '01', title: 'The Tease', sub: 'Build anticipation. Create curiosity.', hookPh: 'Something\'s changing...', datePh: 'e.g. Mon March 24, 7am' },
-  { num: '02', title: 'The Why', sub: 'The honest story behind the decision.', hookPh: 'Why I\'m rebuilding my brand from scratch', datePh: 'e.g. Tue March 25, 7am' },
-  { num: '03', title: 'The Before/After', sub: 'Show the transformation. Visual proof.', hookPh: 'This is what 30 days of intentional brand work looks like', datePh: 'e.g. Wed March 26, 7am' },
-  { num: '04', title: 'The Announcement', sub: 'Official relaunch. New brand. Same mission.', hookPh: 'Introducing [your brand name] — the new chapter', datePh: 'e.g. Thu March 27, 7am' },
-  { num: '05', title: 'Premium Content #1', sub: 'Let the new brand speak for itself. Pure value.', hookPh: 'Your strongest value-first hook...', datePh: 'e.g. Fri March 28, 7am' },
-  { num: '06', title: 'Premium Content #2', sub: 'Continue building trust. Show your expertise.', hookPh: 'Your second strongest hook...', datePh: 'e.g. Sat March 29, 7am' },
-  { num: '07', title: 'Premium Content #3 + Offer CTA', sub: 'End launch week with your strongest content. Close with a clear offer.', hookPh: 'Your most powerful hook for the week...', datePh: 'e.g. Sun March 30, 7am' },
-] as const
 
 export default function LaunchGoals() {
   const { user } = useAuth()
@@ -115,134 +104,7 @@ export default function LaunchGoals() {
         </p>
       </div>
 
-      {/* Launch Week Calendar */}
-      <h2 style={{ fontSize: '16px', fontWeight: 600, color: 'var(--text)', margin: '1.75rem 0 8px' }}>
-        Your Launch Week Calendar
-      </h2>
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '.75rem', marginBottom: '1.5rem' }}>
-        {CALENDAR_DAYS.map((day, i) => {
-          const idx = i + 1
-          const platformKey = `la_cal${idx}_platform` as const
-          const typeKey = `la_cal${idx}_type` as const
-          const hookKey = `la_cal${idx}_hook` as const
-          const dateKey = `la_cal${idx}_date` as const
-          const doneKey = `la_cal${idx}_done` as const
-
-          return (
-            <div
-              key={day.num}
-              style={{
-                border: '1px solid var(--border)',
-                borderRadius: 'var(--radius-lg)',
-                overflow: 'hidden',
-              }}
-            >
-              {/* Day header */}
-              <div
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '10px',
-                  padding: '10px 14px',
-                  background: 'var(--surface)',
-                }}
-              >
-                <div
-                  style={{
-                    fontFamily: 'var(--font-num)',
-                    fontSize: '22px',
-                    fontWeight: 900,
-                    color: 'var(--orange)',
-                    lineHeight: 1,
-                  }}
-                >
-                  {day.num}
-                </div>
-                <div>
-                  <div style={{ fontSize: '13px', fontWeight: 600, color: 'var(--text)' }}>
-                    {day.title}
-                  </div>
-                  <div style={{ fontSize: '11px', color: 'var(--dimmer)' }}>{day.sub}</div>
-                </div>
-              </div>
-
-              {/* Day body */}
-              <div style={{ padding: '.85rem 1rem', background: 'var(--card)' }}>
-                <div className="grid-form" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px' }}>
-                  <div>
-                    <div style={{ fontSize: '12px', fontWeight: 500, color: 'var(--text)', marginBottom: '4px' }}>
-                      Platform
-                    </div>
-                    <WorkshopInput
-                      moduleSlug={MODULE_SLUG}
-                      fieldKey={platformKey}
-                      value={watch(platformKey)}
-                      onChange={val => setValue(platformKey, val)}
-                      getFullResponses={getValues}
-                      placeholder="Instagram, TikTok..."
-                    />
-                    <div style={{ fontSize: '12px', fontWeight: 500, color: 'var(--text)', margin: '8px 0 4px' }}>
-                      {idx <= 4 ? 'Content type' : 'Topic'}
-                    </div>
-                    <WorkshopInput
-                      moduleSlug={MODULE_SLUG}
-                      fieldKey={typeKey}
-                      value={watch(typeKey)}
-                      onChange={val => setValue(typeKey, val)}
-                      getFullResponses={getValues}
-                      placeholder={idx <= 4 ? 'Reel, carousel, story...' : 'Your content pillar topic...'}
-                    />
-                  </div>
-                  <div>
-                    <div style={{ fontSize: '12px', fontWeight: 500, color: 'var(--text)', marginBottom: '4px' }}>
-                      Hook
-                    </div>
-                    <WorkshopInput
-                      moduleSlug={MODULE_SLUG}
-                      fieldKey={hookKey}
-                      value={watch(hookKey)}
-                      onChange={val => setValue(hookKey, val)}
-                      getFullResponses={getValues}
-                      placeholder={day.hookPh}
-                    />
-                    <div style={{ fontSize: '12px', fontWeight: 500, color: 'var(--text)', margin: '8px 0 4px' }}>
-                      Schedule for
-                    </div>
-                    <WorkshopInput
-                      moduleSlug={MODULE_SLUG}
-                      fieldKey={dateKey}
-                      value={watch(dateKey)}
-                      onChange={val => setValue(dateKey, val)}
-                      getFullResponses={getValues}
-                      placeholder={day.datePh}
-                    />
-                  </div>
-                </div>
-                <div style={{ fontSize: '12px', fontWeight: 500, color: 'var(--text)', margin: '8px 0 4px' }}>
-                  Caption written + content created?
-                </div>
-                <OptionSelector
-                  moduleSlug={MODULE_SLUG}
-                  fieldKey={doneKey}
-                  value={watch(doneKey)}
-                  onChange={val => setValue(doneKey, val)}
-                  getFullResponses={getValues}
-                  columns={2}
-                  options={[
-                    { label: 'Caption written', value: 'Caption written' },
-                    { label: 'Content filmed', value: 'Content filmed' },
-                  ]}
-                />
-              </div>
-            </div>
-          )
-        })}
-      </div>
-
       {/* 90-Day Goals Grid */}
-      <h2 style={{ fontSize: '16px', fontWeight: 600, color: 'var(--text)', margin: '1.75rem 0 8px' }}>
-        Your 90-Day Goals
-      </h2>
       <div
         className="grid-form"
         style={{

@@ -123,7 +123,7 @@ export function SectionNavBar({ moduleSlug, currentSectionSlug }: SectionNavBarP
             textDecoration: 'none',
           }}
         >
-          Finish Module &#10003;
+          {finishHref === '/modules/playbook' ? 'View Your Playbook →' : 'Finish Module ✓'}
         </Link>
       )}
     </div>

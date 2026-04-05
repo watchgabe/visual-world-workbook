@@ -1,4 +1,4 @@
-@import "tailwindcss";
+@import 'tailwindcss';
 
 /* Activate dark: prefix utilities when data-theme="dark" is on <html> — per D-07 hybrid approach */
 @custom-variant dark (&:where([data-theme=dark], [data-theme=dark] *));
@@ -13,13 +13,13 @@
   --text: #ffffff;
   --dim: #b0b0b0;
   --dimmer: #555555;
-  --orange: #F0601B;
+  --orange: #f0601b;
   --orange-hover: #ff6d28;
   --orange-tint: rgba(240, 96, 27, 0.1);
   --orange-border: rgba(240, 96, 27, 0.28);
   --orange-dark: #ff8050;
   --green-bg: rgba(61, 184, 100, 0.1);
-  --green-text: #5DCAA5;
+  --green-text: #5dcaa5;
   --green-border: rgba(93, 202, 165, 0.3);
   --radius-lg: 10px;
   --radius-md: 6px;
@@ -30,21 +30,21 @@
 }
 
 /* ─── TOKENS — LIGHT OVERRIDE ─── */
-[data-theme="light"] {
+[data-theme='light'] {
   --bg: #f7f6f4;
   --surface: #edecea;
-  --card: #e2e0dc;
+  --card: transparent;
   --border: #ccc9c2;
   --border2: #b8b4ac;
   --text: #0a0a0a;
   --dim: #404040;
   --dimmer: #888888;
-  --orange-tint: #FEF0E8;
-  --orange-border: #F4B89A;
-  --orange-dark: #B84410;
-  --green-bg: #E6F5EF;
+  --orange-tint: #fef0e8;
+  --orange-border: #f4b89a;
+  --orange-dark: #b84410;
+  --green-bg: #e6f5ef;
   --green-text: #085041;
-  --green-border: #5DCAA5;
+  --green-border: #5dcaa5;
 }
 
 /* ─── BASE ─── */
@@ -56,11 +56,17 @@ body {
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
   overflow: hidden;
-  transition: background .25s, color .25s;
+  transition:
+    background 0.25s,
+    color 0.25s;
 }
 
 /* ─── Idea Generation accordion ─── */
-.ig-inline-input > div { margin-bottom: 0; display: flex; align-items: center; }
+.ig-inline-input > div {
+  margin-bottom: 0;
+  display: flex;
+  align-items: center;
+}
 .ig-inline-input input.workshop-field {
   background: transparent !important;
   border: none !important;
@@ -74,12 +80,30 @@ body {
   height: auto !important;
   min-width: 0;
 }
-.ig-pacc > summary::-webkit-details-marker { display: none; }
-.ig-pacc > summary::after { content: '＋'; font-size: 14px; color: var(--dimmer); flex-shrink: 0; }
-.ig-pacc[open] > summary::after { content: '－'; }
-.ig-iacc > summary::-webkit-details-marker { display: none; }
-.ig-iacc > summary::after { content: '＋'; font-size: 12px; color: var(--dimmer); flex-shrink: 0; }
-.ig-iacc[open] > summary::after { content: '－'; }
+.ig-pacc > summary::-webkit-details-marker {
+  display: none;
+}
+.ig-pacc > summary::after {
+  content: '＋';
+  font-size: 14px;
+  color: var(--dimmer);
+  flex-shrink: 0;
+}
+.ig-pacc[open] > summary::after {
+  content: '－';
+}
+.ig-iacc > summary::-webkit-details-marker {
+  display: none;
+}
+.ig-iacc > summary::after {
+  content: '＋';
+  font-size: 12px;
+  color: var(--dimmer);
+  flex-shrink: 0;
+}
+.ig-iacc[open] > summary::after {
+  content: '－';
+}
 
 /* ─── GRAIN OVERLAY (D-09) ─── */
 body::before {
@@ -112,7 +136,9 @@ body::before {
 
 /* ─── iOS: prevent zoom on input focus (font-size must be >= 16px) ─── */
 @media (max-width: 768px) {
-  input, textarea, select {
+  input,
+  textarea,
+  select {
     font-size: 16px !important;
   }
 }
@@ -126,7 +152,9 @@ body::before {
 
 /* ─── Loading spinner ─── */
 @keyframes spin {
-  to { transform: rotate(360deg); }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 /* ─── STORY PART WATERMARK NUMBER ─── */
@@ -156,9 +184,9 @@ body::before {
     --text: #000000 !important;
     --dim: #333333 !important;
     --dimmer: #555555 !important;
-    --orange-tint: #FEF0E8 !important;
-    --orange-border: #F4B89A !important;
-    --green-bg: #E6F5EF !important;
+    --orange-tint: #fef0e8 !important;
+    --orange-border: #f4b89a !important;
+    --green-bg: #e6f5ef !important;
     --green-text: #085041 !important;
   }
 

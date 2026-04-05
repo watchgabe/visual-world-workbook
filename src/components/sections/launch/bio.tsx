@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import { createClient } from '@/lib/supabase/client'
 import { useAuth } from '@/context/AuthContext'
@@ -10,13 +10,11 @@ import { SectionWrapper } from '@/components/workshop/SectionWrapper'
 import { MODULE_SECTIONS } from '@/lib/modules'
 
 const MODULE_SLUG = 'launch' as const
-const SECTION_INDEX = 4
+const SECTION_INDEX = 1
 const SECTION_DEF = MODULE_SECTIONS[MODULE_SLUG]![SECTION_INDEX]
 
 export default function LaunchBio() {
   const { user } = useAuth()
-  const [isGenerating, setIsGenerating] = useState<string | null>(null)
-  const [bioResult, setBioResult] = useState<string>('')
   const { watch, setValue, getValues } = useForm({
     defaultValues: Object.fromEntries([
       ...SECTION_DEF.fields.map(f => [f.key, '']),
@@ -46,47 +44,6 @@ export default function LaunchBio() {
       })
     return () => { cancelled = true }
   }, [user, setValue])
-
-  async function handleGenerateBio() {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const all = getValues() as Record<string, any>
-    const line1: string = all['la_bio_line1'] || ''
-    const line2: string = all['la_bio_line2'] || ''
-    if (!line1.trim() && !line2.trim()) return
-    setIsGenerating('bio')
-    try {
-      const line3: string = all['la_bio_line3'] || ''
-      const line4: string = all['la_bio_line4'] || ''
-      const funnelCta: string = all['la_funnel_cta'] || ''
-      const lmName: string = all['la_lm_name'] || ''
-      const prompt =
-        'You are a personal brand strategist. Write a punchy, premium Instagram bio using the 4-line formula, then write platform-specific versions.\n\nLine 1 draft: ' +
-        line1 +
-        '\nLine 2 draft: ' +
-        line2 +
-        '\nLine 3 draft: ' +
-        line3 +
-        '\nLine 4 draft: ' +
-        line4 +
-        '\nFunnel CTA: ' +
-        funnelCta +
-        '\nLead magnet: ' +
-        lmName +
-        '\n\nProvide:\n1. Polished 4-line Instagram bio (under 150 chars total)\n2. LinkedIn headline version (under 220 chars)\n3. TikTok version (under 80 chars)\n4. One sentence explaining what makes this bio premium vs generic\n\nBe specific. No buzzwords. Every word earns its place.'
-      const res = await fetch('/api/claude', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ prompt, maxTokens: 600 }),
-      })
-      const data = await res.json()
-      if (data.error) throw new Error(data.error)
-      setBioResult(data.text || '')
-    } catch {
-      // silent error
-    } finally {
-      setIsGenerating(null)
-    }
-  }
 
   const responses = watch()
 
@@ -533,66 +490,6 @@ export default function LaunchBio() {
           </div>
         </div>
 
-        {/* AI Generate bio */}
-        <div style={{ marginTop: '1rem' }}>
-          <button
-            type="button"
-            onClick={handleGenerateBio}
-            disabled={isGenerating === 'bio'}
-            style={{
-              display: 'inline-flex',
-              alignItems: 'center',
-              gap: '6px',
-              padding: '8px 14px',
-              fontSize: '12px',
-              fontWeight: 600,
-              color: isGenerating === 'bio' ? 'var(--dimmer)' : 'var(--orange)',
-              background: 'var(--orange-tint)',
-              borderWidth: '1px',
-              borderStyle: 'solid',
-              borderColor: 'var(--orange-border)',
-              borderRadius: 'var(--radius-md)',
-              cursor: isGenerating === 'bio' ? 'not-allowed' : 'pointer',
-              fontFamily: 'var(--font)',
-              opacity: isGenerating === 'bio' ? 0.6 : 1,
-            }}
-          >
-            {isGenerating === 'bio' ? 'Generating...' : '✦ Generate Bio'}
-          </button>
-        </div>
-
-        {/* AI result display area */}
-        {bioResult && (
-          <div
-            style={{
-              marginTop: '1rem',
-              background: 'var(--surface)',
-              borderWidth: '1px',
-              borderStyle: 'solid',
-              borderColor: 'var(--border)',
-              borderRadius: 'var(--radius-lg)',
-              padding: '1rem 1.1rem',
-              fontSize: '13px',
-              color: 'var(--text)',
-              lineHeight: 1.75,
-              whiteSpace: 'pre-wrap',
-            }}
-          >
-            <div
-              style={{
-                fontSize: '9px',
-                fontWeight: 700,
-                textTransform: 'uppercase',
-                letterSpacing: '.1em',
-                color: 'var(--orange)',
-                marginBottom: '.5rem',
-              }}
-            >
-              AI Generated Bio Versions
-            </div>
-            {bioResult}
-          </div>
-        )}
       </div>
     </SectionWrapper>
   )
