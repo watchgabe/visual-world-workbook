@@ -1,10 +1,10 @@
 export const MODULES = [
-  { slug: 'welcome',          number: '00', title: 'Welcome' },
-  { slug: 'brand-foundation', number: '01', title: 'Brand Foundation' },
-  { slug: 'visual-world',     number: '02', title: 'Define Your Visual World' },
-  { slug: 'content',          number: '03', title: 'Create Your Content' },
-  { slug: 'launch',           number: '04', title: 'Launch' },
-  { slug: 'playbook',         number: '05', title: 'Your Brand Playbook' },
+  { slug: 'welcome',          number: '00', title: 'Welcome',                   subtitle: '' },
+  { slug: 'brand-foundation', number: '01', title: 'Brand Foundation',           subtitle: 'Who You Are & What You Stand For' },
+  { slug: 'visual-world',     number: '02', title: 'Define Your Visual World',   subtitle: 'Build the Aesthetic That Makes You Premium' },
+  { slug: 'content',          number: '03', title: 'Create Your Content',        subtitle: 'The System That Builds Trust and Gets Customers' },
+  { slug: 'launch',           number: '04', title: 'Launch',                     subtitle: 'Your Go-to-Market Strategy' },
+  { slug: 'playbook',         number: '05', title: 'Your Brand Playbook',        subtitle: 'Every Answer. One Document.' },
 ] as const
 
 export type ModuleSlug = typeof MODULES[number]['slug']

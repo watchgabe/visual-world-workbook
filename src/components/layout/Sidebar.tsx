@@ -94,6 +94,15 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
                 >
                   {activeModule.title}&#8482;
                 </div>
+                <div
+                  style={{
+                    height: '2px',
+                    background: 'var(--orange)',
+                    borderRadius: '1px',
+                    marginTop: '10px',
+                    opacity: 0.7,
+                  }}
+                />
               </>
             )
           }
@@ -121,6 +130,15 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
               >
                 The Brand Launch Playbook&#8482;
               </div>
+              <div
+                style={{
+                  height: '2px',
+                  background: 'var(--orange)',
+                  borderRadius: '1px',
+                  marginTop: '10px',
+                  opacity: 0.7,
+                }}
+              />
             </>
           )
         })()}
@@ -210,6 +228,22 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
                     >
                       {mod.title}
                     </div>
+                    {mod.subtitle && isActive && (
+                      <div
+                        style={{
+                          fontSize: '10.5px',
+                          fontWeight: 400,
+                          color: 'var(--dimmer)',
+                          lineHeight: 1.3,
+                          overflow: 'hidden',
+                          textOverflow: 'ellipsis',
+                          whiteSpace: 'nowrap',
+                          marginTop: '1px',
+                        }}
+                      >
+                        {mod.subtitle}
+                      </div>
+                    )}
                   </div>
                 </Link>
 
