@@ -25,6 +25,10 @@ export function UserModal({ email, name: initialName, handle: initialHandle, onS
   const [handleVal, setHandleVal] = useState(initialHandle ?? '')
   const [saving, setSaving] = useState(false)
   const [saved, setSaved] = useState(false)
+  const [newPassword, setNewPassword] = useState('')
+  const [confirmPassword, setConfirmPassword] = useState('')
+  const [passwordSaving, setPasswordSaving] = useState(false)
+  const [passwordMsg, setPasswordMsg] = useState<{ text: string; error: boolean } | null>(null)
   const [clearingModule, setClearingModule] = useState<string | null>(null)
   const [confirmClearModule, setConfirmClearModule] = useState<string | null>(null)
   const [showClearAll, setShowClearAll] = useState(false)
@@ -246,6 +250,118 @@ export function UserModal({ email, name: initialName, handle: initialHandle, onS
               {saved && (
                 <div style={{ fontSize: '12px', color: 'var(--green-text)', marginTop: '.6rem', textAlign: 'center' }}>
                   Profile updated
+                </div>
+              )}
+            </div>
+
+            {/* Divider */}
+            <div style={{ height: '1px', background: 'var(--border)', marginBottom: '1.4rem' }} />
+
+            {/* Change Password */}
+            <div style={{ marginBottom: '1.4rem' }}>
+              <div style={{ fontSize: '9px', fontWeight: 700, letterSpacing: '.12em', textTransform: 'uppercase', color: 'var(--dimmer)', marginBottom: '.75rem' }}>
+                Change Password
+              </div>
+              <div style={{ marginBottom: '.7rem' }}>
+                <label style={{ fontSize: '10.5px', fontWeight: 600, color: 'var(--dim)', display: 'block', marginBottom: '4px', textTransform: 'uppercase', letterSpacing: '.05em' }}>
+                  New Password
+                </label>
+                <input
+                  type="password"
+                  value={newPassword}
+                  onChange={e => { setNewPassword(e.target.value); setPasswordMsg(null) }}
+                  placeholder="At least 6 characters"
+                  autoComplete="new-password"
+                  style={{
+                    width: '100%',
+                    borderWidth: '1px',
+                    borderStyle: 'solid',
+                    borderColor: 'var(--border)',
+                    borderRadius: 'var(--radius-md)',
+                    padding: '9px 12px',
+                    fontSize: '13px',
+                    fontFamily: 'var(--font)',
+                    color: 'var(--text)',
+                    background: 'var(--bg)',
+                    boxSizing: 'border-box',
+                    outline: 'none',
+                  }}
+                  onFocus={e => { e.currentTarget.style.borderColor = 'var(--orange)' }}
+                  onBlur={e => { e.currentTarget.style.borderColor = 'var(--border)' }}
+                />
+              </div>
+              <div style={{ marginBottom: '.7rem' }}>
+                <label style={{ fontSize: '10.5px', fontWeight: 600, color: 'var(--dim)', display: 'block', marginBottom: '4px', textTransform: 'uppercase', letterSpacing: '.05em' }}>
+                  Confirm Password
+                </label>
+                <input
+                  type="password"
+                  value={confirmPassword}
+                  onChange={e => { setConfirmPassword(e.target.value); setPasswordMsg(null) }}
+                  placeholder="Repeat new password"
+                  autoComplete="new-password"
+                  style={{
+                    width: '100%',
+                    borderWidth: '1px',
+                    borderStyle: 'solid',
+                    borderColor: 'var(--border)',
+                    borderRadius: 'var(--radius-md)',
+                    padding: '9px 12px',
+                    fontSize: '13px',
+                    fontFamily: 'var(--font)',
+                    color: 'var(--text)',
+                    background: 'var(--bg)',
+                    boxSizing: 'border-box',
+                    outline: 'none',
+                  }}
+                  onFocus={e => { e.currentTarget.style.borderColor = 'var(--orange)' }}
+                  onBlur={e => { e.currentTarget.style.borderColor = 'var(--border)' }}
+                />
+              </div>
+              <button
+                onClick={async () => {
+                  if (newPassword.length < 6 || !/[a-zA-Z]/.test(newPassword) || !/[0-9]/.test(newPassword)) {
+                    setPasswordMsg({ text: 'Password must be at least 6 characters with a letter and a number.', error: true })
+                    return
+                  }
+                  if (newPassword !== confirmPassword) {
+                    setPasswordMsg({ text: 'Passwords do not match.', error: true })
+                    return
+                  }
+                  setPasswordSaving(true)
+                  setPasswordMsg(null)
+                  const supabase = createClient()
+                  const { error } = await supabase.auth.updateUser({ password: newPassword })
+                  setPasswordSaving(false)
+                  if (error) {
+                    setPasswordMsg({ text: error.message, error: true })
+                  } else {
+                    setPasswordMsg({ text: 'Password updated', error: false })
+                    setNewPassword('')
+                    setConfirmPassword('')
+                  }
+                }}
+                disabled={passwordSaving || !newPassword || !confirmPassword}
+                style={{
+                  width: '100%',
+                  background: (!newPassword || !confirmPassword) ? 'var(--border2)' : 'var(--orange)',
+                  color: '#fff',
+                  border: 'none',
+                  borderRadius: 'var(--radius-md)',
+                  padding: '10px',
+                  fontSize: '13px',
+                  fontWeight: 600,
+                  cursor: (passwordSaving || !newPassword || !confirmPassword) ? 'not-allowed' : 'pointer',
+                  fontFamily: 'var(--font)',
+                  marginTop: '.35rem',
+                  opacity: passwordSaving ? 0.5 : 1,
+                }}
+              >
+                {passwordSaving ? 'Updating...' : 'Update Password'}
+              </button>
+              {passwordMsg && (
+                <div style={{ fontSize: '12px', color: passwordMsg.error ? '#e05555' : 'var(--green-text)', marginTop: '.6rem', textAlign: 'center' }}>
+                  {passwordMsg.text}
                 </div>
               )}
             </div>
