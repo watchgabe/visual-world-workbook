@@ -33,7 +33,7 @@ src/
       circle/           # Circle community proxy
       instagram/        # Instagram embed proxy
       admin/            # Admin actions (toggle-role, delete-user, circle-config)
-    login/              # Magic link login
+    login/              # Email/password login
   components/
     workshop/           # Reusable form components (WorkshopInput, WorkshopTextarea, OptionSelector, ProgressRing, etc.)
     sections/           # Module section content components (brand-foundation/, visual-world/, etc.)
