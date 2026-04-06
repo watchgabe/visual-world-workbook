@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { createClient } from '@/lib/supabase/client'
 import { useAuth } from '@/context/AuthContext'
+import { useAutoSave } from '@/hooks/useAutoSave'
 import { WorkshopTextarea } from '@/components/workshop/WorkshopTextarea'
 import { SectionWrapper } from '@/components/workshop/SectionWrapper'
 import { MODULE_SECTIONS } from '@/lib/modules'
@@ -79,6 +80,7 @@ export default function CreatorAnalysis() {
   const [analyzingId, setAnalyzingId] = useState<string | null>(null)
   const [analyzeErrors, setAnalyzeErrors] = useState<Record<string, string>>({})
   const [expandedCards, setExpandedCards] = useState<Record<string, boolean>>({})
+  const [synthExpanded, setSynthExpanded] = useState(true)
 
   // Load saved data on mount
   useEffect(() => {
@@ -118,9 +120,17 @@ export default function CreatorAnalysis() {
   }, [user, setValue])
 
   // Sync creators to react-hook-form for auto-save
+  const creatorsJson = JSON.stringify(creators)
   useEffect(() => {
-    ;(setValue as (k: string, v: string) => void)('vw_ca_creators', JSON.stringify(creators))
-  }, [creators, setValue])
+    ;(setValue as (k: string, v: string) => void)('vw_ca_creators', creatorsJson)
+  }, [creatorsJson, setValue])
+
+  // Persist creators array to Supabase
+  useAutoSave({
+    moduleSlug: MODULE_SLUG,
+    fieldKey: 'vw_ca_creators',
+    value: creatorsJson,
+  })
 
   const emptyNotes: CreatorNotes = { strengths: '', impressions: '', weaknesses: '', limitations: '', content: '', steal: '', avoid: '', gap: '' }
   const emptyLinks: CreatorLinks = { ig: '', yt: '', web: '', other: '' }
@@ -413,28 +423,44 @@ export default function CreatorAnalysis() {
         </button>
       </div>
 
-      {/* Synthesis section */}
+      {/* Synthesis section — collapsible */}
       <div
         style={{
           background: 'var(--card)',
           border: '1px solid var(--border)',
           borderRadius: 'var(--radius-lg)',
-          padding: '14px 16px',
           marginBottom: '1.5rem',
+          overflow: 'hidden',
         }}
       >
         <div
+          onClick={() => setSynthExpanded(prev => !prev)}
           style={{
-            fontSize: '9px',
-            fontWeight: 700,
-            letterSpacing: '.13em',
-            textTransform: 'uppercase',
-            color: 'var(--orange)',
-            marginBottom: '1rem',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            padding: '10px 14px',
+            background: 'var(--surface)',
+            borderBottom: synthExpanded ? '1px solid var(--border)' : 'none',
+            cursor: 'pointer',
+            userSelect: 'none',
           }}
         >
-          Creator Analysis — Synthesis
+          <div
+            style={{
+              fontSize: '9px',
+              fontWeight: 700,
+              letterSpacing: '.13em',
+              textTransform: 'uppercase',
+              color: 'var(--orange)',
+            }}
+          >
+            Creator Analysis — Synthesis
+          </div>
+          <span style={{ fontSize: '14px', color: 'var(--text-dim, #666)', opacity: 0.5, transition: 'transform .2s', transform: synthExpanded ? 'rotate(180deg)' : 'rotate(0deg)' }}>▼</span>
         </div>
+
+        {synthExpanded && <div style={{ padding: '14px 16px' }}>
 
         {/* Q1 */}
         <div style={{ marginBottom: '1rem' }}>
@@ -531,6 +557,7 @@ export default function CreatorAnalysis() {
             placeholder="My visual identity will stand apart because..."
           />
         </div>
+        </div>}
       </div>
     </SectionWrapper>
   )
