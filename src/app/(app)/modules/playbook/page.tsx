@@ -531,8 +531,8 @@ export default function PlaybookPage() {
   const la = responses['launch']           ?? {}
 
   // Cover metadata
-  const brandName = getStr(bf, 'bf_journey_known') || getStr(la, 'la_bio_username') || 'Your Brand'
-  const handle    = getStr(la, 'la_bio_username')  || ''
+  const brandName = (user?.user_metadata?.full_name as string) || getStr(la, 'la_bio_username') || 'Your Brand'
+  const handle    = getStr(la, 'la_bio_username')  || (user?.user_metadata?.ig_handle as string) || ''
   const knownFor  = getStr(bf, 'bf_journey_known') || ''
   const goal90    = getStr(la, 'la_goal_content')  || getStr(la, 'la_goal_audience') || getStr(la, 'la_goal_revenue') || ''
 
