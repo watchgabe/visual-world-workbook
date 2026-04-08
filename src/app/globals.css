@@ -67,7 +67,7 @@ body {
   display: flex;
   align-items: center;
 }
-.ig-inline-input input.workshop-field {
+.ig-pacc > summary .ig-inline-input input.workshop-field {
   background: transparent !important;
   border: none !important;
   box-shadow: none !important;
@@ -76,6 +76,19 @@ body {
   margin: 0 !important;
   font-size: 14px !important;
   font-weight: 600 !important;
+  line-height: 32px !important;
+  height: 32px !important;
+  min-width: 0;
+}
+.ig-iacc > summary .ig-inline-input input.workshop-field {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  outline: none !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  font-size: 13.5px !important;
+  font-weight: 500 !important;
   line-height: 1 !important;
   height: auto !important;
   min-width: 0;
@@ -94,6 +107,25 @@ body {
 }
 .ig-pacc[open] > summary::after {
   content: '－';
+}
+.ig-gen-btn {
+  width: 100%;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 6px 10px;
+  margin-top: 3px;
+  border: 1px dashed var(--border);
+  border-radius: var(--radius-md);
+  background: transparent;
+  color: var(--dimmer);
+  cursor: pointer;
+  transition: border-color .15s, color .15s;
+  text-align: center;
+  font-family: var(--font);
+}
+.ig-gen-btn:hover {
+  border-color: var(--orange);
+  color: var(--orange);
 }
 .ig-iacc > summary::-webkit-details-marker {
   display: none;

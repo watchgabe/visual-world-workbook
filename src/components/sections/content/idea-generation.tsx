@@ -205,56 +205,16 @@ function PillarAccordion({
   getValues: ReturnType<typeof useForm>['getValues']
 }) {
   const pillarKey = `ct_ig_pillar${pillarIdx}`
-  const [aiLoading, setAiLoading] = useState(false)
-  const [aiError, setAiError] = useState<string | null>(null)
-
-  async function generateIdeas() {
-    const pillarName = (watch as (k: string) => string)(pillarKey)
-    if (!pillarName?.trim()) {
-      setAiError('Enter a pillar name first.')
-      return
-    }
-    setAiLoading(true)
-    setAiError(null)
-    try {
-      const prompt =
-        'You are a content strategist for personal brands on Instagram/TikTok.\n\n' +
-        'Content pillar: ' + pillarName.trim() + '\n\n' +
-        'Generate exactly 4 content ideas for this pillar. Each idea should be a short, specific topic ' +
-        'a creator could film or post about. Return ONLY a JSON array of 4 strings, nothing else. ' +
-        'Example: ["idea one","idea two","idea three","idea four"]'
-      const res = await fetch('/api/claude', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ prompt, maxTokens: 300 }),
-      })
-      const data = await res.json()
-      if (data.error) throw new Error(data.error)
-      const text = (data.text || '').trim()
-      const match = text.match(/\[[\s\S]*\]/)
-      if (!match) throw new Error('Unexpected response format')
-      const ideas: string[] = JSON.parse(match[0])
-      ideas.slice(0, 4).forEach((idea, i) => {
-        const key = `ct_ig_p${pillarIdx}i${i + 1}`
-        ;(setValue as (k: string, v: string) => void)(key, idea)
-        if (userId) saveField(userId, MODULE_SLUG, key, idea)
-      })
-    } catch {
-      setAiError('Could not generate ideas — try again.')
-    } finally {
-      setAiLoading(false)
-    }
-  }
 
   return (
     <details
-      open
       className="ig-pacc"
       style={{
         background: 'var(--surface)',
         border: '1px solid var(--border)',
         borderRadius: 'var(--radius-lg)',
         marginBottom: '8px',
+        overflow: 'visible',
       }}
     >
       <summary
@@ -313,41 +273,13 @@ function PillarAccordion({
             key={ideaIdx}
             pillarIdx={pillarIdx}
             ideaIdx={ideaIdx}
+            userId={userId}
+            pillarName={(watch as (k: string) => string)(pillarKey)}
             watch={watch}
             setValue={setValue}
             getValues={getValues}
           />
         ))}
-
-        {/* AI idea generation */}
-        <button
-          type="button"
-          onClick={e => { e.preventDefault(); generateIdeas() }}
-          disabled={aiLoading}
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: '6px',
-            width: '100%',
-            padding: '8px 12px',
-            marginTop: '4px',
-            background: 'none',
-            border: '1.5px dashed var(--orange)',
-            borderRadius: 'var(--radius-md)',
-            color: 'var(--orange)',
-            fontSize: '12px',
-            fontWeight: 600,
-            cursor: aiLoading ? 'wait' : 'pointer',
-            opacity: aiLoading ? 0.6 : 1,
-          }}
-        >
-          {aiLoading ? '⏳ Generating…' : '✦ Generate ideas with AI'}
-        </button>
-        {aiError && (
-          <div style={{ fontSize: '11.5px', color: 'rgba(220,50,50,.85)', marginTop: '4px', paddingLeft: '2px' }}>
-            {aiError}
-          </div>
-        )}
       </div>
     </details>
   )
@@ -357,18 +289,87 @@ function PillarAccordion({
 function IdeaAccordion({
   pillarIdx,
   ideaIdx,
+  userId,
+  pillarName,
   watch,
   setValue,
   getValues,
 }: {
   pillarIdx: number
   ideaIdx: number
+  userId: string | null
+  pillarName: string
   watch: ReturnType<typeof useForm>['watch']
   setValue: ReturnType<typeof useForm>['setValue']
   getValues: ReturnType<typeof useForm>['getValues']
 }) {
   const ideaKey = `ct_ig_p${pillarIdx}i${ideaIdx}`
   const ideaLabel = ['A', 'B', 'C', 'D'][ideaIdx - 1]
+  const [angleCount, setAngleCount] = useState(4)
+  const [aiOpen, setAiOpen] = useState(false)
+  const [aiLoading, setAiLoading] = useState(false)
+  const [aiError, setAiError] = useState<string | null>(null)
+  const [aiSuggestions, setAiSuggestions] = useState<string[]>([])
+  const ideaValue = (watch as (k: string) => string)(ideaKey)
+
+  useEffect(() => {
+    if (ideaValue?.trim() && aiError) setAiError(null)
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [ideaValue])
+
+  async function generateAngles() {
+    setAiError(null)
+    const idea = (watch as (k: string) => string)(ideaKey)
+    if (!idea?.trim()) {
+      setAiError('Add an idea title first, then generate angles for it.')
+      return
+    }
+    setAiLoading(true)
+    setAiSuggestions([])
+    try {
+      const ctx = pillarName ? ` (pillar: "${pillarName}")` : ''
+      const prompt =
+        'You are a social media content strategist. Generate EXACTLY 10 specific content angles for this idea: "' +
+        idea.trim() + '"' + ctx +
+        '. Each angle should be a punchy hook or take under 10 words — specific enough to film. ' +
+        'Output ONLY a numbered list 1 through 10, one per line, no headers, no explanations.'
+      const res = await fetch('/api/claude', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ prompt, maxTokens: 600 }),
+      })
+      const data = await res.json()
+      if (data.error) throw new Error(data.error)
+      const text = data.text || ''
+      const lines = text.split('\n')
+        .filter((l: string) => /^\d+[\.\)]/.test(l.trim()))
+        .map((l: string) => l.replace(/^\d+[\.\)]\s*/, '').trim())
+      if (!lines.length) throw new Error('No angles generated')
+      setAiSuggestions(lines)
+    } catch {
+      setAiError('Could not generate angles — try again.')
+    } finally {
+      setAiLoading(false)
+    }
+  }
+
+  function addAngle(text: string) {
+    for (let a = 1; a <= angleCount; a++) {
+      const key = `ct_ig_p${pillarIdx}i${ideaIdx}a${a}`
+      const current = (watch as (k: string) => string)(key)
+      if (!current?.trim()) {
+        ;(setValue as (k: string, v: string) => void)(key, text)
+        if (userId) saveField(userId, MODULE_SLUG, key, text)
+        return
+      }
+    }
+    // All slots full — add a new one
+    const newIdx = angleCount + 1
+    setAngleCount(newIdx)
+    const key = `ct_ig_p${pillarIdx}i${ideaIdx}a${newIdx}`
+    ;(setValue as (k: string, v: string) => void)(key, text)
+    if (userId) saveField(userId, MODULE_SLUG, key, text)
+  }
 
   return (
     <details
@@ -434,7 +435,7 @@ function IdeaAccordion({
           gap: '4px',
         }}
       >
-        {[1, 2, 3, 4].map(angleIdx => {
+        {Array.from({ length: angleCount }, (_, i) => i + 1).map(angleIdx => {
           const angleKey = `ct_ig_p${pillarIdx}i${ideaIdx}a${angleIdx}`
           return (
             <WorkshopInput
@@ -448,6 +449,114 @@ function IdeaAccordion({
             />
           )
         })}
+        <button
+          type="button"
+          onClick={() => setAngleCount(prev => prev + 1)}
+          style={{
+            fontSize: '11px',
+            color: 'var(--dimmer)',
+            background: 'none',
+            border: '1px dashed var(--border)',
+            borderRadius: 'var(--radius-md)',
+            padding: '5px 10px',
+            cursor: 'pointer',
+            width: '100%',
+          }}
+        >
+          + Add angle
+        </button>
+
+        {/* AI angle generation */}
+        <button
+          type="button"
+          onClick={e => { e.preventDefault(); setAiOpen(!aiOpen) }}
+          className="ig-gen-btn"
+        >
+          ✦ Generate angles with AI
+        </button>
+
+        {aiOpen && (
+          <div
+            style={{
+              border: '1px solid var(--orange-border)',
+              background: 'var(--orange-tint)',
+              borderRadius: '8px',
+              padding: '10px 12px',
+              marginTop: '6px',
+            }}
+          >
+            <button
+              type="button"
+              onClick={generateAngles}
+              disabled={aiLoading}
+              style={{
+                width: '100%',
+                fontSize: '12px',
+                padding: '7px',
+                marginBottom: '6px',
+                background: 'var(--orange)',
+                color: '#fff',
+                border: 'none',
+                borderRadius: 'var(--radius-md)',
+                fontWeight: 600,
+                cursor: aiLoading ? 'wait' : 'pointer',
+                fontFamily: 'var(--font)',
+                opacity: aiLoading ? 0.6 : 1,
+              }}
+            >
+              {aiLoading ? 'Generating…' : 'Generate 10 Angles →'}
+            </button>
+
+            {aiError && (
+              <div style={{ fontSize: '11px', color: '#e53e3e', padding: '3px 0', lineHeight: 1.5 }}>
+                {aiError}
+              </div>
+            )}
+
+            {aiSuggestions.length > 0 && (
+              <>
+                <div style={{ fontSize: '11px', color: 'var(--dim)', marginBottom: '6px' }}>
+                  Click <strong>+ Add</strong> to drop into the next empty angle:
+                </div>
+                {aiSuggestions.map((s, idx) => (
+                  <div
+                    key={idx}
+                    className="ig-ai-idea"
+                    style={{
+                      display: 'flex',
+                      gap: '8px',
+                      alignItems: 'center',
+                      padding: '7px 10px',
+                      background: 'var(--bg)',
+                      border: '1px solid var(--border)',
+                      borderRadius: 'var(--radius-md)',
+                      marginBottom: '4px',
+                    }}
+                  >
+                    <span style={{ fontSize: '13px', color: 'var(--text)', lineHeight: 1.45, flex: 1 }}>{s}</span>
+                    <button
+                      type="button"
+                      onClick={() => addAngle(s)}
+                      style={{
+                        flexShrink: 0,
+                        fontSize: '11px',
+                        fontWeight: 700,
+                        color: 'var(--orange)',
+                        border: '1px solid var(--orange-border)',
+                        background: 'transparent',
+                        borderRadius: '6px',
+                        padding: '4px 9px',
+                        cursor: 'pointer',
+                      }}
+                    >
+                      + Add
+                    </button>
+                  </div>
+                ))}
+              </>
+            )}
+          </div>
+        )}
       </div>
     </details>
   )

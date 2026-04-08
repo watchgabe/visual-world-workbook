@@ -22,18 +22,26 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
   const { user, signOut } = useAuth()
   const { moduleProgress, sectionProgress, overallProgress } = useProgress()
   const [modalOpen, setModalOpen] = useState(false)
-  const [expandedSlug, setExpandedSlug] = useState<string | null>(null)
-  const [allCollapsed, setAllCollapsed] = useState(false)
+  const [expandedSlugs, setExpandedSlugs] = useState<Set<string>>(new Set())
+  const [initialized, setInitialized] = useState(false)
+
+  // Auto-expand the active module on first render
+  if (!initialized && pathname) {
+    const activeSlug = MODULES.find(m => pathname === `/modules/${m.slug}` || pathname.startsWith(`/modules/${m.slug}/`))?.slug
+    if (activeSlug) expandedSlugs.add(activeSlug)
+    setInitialized(true)
+  }
 
   const toggleExpand = (slug: string) => {
-    if (expandedSlug === slug || (expandedSlug === null && !allCollapsed && pathname.startsWith(`/modules/${slug}`))) {
-      // Collapsing the currently expanded one
-      setExpandedSlug(null)
-      setAllCollapsed(true)
-    } else {
-      setExpandedSlug(slug)
-      setAllCollapsed(false)
-    }
+    setExpandedSlugs(prev => {
+      const next = new Set(prev)
+      if (next.has(slug)) {
+        next.delete(slug)
+      } else {
+        next.add(slug)
+      }
+      return next
+    })
   }
 
   return (
@@ -159,7 +167,7 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
           const isActive = pathname === href || pathname.startsWith(`${href}/`)
           const sections = MODULE_SECTIONS[mod.slug as ModuleSlug]
           const hasSections = sections && sections.length > 0
-          const isExpanded = allCollapsed ? false : (expandedSlug === null ? isActive : expandedSlug === mod.slug)
+          const isExpanded = expandedSlugs.has(mod.slug)
           const progress = moduleProgress[mod.slug] ?? 0
 
           return (
@@ -190,7 +198,10 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
               >
                 <Link
                   href={href}
-                  onClick={onClose}
+                  onClick={() => {
+                    if (hasSections && !isExpanded) toggleExpand(mod.slug)
+                    onClose?.()
+                  }}
                   style={{
                     display: 'flex',
                     alignItems: 'center',
