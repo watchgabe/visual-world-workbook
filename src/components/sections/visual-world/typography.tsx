@@ -249,6 +249,8 @@ export default function Typography() {
   // ── Font Pairing state ────────────────────────────────
   const [selectedMood, setSelectedMood] = useState<string | null>(null)
   const [pairingOffset, setPairingOffset] = useState(0)
+  const [appliedPairingIdx, setAppliedPairingIdx] = useState<number | null>(null)
+  const brandName = (user?.user_metadata?.full_name as string) || 'Your Brand'
 
   // ── Load saved data ───────────────────────────────────
   useEffect(() => {
@@ -387,9 +389,13 @@ export default function Typography() {
     setPairingOffset(0)
   }
 
-  function applyPairing(p: Pairing) {
+  function applyPairing(p: Pairing, idx: number) {
+    // Inject fonts immediately (bypass the 500ms debounce in useEffect)
+    injectGoogleFont(p.header.f, 'gf-primary')
+    injectGoogleFont(p.body.f, 'gf-body')
     ;(setValue as (k: string, v: string) => void)('vw_typo_primary', p.header.f)
     ;(setValue as (k: string, v: string) => void)('vw_typo_body', p.body.f)
+    setAppliedPairingIdx(pairingOffset + idx)
     if (user) {
       saveField(user.id, MODULE_SLUG, 'vw_typo_primary', p.header.f)
       saveField(user.id, MODULE_SLUG, 'vw_typo_body', p.body.f)
@@ -398,6 +404,15 @@ export default function Typography() {
 
   const currentPairings = selectedMood ? (TYP_PAIRINGS[selectedMood] || []).slice(pairingOffset, pairingOffset + 3) : []
   const totalPairings = selectedMood ? (TYP_PAIRINGS[selectedMood] || []).length : 0
+
+  // Pre-load Google Fonts for all visible pairing previews
+  useEffect(() => {
+    currentPairings.forEach((p, i) => {
+      injectGoogleFont(p.header.f, `gf-pair-h-${i}`)
+      injectGoogleFont(p.body.f, `gf-pair-b-${i}`)
+    })
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedMood, pairingOffset])
 
   const responses = watch()
 
@@ -537,14 +552,17 @@ export default function Typography() {
             Click <strong>Use This Pairing</strong> to auto-fill your fonts.
           </p>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-            {currentPairings.map((p, i) => (
+            {currentPairings.map((p, i) => {
+              const isChosen = appliedPairingIdx === pairingOffset + i
+              return (
               <div
                 key={i}
                 style={{
-                  background: 'var(--surface)',
-                  border: '1px solid var(--border)',
+                  background: isChosen ? 'rgba(93,202,165,0.05)' : 'var(--surface)',
+                  border: isChosen ? '2px solid var(--green-text, #5dcaa5)' : '1px solid var(--border)',
                   borderRadius: 'var(--radius-md)',
                   padding: '12px 14px',
+                  transition: 'all .2s',
                 }}
               >
                 <div style={{ fontSize: '12px', fontWeight: 700, color: 'var(--text)', marginBottom: '8px' }}>{p.name}</div>
@@ -558,7 +576,7 @@ export default function Typography() {
                       lineHeight: 1.2,
                     }}
                   >
-                    Your Brand
+                    {brandName}
                   </div>
                   <div
                     style={{
@@ -589,19 +607,19 @@ export default function Typography() {
                 <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
                   <button
                     type="button"
-                    onClick={() => applyPairing(p)}
+                    onClick={() => applyPairing(p, i)}
                     style={{
-                      background: 'var(--orange)',
+                      background: isChosen ? 'var(--green-text, #5dcaa5)' : 'var(--orange)',
                       color: '#fff',
                       border: 'none',
                       borderRadius: 'var(--radius-md)',
                       padding: '7px 14px',
                       fontSize: '12.5px',
                       fontWeight: 600,
-                      cursor: 'pointer',
+                      cursor: isChosen ? 'default' : 'pointer',
                     }}
                   >
-                    Use This Pairing
+                    {isChosen ? '✓ Using This Pairing' : 'Use This Pairing'}
                   </button>
                   <a
                     href={p.gf}
@@ -613,7 +631,8 @@ export default function Typography() {
                   </a>
                 </div>
               </div>
-            ))}
+              )
+            })}
           </div>
           {totalPairings > 3 && (
             <button

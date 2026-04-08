@@ -5,6 +5,17 @@ import { useAuth } from '@/context/AuthContext'
 import { useProgress } from '@/context/ProgressContext'
 import type { ModuleSlug } from '@/types/database'
 
+// Global pending-save counter — warns on tab close if unsaved changes exist
+let pendingCount = 0
+function onBeforeUnload(e: BeforeUnloadEvent) {
+  if (pendingCount > 0) {
+    e.preventDefault()
+  }
+}
+if (typeof window !== 'undefined') {
+  window.addEventListener('beforeunload', onBeforeUnload)
+}
+
 export interface UseAutoSaveOptions {
   moduleSlug: ModuleSlug
   fieldKey: string
@@ -123,11 +134,21 @@ export function useAutoSave(opts: UseAutoSaveOptions): UseAutoSaveReturn {
       return
     }
     cancelPending()
+    pendingCount++
     timerRef.current = setTimeout(() => {
       doSave()
       lastSavedValueRef.current = latestValueRef.current
+      pendingCount = Math.max(0, pendingCount - 1)
     }, 5000)
-    return cancelPending  // cleanup on unmount or value change
+    return () => {
+      cancelPending()
+      pendingCount = Math.max(0, pendingCount - 1)
+      // Flush unsaved changes on unmount (e.g. navigating away)
+      if (latestValueRef.current !== lastSavedValueRef.current) {
+        doSave()
+        lastSavedValueRef.current = latestValueRef.current
+      }
+    }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [opts.value])
 

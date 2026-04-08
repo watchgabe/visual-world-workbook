@@ -47,11 +47,18 @@ export function ProgressProvider({ children }: { children: React.ReactNode }) {
     const secProg: Record<string, number> = {}
     for (const section of sections) {
       if (section.fields.length === 0) {
-        secProg[section.slug] = 0
+        secProg[section.slug] = responses[`_${section.slug}_viewed`] ? 100 : 0
         continue
       }
       const filled = section.fields.filter(f => typeof responses[f.key] === 'string' && (responses[f.key] as string).trim() !== '').length
-      secProg[section.slug] = Math.round((filled / section.fields.length) * 100)
+      // Typography: primary + body fonts filled = 100% (italic/bold are optional toggles)
+      if (section.slug === 'typography') {
+        const hasPrimary = typeof responses['vw_typo_primary'] === 'string' && (responses['vw_typo_primary'] as string).trim() !== ''
+        const hasBody = typeof responses['vw_typo_body'] === 'string' && (responses['vw_typo_body'] as string).trim() !== ''
+        secProg[section.slug] = hasPrimary && hasBody ? 100 : hasPrimary || hasBody ? 50 : 0
+      } else {
+        secProg[section.slug] = Math.round((filled / section.fields.length) * 100)
+      }
     }
     setSectionProgress(prev => ({ ...prev, [slug]: secProg }))
 

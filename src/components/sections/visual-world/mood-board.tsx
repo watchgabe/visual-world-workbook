@@ -50,7 +50,6 @@ export default function MoodBoard() {
   const [mbImages, setMbImages] = useState<Record<MBCategory, string[]>>({
     colorgrading: [], fonts: [], shots: [], colors: [],
   })
-  const [mbStorageFull, setMbStorageFull] = useState(false)
   const [mbDragOver, setMbDragOver] = useState<MBCategory | null>(null)
   const [mosaicFilter, setMosaicFilter] = useState<'all' | MBCategory>('all')
   const mbFileInputRefs = useRef<Record<MBCategory, HTMLInputElement | null>>({
@@ -100,9 +99,7 @@ export default function MoodBoard() {
   useEffect(() => {
     try {
       localStorage.setItem(MB_KEY, JSON.stringify(mbImages))
-      setMbStorageFull(false)
     } catch {
-      setMbStorageFull(true)
       console.warn('Mood board save failed — localStorage may be full')
     }
   }, [mbImages])
@@ -268,22 +265,6 @@ export default function MoodBoard() {
       </div>
 
       {/* ── Mood Board Image Zones ─────────────────────── */}
-      {mbStorageFull && (
-        <div
-          style={{
-            background: 'rgba(220,50,50,.1)',
-            border: '1px solid rgba(220,50,50,.3)',
-            borderRadius: 'var(--radius-md)',
-            padding: '10px 14px',
-            marginBottom: '1rem',
-            fontSize: '12.5px',
-            color: 'rgba(220,100,100,1)',
-          }}
-        >
-          Storage is full. Remove some images to add new ones.
-        </div>
-      )}
-
       <div
         style={{
           display: 'grid',

@@ -1,7 +1,11 @@
 'use client'
 
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 import { MODULES, MODULE_SECTIONS } from '@/lib/modules'
+import { useAuth } from '@/context/AuthContext'
+import { useProgress } from '@/context/ProgressContext'
+import { saveField } from '@/lib/saveField'
 import type { ModuleSlug } from '@/types/database'
 
 interface SectionNavBarProps {
@@ -11,6 +15,9 @@ interface SectionNavBarProps {
 
 export function SectionNavBar({ moduleSlug, currentSectionSlug }: SectionNavBarProps) {
   const sections = MODULE_SECTIONS[moduleSlug]
+  const { user } = useAuth()
+  const { refreshProgress } = useProgress()
+  const router = useRouter()
   if (!sections) return null
 
   // Filter out overview — it's not a workshop section
@@ -26,6 +33,16 @@ export function SectionNavBar({ moduleSlug, currentSectionSlug }: SectionNavBarP
   const finishHref = nextModule ? `/modules/${nextModule.slug}` : `/modules/playbook`
   const overviewHref = `/modules/${moduleSlug}`
   const sectionLabel = `${currentIndex + 1}/${workshopSections.length}`
+  const currentSection = workshopSections[currentIndex]
+  const hasNoFields = currentSection.fields.length === 0
+
+  async function handleSaveAndContinue(href: string) {
+    if (hasNoFields && user) {
+      await saveField(user.id, moduleSlug, `_${currentSectionSlug}_viewed`, 'true')
+      await refreshProgress(moduleSlug)
+    }
+    router.push(href)
+  }
 
   return (
     <div
@@ -90,41 +107,81 @@ export function SectionNavBar({ moduleSlug, currentSectionSlug }: SectionNavBarP
 
       {/* Save & Continue button */}
       {nextSection ? (
-        <Link
-          href={`/modules/${moduleSlug}/${nextSection.slug}`}
-          style={{
-            padding: '9px 18px',
-            borderRadius: 'var(--radius-md)',
-            fontSize: '12.5px',
-            cursor: 'pointer',
-            background: 'var(--orange)',
-            color: '#fff',
-            border: '1px solid var(--orange)',
-            fontFamily: 'var(--font)',
-            fontWeight: 600,
-            textDecoration: 'none',
-          }}
-        >
-          Save &amp; Continue &#8594;
-        </Link>
+        hasNoFields ? (
+          <button
+            type="button"
+            onClick={() => handleSaveAndContinue(`/modules/${moduleSlug}/${nextSection.slug}`)}
+            style={{
+              padding: '9px 18px',
+              borderRadius: 'var(--radius-md)',
+              fontSize: '12.5px',
+              cursor: 'pointer',
+              background: 'var(--orange)',
+              color: '#fff',
+              border: '1px solid var(--orange)',
+              fontFamily: 'var(--font)',
+              fontWeight: 600,
+            }}
+          >
+            Save &amp; Continue &#8594;
+          </button>
+        ) : (
+          <Link
+            href={`/modules/${moduleSlug}/${nextSection.slug}`}
+            style={{
+              padding: '9px 18px',
+              borderRadius: 'var(--radius-md)',
+              fontSize: '12.5px',
+              cursor: 'pointer',
+              background: 'var(--orange)',
+              color: '#fff',
+              border: '1px solid var(--orange)',
+              fontFamily: 'var(--font)',
+              fontWeight: 600,
+              textDecoration: 'none',
+            }}
+          >
+            Save &amp; Continue &#8594;
+          </Link>
+        )
       ) : (
-        <Link
-          href={finishHref}
-          style={{
-            padding: '9px 18px',
-            borderRadius: 'var(--radius-md)',
-            fontSize: '12.5px',
-            cursor: 'pointer',
-            background: 'var(--orange)',
-            color: '#fff',
-            border: '1px solid var(--orange)',
-            fontFamily: 'var(--font)',
-            fontWeight: 600,
-            textDecoration: 'none',
-          }}
-        >
+        hasNoFields ? (
+          <button
+            type="button"
+            onClick={() => handleSaveAndContinue(finishHref)}
+            style={{
+              padding: '9px 18px',
+              borderRadius: 'var(--radius-md)',
+              fontSize: '12.5px',
+              cursor: 'pointer',
+              background: 'var(--orange)',
+              color: '#fff',
+              border: '1px solid var(--orange)',
+              fontFamily: 'var(--font)',
+              fontWeight: 600,
+            }}
+          >
+            {finishHref === '/modules/playbook' ? 'View Your Playbook →' : 'Finish Module ✓'}
+          </button>
+        ) : (
+          <Link
+            href={finishHref}
+            style={{
+              padding: '9px 18px',
+              borderRadius: 'var(--radius-md)',
+              fontSize: '12.5px',
+              cursor: 'pointer',
+              background: 'var(--orange)',
+              color: '#fff',
+              border: '1px solid var(--orange)',
+              fontFamily: 'var(--font)',
+              fontWeight: 600,
+              textDecoration: 'none',
+            }}
+          >
           {finishHref === '/modules/playbook' ? 'View Your Playbook →' : 'Finish Module ✓'}
         </Link>
+        )
       )}
     </div>
   )

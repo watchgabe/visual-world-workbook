@@ -8,6 +8,7 @@ import { useAuth } from '@/context/AuthContext'
 import { WorkshopInput } from '@/components/workshop/WorkshopInput'
 import { SectionWrapper } from '@/components/workshop/SectionWrapper'
 import { MODULE_SECTIONS } from '@/lib/modules'
+import { saveField } from '@/lib/saveField'
 
 const MODULE_SLUG = 'content' as const
 const SECTION_INDEX = 7
@@ -65,7 +66,7 @@ export default function IdeaGeneration() {
       const inp = data.responses as Record<string, string>
       let found = 0
       for (let i = 1; i <= 5; i++) {
-        const v = inp[`pillar${i}name`] || ''
+        const v = inp[`bf_pillar${i}_name`] || ''
         if (v) {
           ;(setValue as (k: string, v: string) => void)(`ct_ig_pillar${i}`, v)
           found++
@@ -179,6 +180,7 @@ export default function IdeaGeneration() {
         <PillarAccordion
           key={pillarIdx}
           pillarIdx={pillarIdx}
+          userId={user?.id ?? null}
           watch={watch}
           setValue={setValue}
           getValues={getValues}
@@ -191,16 +193,58 @@ export default function IdeaGeneration() {
 /* ─── Pillar Accordion ─── */
 function PillarAccordion({
   pillarIdx,
+  userId,
   watch,
   setValue,
   getValues,
 }: {
   pillarIdx: number
+  userId: string | null
   watch: ReturnType<typeof useForm>['watch']
   setValue: ReturnType<typeof useForm>['setValue']
   getValues: ReturnType<typeof useForm>['getValues']
 }) {
   const pillarKey = `ct_ig_pillar${pillarIdx}`
+  const [aiLoading, setAiLoading] = useState(false)
+  const [aiError, setAiError] = useState<string | null>(null)
+
+  async function generateIdeas() {
+    const pillarName = (watch as (k: string) => string)(pillarKey)
+    if (!pillarName?.trim()) {
+      setAiError('Enter a pillar name first.')
+      return
+    }
+    setAiLoading(true)
+    setAiError(null)
+    try {
+      const prompt =
+        'You are a content strategist for personal brands on Instagram/TikTok.\n\n' +
+        'Content pillar: ' + pillarName.trim() + '\n\n' +
+        'Generate exactly 4 content ideas for this pillar. Each idea should be a short, specific topic ' +
+        'a creator could film or post about. Return ONLY a JSON array of 4 strings, nothing else. ' +
+        'Example: ["idea one","idea two","idea three","idea four"]'
+      const res = await fetch('/api/claude', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ prompt, maxTokens: 300 }),
+      })
+      const data = await res.json()
+      if (data.error) throw new Error(data.error)
+      const text = (data.text || '').trim()
+      const match = text.match(/\[[\s\S]*\]/)
+      if (!match) throw new Error('Unexpected response format')
+      const ideas: string[] = JSON.parse(match[0])
+      ideas.slice(0, 4).forEach((idea, i) => {
+        const key = `ct_ig_p${pillarIdx}i${i + 1}`
+        ;(setValue as (k: string, v: string) => void)(key, idea)
+        if (userId) saveField(userId, MODULE_SLUG, key, idea)
+      })
+    } catch {
+      setAiError('Could not generate ideas — try again.')
+    } finally {
+      setAiLoading(false)
+    }
+  }
 
   return (
     <details
@@ -211,7 +255,6 @@ function PillarAccordion({
         border: '1px solid var(--border)',
         borderRadius: 'var(--radius-lg)',
         marginBottom: '8px',
-        overflow: 'hidden',
       }}
     >
       <summary
@@ -219,7 +262,7 @@ function PillarAccordion({
           display: 'flex',
           alignItems: 'center',
           gap: '10px',
-          padding: '10px 14px',
+          padding: '12px 14px',
           cursor: 'pointer',
           listStyle: 'none',
           userSelect: 'none',
@@ -228,13 +271,15 @@ function PillarAccordion({
         <span
           style={{
             fontFamily: 'var(--font-num)',
-            fontSize: '28px',
+            fontSize: '24px',
             fontWeight: 900,
             color: 'var(--orange)',
             opacity: 0.45,
             flexShrink: 0,
             lineHeight: 1,
             minWidth: '36px',
+            textAlign: 'center',
+            transform: 'translateY(-3px)',
           }}
         >
           {String(pillarIdx).padStart(2, '0')}
@@ -273,6 +318,36 @@ function PillarAccordion({
             getValues={getValues}
           />
         ))}
+
+        {/* AI idea generation */}
+        <button
+          type="button"
+          onClick={e => { e.preventDefault(); generateIdeas() }}
+          disabled={aiLoading}
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '6px',
+            width: '100%',
+            padding: '8px 12px',
+            marginTop: '4px',
+            background: 'none',
+            border: '1.5px dashed var(--orange)',
+            borderRadius: 'var(--radius-md)',
+            color: 'var(--orange)',
+            fontSize: '12px',
+            fontWeight: 600,
+            cursor: aiLoading ? 'wait' : 'pointer',
+            opacity: aiLoading ? 0.6 : 1,
+          }}
+        >
+          {aiLoading ? '⏳ Generating…' : '✦ Generate ideas with AI'}
+        </button>
+        {aiError && (
+          <div style={{ fontSize: '11.5px', color: 'rgba(220,50,50,.85)', marginTop: '4px', paddingLeft: '2px' }}>
+            {aiError}
+          </div>
+        )}
       </div>
     </details>
   )

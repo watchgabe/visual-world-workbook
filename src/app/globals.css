@@ -74,11 +74,14 @@ body {
   outline: none !important;
   padding: 0 !important;
   margin: 0 !important;
-  font-size: 13.5px !important;
-  font-weight: 500 !important;
+  font-size: 14px !important;
+  font-weight: 600 !important;
   line-height: 1 !important;
   height: auto !important;
   min-width: 0;
+}
+.ig-pacc > summary {
+  overflow: visible;
 }
 .ig-pacc > summary::-webkit-details-marker {
   display: none;
