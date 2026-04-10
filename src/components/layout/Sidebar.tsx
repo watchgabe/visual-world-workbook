@@ -136,7 +136,7 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
                   lineHeight: 1.35,
                 }}
               >
-                The Brand Launch Playbook&#8482;
+                Brand Playbook&#8482;
               </div>
               <div
                 style={{

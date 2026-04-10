@@ -74,7 +74,7 @@ export function MobileTopbar({ onToggle }: MobileTopbarProps) {
             whiteSpace: 'nowrap',
           }}
         >
-          The Brand Launch Playbook&#8482;
+          Brand Playbook&#8482;
         </div>
       </div>
 
