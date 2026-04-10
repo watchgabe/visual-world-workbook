@@ -93,3 +93,7 @@ If something breaks and you can't figure it out from these guides, the most usef
 | Database & users      | [supabase.com](https://supabase.com/dashboard) > your project |
 | Code                  | [github.com](https://github.com) > your repository            |
 | Environment variables | Vercel > Project Settings > Environment Variables             |
+
+---
+
+*Last updated: April 2026*
