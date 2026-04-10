@@ -96,4 +96,4 @@ If something breaks and you can't figure it out from these guides, the most usef
 
 ---
 
-*Last updated: April 2026*
+*Last updated: April 10, 2026*
