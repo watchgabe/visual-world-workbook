@@ -67,7 +67,20 @@ When it finishes, you'll see a green checkmark and a URL like `your-project.verc
 
 ---
 
-## Step 5: Set up a custom domain (optional)
+## Step 5: Configure Supabase redirect URLs
+
+For login to work on your new Vercel URL, you need to tell Supabase about it:
+
+1. Go to **Supabase Dashboard** → **Authentication** → **URL Configuration**
+2. Under **Site URL**, enter your Vercel URL (e.g., `https://your-project.vercel.app`)
+3. Under **Redirect URLs**, click **Add URL** and add: `https://your-project.vercel.app/auth/callback`
+4. Click **Save**
+
+If you set up a custom domain later (Step 6), you'll need to update these URLs to match the new domain.
+
+---
+
+## Step 6: Set up a custom domain (optional)
 
 1. Go to **Project Settings > Domains**
 2. Type your domain (e.g., `app.yourbrand.com`)
