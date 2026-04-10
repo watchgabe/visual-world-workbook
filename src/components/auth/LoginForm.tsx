@@ -19,9 +19,10 @@ export function LoginForm({ redirectPath, errorParam }: LoginFormProps) {
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
-  const [mode, setMode] = useState<'signin' | 'signup'>('signin')
+  const [mode, setMode] = useState<'signin' | 'signup' | 'forgot'>('signin')
   const [loading, setLoading] = useState(false)
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
+  const [resetSent, setResetSent] = useState(false)
 
   // On mount, set error from URL param if present
   useEffect(() => {
@@ -104,10 +105,78 @@ export function LoginForm({ redirectPath, errorParam }: LoginFormProps) {
     }
   }
 
-  const isDisabled = loading || !email.trim() || !password || passwordTooWeak
+  async function handleForgotSubmit(e: React.FormEvent) {
+    e.preventDefault()
+    if (!email.trim()) return
+
+    setLoading(true)
+    setErrorMessage(null)
+
+    const supabase = createClient()
+    const { error } = await supabase.auth.resetPasswordForEmail(email.trim(), {
+      redirectTo: `${window.location.origin}/auth/callback?next=/reset-password`,
+    })
+
+    setLoading(false)
+
+    if (error) {
+      if (error.message.toLowerCase().includes('rate limit') || error.message.toLowerCase().includes('too many')) {
+        setErrorMessage(AUTH_ERRORS.rate_limit)
+      } else {
+        setErrorMessage(AUTH_ERRORS.unknown)
+      }
+      return
+    }
+
+    setResetSent(true)
+  }
+
+  const isDisabled = loading || !email.trim() || (mode !== 'forgot' && (!password || passwordTooWeak))
+
+  if (mode === 'forgot' && resetSent) {
+    return (
+      <div>
+        <div
+          style={{
+            background: 'var(--orange-tint)',
+            border: '1px solid var(--orange-border)',
+            borderRadius: 'var(--radius-md)',
+            padding: '14px 16px',
+            marginBottom: '1.25rem',
+            fontSize: '14px',
+            color: 'var(--text)',
+            lineHeight: 1.6,
+          }}
+        >
+          If an account exists for <strong>{email}</strong>, you&apos;ll receive a password reset link shortly.
+        </div>
+        <button
+          type="button"
+          onClick={() => { setMode('signin'); setResetSent(false); setErrorMessage(null) }}
+          style={{
+            width: '100%',
+            background: 'var(--orange)',
+            color: 'white',
+            border: 'none',
+            borderRadius: 'var(--radius-md)',
+            padding: '12px',
+            fontSize: '15px',
+            fontWeight: 600,
+            cursor: 'pointer',
+            fontFamily: 'var(--font)',
+            transition: 'background .15s',
+          }}
+          onMouseEnter={e => { e.currentTarget.style.background = 'var(--orange-hover)' }}
+          onMouseLeave={e => { e.currentTarget.style.background = 'var(--orange)' }}
+        >
+          Back to sign in
+        </button>
+      </div>
+    )
+  }
 
   return (
-    <form onSubmit={handleSubmit} noValidate>
+    <form onSubmit={mode === 'forgot' ? handleForgotSubmit : handleSubmit} noValidate>
       {/* Error message */}
       {errorMessage && (
         <div
@@ -220,6 +289,7 @@ export function LoginForm({ redirectPath, errorParam }: LoginFormProps) {
       </div>
 
       {/* Password input */}
+      {mode !== 'forgot' && (
       <div style={{ marginBottom: '0.875rem' }}>
         <label
           htmlFor="password"
@@ -276,6 +346,27 @@ export function LoginForm({ redirectPath, errorParam }: LoginFormProps) {
           </p>
         )}
       </div>
+      )}
+
+      {/* Forgot password? — signin only */}
+      {mode === 'signin' && (
+        <div style={{ textAlign: 'right', marginBottom: '1rem', marginTop: '-0.5rem' }}>
+          <button
+            type="button"
+            onClick={() => { setMode('forgot'); setErrorMessage(null) }}
+            style={{
+              background: 'none',
+              border: 'none',
+              color: 'var(--dim)',
+              fontSize: '13px',
+              cursor: 'pointer',
+              padding: 0,
+            }}
+          >
+            Forgot password?
+          </button>
+        </div>
+      )}
 
       {/* Submit button */}
       <button
@@ -324,7 +415,9 @@ export function LoginForm({ redirectPath, errorParam }: LoginFormProps) {
             aria-hidden="true"
           />
         )}
-        {loading ? (mode === 'signup' ? 'Creating account...' : 'Signing in...') : (mode === 'signup' ? 'Sign up' : 'Sign in')}
+        {loading
+          ? (mode === 'signup' ? 'Creating account...' : mode === 'forgot' ? 'Sending...' : 'Signing in...')
+          : (mode === 'signup' ? 'Sign up' : mode === 'forgot' ? 'Send reset link' : 'Sign in')}
       </button>
 
       {/* Mode toggle */}
@@ -356,7 +449,7 @@ export function LoginForm({ redirectPath, errorParam }: LoginFormProps) {
               Sign up
             </button>
           </>
-        ) : (
+        ) : mode === 'signup' ? (
           <>
             Already have an account?{' '}
             <button
@@ -375,6 +468,22 @@ export function LoginForm({ redirectPath, errorParam }: LoginFormProps) {
               Sign in
             </button>
           </>
+        ) : (
+          <button
+            type="button"
+            onClick={() => { setMode('signin'); setErrorMessage(null) }}
+            style={{
+              background: 'none',
+              border: 'none',
+              color: 'var(--orange)',
+              fontSize: '14px',
+              fontWeight: 600,
+              cursor: 'pointer',
+              padding: 0,
+            }}
+          >
+            Back to sign in
+          </button>
         )}
       </p>
 
