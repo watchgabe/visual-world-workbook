@@ -44,7 +44,8 @@ Middleware checks: is user logged in?
 
 ```
 visual-world-workbook/
-├── docs/                    # ← You are here (documentation)
+├── docs/                    # Documentation guides
+├── README.md                # ← Start here (main guide with links to all docs)
 ├── public/                  # Static files (images, fonts)
 ├── src/
 │   ├── app/                 # Pages and routes

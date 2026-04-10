@@ -15,7 +15,7 @@ You need these installed on your computer:
 Open your terminal (Terminal app on Mac, Command Prompt on Windows) and run these commands one at a time:
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/visual-world-workbook.git
+git clone https://github.com/watchgabe/visual-world-workbook.git
 ```
 
 ```bash

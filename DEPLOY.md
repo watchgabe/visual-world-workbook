@@ -6,23 +6,36 @@ This guide walks you through deploying the project on Vercel and connecting it t
 
 ## What you need before starting
 
-- A **GitHub account** (the code lives there)
 - A **Vercel account** (free plan works) — sign up at [vercel.com](https://vercel.com) using your GitHub account
 - Access to the **Supabase project** dashboard (you should already have this)
 
 ---
 
-## Step 1: Import the project on Vercel
+## Step 1: Switch GitHub Pages to the v0 branch
+
+Your site is currently live on GitHub Pages from the **main** branch. Since the new version will be built on **main** and deployed on Vercel, you need to point GitHub Pages to the **v0** branch so your current site stays live while we work.
+
+1. Go to your repository on GitHub
+2. Click **Settings** (top menu bar)
+3. In the left sidebar, click **Pages**
+4. Under **Branch**, you'll see it's set to `main` — change it to `v0`
+5. Click **Save**
+
+Your site will stay at the same URL and look exactly the same — `v0` is an exact copy of what's live right now.
+
+---
+
+## Step 2: Import the project on Vercel
 
 1. Go to [vercel.com/new](https://vercel.com/new)
 2. Click **"Import Git Repository"**
 3. Find and select the **visual-world-workbook** repository
 4. Leave all the default settings as they are (Vercel auto-detects Next.js)
-5. **Do NOT click Deploy yet** — you need to add environment variables first (Step 2)
+5. **Do NOT click Deploy yet** — you need to add environment variables first (Step 3)
 
 ---
 
-## Step 2: Add environment variables on Vercel
+## Step 3: Add environment variables on Vercel
 
 Before deploying, you need to tell Vercel how to connect to Supabase. These are secret keys that the app needs to work.
 
@@ -46,7 +59,7 @@ On the same import page (or go to **Project Settings > Environment Variables**),
 
 ---
 
-## Step 3: Deploy
+## Step 4: Deploy
 
 Click **Deploy**. Vercel will build and publish the site. This takes about 1 minute.
 
@@ -54,7 +67,7 @@ When it finishes, you'll see a green checkmark and a URL like `your-project.verc
 
 ---
 
-## Step 4: Set up a custom domain (optional)
+## Step 5: Set up a custom domain (optional)
 
 1. Go to **Project Settings > Domains**
 2. Type your domain (e.g., `app.yourbrand.com`)
@@ -87,26 +100,20 @@ If code is pushed to any other branch, Vercel creates a **preview deployment** (
 
 ### Admin access
 
-To give someone admin access to the dashboard (`/admin`):
-
-1. Go to **Supabase Dashboard > Authentication > Users**
-2. Find the user and click on them
-3. Under `app_metadata`, add or edit: `"role": "admin"`
-4. Save — they can now access `/admin` on the site
-
-Alternatively, an existing admin can promote other users directly from the admin dashboard.
+To give someone admin access to the dashboard (`/admin`), an existing admin can promote them directly from the admin dashboard — go to `/admin`, find the user, and toggle their role.
 
 ---
 
-## The `.env.local` file (for local development only)
+## Working on the project locally
 
-If a developer needs to run the project on their own computer, they should:
+If you want to run the project on your own computer (e.g., to make changes with Claude), you'll need to set up a local environment file:
 
-1. Copy `.env.example` to `.env.local`
-2. Fill in the same values from Supabase (same keys as Vercel)
-3. Run `npm install` then `npm run dev`
+1. In the root folder of the project, find the file called `.env.example`
+2. Duplicate it and rename the copy to `.env.local`
+3. Open `.env.local` and fill in the values — these are the same keys you added on Vercel (Supabase URL, anon key, service role key, etc.)
+4. Run `npm install` then `npm run dev` in the terminal, or ask Claude to do it for you
 
-**Important:** `.env.local` is already in `.gitignore` — it will never be uploaded to GitHub. This is intentional. Secrets should only live on your machine or on Vercel, never in the code repository.
+**Important:** The `.env.local` file contains your secret keys, but it's already set up to be ignored by Git — it will never be uploaded to GitHub. This is intentional. Secrets should only live on your machine or on Vercel, never in the code repository.
 
 ---
 
