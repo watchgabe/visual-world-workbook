@@ -53,28 +53,22 @@ export function UserModal({ email, name: initialName, handle: initialHandle, onS
 
   async function handleClearModule(moduleSlug: string) {
     setClearingModule(moduleSlug)
-    const supabase = createClient()
-    const { data: { user } } = await supabase.auth.getUser()
-    if (user) {
-      await (supabase as unknown as { from: (t: string) => { delete: () => { match: (m: Record<string, string>) => Promise<unknown> } } })
-        .from('blp_responses')
-        .delete()
-        .match({ user_id: user.id, module_slug: moduleSlug })
-    }
+    await fetch('/api/clear-responses', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ moduleSlug }),
+    })
     setClearingModule(null)
     window.location.reload()
   }
 
   async function handleClearAll() {
     setClearingAll(true)
-    const supabase = createClient()
-    const { data: { user } } = await supabase.auth.getUser()
-    if (user) {
-      await (supabase as unknown as { from: (t: string) => { delete: () => { eq: (k: string, v: string) => Promise<unknown> } } })
-        .from('blp_responses')
-        .delete()
-        .eq('user_id', user.id)
-    }
+    await fetch('/api/clear-responses', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({}),
+    })
     setClearingAll(false)
     setShowClearAll(false)
     window.location.reload()
