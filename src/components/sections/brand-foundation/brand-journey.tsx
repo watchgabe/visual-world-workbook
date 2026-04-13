@@ -8,6 +8,7 @@ import { WorkshopTextarea } from '@/components/workshop/WorkshopTextarea'
 import { SectionWrapper } from '@/components/workshop/SectionWrapper'
 import { MODULE_SECTIONS } from '@/lib/modules'
 import { saveField } from '@/lib/saveField'
+import { stripMarkdown } from '@/lib/stripMarkdown'
 
 const MODULE_SLUG = 'brand-foundation' as const
 const SECTION_INDEX = 1
@@ -73,7 +74,7 @@ export default function BrandJourney() {
       })
       const data = await res.json()
       if (data.error) throw new Error(data.error)
-      const text = data.text || ''
+      const text = stripMarkdown(data.text || '')
       ;(setValue as (k: string, v: string) => void)(
         'bf_journey_statement',
         text,

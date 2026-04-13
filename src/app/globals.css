@@ -185,6 +185,22 @@ body::before {
   }
 }
 
+/* ─── Brand guideline section row: label-left + content-right ─── */
+.guideline-row {
+  display: grid;
+  grid-template-columns: 150px 1fr;
+  gap: 0 64px;
+  margin-bottom: 8px;
+}
+@media (max-width: 768px) {
+  .guideline-row {
+    grid-template-columns: 1fr;
+  }
+  .guideline-row-label {
+    margin-bottom: 2px;
+  }
+}
+
 /* ─── Loading spinner ─── */
 @keyframes spin {
   to {

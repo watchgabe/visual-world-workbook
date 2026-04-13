@@ -8,6 +8,7 @@ import { WorkshopTextarea } from '@/components/workshop/WorkshopTextarea'
 import { SectionWrapper } from '@/components/workshop/SectionWrapper'
 import { MODULE_SECTIONS } from '@/lib/modules'
 import { saveField } from '@/lib/saveField'
+import { stripMarkdown } from '@/lib/stripMarkdown'
 
 const CLOCK_ICON = (
   <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -186,7 +187,7 @@ export default function OriginStory() {
       })
       const data = await res.json()
       if (data.error) throw new Error(data.error)
-      const text = data.text || ''
+      const text = stripMarkdown(data.text || '')
       ;(setValue as (k: string, v: string) => void)('bf_origin_story', text)
       if (user) saveField(user.id, MODULE_SLUG, 'bf_origin_story', text)
     } catch {

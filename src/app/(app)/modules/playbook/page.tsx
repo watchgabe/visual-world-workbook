@@ -41,9 +41,20 @@ const OPTION_LABELS: Record<string, string> = {
   'maybe': 'Maybe 20–30',
 }
 
+function stripMarkdown(text: string): string {
+  return text
+    .replace(/\*\*([\s\S]*?)\*\*/g, '$1')   // **bold**
+    .replace(/\*([\s\S]*?)\*/g, '$1')        // *italic*
+    .replace(/__([\s\S]*?)__/g, '$1')        // __bold__
+    .replace(/_([\s\S]*?)_/g, '$1')          // _italic_
+    .replace(/`([\s\S]*?)`/g, '$1')          // `code`
+    .replace(/^#+\s+/gm, '')                 // ## headings
+    .trim()
+}
+
 function getStr(responses: Record<string, unknown>, key: string): string {
   const v = responses[key]
-  if (typeof v === 'string' && v.trim()) return v.trim()
+  if (typeof v === 'string' && v.trim()) return stripMarkdown(v.trim())
   return ''
 }
 
@@ -121,19 +132,33 @@ interface ColorSwatchProps {
   hex: string
 }
 function ColorSwatch({ label, hex }: ColorSwatchProps) {
+  const [hovered, setHovered] = useState(false)
   const isValidHex = /^#([0-9a-fA-F]{3}|[0-9a-fA-F]{6})$/.test(hex)
   return (
-    <div style={{
-      display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '6px',
-    }}>
+    <div
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+      style={{
+        flex: hovered ? '2' : '1',
+        transition: 'flex 0.3s ease',
+        display: 'flex',
+        flexDirection: 'column',
+        minWidth: 0,
+      }}
+    >
       <div style={{
-        width: '32px', height: '32px', borderRadius: '4px', flexShrink: 0,
-        background: isValidHex ? hex : 'transparent',
+        height: '140px',
+        borderRadius: '6px',
+        background: isValidHex ? hex : 'var(--border2)',
         border: '1px solid var(--border2)',
+        transition: 'height 0.3s ease',
+        marginBottom: '10px',
       }} />
-      <div>
-        <div style={{ fontSize: '11px', fontWeight: 600, color: 'var(--text)' }}>{label}</div>
-        <div style={{ fontSize: '10px', color: 'var(--dimmer)' }}>{hex}</div>
+      <div style={{ fontSize: '9px', fontWeight: 700, textTransform: 'uppercase' as const, letterSpacing: '.1em', color: 'var(--dimmer)', marginBottom: '4px' }}>
+        {label}
+      </div>
+      <div style={{ fontSize: '13px', fontWeight: 700, color: 'var(--text)', marginBottom: '4px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+        {hex}
       </div>
     </div>
   )
@@ -188,8 +213,7 @@ function ChapterHeader({ num, moduleLabel, title }: { num: string; moduleLabel: 
   return (
     <div style={{
       display: 'flex', alignItems: 'center', gap: '16px',
-      marginBottom: '1.5rem', paddingBottom: '1rem',
-      borderBottom: '1px solid var(--border)',
+      marginBottom: '0.75rem',
     }}>
       <div style={{
         fontFamily: 'var(--font-num)', fontSize: '48px', fontWeight: 900,
@@ -241,17 +265,295 @@ function PlaybookSkeleton() {
 
 // ─── CHAPTER RENDERERS ───────────────────────────────────────────────────────
 
+// ── Brand guidelines sub-components ─────────────────────────────────────────
+
+interface GuidelineRowProps {
+  number: string
+  title: string
+  children: React.ReactNode
+}
+function GuidelineRow({ number, title, children }: GuidelineRowProps) {
+  return (
+    <div style={{ marginTop: '20px' }}>
+      {/* Single full-width line spanning both columns */}
+      <div style={{ height: '1px', background: 'var(--border)', marginBottom: '10px' }} />
+      <div className="guideline-row">
+        {/* Left: number + title on one line */}
+        <div style={{ paddingTop: '1px' }}>
+          <span style={{ fontSize: '10px', fontWeight: 600, color: 'var(--orange)', letterSpacing: '.06em' }}>
+            {number}
+          </span>
+          <span style={{
+            fontSize: '10px', fontWeight: 600, textTransform: 'uppercase' as const,
+            letterSpacing: '.1em', color: 'var(--dim)', marginLeft: '8px',
+          }}>
+            {title}
+          </span>
+        </div>
+        {/* Right: content */}
+        <div>{children}</div>
+      </div>
+    </div>
+  )
+}
+
+function GuidelineHero({ text }: { text: string }) {
+  return (
+    <div style={{
+      fontSize: '15px', fontWeight: 400, color: 'var(--text)',
+      lineHeight: 1.65, marginBottom: '18px',
+    }}>
+      {text}
+    </div>
+  )
+}
+
+function GuidelineQuote({ text }: { text: string }) {
+  return (
+    <div style={{
+      fontSize: '13px', fontStyle: 'italic', fontWeight: 400,
+      color: 'var(--dim)', lineHeight: 1.65, marginBottom: '4px',
+    }}>
+      &ldquo;{text}&rdquo;
+    </div>
+  )
+}
+
+function GuidelineCol({ label, value }: { label: string; value?: string | null }) {
+  if (!value) return null
+  return (
+    <div>
+      <div style={{
+        fontSize: '9px', fontWeight: 600, textTransform: 'uppercase' as const,
+        letterSpacing: '.1em', color: 'var(--dimmer)', marginBottom: '5px',
+      }}>
+        {label}
+      </div>
+      <div style={{ fontSize: '12px', fontWeight: 400, color: 'var(--text)', lineHeight: 1.55 }}>
+        {value}
+      </div>
+    </div>
+  )
+}
+
+// ── Collapsible sub-components ────────────────────────────────────────────────
+
+function CollapsibleAvatarCard({
+  num,
+  r,
+}: {
+  num: number
+  r: Record<string, unknown>
+}) {
+  const [expanded, setExpanded] = useState(false)
+  const g = (k: string) => getStr(r, k)
+  const image = r[`bf_av${num}_image`]
+  const name = g(`bf_av${num}_name`)
+  const age = g(`bf_av${num}_age`)
+  const occupation = g(`bf_av${num}_occupation`)
+  const statement = g(`bf_av${num}_statement`)
+  const struggle = g(`bf_av${num}_struggle`)
+  const desired = g(`bf_av${num}_desired`)
+  const platforms = g(`bf_av${num}_platforms`)
+  const fears = g(`bf_av${num}_fears`)
+  const demographics = [age, occupation].filter(Boolean).join(' · ')
+  const avatarLabel =
+    num === 1 ? 'Primary' : num === 2 ? 'Secondary' : `Avatar ${num}`
+
+  // Skip if no meaningful data
+  if (!name && !statement && !struggle && !g(`bf_av${num}_who`)) return null
+
+  return (
+    <div style={{ marginBottom: '12px' }}>
+      <button
+        type="button"
+        onClick={() => setExpanded((v) => !v)}
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          gap: '12px',
+          width: '100%',
+          background: 'none',
+          border: 'none',
+          cursor: 'pointer',
+          textAlign: 'left',
+          padding: '6px 0',
+          fontFamily: 'var(--font)',
+        }}
+      >
+        {/* Avatar image circle */}
+        <div
+          style={{
+            width: '44px',
+            height: '44px',
+            borderRadius: '50%',
+            border: `1.5px solid ${image ? 'var(--orange)' : 'var(--border2)'}`,
+            overflow: 'hidden',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            background: 'var(--surface)',
+            flexShrink: 0,
+          }}
+        >
+          {image ? (
+            <img
+              src={image as string}
+              alt={name || avatarLabel}
+              style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+            />
+          ) : (
+            <svg
+              width="18"
+              height="18"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="var(--dimmer)"
+              strokeWidth="1.5"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <circle cx="12" cy="8" r="4" />
+              <path d="M5 20c0-4 3.5-7 7-7s7 3 7 7" />
+            </svg>
+          )}
+        </div>
+        {/* Name + demographics */}
+        <div style={{ flex: 1, minWidth: 0 }}>
+          {name ? (
+            <>
+              <div
+                style={{
+                  fontSize: '13px',
+                  fontWeight: 700,
+                  color: 'var(--text)',
+                  lineHeight: 1.2,
+                }}
+              >
+                {name}
+              </div>
+              {demographics && (
+                <div
+                  style={{
+                    fontSize: '11px',
+                    color: 'var(--dim)',
+                    marginTop: '1px',
+                  }}
+                >
+                  {demographics}
+                </div>
+              )}
+            </>
+          ) : (
+            <div
+              style={{
+                fontSize: '12px',
+                color: 'var(--dimmer)',
+                fontStyle: 'italic',
+              }}
+            >
+              {avatarLabel}
+              {demographics ? ` · ${demographics}` : ''}
+            </div>
+          )}
+        </div>
+        {/* Chevron */}
+        <span
+          style={{
+            fontSize: '10px',
+            color: 'var(--dimmer)',
+            flexShrink: 0,
+            transform: expanded ? 'rotate(180deg)' : 'rotate(0deg)',
+            transition: 'transform .15s',
+          }}
+        >
+          ▼
+        </span>
+      </button>
+
+      {expanded && (
+        <div style={{ paddingTop: '10px', paddingLeft: '56px' }}>
+          {statement && (
+            <div
+              style={{
+                fontSize: '12px',
+                fontWeight: 400,
+                color: 'var(--text)',
+                lineHeight: 1.65,
+                marginBottom: '16px',
+              }}
+            >
+              {statement}
+            </div>
+          )}
+          <div
+            style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px 24px' }}
+          >
+            <GuidelineCol label="Their Struggle" value={struggle} />
+            <GuidelineCol label="Their Goal" value={desired} />
+            <GuidelineCol label="Where They Hang Out" value={platforms} />
+            <GuidelineCol label="What They Fear" value={fears} />
+          </div>
+        </div>
+      )}
+    </div>
+  )
+}
+
+function CollapsibleOriginStory({ text }: { text: string }) {
+  const [expanded, setExpanded] = useState(false)
+  const PREVIEW_LEN = 280
+  const isLong = text.length > PREVIEW_LEN
+
+  return (
+    <div>
+      <div
+        style={{
+          fontSize: '13px',
+          fontStyle: 'italic',
+          fontWeight: 400,
+          color: 'var(--dim)',
+          lineHeight: 1.65,
+          marginBottom: '6px',
+        }}
+      >
+        &ldquo;
+        {expanded || !isLong ? text : text.slice(0, PREVIEW_LEN) + '…'}
+        &rdquo;
+      </div>
+      {isLong && (
+        <button
+          type="button"
+          onClick={() => setExpanded((v) => !v)}
+          style={{
+            fontSize: '11px',
+            color: 'var(--orange)',
+            background: 'none',
+            border: 'none',
+            cursor: 'pointer',
+            padding: '2px 0',
+            fontFamily: 'var(--font)',
+            fontWeight: 600,
+          }}
+        >
+          {expanded ? '− Show less' : '+ Read more'}
+        </button>
+      )}
+    </div>
+  )
+}
+
+// ── Main chapter ──────────────────────────────────────────────────────────────
+
 function BrandFoundationChapter({ r }: { r: Record<string, unknown> }) {
   const g = (k: string) => getStr(r, k)
 
-  // Values
   const values: { name: string; practice: string }[] = []
   for (let i = 1; i <= 6; i++) {
     const name = g(`bf_val${i}_name`)
     if (name) values.push({ name, practice: g(`bf_val${i}_practice`) })
   }
 
-  // Pillars
   const pillars: { name: string; sub: string }[] = []
   for (let i = 1; i <= 5; i++) {
     const name = g(`bf_pillar${i}_name`)
@@ -260,57 +562,82 @@ function BrandFoundationChapter({ r }: { r: Record<string, unknown> }) {
 
   return (
     <>
-      <FieldCard label="Brand Journey Statement" value={r.bf_journey_statement} highlight />
-      <div className="playbook-grid-responsive" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', marginBottom: '10px' }}>
-        <FieldCard label="Desired Outcome" value={r.bf_journey_outcome} />
-        <FieldCard label="Known For" value={r.bf_journey_known} />
-      </div>
-      <div className="playbook-grid-responsive" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', marginBottom: '10px' }}>
-        <FieldCard label="Actions" value={r.bf_journey_do} />
-        <FieldCard label="Learning Priority" value={r.bf_journey_learn} />
-      </div>
+      {/* 1.1 Brand Journey */}
+      <GuidelineRow number="1.1" title="Brand Journey">
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px 28px' }}>
+          <GuidelineCol label="Desired Outcome" value={g('bf_journey_outcome')} />
+          <GuidelineCol label="Known For" value={g('bf_journey_known')} />
+          <GuidelineCol label="What I Do" value={g('bf_journey_do')} />
+          <GuidelineCol label="Learning Priority" value={g('bf_journey_learn')} />
+        </div>
+      </GuidelineRow>
 
-      <FieldCard label="Core Mission" value={r.bf_core_mission} highlight />
-      <FieldCard label="Ikigai" value={r.bf_ikigai_center} highlight />
-      <FieldCard label="Avatar Statement" value={r.bf_av1_statement} highlight />
+      {/* 1.2 Core Mission */}
+      <GuidelineRow number="1.2" title="Core Mission">
+        {g('bf_core_mission') && <GuidelineHero text={g('bf_core_mission')} />}
+        {g('bf_ikigai_center') && (
+          <div style={{ marginBottom: '18px' }}>
+            <div style={{ fontSize: '9px', fontWeight: 600, textTransform: 'uppercase' as const, letterSpacing: '.1em', color: 'var(--orange)', marginBottom: '5px' }}>
+              Ikigai — Sweet Spot
+            </div>
+            <div style={{ fontSize: '13px', fontWeight: 400, color: 'var(--text)', lineHeight: 1.5 }}>
+              {g('bf_ikigai_center')}
+            </div>
+          </div>
+        )}
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px 28px' }}>
+          <GuidelineCol label="What I Love" value={g('bf_ikigai_love')} />
+          <GuidelineCol label="What I'm Good At" value={g('bf_ikigai_good')} />
+          <GuidelineCol label="What the World Needs" value={g('bf_ikigai_world')} />
+          <GuidelineCol label="What I Can Be Paid For" value={g('bf_ikigai_paid')} />
+        </div>
+      </GuidelineRow>
 
-      <div className="playbook-grid-responsive" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', marginBottom: '10px' }}>
-        <FieldCard label="Demographics" value={[g('bf_av1_age'), g('bf_av1_occupation')].filter(Boolean).join(' · ') || null} />
-        <FieldCard label="Struggle" value={r.bf_av1_struggle} />
-      </div>
-      <div className="playbook-grid-responsive" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', marginBottom: '10px' }}>
-        <FieldCard label="Desired Outcome" value={r.bf_av1_desired} />
-        <FieldCard label="Where They Hang Out" value={r.bf_av1_platforms} />
-      </div>
+      {/* 1.3 Avatars */}
+      <GuidelineRow number="1.3" title="Avatars">
+        {[1, 2, 3, 4, 5].map((n) => (
+          <CollapsibleAvatarCard key={n} num={n} r={r} />
+        ))}
+      </GuidelineRow>
 
+      {/* 1.4 Core Values */}
       {values.length > 0 && (
-        <>
-          <SectionLabel label="Core Values" />
-          <div className="playbook-grid-responsive" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '8px', marginBottom: '1rem' }}>
+        <GuidelineRow number="1.4" title="Core Values">
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '20px 28px' }}>
             {values.map((v, i) => (
-              <PillarCard key={i} number={`0${i + 1}`} name={v.name} sub={v.practice} />
+              <GuidelineCol key={i} label={`${String(i + 1).padStart(2, '0')} — ${v.name}`} value={v.practice || v.name} />
             ))}
           </div>
-        </>
+        </GuidelineRow>
       )}
 
+      {/* 1.5 Content Pillars */}
       {pillars.length > 0 && (
-        <>
-          <SectionLabel label="Content Pillars" />
-          <div className="playbook-grid-responsive" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '8px', marginBottom: '1rem' }}>
+        <GuidelineRow number="1.5" title="Content Pillars">
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px 28px' }}>
             {pillars.map((p, i) => (
-              <PillarCard key={i} number={`0${i + 1}`} name={p.name} sub={p.sub} />
+              <GuidelineCol key={i} label={`${String(i + 1).padStart(2, '0')} — ${p.name}`} value={p.sub || p.name} />
             ))}
           </div>
-        </>
+        </GuidelineRow>
       )}
 
-      <FieldCard label="Origin Story" value={r.bf_origin_story} highlight />
-      <div className="playbook-grid-responsive" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', marginBottom: '10px' }}>
-        <FieldCard label="3-Year Vision" value={r.bf_vision_3yr} />
-        <FieldCard label="Impact" value={r.bf_vision_impact} />
-      </div>
-      <FieldCard label="Brand Vision" value={r.bf_brand_vision} highlight />
+      {/* 1.6 Origin Story */}
+      <GuidelineRow number="1.6" title="Origin Story">
+        {g('bf_origin_story') && (
+          <CollapsibleOriginStory text={g('bf_origin_story')} />
+        )}
+      </GuidelineRow>
+
+      {/* 1.7 Brand Vision */}
+      <GuidelineRow number="1.7" title="Brand Vision">
+        {g('bf_brand_vision') && <GuidelineHero text={g('bf_brand_vision')} />}
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px 28px' }}>
+          <GuidelineCol label="3-Year Vision" value={g('bf_vision_3yr')} />
+          <GuidelineCol label="Impact" value={g('bf_vision_impact')} />
+          {g('bf_vision_legacy') && <GuidelineCol label="Legacy" value={g('bf_vision_legacy')} />}
+        </div>
+      </GuidelineRow>
     </>
   )
 }
@@ -332,19 +659,21 @@ function VisualWorldChapter({ r }: { r: Record<string, unknown> }) {
           background: 'var(--surface)',
           border: '1px solid var(--border)',
           borderRadius: 'var(--radius-md)',
-          padding: '.9rem 1rem',
+          padding: '1rem 1rem 1.2rem',
           marginBottom: '10px',
         }}>
           <div style={{
             fontSize: '9px', fontWeight: 700, textTransform: 'uppercase' as const,
-            letterSpacing: '.1em', color: 'var(--orange)', marginBottom: '8px',
+            letterSpacing: '.1em', color: 'var(--orange)', marginBottom: '12px',
           }}>
             Color Palette{colorName ? ` — ${colorName}` : ''}
           </div>
-          {colorPrimary   && <ColorSwatch label="Primary"   hex={colorPrimary}   />}
-          {colorSecondary && <ColorSwatch label="Secondary" hex={colorSecondary} />}
-          {colorAccent    && <ColorSwatch label="Accent"    hex={colorAccent}    />}
-          {colorNeutral   && <ColorSwatch label="Neutral"   hex={colorNeutral}   />}
+          <div style={{ display: 'flex', gap: '8px', alignItems: 'stretch' }}>
+            {colorPrimary   && <ColorSwatch label="Primary"   hex={colorPrimary}   />}
+            {colorSecondary && <ColorSwatch label="Secondary" hex={colorSecondary} />}
+            {colorAccent    && <ColorSwatch label="Accent"    hex={colorAccent}    />}
+            {colorNeutral   && <ColorSwatch label="Neutral"   hex={colorNeutral}   />}
+          </div>
         </div>
       )}
 

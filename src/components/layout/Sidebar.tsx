@@ -25,6 +25,11 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
   const [expandedSlugs, setExpandedSlugs] = useState<Set<string>>(new Set())
   const [initialized, setInitialized] = useState(false)
 
+  // Only close sidebar on nav clicks when on mobile
+  const closeMobile = () => {
+    if (typeof window !== 'undefined' && window.innerWidth < 768) onClose()
+  }
+
   // Auto-expand the active module on first render
   if (!initialized && pathname) {
     const activeSlug = MODULES.find(m => pathname === `/modules/${m.slug}` || pathname.startsWith(`/modules/${m.slug}/`))?.slug
@@ -60,12 +65,8 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
         zIndex: 200,
         overflow: 'hidden',
         transition: 'transform .25s cubic-bezier(.4,0,.2,1)',
-        transform: isOpen ? 'translateX(0)' : undefined,
+        transform: isOpen ? 'translateX(0)' : 'translateX(-100%)',
       }}
-      className={[
-        'md:translate-x-0',
-        !isOpen ? '-translate-x-full md:translate-x-0' : 'translate-x-0',
-      ].join(' ')}
     >
       {/* Sidebar header */}
       <div
@@ -73,8 +74,34 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
           padding: '1.35rem 1.25rem 1.1rem',
           borderBottom: '1px solid var(--border)',
           flexShrink: 0,
+          position: 'relative',
         }}
       >
+        <button
+          type="button"
+          onClick={onClose}
+          aria-label="Close sidebar"
+          style={{
+            position: 'absolute',
+            top: '10px',
+            right: '10px',
+            background: 'none',
+            border: 'none',
+            cursor: 'pointer',
+            color: 'var(--dimmer)',
+            padding: '4px',
+            lineHeight: 1,
+            borderRadius: '4px',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}
+        >
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+            <line x1="18" y1="6" x2="6" y2="18" />
+            <line x1="6" y1="6" x2="18" y2="18" />
+          </svg>
+        </button>
         {(() => {
           const activeModule = MODULES.find(m => pathname.startsWith(`/modules/${m.slug}`))
           if (activeModule && activeModule.slug !== 'welcome') {
@@ -200,7 +227,7 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
                   href={href}
                   onClick={() => {
                     if (hasSections && !isExpanded) toggleExpand(mod.slug)
-                    onClose?.()
+                    closeMobile()
                   }}
                   style={{
                     display: 'flex',
@@ -342,7 +369,7 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
                       <Link
                         key={section.slug}
                         href={sectionHref}
-                        onClick={onClose}
+                        onClick={closeMobile}
                         style={{
                           display: 'flex',
                           alignItems: 'center',

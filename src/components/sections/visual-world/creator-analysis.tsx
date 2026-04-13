@@ -8,6 +8,7 @@ import { useAutoSave } from '@/hooks/useAutoSave'
 import { WorkshopTextarea } from '@/components/workshop/WorkshopTextarea'
 import { SectionWrapper } from '@/components/workshop/SectionWrapper'
 import { MODULE_SECTIONS } from '@/lib/modules'
+import { stripMarkdown } from '@/lib/stripMarkdown'
 
 const MODULE_SLUG = 'visual-world' as const
 const SECTION_INDEX = 1
@@ -275,7 +276,7 @@ export default function CreatorAnalysis() {
       if (data.error) throw new Error(data.error)
       let analysis: CreatorAnalysis
       try {
-        let raw = (data.text || '').trim()
+        let raw = stripMarkdown(data.text || '').trim()
         raw = raw.replace(/```json|```/g, '').trim()
         const jsonStart = raw.indexOf('{')
         const jsonEnd = raw.lastIndexOf('}')

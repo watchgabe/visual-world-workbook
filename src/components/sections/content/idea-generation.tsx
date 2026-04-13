@@ -9,6 +9,7 @@ import { WorkshopInput } from '@/components/workshop/WorkshopInput'
 import { SectionWrapper } from '@/components/workshop/SectionWrapper'
 import { MODULE_SECTIONS } from '@/lib/modules'
 import { saveField } from '@/lib/saveField'
+import { stripMarkdown } from '@/lib/stripMarkdown'
 
 const MODULE_SLUG = 'content' as const
 const SECTION_INDEX = 7
@@ -340,7 +341,7 @@ function IdeaAccordion({
       })
       const data = await res.json()
       if (data.error) throw new Error(data.error)
-      const text = data.text || ''
+      const text = stripMarkdown(data.text || '')
       const lines = text.split('\n')
         .filter((l: string) => /^\d+[\.\)]/.test(l.trim()))
         .map((l: string) => l.replace(/^\d+[\.\)]\s*/, '').trim())

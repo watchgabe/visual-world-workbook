@@ -9,6 +9,7 @@ import { WorkshopInput } from '@/components/workshop/WorkshopInput'
 import { SectionWrapper } from '@/components/workshop/SectionWrapper'
 import { MODULE_SECTIONS } from '@/lib/modules'
 import { saveField } from '@/lib/saveField'
+import { stripMarkdown } from '@/lib/stripMarkdown'
 
 const MODULE_SLUG = 'brand-foundation' as const
 const SECTION_INDEX = 3
@@ -74,7 +75,7 @@ export default function CoreMission() {
       })
       const data = await res.json()
       if (data.error) throw new Error(data.error)
-      const text = data.text || ''
+      const text = stripMarkdown(data.text || '')
       ;(setValue as (k: string, v: string) => void)('bf_ikigai_center', text)
       if (user) saveField(user.id, MODULE_SLUG, 'bf_ikigai_center', text)
     } catch {

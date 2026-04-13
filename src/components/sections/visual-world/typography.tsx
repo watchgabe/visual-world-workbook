@@ -8,6 +8,7 @@ import { WorkshopInput } from '@/components/workshop/WorkshopInput'
 import { SectionWrapper } from '@/components/workshop/SectionWrapper'
 import { MODULE_SECTIONS } from '@/lib/modules'
 import { saveField } from '@/lib/saveField'
+import { stripMarkdown } from '@/lib/stripMarkdown'
 
 const MODULE_SLUG = 'visual-world' as const
 const SECTION_INDEX = 4
@@ -349,7 +350,7 @@ export default function Typography() {
       })
       const data = await res.json()
       if (data.error) throw new Error(data.error)
-      const text: string = data.text || data.content || ''
+      const text: string = stripMarkdown(data.text || data.content || '')
       const cleaned = text.replace(/```json|```/g, '').trim()
       const jsonStart = cleaned.indexOf('[')
       const jsonEnd = cleaned.lastIndexOf(']')
