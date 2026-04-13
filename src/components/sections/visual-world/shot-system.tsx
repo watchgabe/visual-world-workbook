@@ -336,11 +336,6 @@ export default function ShotSystem() {
         <div style={{ fontSize: '16px', fontWeight: 700, color: 'var(--text)', marginBottom: '6px' }}>
           Color Language
         </div>
-        <p style={{ fontSize: '13px', color: 'var(--dim)', lineHeight: 1.65, marginBottom: '1rem' }}>
-          Your color palette and typography, defined in Workshops 3 &amp; 4. Confirm how you apply
-          them to video below.
-        </p>
-
         <div style={{ marginBottom: '1rem' }}>
           <div style={{ fontSize: '13.5px', fontWeight: 600, color: 'var(--text)', marginBottom: '6px' }}>
             Color grade approach for video

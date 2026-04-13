@@ -77,7 +77,18 @@ export default function CreatorAnalysis() {
     ),
   })
 
-  const [creators, setCreators] = useState<Creator[]>([])
+  const defaultCreator: Creator = {
+    id: 'creator-default-1',
+    handle: '',
+    bio: '',
+    analyzed: false,
+    analysis: null,
+    profile: null,
+    notes: '',
+    detailedNotes: { strengths: '', impressions: '', weaknesses: '', limitations: '', content: '', steal: '', avoid: '', gap: '' },
+    links: { ig: '', yt: '', web: '', other: '' },
+  }
+  const [creators, setCreators] = useState<Creator[]>([defaultCreator])
   const [analyzingId, setAnalyzingId] = useState<string | null>(null)
   const [analyzeErrors, setAnalyzeErrors] = useState<Record<string, string>>({})
   const [expandedCards, setExpandedCards] = useState<Record<string, boolean>>({})
@@ -107,13 +118,15 @@ export default function CreatorAnalysis() {
         if (savedCreators) {
           try {
             const parsed = JSON.parse(savedCreators) as Creator[]
-            // Backfill new fields for old saved creators
-            setCreators(parsed.map(c => ({
-              ...c,
-              profile: c.profile || null,
-              detailedNotes: c.detailedNotes || { strengths: '', impressions: '', weaknesses: '', limitations: '', content: '', steal: '', avoid: '', gap: '' },
-              links: c.links || { ig: c.handle ? `@${c.handle}` : '', yt: '', web: '', other: '' },
-            })))
+            // Only load if there are actual creators — otherwise keep the default one
+            if (parsed.length > 0) {
+              setCreators(parsed.map(c => ({
+                ...c,
+                profile: c.profile || null,
+                detailedNotes: c.detailedNotes || { strengths: '', impressions: '', weaknesses: '', limitations: '', content: '', steal: '', avoid: '', gap: '' },
+                links: c.links || { ig: c.handle ? `@${c.handle}` : '', yt: '', web: '', other: '' },
+              })))
+            }
           } catch { /* ignore parse errors */ }
         }
       })

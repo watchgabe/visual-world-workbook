@@ -642,8 +642,142 @@ function BrandFoundationChapter({ r }: { r: Record<string, unknown> }) {
   )
 }
 
+// ── Creator card for playbook ─────────────────────────────────────────────────
+
+interface PlaybookCreator {
+  id: string
+  handle: string
+  profile?: { fullName?: string; picUrl?: string; followers?: string } | null
+  notes?: string
+  analysis?: { gap?: string; niche?: string } | null
+  detailedNotes?: { steal?: string; avoid?: string; gap?: string; strengths?: string; impressions?: string } | null
+}
+
+function CollapsibleCreatorPlaybookCard({
+  creator,
+  index,
+}: {
+  creator: PlaybookCreator
+  index: number
+}) {
+  const [expanded, setExpanded] = useState(false)
+  const name = creator.profile?.fullName || (creator.handle ? `@${creator.handle}` : null)
+  const sub = creator.profile?.fullName && creator.handle
+    ? `@${creator.handle}${creator.profile.followers ? ` · ${creator.profile.followers}` : ''}`
+    : creator.profile?.followers || null
+  const hasContent = creator.notes || creator.detailedNotes?.steal || creator.detailedNotes?.avoid || creator.analysis?.gap || creator.detailedNotes?.strengths
+
+  if (!name && !hasContent) return null
+
+  return (
+    <div style={{ marginBottom: '10px' }}>
+      <button
+        type="button"
+        onClick={() => setExpanded((v) => !v)}
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          gap: '10px',
+          width: '100%',
+          background: 'none',
+          border: 'none',
+          cursor: 'pointer',
+          textAlign: 'left',
+          padding: '4px 0',
+          fontFamily: 'var(--font)',
+        }}
+      >
+        {/* Avatar circle */}
+        <div
+          style={{
+            width: '36px',
+            height: '36px',
+            borderRadius: '50%',
+            border: '1.5px solid var(--border2)',
+            overflow: 'hidden',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            background: 'var(--surface)',
+            flexShrink: 0,
+            fontSize: '12px',
+            fontWeight: 700,
+            color: 'var(--orange)',
+          }}
+        >
+          {creator.profile?.picUrl ? (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img
+              src={`https://images.weserv.nl/?url=${encodeURIComponent(creator.profile.picUrl)}&w=60&h=60&fit=cover&mask=circle`}
+              alt=""
+              style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+              onError={(e) => { (e.target as HTMLImageElement).style.display = 'none' }}
+            />
+          ) : (
+            creator.handle ? creator.handle.charAt(0).toUpperCase() : String(index + 1)
+          )}
+        </div>
+        {/* Name */}
+        <div style={{ flex: 1, minWidth: 0 }}>
+          <div style={{ fontSize: '9px', fontWeight: 700, textTransform: 'uppercase' as const, letterSpacing: '.1em', color: 'var(--orange)', lineHeight: 1, marginBottom: '2px' }}>
+            Creator {index + 1}
+          </div>
+          <div style={{ fontSize: '13px', fontWeight: 600, color: 'var(--text)', lineHeight: 1.2 }}>
+            {name || `Creator ${index + 1}`}
+          </div>
+          {sub && (
+            <div style={{ fontSize: '10.5px', color: 'var(--dimmer)', marginTop: '1px' }}>
+              {sub}
+            </div>
+          )}
+        </div>
+        <span style={{ fontSize: '10px', color: 'var(--dimmer)', flexShrink: 0, transform: expanded ? 'rotate(180deg)' : 'none', transition: 'transform .15s' }}>▼</span>
+      </button>
+
+      {expanded && (
+        <div style={{ paddingLeft: '46px', paddingTop: '10px' }}>
+          {creator.analysis?.niche && (
+            <div style={{ fontSize: '11px', color: 'var(--dim)', marginBottom: '10px', fontStyle: 'italic' }}>
+              {creator.analysis.niche}
+            </div>
+          )}
+          {creator.notes && (
+            <div style={{ fontSize: '12px', color: 'var(--text)', lineHeight: 1.65, marginBottom: '12px' }}>
+              {creator.notes}
+            </div>
+          )}
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px 24px' }}>
+            {creator.detailedNotes?.strengths && (
+              <GuidelineCol label="Strengths" value={creator.detailedNotes.strengths} />
+            )}
+            {creator.detailedNotes?.steal && (
+              <GuidelineCol label="What to Steal" value={creator.detailedNotes.steal} />
+            )}
+            {creator.detailedNotes?.avoid && (
+              <GuidelineCol label="What to Avoid" value={creator.detailedNotes.avoid} />
+            )}
+            {(creator.detailedNotes?.gap || creator.analysis?.gap) && (
+              <GuidelineCol label="Gap / Opportunity" value={creator.detailedNotes?.gap || creator.analysis?.gap} />
+            )}
+          </div>
+        </div>
+      )}
+    </div>
+  )
+}
+
 function VisualWorldChapter({ r }: { r: Record<string, unknown> }) {
   const g = (k: string) => getStr(r, k)
+
+  // Parse creators from JSON field
+  let creators: PlaybookCreator[] = []
+  try {
+    const raw = r['vw_ca_creators']
+    if (typeof raw === 'string' && raw.trim()) {
+      creators = JSON.parse(raw) as PlaybookCreator[]
+    }
+  } catch { /* ignore */ }
+  const hasCreators = creators.some(c => c.handle || c.notes || c.detailedNotes?.steal)
 
   const colorPrimary   = g('vw_color_primary')
   const colorSecondary = g('vw_color_secondary')
@@ -654,6 +788,24 @@ function VisualWorldChapter({ r }: { r: Record<string, unknown> }) {
 
   return (
     <>
+      {/* Creator Analysis */}
+      {hasCreators && (
+        <div style={{ marginBottom: '16px' }}>
+          <div style={{ height: '1px', background: 'var(--border)', marginBottom: '10px' }} />
+          <div className="guideline-row">
+            <div style={{ paddingTop: '1px' }}>
+              <span style={{ fontSize: '10px', fontWeight: 600, color: 'var(--orange)', letterSpacing: '.06em' }}>2.1</span>
+              <span style={{ fontSize: '10px', fontWeight: 600, textTransform: 'uppercase' as const, letterSpacing: '.1em', color: 'var(--dim)', marginLeft: '8px' }}>Creator Analysis</span>
+            </div>
+            <div>
+              {creators.map((c, i) => (
+                <CollapsibleCreatorPlaybookCard key={c.id || i} creator={c} index={i} />
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
+
       {hasColors && (
         <div style={{
           background: 'var(--surface)',
