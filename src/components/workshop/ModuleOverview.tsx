@@ -34,10 +34,10 @@ export function ModuleOverview({
   const { moduleProgress } = useProgress()
   const sections = MODULE_SECTIONS[moduleSlug] ?? []
 
-  const workshopCount = sections.filter(s => s.fields.length > 0).length
+  const moduleCount = sections.filter(s => s.slug !== 'overview').length
   const progress = moduleProgress[moduleSlug] ?? 0
-  const completed = progress === 100 ? workshopCount : Math.floor((progress / 100) * workshopCount)
-  const pct = workshopCount > 0 ? Math.round((completed / workshopCount) * 100) : 0
+  const completed = progress === 100 ? moduleCount : Math.floor((progress / 100) * moduleCount)
+  const pct = moduleCount > 0 ? Math.round((completed / moduleCount) * 100) : 0
 
   return (
     <section>
@@ -80,7 +80,7 @@ export function ModuleOverview({
       <div style={{ marginBottom: '2rem' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: '8px' }}>
           <span style={{ fontSize: '13px', color: 'var(--dim)' }}>
-            {completed} of {workshopCount} workshops complete
+            {completed} of {moduleCount} modules complete
           </span>
           <span style={{ fontSize: '12px', fontWeight: 700, color: 'var(--green-text)' }}>
             {pct}%
