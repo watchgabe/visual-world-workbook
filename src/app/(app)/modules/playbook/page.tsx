@@ -672,7 +672,7 @@ interface PlaybookCreator {
   id: string
   handle: string
   bio?: string
-  profile?: { fullName?: string; picUrl?: string; followers?: string; bio?: string } | null
+  profile?: { fullName?: string; picUrl?: string; followers?: string; bio?: string; postsCount?: string; avgLikes?: string; freq?: string; thumbUrls?: string[] } | null
   notes?: string
   analysis?: { gap?: string; niche?: string } | null
   detailedNotes?: { steal?: string; avoid?: string; gap?: string; strengths?: string; impressions?: string; weaknesses?: string; limitations?: string; content?: string } | null
@@ -772,29 +772,114 @@ function CollapsibleCreatorPlaybookCard({
       </button>
 
       {expanded && (
-        <div style={{ padding: '14px 16px' }}>
-          {creator.analysis?.niche && (
-            <div style={{ fontSize: '11px', color: 'var(--dim)', marginBottom: '10px', fontStyle: 'italic' }}>
-              {creator.analysis.niche}
+        <div>
+          {/* Profile: avatar + name + bio */}
+          {creator.profile && (
+            <div style={{ borderBottom: '1px solid var(--border)' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '12px', padding: '12px 14px' }}>
+                <div style={{
+                  width: '44px', height: '44px', borderRadius: '50%', flexShrink: 0,
+                  background: 'var(--surface)', border: '1px solid var(--border)',
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  fontSize: '16px', fontWeight: 700, color: 'var(--dimmer)', overflow: 'hidden',
+                }}>
+                  {creator.profile.picUrl ? (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img
+                      src={`https://images.weserv.nl/?url=${encodeURIComponent(creator.profile.picUrl)}&w=88&h=88&fit=cover&mask=circle`}
+                      alt=""
+                      style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '50%' }}
+                      onError={(e) => { (e.target as HTMLImageElement).style.display = 'none' }}
+                    />
+                  ) : (
+                    (creator.profile.fullName || creator.handle || '?').charAt(0).toUpperCase()
+                  )}
+                </div>
+                <div style={{ flex: 1, minWidth: 0 }}>
+                  <div style={{ fontSize: '14px', fontWeight: 600, color: 'var(--text)' }}>
+                    {creator.profile.fullName || `@${creator.handle}`}
+                  </div>
+                  <div style={{ fontSize: '11px', color: 'var(--dimmer)', marginTop: '1px' }}>
+                    @{creator.handle}{creator.analysis?.niche ? ` · ${creator.analysis.niche}` : ''}
+                  </div>
+                  {(creator.profile.bio || creator.bio) && (
+                    <div style={{ fontSize: '11.5px', color: 'var(--dim)', marginTop: '3px', lineHeight: 1.45, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                      {creator.profile.bio || creator.bio}
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              {/* Stats row */}
+              {(creator.profile.followers || creator.profile.postsCount) && (
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '6px', padding: '0 14px 12px' }}>
+                  {[
+                    { num: creator.profile.followers, label: 'Followers' },
+                    { num: creator.profile.postsCount, label: 'Posts' },
+                    { num: creator.profile.avgLikes, label: 'Avg Likes' },
+                    { num: creator.profile.freq, label: 'Posts/Wk' },
+                  ].filter(s => s.num).map(({ num, label }) => (
+                    <div key={label} style={{
+                      background: 'var(--surface)', border: '1px solid var(--border)',
+                      borderRadius: 'var(--radius-md)', padding: '8px', textAlign: 'center' as const,
+                    }}>
+                      <div style={{ fontFamily: 'var(--font-num)', fontSize: '18px', fontWeight: 900, lineHeight: 1, color: 'var(--text)' }}>
+                        {num}
+                      </div>
+                      <div style={{ fontSize: '9px', color: 'var(--dimmer)', textTransform: 'uppercase' as const, letterSpacing: '.06em', marginTop: '2px' }}>
+                        {label}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+
+              {/* Thumbnail grid */}
+              {creator.profile.thumbUrls && creator.profile.thumbUrls.length > 0 && (
+                <div style={{ padding: '0 14px 14px' }}>
+                  <div style={{ fontSize: '9px', fontWeight: 700, textTransform: 'uppercase' as const, letterSpacing: '.1em', color: 'var(--dimmer)', marginBottom: '6px' }}>
+                    Recent Posts
+                  </div>
+                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(6, 1fr)', gap: '3px' }}>
+                    {creator.profile.thumbUrls.slice(0, 12).map((url, i) => (
+                      <div key={i} style={{ aspectRatio: '1', borderRadius: '3px', overflow: 'hidden', background: 'var(--surface)' }}>
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                        <img
+                          src={`https://images.weserv.nl/?url=${encodeURIComponent(url)}&w=200&h=200&fit=cover`}
+                          alt=""
+                          style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                          onError={(e) => { (e.target as HTMLImageElement).style.display = 'none' }}
+                        />
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
             </div>
           )}
-          {(creator.bio || creator.profile?.bio) && (
-            <div style={{ fontSize: '12px', color: 'var(--dim)', lineHeight: 1.6, marginBottom: '10px' }}>
-              {creator.bio || creator.profile?.bio}
-            </div>
-          )}
-          {creator.notes && (
-            <div style={{ fontSize: '12px', color: 'var(--text)', lineHeight: 1.65, marginBottom: '12px' }}>
-              {creator.notes}
-            </div>
-          )}
-          <div className="pb-2col" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px 24px' }}>
-            <GuidelineCol label="Strengths" value={creator.detailedNotes?.strengths} />
-            <GuidelineCol label="First Impressions" value={creator.detailedNotes?.impressions} />
-            <GuidelineCol label="What to Steal" value={creator.detailedNotes?.steal} />
-            <GuidelineCol label="What to Avoid" value={creator.detailedNotes?.avoid} />
-            <GuidelineCol label="Gap / Opportunity" value={creator.detailedNotes?.gap || creator.analysis?.gap} />
-            <GuidelineCol label="Their Content" value={creator.detailedNotes?.content} />
+
+          {/* Notes + analysis */}
+          <div style={{ padding: '14px 16px' }}>
+            {creator.notes && (
+              <div style={{ fontSize: '12px', color: 'var(--text)', lineHeight: 1.65, marginBottom: '12px' }}>
+                {creator.notes}
+              </div>
+            )}
+            {(creator.detailedNotes?.strengths || creator.detailedNotes?.impressions || creator.detailedNotes?.steal || creator.detailedNotes?.gap || creator.analysis?.gap) && (
+              <>
+                <div style={{ fontSize: '9px', fontWeight: 700, textTransform: 'uppercase' as const, letterSpacing: '.13em', color: 'var(--orange)', marginBottom: '10px' }}>
+                  AI Visual Analysis
+                </div>
+                <div className="pb-2col" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px 24px' }}>
+                  <GuidelineCol label="Strengths" value={creator.detailedNotes?.strengths} />
+                  <GuidelineCol label="First Impressions" value={creator.detailedNotes?.impressions} />
+                  <GuidelineCol label="What to Steal" value={creator.detailedNotes?.steal} />
+                  <GuidelineCol label="What to Avoid" value={creator.detailedNotes?.avoid} />
+                  <GuidelineCol label="Gap / Opportunity" value={creator.detailedNotes?.gap || creator.analysis?.gap} />
+                  <GuidelineCol label="Their Content" value={creator.detailedNotes?.content} />
+                </div>
+              </>
+            )}
           </div>
         </div>
       )}
