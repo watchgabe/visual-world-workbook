@@ -7,10 +7,6 @@ export default function BrandFoundationOverview() {
       moduleNumber="01"
       title="Brand Foundation"
       description="Your Brand Foundation is the strategic bedrock of your entire brand. Everything you build — your visual identity, your content, your business — flows from this. Don't rush it. The creators who do this work are the ones who build brands that last."
-      stats={[
-        { num: 7, label: 'WORKSHOPS' },
-        { num: 8, label: 'DELIVERABLES' },
-      ]}
       roadmap={[
         { num: '01', slug: 'brand-journey', title: 'Brand Journey', sub: "Where you're going and what you need to do to get there" },
         { num: '02', slug: 'avatar', title: 'Avatar Profile', sub: "Know exactly who you're building for" },

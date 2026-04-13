@@ -12,17 +12,11 @@ interface RoadmapCard {
   sub: string
 }
 
-interface StatCard {
-  num: number
-  label: string
-}
-
 interface ModuleOverviewProps {
   moduleSlug: ModuleSlug
   moduleNumber: string
   title: string
   description: string
-  stats: [StatCard, StatCard]
   roadmap: RoadmapCard[]
   beginLabel?: string
   footer?: React.ReactNode
@@ -33,7 +27,6 @@ export function ModuleOverview({
   moduleNumber,
   title,
   description,
-  stats,
   roadmap,
   beginLabel,
   footer,
@@ -44,6 +37,7 @@ export function ModuleOverview({
   const workshopCount = sections.filter(s => s.fields.length > 0).length
   const progress = moduleProgress[moduleSlug] ?? 0
   const completed = progress === 100 ? workshopCount : Math.floor((progress / 100) * workshopCount)
+  const pct = workshopCount > 0 ? Math.round((completed / workshopCount) * 100) : 0
 
   return (
     <section>
@@ -82,55 +76,27 @@ export function ModuleOverview({
         {description}
       </p>
 
-      {/* Stats cards */}
-      <div
-        className="grid-form"
-        style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(3, 1fr)',
-          gap: '1rem',
-          marginBottom: '2rem',
-        }}
-      >
-        {[
-          stats[0],
-          stats[1],
-          { num: completed, label: 'COMPLETED' },
-        ].map(card => (
+      {/* Progress bar */}
+      <div style={{ marginBottom: '2rem' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: '8px' }}>
+          <span style={{ fontSize: '13px', color: 'var(--dim)' }}>
+            {completed} of {workshopCount} workshops complete
+          </span>
+          <span style={{ fontSize: '12px', fontWeight: 700, color: 'var(--green-text)' }}>
+            {pct}%
+          </span>
+        </div>
+        <div style={{ height: '6px', background: 'var(--border2)', borderRadius: '3px', overflow: 'hidden' }}>
           <div
-            key={card.label}
             style={{
-              background: 'var(--card)',
-              border: '1px solid var(--border)',
-              borderRadius: 'var(--radius-lg)',
-              padding: '1.25rem 1.5rem',
-              textAlign: 'center' as const,
+              height: '100%',
+              width: `${pct}%`,
+              background: 'var(--green-text)',
+              borderRadius: '3px',
+              transition: 'width 0.4s ease',
             }}
-          >
-            <div
-              style={{
-                fontFamily: 'var(--font-num)',
-                fontSize: 'clamp(1.8rem, 3vw, 2.2rem)',
-                fontWeight: 900,
-                color: 'var(--text)',
-                lineHeight: 1,
-                marginBottom: '8px',
-              }}
-            >
-              {card.num}
-            </div>
-            <div
-              style={{
-                fontSize: '11px',
-                fontWeight: 600,
-                letterSpacing: '.08em',
-                color: 'var(--dim)',
-              }}
-            >
-              {card.label}
-            </div>
-          </div>
-        ))}
+          />
+        </div>
       </div>
 
       {/* Module Roadmap */}
