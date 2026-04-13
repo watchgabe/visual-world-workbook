@@ -336,6 +336,35 @@ function GuidelineCol({ label, value }: { label: string; value?: string | null }
   )
 }
 
+function FontSpecimen({ font, label }: { font: string; label: string }) {
+  useEffect(() => {
+    const id = `gfont-${font.replace(/\s+/g, '-').toLowerCase()}`
+    if (typeof document !== 'undefined' && !document.getElementById(id)) {
+      const link = document.createElement('link')
+      link.id = id
+      link.rel = 'stylesheet'
+      link.href = `https://fonts.googleapis.com/css2?family=${font.replace(/\s+/g, '+')}&display=swap`
+      document.head.appendChild(link)
+    }
+  }, [font])
+
+  return (
+    <div style={{ paddingBottom: '16px', borderBottom: '1px solid var(--border)' }}>
+      <div style={{ fontSize: '9px', fontWeight: 600, textTransform: 'uppercase' as const, letterSpacing: '.1em', color: 'var(--dimmer)', marginBottom: '8px' }}>
+        {label}
+      </div>
+      <div style={{ fontSize: '26px', fontWeight: 400, color: 'var(--text)', lineHeight: 1.1, marginBottom: '6px', fontFamily: `'${font}', Georgia, serif` }}>
+        {font}
+      </div>
+      <div style={{ fontFamily: `'${font}', sans-serif`, color: 'var(--dim)', lineHeight: 1.5 }}>
+        <div style={{ fontSize: '11px', letterSpacing: '.02em' }}>abcdefghijklmnopqrstuvwxyz</div>
+        <div style={{ fontSize: '11px', letterSpacing: '.02em' }}>ABCDEFGHIJKLMNOPQRSTUVWXYZ</div>
+        <div style={{ fontSize: '11px', letterSpacing: '.02em' }}>0123456789</div>
+      </div>
+    </div>
+  )
+}
+
 // ── Collapsible sub-components ────────────────────────────────────────────────
 
 function CollapsibleAvatarCard({
@@ -794,28 +823,8 @@ function VisualWorldChapter({ r }: { r: Record<string, unknown> }) {
       {(primaryFont || bodyFont) && (
         <GuidelineRow number="2.3" title="Typography">
           <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
-            {[primaryFont && { font: primaryFont, label: 'Primary' }, bodyFont && { font: bodyFont, label: 'Body' }].filter(Boolean).map((item) => {
-              const f = item as { font: string; label: string }
-              return (
-                <div key={f.font} style={{ paddingBottom: '16px', borderBottom: '1px solid var(--border)' }}>
-                  <div style={{ fontSize: '9px', fontWeight: 600, textTransform: 'uppercase' as const, letterSpacing: '.1em', color: 'var(--dimmer)', marginBottom: '8px' }}>
-                    {f.label} Typeface
-                  </div>
-                  <div style={{ fontSize: '26px', fontWeight: 400, color: 'var(--text)', lineHeight: 1.1, marginBottom: '6px' }}>
-                    {f.font}
-                  </div>
-                  <div style={{ fontSize: '11px', color: 'var(--dim)', lineHeight: 1.5, letterSpacing: '.02em' }}>
-                    abcdefghijklmnopqrstuvwxyz
-                  </div>
-                  <div style={{ fontSize: '11px', color: 'var(--dim)', lineHeight: 1.5, letterSpacing: '.02em' }}>
-                    ABCDEFGHIJKLMNOPQRSTUVWXYZ
-                  </div>
-                  <div style={{ fontSize: '11px', color: 'var(--dim)', lineHeight: 1.5, letterSpacing: '.02em' }}>
-                    0123456789
-                  </div>
-                </div>
-              )
-            })}
+            {primaryFont && <FontSpecimen font={primaryFont} label="Primary Typeface" />}
+            {bodyFont    && <FontSpecimen font={bodyFont}    label="Body Typeface" />}
           </div>
         </GuidelineRow>
       )}
@@ -910,35 +919,88 @@ function PillarIdeasCard({ num, name, ideas, r, pillar }: { num: number; name: s
   )
 }
 
+function LaunchVideoCard({ title, hook, children }: { title: string; hook?: string; children: React.ReactNode }) {
+  const [expanded, setExpanded] = useState(false)
+  return (
+    <div style={{ background: 'var(--card)', border: '1px solid var(--border)', borderRadius: 'var(--radius-lg)', marginBottom: '8px', overflow: 'hidden' }}>
+      <button
+        type="button"
+        onClick={() => setExpanded(v => !v)}
+        style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '10px 14px', background: 'var(--surface)', borderBottom: expanded ? '1px solid var(--border)' : 'none', cursor: 'pointer', textAlign: 'left', fontFamily: 'var(--font)', width: '100%', border: 'none' }}
+      >
+        <div style={{ flex: 1, minWidth: 0 }}>
+          <div style={{ fontSize: '9px', fontWeight: 700, textTransform: 'uppercase' as const, letterSpacing: '.1em', color: 'var(--orange)', marginBottom: '2px' }}>{title}</div>
+          {hook && <div style={{ fontSize: '12px', fontWeight: 500, color: 'var(--text)', lineHeight: 1.4, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' as const }}>{hook}</div>}
+        </div>
+        <span style={{ color: 'var(--dimmer)', fontSize: '12px', transition: 'transform .2s', display: 'inline-block', transform: expanded ? 'none' : 'rotate(-90deg)', flexShrink: 0, marginLeft: '10px' }}>▼</span>
+      </button>
+      {expanded && (
+        <div style={{ padding: '14px 16px' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px 24px' }}>
+            {children}
+          </div>
+        </div>
+      )}
+    </div>
+  )
+}
+
 function ContentChapter({ r }: { r: Record<string, unknown> }) {
   const g = (k: string) => getStr(r, k)
-  const hasSustain  = g('ct_sustain_primary') || g('ct_sustain_week_hours') || g('ct_sustain_cadence')
+  const hasStrategy = g('ct_strategy_pain_problem') || g('ct_strategy_unique_sol') || g('ct_strategy_credibility') || g('ct_strategy_goal')
+  const hasSustain  = g('ct_sustain_primary') || g('ct_sustain_week_hours') || g('ct_sustain_cadence') || g('ct_sustain_secondary')
+  const hasBatch    = g('ct_batch_film_day') || g('ct_batch_count') || g('ct_batch_setup') || g('ct_batch_commit')
   const hasPillars  = [1,2,3,4,5].some(i => g(`ct_ig_pillar${i}`))
   const hasStory    = g('ct_story_idea') || g('ct_story_hook') || g('ct_story_prob')
   const hasLadder   = g('ct_tm_free') || g('ct_tm_lead') || g('ct_tm_low') || g('ct_tm_mid') || g('ct_tm_high')
 
   return (
     <>
-      <GuidelineRow number="3.1" title="Strategy">
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px 28px' }}>
-          <GuidelineCol label="Core Pain Problem"        value={g('ct_strategy_pain_problem')} />
-          <GuidelineCol label="My Unique Solution"       value={g('ct_strategy_unique_sol')} />
-          <GuidelineCol label="Contextual Credibility"   value={g('ct_strategy_credibility')} />
-        </div>
-      </GuidelineRow>
+      {hasStrategy && (
+        <GuidelineRow number="3.1" title="Strategy">
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px 28px' }}>
+            <GuidelineCol label="Core Pain Problem"        value={g('ct_strategy_pain_problem')} />
+            <GuidelineCol label="My Unique Solution"       value={g('ct_strategy_unique_sol')} />
+            <GuidelineCol label="Contextual Credibility"   value={g('ct_strategy_credibility')} />
+            <GuidelineCol label="Content Goal"             value={g('ct_strategy_goal')} />
+            <GuidelineCol label="Next Step"                value={g('ct_strategy_next_step')} />
+          </div>
+        </GuidelineRow>
+      )}
 
       {hasSustain && (
         <GuidelineRow number="3.2" title="Sustainability">
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px 28px' }}>
-            <GuidelineCol label="Primary Platform"  value={g('ct_sustain_primary')} />
-            <GuidelineCol label="Weekly Hours"      value={g('ct_sustain_week_hours')} />
-            <GuidelineCol label="Content Cadence"   value={g('ct_sustain_cadence')} />
+            <GuidelineCol label="Primary Platform"    value={g('ct_sustain_primary')} />
+            <GuidelineCol label="Secondary Platform"  value={g('ct_sustain_secondary')} />
+            <GuidelineCol label="Content Medium"      value={g('ct_sustain_medium')} />
+            <GuidelineCol label="Weekly Hours"        value={g('ct_sustain_week_hours')} />
+            <GuidelineCol label="Posting Frequency"   value={g('ct_sustain_freq')} />
+            <GuidelineCol label="Content Cadence"     value={g('ct_sustain_cadence')} />
+            <GuidelineCol label="Energizes Me"        value={g('ct_sustain_energize')} />
+            <GuidelineCol label="Drains Me"           value={g('ct_sustain_drain')} />
+            <GuidelineCol label="My Sharpest Hours"   value={g('ct_sustain_sharp')} />
+            <GuidelineCol label="Target Audience"     value={g('ct_sustain_audience')} />
+            <GuidelineCol label="I Most Enjoy"        value={g('ct_sustain_enjoy')} />
+            <GuidelineCol label="Platform Goal"       value={g('ct_sustain_platgoal')} />
+            <GuidelineCol label="Strategic Focus"     value={g('ct_sustain_focus')} />
+          </div>
+        </GuidelineRow>
+      )}
+
+      {hasBatch && (
+        <GuidelineRow number="3.3" title="Batching System">
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px 28px' }}>
+            <GuidelineCol label="Filming Day"         value={g('ct_batch_film_day')} />
+            <GuidelineCol label="Videos Per Batch"    value={g('ct_batch_count')} />
+            <GuidelineCol label="My Setup"            value={g('ct_batch_setup')} />
+            <GuidelineCol label="My Commitment"       value={g('ct_batch_commit')} />
           </div>
         </GuidelineRow>
       )}
 
       {hasPillars && (
-        <GuidelineRow number="3.3" title="Idea Generation">
+        <GuidelineRow number="3.4" title="Idea Generation">
           <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
             {[1,2,3,4,5].map(i => {
               const pillarName = g(`ct_ig_pillar${i}`)
@@ -953,28 +1015,28 @@ function ContentChapter({ r }: { r: Record<string, unknown> }) {
       )}
 
       {hasStory && (
-        <GuidelineRow number="3.4" title="Story Framework">
-          {g('ct_story_idea') && <GuidelineHero text={g('ct_story_idea')} />}
+        <GuidelineRow number="3.5" title="Story Framework">
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px 28px' }}>
-            <GuidelineCol label="Hook"    value={g('ct_story_hook')} />
-            <GuidelineCol label="Problem" value={g('ct_story_prob')} />
-            <GuidelineCol label="Journey" value={g('ct_story_journey')} />
-            <GuidelineCol label="Lesson"  value={g('ct_story_lesson')} />
-            <GuidelineCol label="CTA"     value={g('ct_story_cta')} />
+            <GuidelineCol label="Story Idea / Identity" value={g('ct_story_idea')} />
+            <GuidelineCol label="Hook"                  value={g('ct_story_hook')} />
+            <GuidelineCol label="Problem"               value={g('ct_story_prob')} />
+            <GuidelineCol label="Journey"               value={g('ct_story_journey')} />
+            <GuidelineCol label="Lesson"                value={g('ct_story_lesson')} />
+            <GuidelineCol label="CTA"                   value={g('ct_story_cta')} />
           </div>
         </GuidelineRow>
       )}
 
       {hasLadder && (
-        <GuidelineRow number="3.5" title="Offer Ladder">
+        <GuidelineRow number="3.6" title="Offer Ladder">
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px 28px' }}>
             <GuidelineCol label="Free Content"         value={g('ct_tm_free')} />
             <GuidelineCol label="Lead Magnet"          value={g('ct_tm_lead')} />
-            <GuidelineCol label="Low-Ticket"           value={g('ct_tm_low')} />
-            <GuidelineCol label="Mid-Ticket"           value={g('ct_tm_mid')} />
-            <GuidelineCol label="High-Ticket"          value={g('ct_tm_high')} />
-            <GuidelineCol label="Conversion Strategy"  value={g('ct_tm_conv')} />
-            <GuidelineCol label="CTA Strategy"         value={g('ct_tm_cta_strat')} />
+            <GuidelineCol label="Low-Ticket ($10–$100)"    value={g('ct_tm_low')} />
+            <GuidelineCol label="Mid-Ticket ($500–$5K)"    value={g('ct_tm_mid')} />
+            <GuidelineCol label="High-Ticket ($10K+)"      value={g('ct_tm_high')} />
+            <GuidelineCol label="Conversion Mechanism"     value={g('ct_tm_conv')} />
+            <GuidelineCol label="CTA Strategy"             value={g('ct_tm_cta_strat')} />
           </div>
         </GuidelineRow>
       )}
@@ -984,31 +1046,33 @@ function ContentChapter({ r }: { r: Record<string, unknown> }) {
 
 function LaunchChapter({ r }: { r: Record<string, unknown> }) {
   const g = (k: string) => getStr(r, k)
-  const bioFull        = [g('la_bio_line1'), g('la_bio_line2'), g('la_bio_line3'), g('la_bio_line4')].filter(Boolean).join('\n')
-  const offerPrice     = [g('la_funnel_offer'), g('la_funnel_price')].filter(Boolean).join(' — ')
-  const formatDelivery = [g('la_lm_format'), g('la_lm_delivery')].filter(Boolean).join(' · ')
-  const hasBio     = g('la_bio_username') || bioFull
-  const hasFunnel  = g('la_funnel_platforms') || g('la_funnel_cta') || offerPrice
-  const hasLM      = g('la_lm_name') || g('la_lm_big_win')
-  const hasVideos  = g('la_lc_story_hook') || g('la_lc_pos_claim')
-  const hasGoals   = g('la_goal_followers') || g('la_goal_content') || g('la_goal_offer')
+  const bioLines    = [g('la_bio_line1'), g('la_bio_line2'), g('la_bio_line3'), g('la_bio_line4')].filter(Boolean)
+  const hasBio      = g('la_bio_username') || bioLines.length > 0
+  const hasFunnel   = g('la_funnel_platforms') || g('la_funnel_cta') || g('la_funnel_offer')
+  const hasLM       = g('la_lm_name') || g('la_lm_big_win') || g('la_lm_topic')
+  const hasVideos   = g('la_lc_story_hook') || g('la_lc_story_why') || g('la_lc_pos_claim') || g('la_lc_mc_subject')
+  const hasGoals    = g('la_goal_followers') || g('la_goal_content') || g('la_goal_offer') || g('la_goal_revenue')
 
   return (
     <>
       {hasBio && (
         <GuidelineRow number="4.1" title="Bio">
-          {bioFull && (
+          {bioLines.length > 0 && (
             <div style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 'var(--radius-md)', padding: '12px 14px', marginBottom: '16px' }}>
-              {[g('la_bio_line1'), g('la_bio_line2'), g('la_bio_line3'), g('la_bio_line4')].filter(Boolean).map((line, i) => (
-                <div key={i} style={{ fontSize: '13px', color: 'var(--text)', lineHeight: 1.6, marginBottom: i < 3 ? '4px' : 0 }}>
+              {bioLines.map((line, i) => (
+                <div key={i} style={{ fontSize: '13px', color: 'var(--text)', lineHeight: 1.6, marginBottom: i < bioLines.length - 1 ? '4px' : 0 }}>
                   {line}
                 </div>
               ))}
             </div>
           )}
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px 28px' }}>
-            <GuidelineCol label="Username"    value={g('la_bio_username')} />
-            <GuidelineCol label="Link in Bio" value={g('la_bio_link')} />
+            <GuidelineCol label="Username"              value={g('la_bio_username')} />
+            <GuidelineCol label="Link in Bio"           value={g('la_bio_link')} />
+            <GuidelineCol label="Name Field / Tagline"  value={g('la_bio_ig_name')} />
+            <GuidelineCol label="Profile Picture"       value={g('la_bio_pfp_visibility')} />
+            <GuidelineCol label="Background"            value={g('la_bio_pfp_bg')} />
+            <GuidelineCol label="Photo Notes"           value={g('la_bio_pfp_notes')} />
           </div>
         </GuidelineRow>
       )}
@@ -1016,10 +1080,18 @@ function LaunchChapter({ r }: { r: Record<string, unknown> }) {
       {hasFunnel && (
         <GuidelineRow number="4.2" title="Funnel">
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px 28px' }}>
-            <GuidelineCol label="Content Platforms" value={g('la_funnel_platforms')} />
-            <GuidelineCol label="Email Platform"    value={g('la_funnel_email_platform')} />
-            <GuidelineCol label="Primary CTA"       value={g('la_funnel_cta')} />
-            <GuidelineCol label="Core Offer"        value={offerPrice || g('la_funnel_offer')} />
+            <GuidelineCol label="Content Platform(s)"   value={g('la_funnel_platforms')} />
+            <GuidelineCol label="Email Platform"        value={g('la_funnel_email_platform')} />
+            <GuidelineCol label="Lead Magnet Name"      value={g('la_funnel_lead_magnet')} />
+            <GuidelineCol label="Newsletter Frequency"  value={g('la_funnel_newsletter_freq')} />
+            <GuidelineCol label="Content CTA"           value={g('la_funnel_cta')} />
+            <GuidelineCol label="Primary Offer"         value={g('la_funnel_offer')} />
+            <GuidelineCol label="Price Point"           value={g('la_funnel_price')} />
+            <GuidelineCol label="Conversion Mechanism"  value={g('la_funnel_conversion')} />
+            <GuidelineCol label="Have a Lead Magnet?"   value={g('la_funnel_has_lm')} />
+            <GuidelineCol label="Have an Email List?"   value={g('la_funnel_has_email')} />
+            <GuidelineCol label="Have a Clear Offer?"   value={g('la_funnel_has_offer')} />
+            <GuidelineCol label="Where Funnel Is Broken" value={g('la_funnel_broken')} />
           </div>
         </GuidelineRow>
       )}
@@ -1028,55 +1100,71 @@ function LaunchChapter({ r }: { r: Record<string, unknown> }) {
         <GuidelineRow number="4.3" title="Lead Magnet">
           {g('la_lm_name') && <GuidelineHero text={g('la_lm_name')} />}
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px 28px' }}>
-            <GuidelineCol label="The One Big Win"    value={g('la_lm_big_win')} />
-            <GuidelineCol label="Format + Delivery"  value={formatDelivery || g('la_lm_format')} />
-            <GuidelineCol label="CTA"                value={g('la_lm_cta')} />
+            <GuidelineCol label="Topic"                 value={g('la_lm_topic')} />
+            <GuidelineCol label="The One Big Win"       value={g('la_lm_big_win')} />
+            <GuidelineCol label="Bridge to Offer"       value={g('la_lm_offer_bridge')} />
+            <GuidelineCol label="Format"                value={g('la_lm_format')} />
+            <GuidelineCol label="Delivery Method"       value={g('la_lm_delivery')} />
+            <GuidelineCol label="Tool to Build It"      value={g('la_lm_tool')} />
+            <GuidelineCol label="Outline"               value={g('la_lm_outline')} />
+            <GuidelineCol label="CTA"                   value={g('la_lm_cta')} />
           </div>
         </GuidelineRow>
       )}
 
       {hasVideos && (
         <GuidelineRow number="4.4" title="Launch Videos">
-          {g('la_lc_story_hook') && (
-            <div style={{ marginBottom: '20px' }}>
-              <div style={{ fontSize: '9px', fontWeight: 600, textTransform: 'uppercase' as const, letterSpacing: '.1em', color: 'var(--orange)', marginBottom: '8px' }}>
-                Video 1 — Your Story
-              </div>
-              <GuidelineHero text={g('la_lc_story_hook')} />
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px 24px' }}>
-                <GuidelineCol label="Why You Do This"  value={g('la_lc_story_why')} />
-                <GuidelineCol label="The Challenge"    value={g('la_lc_story_challenge')} />
-                <GuidelineCol label="The Turn"         value={g('la_lc_story_turning')} />
-                <GuidelineCol label="What You Learned" value={g('la_lc_story_learned')} />
-                <GuidelineCol label="CTA"              value={g('la_lc_story_cta')} />
-              </div>
-            </div>
-          )}
-          {g('la_lc_pos_claim') && (
-            <div>
-              <div style={{ fontSize: '9px', fontWeight: 600, textTransform: 'uppercase' as const, letterSpacing: '.1em', color: 'var(--orange)', marginBottom: '8px' }}>
-                Video 2 — Positioning
-              </div>
-              <GuidelineHero text={g('la_lc_pos_claim')} />
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px 24px' }}>
-                <GuidelineCol label="Core Belief"      value={g('la_lc_pos_belief')} />
-                <GuidelineCol label="Anchor Statement" value={g('la_lc_pos_anchor')} />
-              </div>
-            </div>
-          )}
+          <LaunchVideoCard title="Video 1 — Your Story" hook={g('la_lc_story_hook')}>
+            <GuidelineCol label="Why You Create"        value={g('la_lc_story_why')} />
+            <GuidelineCol label="The Challenge"         value={g('la_lc_story_challenge')} />
+            <GuidelineCol label="The Turning Point"     value={g('la_lc_story_turning')} />
+            <GuidelineCol label="What You Learned"      value={g('la_lc_story_learned')} />
+            <GuidelineCol label="Opening Hook"          value={g('la_lc_story_hook')} />
+            <GuidelineCol label="Examples / Proof"      value={g('la_lc_story_examples')} />
+            <GuidelineCol label="CTA"                   value={g('la_lc_story_cta')} />
+          </LaunchVideoCard>
+          <LaunchVideoCard title="Video 2 — Positioning Deep Dive" hook={g('la_lc_pos_claim')}>
+            <GuidelineCol label="Contrarian Belief"     value={g('la_lc_pos_belief')} />
+            <GuidelineCol label="Claim Subject"         value={g('la_lc_pos_claim')} />
+            <GuidelineCol label="Breakthrough #1"       value={g('la_lc_pos_b1')} />
+            <GuidelineCol label="Breakthrough #2"       value={g('la_lc_pos_b2')} />
+            <GuidelineCol label="Breakthrough #3"       value={g('la_lc_pos_b3')} />
+            <GuidelineCol label="Breakthrough #4"       value={g('la_lc_pos_b4')} />
+            <GuidelineCol label="Breakthrough #5"       value={g('la_lc_pos_b5')} />
+            <GuidelineCol label="Stop Doing"            value={g('la_lc_pos_stop')} />
+            <GuidelineCol label="Start Doing"           value={g('la_lc_pos_start')} />
+            <GuidelineCol label="Old Belief"            value={g('la_lc_pos_oldbelief')} />
+            <GuidelineCol label="New Belief"            value={g('la_lc_pos_newbelief')} />
+            <GuidelineCol label="Anchor POV"            value={g('la_lc_pos_anchor')} />
+          </LaunchVideoCard>
+          <LaunchVideoCard title="Video 3 — Authority Masterclass" hook={g('la_lc_mc_subject')}>
+            <GuidelineCol label="Subject"               value={g('la_lc_mc_subject')} />
+            <GuidelineCol label="Who It's For"          value={g('la_lc_mc_audience')} />
+            <GuidelineCol label="Authority Proof"       value={g('la_lc_mc_authority')} />
+            <GuidelineCol label="Opening Hook"          value={g('la_lc_mc_hook')} />
+            <GuidelineCol label="Section 1"             value={g('la_lc_mc_s1')} />
+            <GuidelineCol label="Section 2"             value={g('la_lc_mc_s2')} />
+            <GuidelineCol label="Section 3"             value={g('la_lc_mc_s3')} />
+            <GuidelineCol label="Section 4"             value={g('la_lc_mc_s4')} />
+            <GuidelineCol label="Section 5"             value={g('la_lc_mc_s5')} />
+            <GuidelineCol label="Section 6"             value={g('la_lc_mc_s6')} />
+            <GuidelineCol label="Section 7"             value={g('la_lc_mc_s7')} />
+          </LaunchVideoCard>
         </GuidelineRow>
       )}
 
       {hasGoals && (
         <GuidelineRow number="4.5" title="90-Day Goals">
-          {g('la_goal_content') && <GuidelineHero text={g('la_goal_content')} />}
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px 28px' }}>
-            <GuidelineCol label="Followers Goal"    value={g('la_goal_followers')} />
-            <GuidelineCol label="Email Subscribers" value={g('la_goal_email')} />
-            <GuidelineCol label="Revenue Goal"      value={g('la_goal_revenue')} />
-            <GuidelineCol label="Review Date"       value={g('la_goal_review_date')} />
-            <GuidelineCol label="Offer Goal"        value={g('la_goal_offer')} />
-            <GuidelineCol label="Accountability"    value={g('la_goal_accountability')} />
+            <GuidelineCol label="90-Day Content Goal"   value={g('la_goal_content')} />
+            <GuidelineCol label="90-Day Audience Goal"  value={g('la_goal_audience')} />
+            <GuidelineCol label="90-Day Revenue Goal"   value={g('la_goal_revenue')} />
+            <GuidelineCol label="Follower Goal"         value={g('la_goal_followers')} />
+            <GuidelineCol label="Email List Goal"       value={g('la_goal_email')} />
+            <GuidelineCol label="Primary Offer"         value={g('la_goal_offer')} />
+            <GuidelineCol label="Sales Target"          value={g('la_goal_sales')} />
+            <GuidelineCol label="Review Date"           value={g('la_goal_review_date')} />
+            <GuidelineCol label="Accountability Partner" value={g('la_goal_accountability')} />
           </div>
         </GuidelineRow>
       )}
