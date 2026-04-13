@@ -356,13 +356,13 @@ function GuidelineCol({ label, value }: { label: string; value?: string | null }
   if (!value) return null
   return (
     <div>
-      <div style={{
+      <div className="pb-col-label" style={{
         fontSize: '9px', fontWeight: 600, textTransform: 'uppercase' as const,
         letterSpacing: '.1em', color: 'var(--dimmer)', marginBottom: '5px',
       }}>
         {label}
       </div>
-      <div style={{ fontSize: '12px', fontWeight: 400, color: 'var(--text)', lineHeight: 1.55 }}>
+      <div className="pb-col-value" style={{ fontSize: '12px', fontWeight: 400, color: 'var(--text)', lineHeight: 1.55 }}>
         {value}
       </div>
     </div>
@@ -509,7 +509,7 @@ function CollapsibleAvatarCard({
               {statement}
             </div>
           )}
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px 24px' }}>
+          <div className="pb-2col" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px 24px' }}>
             <GuidelineCol label="Their Struggle" value={struggle} />
             <GuidelineCol label="Their Goal" value={desired} />
             <GuidelineCol label="Where They Hang Out" value={platforms} />
@@ -585,7 +585,7 @@ function BrandFoundationChapter({ r }: { r: Record<string, unknown> }) {
     <>
       {/* 1.1 Brand Journey */}
       <GuidelineRow number="1.1" title="Brand Journey">
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px 28px' }}>
+        <div className="pb-2col" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px 28px' }}>
           <GuidelineCol label="Desired Outcome" value={g('bf_journey_outcome')} />
           <GuidelineCol label="Known For" value={g('bf_journey_known')} />
           <GuidelineCol label="What I Do" value={g('bf_journey_do')} />
@@ -606,7 +606,7 @@ function BrandFoundationChapter({ r }: { r: Record<string, unknown> }) {
             </div>
           </div>
         )}
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px 28px' }}>
+        <div className="pb-2col" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px 28px' }}>
           <GuidelineCol label="What I Love" value={g('bf_ikigai_love')} />
           <GuidelineCol label="What I'm Good At" value={g('bf_ikigai_good')} />
           <GuidelineCol label="What the World Needs" value={g('bf_ikigai_world')} />
@@ -624,9 +624,12 @@ function BrandFoundationChapter({ r }: { r: Record<string, unknown> }) {
       {/* 1.4 Core Values */}
       {values.length > 0 && (
         <GuidelineRow number="1.4" title="Core Values">
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '20px 28px' }}>
+          <div className="pb-2col" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '14px 28px' }}>
             {values.map((v, i) => (
-              <GuidelineCol key={i} label={`${String(i + 1).padStart(2, '0')} — ${v.name}`} value={v.practice || v.name} />
+              <div key={i} className="pb-value-item" style={{ fontSize: '12px', lineHeight: 1.55, color: 'var(--text)' }}>
+                <span style={{ fontWeight: 700 }}>{v.name}</span>
+                {v.practice && <span style={{ color: 'var(--dim)' }}> — {v.practice}</span>}
+              </div>
             ))}
           </div>
         </GuidelineRow>
@@ -635,7 +638,7 @@ function BrandFoundationChapter({ r }: { r: Record<string, unknown> }) {
       {/* 1.5 Content Pillars */}
       {pillars.length > 0 && (
         <GuidelineRow number="1.5" title="Content Pillars">
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px 28px' }}>
+          <div className="pb-2col" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px 28px' }}>
             {pillars.map((p, i) => (
               <GuidelineCol key={i} label={`${String(i + 1).padStart(2, '0')} — ${p.name}`} value={p.sub || p.name} />
             ))}
@@ -653,7 +656,7 @@ function BrandFoundationChapter({ r }: { r: Record<string, unknown> }) {
       {/* 1.7 Brand Vision */}
       <GuidelineRow number="1.7" title="Brand Vision">
         {g('bf_brand_vision') && <GuidelineHero text={g('bf_brand_vision')} />}
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px 28px' }}>
+        <div className="pb-2col" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px 28px' }}>
           <GuidelineCol label="3-Year Vision" value={g('bf_vision_3yr')} />
           <GuidelineCol label="Impact" value={g('bf_vision_impact')} />
           {g('bf_vision_legacy') && <GuidelineCol label="Legacy" value={g('bf_vision_legacy')} />}
@@ -785,7 +788,7 @@ function CollapsibleCreatorPlaybookCard({
               {creator.notes}
             </div>
           )}
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px 24px' }}>
+          <div className="pb-2col" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px 24px' }}>
             <GuidelineCol label="Strengths" value={creator.detailedNotes?.strengths} />
             <GuidelineCol label="First Impressions" value={creator.detailedNotes?.impressions} />
             <GuidelineCol label="What to Steal" value={creator.detailedNotes?.steal} />
@@ -866,7 +869,7 @@ function VisualWorldChapter({ r }: { r: Record<string, unknown> }) {
         <GuidelineRow number="2.4" title="Perspective">
           {settingStatement && <GuidelineHero text={settingStatement} />}
           {moodStatement    && <GuidelineQuote text={moodStatement} />}
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px 28px' }}>
+          <div className="pb-2col" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px 28px' }}>
             <GuidelineCol label="Setting"      value={g('vw_shot_e1_location')} />
             <GuidelineCol label="Environment"  value={getLabel(r, 'vw_shot_e1_vibe')} />
             <GuidelineCol label="Primary Mood" value={getLabel(r, 'vw_shot_e2_mood')} />
@@ -879,7 +882,7 @@ function VisualWorldChapter({ r }: { r: Record<string, unknown> }) {
 
       {hasDesign && (
         <GuidelineRow number="2.5" title="Design Details">
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px 28px' }}>
+          <div className="pb-2col" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px 28px' }}>
             <GuidelineCol label="Signature Objects" value={g('vw_shot_e4_objects')} />
             <GuidelineCol label="Wardrobe"          value={g('vw_shot_e4_wardrobe')} />
             <GuidelineCol label="Textures"          value={getLabel(r, 'vw_shot_e4_textures')} />
@@ -890,7 +893,7 @@ function VisualWorldChapter({ r }: { r: Record<string, unknown> }) {
 
       {hasDiff && (
         <GuidelineRow number="2.6" title="Visual Identity">
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px 28px' }}>
+          <div className="pb-2col" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px 28px' }}>
             <GuidelineCol label="What Makes You Different" value={g('vw_ca_different')} />
             <GuidelineCol label="What You Own"             value={g('vw_ca_own')} />
           </div>
@@ -969,7 +972,7 @@ function LaunchVideoCard({ title, hook, children }: { title: string; hook?: stri
       </button>
       {expanded && (
         <div style={{ padding: '14px 16px' }}>
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px 24px' }}>
+          <div className="pb-2col" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px 24px' }}>
             {children}
           </div>
         </div>
@@ -991,7 +994,7 @@ function ContentChapter({ r }: { r: Record<string, unknown> }) {
     <>
       {hasStrategy && (
         <GuidelineRow number="3.1" title="Strategy">
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px 28px' }}>
+          <div className="pb-2col" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px 28px' }}>
             <GuidelineCol label="Core Pain Problem"        value={g('ct_strategy_pain_problem')} />
             <GuidelineCol label="My Unique Solution"       value={g('ct_strategy_unique_sol')} />
             <GuidelineCol label="Contextual Credibility"   value={g('ct_strategy_credibility')} />
@@ -1003,7 +1006,7 @@ function ContentChapter({ r }: { r: Record<string, unknown> }) {
 
       {hasSustain && (
         <GuidelineRow number="3.2" title="Sustainability">
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px 28px' }}>
+          <div className="pb-2col" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px 28px' }}>
             <GuidelineCol label="Primary Platform"    value={g('ct_sustain_primary')} />
             <GuidelineCol label="Secondary Platform"  value={g('ct_sustain_secondary')} />
             <GuidelineCol label="Content Medium"      value={g('ct_sustain_medium')} />
@@ -1023,7 +1026,7 @@ function ContentChapter({ r }: { r: Record<string, unknown> }) {
 
       {hasBatch && (
         <GuidelineRow number="3.3" title="Batching System">
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px 28px' }}>
+          <div className="pb-2col" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px 28px' }}>
             <GuidelineCol label="Filming Day"         value={g('ct_batch_film_day')} />
             <GuidelineCol label="Videos Per Batch"    value={g('ct_batch_count')} />
             <GuidelineCol label="My Setup"            value={g('ct_batch_setup')} />
@@ -1049,7 +1052,7 @@ function ContentChapter({ r }: { r: Record<string, unknown> }) {
 
       {hasStory && (
         <GuidelineRow number="3.5" title="Story Framework">
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px 28px' }}>
+          <div className="pb-2col" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px 28px' }}>
             <GuidelineCol label="Story Idea / Identity" value={g('ct_story_idea')} />
             <GuidelineCol label="Hook"                  value={g('ct_story_hook')} />
             <GuidelineCol label="Problem"               value={g('ct_story_prob')} />
@@ -1062,7 +1065,7 @@ function ContentChapter({ r }: { r: Record<string, unknown> }) {
 
       {hasLadder && (
         <GuidelineRow number="3.6" title="Offer Ladder">
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px 28px' }}>
+          <div className="pb-2col" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px 28px' }}>
             <GuidelineCol label="Free Content"         value={g('ct_tm_free')} />
             <GuidelineCol label="Lead Magnet"          value={g('ct_tm_lead')} />
             <GuidelineCol label="Low-Ticket ($10–$100)"    value={g('ct_tm_low')} />
@@ -1099,7 +1102,7 @@ function LaunchChapter({ r }: { r: Record<string, unknown> }) {
               ))}
             </div>
           )}
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px 28px' }}>
+          <div className="pb-2col" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px 28px' }}>
             <GuidelineCol label="Username"              value={g('la_bio_username')} />
             <GuidelineCol label="Link in Bio"           value={g('la_bio_link')} />
             <GuidelineCol label="Name Field / Tagline"  value={g('la_bio_ig_name')} />
@@ -1112,7 +1115,7 @@ function LaunchChapter({ r }: { r: Record<string, unknown> }) {
 
       {hasFunnel && (
         <GuidelineRow number="4.2" title="Funnel">
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px 28px' }}>
+          <div className="pb-2col" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px 28px' }}>
             <GuidelineCol label="Content Platform(s)"   value={g('la_funnel_platforms')} />
             <GuidelineCol label="Email Platform"        value={g('la_funnel_email_platform')} />
             <GuidelineCol label="Lead Magnet Name"      value={g('la_funnel_lead_magnet')} />
@@ -1132,7 +1135,7 @@ function LaunchChapter({ r }: { r: Record<string, unknown> }) {
       {hasLM && (
         <GuidelineRow number="4.3" title="Lead Magnet">
           {g('la_lm_name') && <GuidelineHero text={g('la_lm_name')} />}
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px 28px' }}>
+          <div className="pb-2col" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px 28px' }}>
             <GuidelineCol label="Topic"                 value={g('la_lm_topic')} />
             <GuidelineCol label="The One Big Win"       value={g('la_lm_big_win')} />
             <GuidelineCol label="Bridge to Offer"       value={g('la_lm_offer_bridge')} />
@@ -1188,7 +1191,7 @@ function LaunchChapter({ r }: { r: Record<string, unknown> }) {
 
       {hasGoals && (
         <GuidelineRow number="4.5" title="90-Day Goals">
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px 28px' }}>
+          <div className="pb-2col" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px 28px' }}>
             <GuidelineCol label="90-Day Content Goal"   value={g('la_goal_content')} />
             <GuidelineCol label="90-Day Audience Goal"  value={g('la_goal_audience')} />
             <GuidelineCol label="90-Day Revenue Goal"   value={g('la_goal_revenue')} />
@@ -1314,7 +1317,7 @@ export default function PlaybookPage() {
   ]
 
   return (
-    <div style={{ width: '100%', padding: '2rem 2rem 5rem' }}>
+    <div className="pb-wrapper" style={{ width: '100%', padding: '2rem 2rem 5rem' }}>
 
       {/* ── COVER ── */}
       <div style={{ textAlign: 'left', paddingTop: '2.5rem', marginBottom: '0' }}>
@@ -1334,12 +1337,14 @@ export default function PlaybookPage() {
           YOUR BRAND<br />PLAYBOOK
         </div>
 
-        {/* Metadata row */}
-        <div className="playbook-grid-responsive" style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', columnGap: '1.5rem' }}>
+        {/* Metadata row — desktop: 4 col, mobile: 2 col (creator+handle side by side, platform hidden) */}
+        <div className="pb-meta-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', columnGap: '1.5rem' }}>
           <MetaCell label="Creator"    value={brandName} placeholder="Your Name"                  />
           <MetaCell label="Handle"     value={handle}    placeholder="Not set"                     />
           <ExpandableMetaCell label="Desired Outcome" value={knownFor} placeholder="Complete Brand Foundation" maxLines={2} />
-          <MetaCell label="Primary Platform" value={getStr(ct, 'ct_sustain_primary') || ''} placeholder="Complete Launch module" />
+          <div className="pb-hide-mobile">
+            <MetaCell label="Primary Platform" value={getStr(ct, 'ct_sustain_primary') || ''} placeholder="Complete Launch module" />
+          </div>
         </div>
 
         {/* Chapter nav */}

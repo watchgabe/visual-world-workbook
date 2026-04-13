@@ -185,6 +185,28 @@ body::before {
   }
 }
 
+/* ─── Playbook mobile layout ─── */
+@media (max-width: 768px) {
+  /* Tighter wrapper padding */
+  .pb-wrapper { padding: 1rem 1rem 4rem !important; }
+
+  /* Metadata: 2-col (creator+handle side by side, outcome below) */
+  .pb-meta-grid { grid-template-columns: 1fr 1fr !important; }
+
+  /* Hide Primary Platform on mobile */
+  .pb-hide-mobile { display: none !important; }
+
+  /* Collapse all 2/3-col content grids to 1 col */
+  .pb-2col { grid-template-columns: 1fr !important; }
+
+  /* Bigger label + value text inside chapters */
+  .pb-col-label { font-size: 10px !important; }
+  .pb-col-value { font-size: 15px !important; line-height: 1.65 !important; }
+
+  /* Core values list */
+  .pb-value-item { font-size: 15px !important; line-height: 1.65 !important; }
+}
+
 /* ─── Mobile: increase copy size ~20% and add vertical spacing between sections ─── */
 @media (max-width: 768px) {
   section[data-section-index] h1 {
