@@ -249,8 +249,10 @@ body::before {
 
 /* ── Print styles for Playbook (MOD-07) ── */
 @media print {
-  /* Force light theme variables for print */
-  :root {
+  /* Force light theme variables for print — regardless of dark/light toggle */
+  :root,
+  [data-theme='dark'],
+  [data-theme='light'] {
     --bg: #ffffff !important;
     --surface: #ffffff !important;
     --card: #f5f5f5 !important;
@@ -263,6 +265,16 @@ body::before {
     --orange-border: #f4b89a !important;
     --green-bg: #e6f5ef !important;
     --green-text: #085041 !important;
+  }
+
+  /* Force all collapsible playbook chapters open */
+  .playbook-chapter-body {
+    display: block !important;
+  }
+
+  /* Hide the toggle button chevron — not needed in print */
+  .playbook-chapter-btn svg {
+    display: none !important;
   }
 
   /* Hide navigation and UI chrome */

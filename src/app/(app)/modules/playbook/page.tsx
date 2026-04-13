@@ -238,10 +238,11 @@ function ChapterHeader({ num, moduleLabel, title }: { num: string; moduleLabel: 
 function CollapsibleChapter({ num, moduleLabel, title, children }: { num: string; moduleLabel: string; title: string; children: React.ReactNode }) {
   const [expanded, setExpanded] = useState(true)
   return (
-    <div style={{ marginBottom: '1.5rem', border: '1px solid var(--border)', borderRadius: 'var(--radius-lg)', overflow: 'hidden' }}>
+    <div className="playbook-chapter" style={{ marginBottom: '1.5rem', border: '1px solid var(--border)', borderRadius: 'var(--radius-lg)', overflow: 'hidden' }}>
       <button
         type="button"
         onClick={() => setExpanded(v => !v)}
+        className="playbook-chapter-btn"
         style={{
           width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'space-between',
           padding: '1rem 1.25rem', background: 'var(--surface)', border: 'none', cursor: 'pointer',
@@ -257,11 +258,13 @@ function CollapsibleChapter({ num, moduleLabel, title, children }: { num: string
           <polyline points="6 9 12 15 18 9"/>
         </svg>
       </button>
-      {expanded && (
-        <div style={{ padding: '1.25rem 1.25rem 1.5rem' }}>
-          {children}
-        </div>
-      )}
+      {/* Always in DOM — hidden via CSS when collapsed so @media print can force it open */}
+      <div
+        className="playbook-chapter-body"
+        style={{ padding: '1.25rem 1.25rem 1.5rem', display: expanded ? 'block' : 'none' }}
+      >
+        {children}
+      </div>
     </div>
   )
 }
