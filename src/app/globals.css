@@ -205,6 +205,12 @@ body::before {
 
   /* Core values list */
   .pb-value-item { font-size: 15px !important; line-height: 1.65 !important; }
+
+  /* Creator card: stats 2x2 on mobile */
+  .pb-creator-stats { grid-template-columns: 1fr 1fr !important; }
+
+  /* Creator card: thumbnail grid 3-col on mobile */
+  .pb-creator-thumbs { grid-template-columns: repeat(3, 1fr) !important; }
 }
 
 /* ─── Mobile: increase copy size ~20% and add vertical spacing between sections ─── */

@@ -812,7 +812,7 @@ function CollapsibleCreatorPlaybookCard({
 
               {/* Stats row */}
               {(creator.profile.followers || creator.profile.postsCount) && (
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '6px', padding: '0 14px 12px' }}>
+                <div className="pb-creator-stats" style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '6px', padding: '0 14px 12px' }}>
                   {[
                     { num: creator.profile.followers, label: 'Followers' },
                     { num: creator.profile.postsCount, label: 'Posts' },
@@ -840,7 +840,7 @@ function CollapsibleCreatorPlaybookCard({
                   <div style={{ fontSize: '9px', fontWeight: 700, textTransform: 'uppercase' as const, letterSpacing: '.1em', color: 'var(--dimmer)', marginBottom: '6px' }}>
                     Recent Posts
                   </div>
-                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(6, 1fr)', gap: '3px' }}>
+                  <div className="pb-creator-thumbs" style={{ display: 'grid', gridTemplateColumns: 'repeat(6, 1fr)', gap: '3px' }}>
                     {creator.profile.thumbUrls.slice(0, 12).map((url, i) => (
                       <div key={i} style={{ aspectRatio: '1', borderRadius: '3px', overflow: 'hidden', background: 'var(--surface)' }}>
                         {/* eslint-disable-next-line @next/next/no-img-element */}
