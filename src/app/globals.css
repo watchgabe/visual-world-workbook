@@ -212,8 +212,8 @@ body::before {
 /* ─── Brand guideline section row: label-left + content-right ─── */
 .guideline-row {
   display: grid;
-  grid-template-columns: 150px 1fr;
-  gap: 0 64px;
+  grid-template-columns: 160px 1fr;
+  gap: 0 96px;
   margin-bottom: 8px;
 }
 @media (max-width: 768px) {

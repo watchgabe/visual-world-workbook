@@ -213,7 +213,6 @@ function ChapterHeader({ num, moduleLabel, title }: { num: string; moduleLabel: 
   return (
     <div style={{
       display: 'flex', alignItems: 'center', gap: '16px',
-      marginBottom: '0.75rem',
     }}>
       <div style={{
         fontFamily: 'var(--font-num)', fontSize: '48px', fontWeight: 900,
@@ -232,6 +231,37 @@ function ChapterHeader({ num, moduleLabel, title }: { num: string; moduleLabel: 
           {title}
         </div>
       </div>
+    </div>
+  )
+}
+
+function CollapsibleChapter({ num, moduleLabel, title, children }: { num: string; moduleLabel: string; title: string; children: React.ReactNode }) {
+  const [expanded, setExpanded] = useState(true)
+  return (
+    <div style={{ marginBottom: '1.5rem', border: '1px solid var(--border)', borderRadius: 'var(--radius-lg)', overflow: 'hidden' }}>
+      <button
+        type="button"
+        onClick={() => setExpanded(v => !v)}
+        style={{
+          width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+          padding: '1rem 1.25rem', background: 'var(--surface)', border: 'none', cursor: 'pointer',
+          textAlign: 'left',
+        }}
+      >
+        <ChapterHeader num={num} moduleLabel={moduleLabel} title={title} />
+        <svg
+          width="16" height="16" viewBox="0 0 24 24" fill="none"
+          stroke="var(--dim)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
+          style={{ flexShrink: 0, transition: 'transform .2s', transform: expanded ? 'rotate(0deg)' : 'rotate(-90deg)' }}
+        >
+          <polyline points="6 9 12 15 18 9"/>
+        </svg>
+      </button>
+      {expanded && (
+        <div style={{ padding: '1.25rem 1.25rem 1.5rem' }}>
+          {children}
+        </div>
+      )}
     </div>
   )
 }
@@ -1174,8 +1204,8 @@ function LaunchChapter({ r }: { r: Record<string, unknown> }) {
 
 function ExpandableMetaCell({ label, value, placeholder, maxLines = 3 }: { label: string; value: string; placeholder: string; maxLines?: number }) {
   const [expanded, setExpanded] = useState(false)
-  // Estimate if text is long enough to need truncation (rough heuristic: >120 chars ≈ 3 lines in this column width)
-  const needsTrunc = value.length > 120
+  // Estimate if text is long enough to need truncation (rough heuristic: >80 chars ≈ 2 sentences)
+  const needsTrunc = value.length > 80
 
   return (
     <div style={{ padding: '.65rem 0' }}>
@@ -1305,7 +1335,7 @@ export default function PlaybookPage() {
         <div className="playbook-grid-responsive" style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', columnGap: '1.5rem' }}>
           <MetaCell label="Creator"    value={brandName} placeholder="Your Name"                  />
           <MetaCell label="Handle"     value={handle}    placeholder="Not set"                     />
-          <ExpandableMetaCell label="Desired Outcome" value={knownFor} placeholder="Complete Brand Foundation" maxLines={3} />
+          <ExpandableMetaCell label="Desired Outcome" value={knownFor} placeholder="Complete Brand Foundation" maxLines={2} />
           <MetaCell label="Primary Platform" value={getStr(ct, 'ct_sustain_primary') || ''} placeholder="Complete Launch module" />
         </div>
 
@@ -1344,28 +1374,29 @@ export default function PlaybookPage() {
 
       {/* ── CHAPTERS ── */}
       {chapters.map(c => (
-        <div key={c.slug} id={`ch${c.num}`} className="pb-chapter" style={{ marginBottom: '3rem' }}>
-          <ChapterHeader num={c.num} moduleLabel={c.label} title={c.title} />
-          {c.slug === 'brand-foundation' && (
-            Object.keys(c.data).length > 0
-              ? <BrandFoundationChapter r={c.data} />
-              : <EmptyChapter moduleNum={c.num} />
-          )}
-          {c.slug === 'visual-world' && (
-            Object.keys(c.data).length > 0
-              ? <VisualWorldChapter r={c.data} />
-              : <EmptyChapter moduleNum={c.num} />
-          )}
-          {c.slug === 'content' && (
-            Object.keys(c.data).length > 0
-              ? <ContentChapter r={c.data} />
-              : <EmptyChapter moduleNum={c.num} />
-          )}
-          {c.slug === 'launch' && (
-            Object.keys(c.data).length > 0
-              ? <LaunchChapter r={c.data} />
-              : <EmptyChapter moduleNum={c.num} />
-          )}
+        <div key={c.slug} id={`ch${c.num}`} className="pb-chapter">
+          <CollapsibleChapter num={c.num} moduleLabel={c.label} title={c.title}>
+            {c.slug === 'brand-foundation' && (
+              Object.keys(c.data).length > 0
+                ? <BrandFoundationChapter r={c.data} />
+                : <EmptyChapter moduleNum={c.num} />
+            )}
+            {c.slug === 'visual-world' && (
+              Object.keys(c.data).length > 0
+                ? <VisualWorldChapter r={c.data} />
+                : <EmptyChapter moduleNum={c.num} />
+            )}
+            {c.slug === 'content' && (
+              Object.keys(c.data).length > 0
+                ? <ContentChapter r={c.data} />
+                : <EmptyChapter moduleNum={c.num} />
+            )}
+            {c.slug === 'launch' && (
+              Object.keys(c.data).length > 0
+                ? <LaunchChapter r={c.data} />
+                : <EmptyChapter moduleNum={c.num} />
+            )}
+          </CollapsibleChapter>
         </div>
       ))}
 

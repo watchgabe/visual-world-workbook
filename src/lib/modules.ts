@@ -283,17 +283,6 @@ export const MODULE_SECTIONS: Partial<Record<ModuleSlug, SectionDef[]>> = {
     { slug: 'formats',           name: 'Formats',           fields: [] },
     // INDEX 5
     { slug: 'content-system',    name: 'Content System',    fields: [] },
-    // INDEX 6
-    { slug: 'trust-and-money',   name: 'Trust & Money',     fields: [
-      // Workshop 6 — Trust & Money
-      { key: 'ct_tm_free',       required: false },
-      { key: 'ct_tm_lead',       required: false },
-      { key: 'ct_tm_low',        required: false },
-      { key: 'ct_tm_mid',        required: false },
-      { key: 'ct_tm_high',       required: false },
-      { key: 'ct_tm_conv',       required: false },
-      { key: 'ct_tm_cta_strat',  required: false },
-    ]},
     // INDEX 7
     { slug: 'idea-generation',   name: 'Idea Generation',   fields: [
       // Workshop 7 — Idea Generation (pillar names)
