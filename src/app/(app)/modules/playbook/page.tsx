@@ -1172,6 +1172,48 @@ function LaunchChapter({ r }: { r: Record<string, unknown> }) {
   )
 }
 
+function ExpandableMetaCell({ label, value, placeholder, maxLines = 3 }: { label: string; value: string; placeholder: string; maxLines?: number }) {
+  const [expanded, setExpanded] = useState(false)
+  // Estimate if text is long enough to need truncation (rough heuristic: >120 chars ≈ 3 lines in this column width)
+  const needsTrunc = value.length > 120
+
+  return (
+    <div style={{ padding: '.65rem 0' }}>
+      <div style={{
+        fontSize: '8px', fontWeight: 700, letterSpacing: '.12em',
+        textTransform: 'uppercase' as const, color: 'var(--dimmer)', marginBottom: '3px',
+      }}>
+        {label}
+      </div>
+      <div
+        style={{
+          fontSize: '12px', fontWeight: value ? 700 : 400, lineHeight: 1.4,
+          color: value ? 'var(--text)' : 'var(--dimmer)',
+          fontStyle: value ? 'normal' : 'italic',
+          wordWrap: 'break-word' as const,
+          ...(needsTrunc && !expanded ? {
+            display: '-webkit-box',
+            WebkitLineClamp: maxLines,
+            WebkitBoxOrient: 'vertical' as const,
+            overflow: 'hidden',
+          } : {}),
+        }}
+      >
+        {value || placeholder}
+      </div>
+      {needsTrunc && (
+        <button
+          type="button"
+          onClick={() => setExpanded(v => !v)}
+          style={{ fontSize: '10px', color: 'var(--orange)', background: 'none', border: 'none', padding: '2px 0 0', cursor: 'pointer', fontFamily: 'var(--font)' }}
+        >
+          {expanded ? 'Show less' : '…more'}
+        </button>
+      )}
+    </div>
+  )
+}
+
 // ─── MAIN PAGE ────────────────────────────────────────────────────────────────
 
 export default function PlaybookPage() {
@@ -1263,8 +1305,8 @@ export default function PlaybookPage() {
         <div className="playbook-grid-responsive" style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', columnGap: '1.5rem' }}>
           <MetaCell label="Creator"    value={brandName} placeholder="Your Name"                  />
           <MetaCell label="Handle"     value={handle}    placeholder="Not set"                     />
-          <MetaCell label="Known For"  value={knownFor}  placeholder="Complete Brand Foundation"   />
-          <MetaCell label="90-Day Goal" value={goal90}   placeholder="Complete Launch module"      />
+          <ExpandableMetaCell label="Desired Outcome" value={knownFor} placeholder="Complete Brand Foundation" maxLines={3} />
+          <MetaCell label="Primary Platform" value={getStr(ct, 'ct_sustain_primary') || ''} placeholder="Complete Launch module" />
         </div>
 
         {/* Chapter nav */}
