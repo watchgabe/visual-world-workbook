@@ -1249,7 +1249,7 @@ export default function PlaybookPage() {
   // Cover metadata
   const brandName = (user?.user_metadata?.full_name as string) || getStr(la, 'la_bio_username') || 'Your Brand'
   const handle    = getStr(la, 'la_bio_username')  || (user?.user_metadata?.ig_handle as string) || ''
-  const knownFor  = getStr(bf, 'bf_journey_known') || ''
+  const knownFor  = getStr(bf, 'bf_journey_outcome') || ''
   const goal90    = getStr(la, 'la_goal_content')  || getStr(la, 'la_goal_audience') || getStr(la, 'la_goal_revenue') || ''
 
   function MetaCell({ label, value, placeholder }: { label: string; value: string; placeholder: string }) {
@@ -1334,9 +1334,9 @@ export default function PlaybookPage() {
               }}
             >
               {navLabels[c.slug] || c.title}
-              <span style={{ color: 'var(--orange)', fontSize: '11px', flexShrink: 0, marginLeft: '4px' }}>
-                &#8599;
-              </span>
+              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="var(--orange)" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0, marginLeft: '4px' }}>
+                <line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/>
+              </svg>
             </a>
           )})}
         </div>

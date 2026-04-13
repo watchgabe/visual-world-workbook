@@ -185,6 +185,30 @@ body::before {
   }
 }
 
+/* ─── Mobile: increase copy size ~20% and add vertical spacing between sections ─── */
+@media (max-width: 768px) {
+  section[data-section-index] h1 {
+    font-size: 31px !important;
+    line-height: 1.15 !important;
+  }
+  section[data-section-index] h2 {
+    font-size: 20px !important;
+    line-height: 1.3 !important;
+  }
+  section[data-section-index] p {
+    font-size: 17px !important;
+    line-height: 1.8 !important;
+  }
+  section[data-section-index] label,
+  section[data-section-index] .workshop-label {
+    font-size: 14px !important;
+  }
+  /* Extra vertical breathing room between stacked sections on mobile */
+  section[data-section-index] + section[data-section-index] {
+    margin-top: 30px !important;
+  }
+}
+
 /* ─── Brand guideline section row: label-left + content-right ─── */
 .guideline-row {
   display: grid;
