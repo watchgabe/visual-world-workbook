@@ -357,138 +357,95 @@ function CollapsibleAvatarCard({
   const platforms = g(`bf_av${num}_platforms`)
   const fears = g(`bf_av${num}_fears`)
   const demographics = [age, occupation].filter(Boolean).join(' · ')
-  const avatarLabel =
-    num === 1 ? 'Primary' : num === 2 ? 'Secondary' : `Avatar ${num}`
 
   // Skip if no meaningful data
   if (!name && !statement && !struggle && !g(`bf_av${num}_who`)) return null
 
   return (
-    <div style={{ marginBottom: '12px' }}>
+    <div
+      style={{
+        background: 'var(--card)',
+        border: '1px solid var(--border)',
+        borderRadius: 'var(--radius-lg)',
+        marginBottom: '10px',
+        overflow: 'hidden',
+      }}
+    >
       <button
         type="button"
         onClick={() => setExpanded((v) => !v)}
         style={{
           display: 'flex',
           alignItems: 'center',
-          gap: '12px',
-          width: '100%',
-          background: 'none',
-          border: 'none',
+          justifyContent: 'space-between',
+          padding: '10px 14px',
+          background: 'var(--surface)',
+          borderBottom: expanded ? '1px solid var(--border)' : 'none',
           cursor: 'pointer',
           textAlign: 'left',
-          padding: '6px 0',
           fontFamily: 'var(--font)',
+          width: '100%',
+          border: 'none',
         }}
       >
-        {/* Avatar image circle */}
-        <div
-          style={{
-            width: '44px',
-            height: '44px',
-            borderRadius: '50%',
-            border: `1.5px solid ${image ? 'var(--orange)' : 'var(--border2)'}`,
-            overflow: 'hidden',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            background: 'var(--surface)',
-            flexShrink: 0,
-          }}
-        >
-          {image ? (
-            <img
-              src={image as string}
-              alt={name || avatarLabel}
-              style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-            />
-          ) : (
-            <svg
-              width="18"
-              height="18"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="var(--dimmer)"
-              strokeWidth="1.5"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <circle cx="12" cy="8" r="4" />
-              <path d="M5 20c0-4 3.5-7 7-7s7 3 7 7" />
-            </svg>
-          )}
-        </div>
-        {/* Name + demographics */}
-        <div style={{ flex: 1, minWidth: 0 }}>
-          {name ? (
-            <>
-              <div
-                style={{
-                  fontSize: '13px',
-                  fontWeight: 700,
-                  color: 'var(--text)',
-                  lineHeight: 1.2,
-                }}
-              >
-                {name}
-              </div>
-              {demographics && (
-                <div
-                  style={{
-                    fontSize: '11px',
-                    color: 'var(--dim)',
-                    marginTop: '1px',
-                  }}
-                >
-                  {demographics}
-                </div>
-              )}
-            </>
-          ) : (
-            <div
-              style={{
-                fontSize: '12px',
-                color: 'var(--dimmer)',
-                fontStyle: 'italic',
-              }}
-            >
-              {avatarLabel}
-              {demographics ? ` · ${demographics}` : ''}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flex: 1, minWidth: 0 }}>
+          {/* 30px circle */}
+          <div
+            style={{
+              width: '30px',
+              height: '30px',
+              borderRadius: '50%',
+              border: `1.5px solid ${image ? 'var(--orange)' : 'var(--border2)'}`,
+              overflow: 'hidden',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              background: 'var(--bg)',
+              flexShrink: 0,
+              fontSize: '11px',
+              fontWeight: 700,
+              color: 'var(--orange)',
+            }}
+          >
+            {image ? (
+              <img
+                src={image as string}
+                alt={name || `Avatar ${num}`}
+                style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+              />
+            ) : (
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--dimmer)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                <circle cx="12" cy="8" r="4" /><path d="M5 20c0-4 3.5-7 7-7s7 3 7 7" />
+              </svg>
+            )}
+          </div>
+          <div>
+            <div style={{ fontSize: '9px', fontWeight: 700, textTransform: 'uppercase' as const, letterSpacing: '.1em', color: 'var(--orange)', lineHeight: 1, marginBottom: '2px' }}>
+              Avatar {num}
             </div>
-          )}
+            <div style={{ fontSize: '13px', fontWeight: 600, color: 'var(--text)' }}>
+              {name || 'No name yet'}
+            </div>
+            {demographics && (
+              <div style={{ fontSize: '10.5px', color: 'var(--dimmer)', marginTop: '1px' }}>
+                {demographics}
+              </div>
+            )}
+          </div>
         </div>
-        {/* Chevron */}
-        <span
-          style={{
-            fontSize: '10px',
-            color: 'var(--dimmer)',
-            flexShrink: 0,
-            transform: expanded ? 'rotate(180deg)' : 'rotate(0deg)',
-            transition: 'transform .15s',
-          }}
-        >
+        <span style={{ color: 'var(--dimmer)', fontSize: '12px', transition: 'transform .2s', display: 'inline-block', transform: expanded ? 'none' : 'rotate(-90deg)' }}>
           ▼
         </span>
       </button>
 
       {expanded && (
-        <div style={{ paddingTop: '10px', paddingLeft: '56px' }}>
+        <div style={{ padding: '14px 16px' }}>
           {statement && (
-            <div
-              style={{
-                fontSize: '12px',
-                fontWeight: 400,
-                color: 'var(--text)',
-                lineHeight: 1.65,
-                marginBottom: '16px',
-              }}
-            >
+            <div style={{ fontSize: '12px', color: 'var(--text)', lineHeight: 1.65, marginBottom: '14px' }}>
               {statement}
             </div>
           )}
-          <div
-            style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px 24px' }}
-          >
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px 24px' }}>
             <GuidelineCol label="Their Struggle" value={struggle} />
             <GuidelineCol label="Their Goal" value={desired} />
             <GuidelineCol label="Where They Hang Out" value={platforms} />
@@ -670,72 +627,83 @@ function CollapsibleCreatorPlaybookCard({
   if (!name && !hasContent) return null
 
   return (
-    <div style={{ marginBottom: '10px' }}>
+    <div
+      style={{
+        background: 'var(--card)',
+        border: '1px solid var(--border)',
+        borderRadius: 'var(--radius-lg)',
+        marginBottom: '10px',
+        overflow: 'hidden',
+      }}
+    >
       <button
         type="button"
         onClick={() => setExpanded((v) => !v)}
         style={{
           display: 'flex',
           alignItems: 'center',
-          gap: '10px',
-          width: '100%',
-          background: 'none',
-          border: 'none',
+          justifyContent: 'space-between',
+          padding: '10px 14px',
+          background: 'var(--surface)',
+          borderBottom: expanded ? '1px solid var(--border)' : 'none',
           cursor: 'pointer',
           textAlign: 'left',
-          padding: '4px 0',
           fontFamily: 'var(--font)',
+          width: '100%',
+          border: 'none',
         }}
       >
-        {/* Avatar circle */}
-        <div
-          style={{
-            width: '36px',
-            height: '36px',
-            borderRadius: '50%',
-            border: '1.5px solid var(--border2)',
-            overflow: 'hidden',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            background: 'var(--surface)',
-            flexShrink: 0,
-            fontSize: '12px',
-            fontWeight: 700,
-            color: 'var(--orange)',
-          }}
-        >
-          {creator.profile?.picUrl ? (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img
-              src={`https://images.weserv.nl/?url=${encodeURIComponent(creator.profile.picUrl)}&w=60&h=60&fit=cover&mask=circle`}
-              alt=""
-              style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-              onError={(e) => { (e.target as HTMLImageElement).style.display = 'none' }}
-            />
-          ) : (
-            creator.handle ? creator.handle.charAt(0).toUpperCase() : String(index + 1)
-          )}
-        </div>
-        {/* Name */}
-        <div style={{ flex: 1, minWidth: 0 }}>
-          <div style={{ fontSize: '9px', fontWeight: 700, textTransform: 'uppercase' as const, letterSpacing: '.1em', color: 'var(--orange)', lineHeight: 1, marginBottom: '2px' }}>
-            Creator {index + 1}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flex: 1, minWidth: 0 }}>
+          <div
+            style={{
+              width: '30px',
+              height: '30px',
+              borderRadius: '50%',
+              background: 'var(--orange-tint)',
+              border: '1px solid var(--orange-border)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              fontSize: '12px',
+              fontWeight: 700,
+              color: 'var(--orange)',
+              flexShrink: 0,
+              overflow: 'hidden',
+            }}
+          >
+            {creator.profile?.picUrl ? (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img
+                src={`https://images.weserv.nl/?url=${encodeURIComponent(creator.profile.picUrl)}&w=60&h=60&fit=cover&mask=circle`}
+                alt=""
+                style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '50%' }}
+                onError={(e) => { (e.target as HTMLImageElement).style.display = 'none' }}
+              />
+            ) : (
+              creator.handle ? creator.handle.charAt(0).toUpperCase() : String(index + 1)
+            )}
           </div>
-          <div style={{ fontSize: '13px', fontWeight: 600, color: 'var(--text)', lineHeight: 1.2 }}>
-            {name || `Creator ${index + 1}`}
-          </div>
-          {sub && (
-            <div style={{ fontSize: '10.5px', color: 'var(--dimmer)', marginTop: '1px' }}>
-              {sub}
+          <div>
+            <div style={{ fontSize: '9px', fontWeight: 700, textTransform: 'uppercase' as const, letterSpacing: '.1em', color: 'var(--orange)', lineHeight: 1, marginBottom: '2px' }}>
+              Creator {index + 1}
             </div>
-          )}
+            <div style={{ fontSize: '13px', fontWeight: 600, color: 'var(--text)' }}>
+              {name || `Creator ${index + 1}`}
+            </div>
+            {sub && (
+              <div style={{ fontSize: '10.5px', color: 'var(--dimmer)', marginTop: '1px' }}>
+                {sub}
+              </div>
+            )}
+          </div>
         </div>
-        <span style={{ fontSize: '10px', color: 'var(--dimmer)', flexShrink: 0, transform: expanded ? 'rotate(180deg)' : 'none', transition: 'transform .15s' }}>▼</span>
+        <span style={{ color: 'var(--dimmer)', fontSize: '12px', transition: 'transform .2s', display: 'inline-block', transform: expanded ? 'none' : 'rotate(-90deg)' }}>
+          ▼
+        </span>
       </button>
 
       {expanded && (
-        <div style={{ paddingLeft: '46px', paddingTop: '10px' }}>
+        <div style={{ padding: '14px 16px' }}>
           {creator.analysis?.niche && (
             <div style={{ fontSize: '11px', color: 'var(--dim)', marginBottom: '10px', fontStyle: 'italic' }}>
               {creator.analysis.niche}
@@ -786,195 +754,245 @@ function VisualWorldChapter({ r }: { r: Record<string, unknown> }) {
   const colorName      = g('vw_color_name')
   const hasColors      = colorPrimary || colorSecondary || colorAccent || colorNeutral
 
+  const primaryFont = g('vw_typo_primary')
+  const bodyFont    = g('vw_typo_body')
+  const settingStatement = g('vw_shot_e1_statement')
+  const moodStatement    = g('vw_shot_e2_statement')
+  const hasPersp = g('vw_shot_e1_location') || g('vw_shot_e1_vibe') || g('vw_shot_e2_mood') || settingStatement || moodStatement
+  const hasDesign = g('vw_shot_e4_objects') || g('vw_shot_e4_wardrobe') || g('vw_shot_e4_textures') || g('vw_shot_e4_never')
+  const hasDiff   = g('vw_ca_different') || g('vw_ca_own')
+
   return (
     <>
-      {/* Creator Analysis */}
       {hasCreators && (
-        <div style={{ marginBottom: '16px' }}>
-          <div style={{ height: '1px', background: 'var(--border)', marginBottom: '10px' }} />
-          <div className="guideline-row">
-            <div style={{ paddingTop: '1px' }}>
-              <span style={{ fontSize: '10px', fontWeight: 600, color: 'var(--orange)', letterSpacing: '.06em' }}>2.1</span>
-              <span style={{ fontSize: '10px', fontWeight: 600, textTransform: 'uppercase' as const, letterSpacing: '.1em', color: 'var(--dim)', marginLeft: '8px' }}>Creator Analysis</span>
-            </div>
-            <div>
-              {creators.map((c, i) => (
-                <CollapsibleCreatorPlaybookCard key={c.id || i} creator={c} index={i} />
-              ))}
-            </div>
-          </div>
-        </div>
+        <GuidelineRow number="2.1" title="Creator Analysis">
+          {creators.map((c, i) => (
+            <CollapsibleCreatorPlaybookCard key={c.id || String(i)} creator={c} index={i} />
+          ))}
+        </GuidelineRow>
       )}
 
       {hasColors && (
-        <div style={{
-          background: 'var(--surface)',
-          border: '1px solid var(--border)',
-          borderRadius: 'var(--radius-md)',
-          padding: '1rem 1rem 1.2rem',
-          marginBottom: '10px',
-        }}>
-          <div style={{
-            fontSize: '9px', fontWeight: 700, textTransform: 'uppercase' as const,
-            letterSpacing: '.1em', color: 'var(--orange)', marginBottom: '12px',
-          }}>
-            Color Palette{colorName ? ` — ${colorName}` : ''}
-          </div>
+        <GuidelineRow number="2.2" title="Color Palette">
+          {colorName && (
+            <div style={{ fontSize: '10px', fontWeight: 600, textTransform: 'uppercase' as const, letterSpacing: '.08em', color: 'var(--dim)', marginBottom: '10px' }}>
+              {colorName}
+            </div>
+          )}
           <div style={{ display: 'flex', gap: '8px', alignItems: 'stretch' }}>
             {colorPrimary   && <ColorSwatch label="Primary"   hex={colorPrimary}   />}
             {colorSecondary && <ColorSwatch label="Secondary" hex={colorSecondary} />}
             {colorAccent    && <ColorSwatch label="Accent"    hex={colorAccent}    />}
             {colorNeutral   && <ColorSwatch label="Neutral"   hex={colorNeutral}   />}
           </div>
-        </div>
+        </GuidelineRow>
       )}
 
-      <div className="playbook-grid-responsive" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', marginBottom: '10px' }}>
-        <FieldCard label="Primary Font" value={r.vw_typo_primary} />
-        <FieldCard label="Body Font"    value={r.vw_typo_body}    />
-      </div>
+      {(primaryFont || bodyFont) && (
+        <GuidelineRow number="2.3" title="Typography">
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px 28px' }}>
+            <GuidelineCol label="Primary Font" value={primaryFont} />
+            <GuidelineCol label="Body Font"    value={bodyFont}    />
+          </div>
+        </GuidelineRow>
+      )}
 
-      <SectionLabel label="Mood &amp; Setting" values={[r.vw_shot_e1_location, getLabel(r, 'vw_shot_e1_vibe'), getLabel(r, 'vw_shot_e2_mood'), getLabel(r, 'vw_shot_e2_lighting'), r.vw_shot_e2_time, getLabel(r, 'vw_shot_e3_grade'), r.vw_shot_e1_statement, r.vw_shot_e2_statement]} />
-      <div className="playbook-grid-responsive" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '10px', marginBottom: '10px' }}>
-        <FieldCard label="Setting"      value={r.vw_shot_e1_location} />
-        <FieldCard label="Environment"  value={getLabel(r, 'vw_shot_e1_vibe')}     />
-        <FieldCard label="Primary Mood" value={getLabel(r, 'vw_shot_e2_mood')}     />
-      </div>
-      <div className="playbook-grid-responsive" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '10px', marginBottom: '10px' }}>
-        <FieldCard label="Lighting"     value={getLabel(r, 'vw_shot_e2_lighting')} />
-        <FieldCard label="Time of Day"  value={r.vw_shot_e2_time}     />
-        <FieldCard label="Color Grade"  value={getLabel(r, 'vw_shot_e3_grade')}    />
-      </div>
-      <FieldCard label="Setting Statement" value={r.vw_shot_e1_statement} highlight />
-      <FieldCard label="Mood Statement"    value={r.vw_shot_e2_statement} highlight />
+      {hasPersp && (
+        <GuidelineRow number="2.4" title="Perspective">
+          {settingStatement && <GuidelineHero text={settingStatement} />}
+          {moodStatement    && <GuidelineQuote text={moodStatement} />}
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px 28px' }}>
+            <GuidelineCol label="Setting"      value={g('vw_shot_e1_location')} />
+            <GuidelineCol label="Environment"  value={getLabel(r, 'vw_shot_e1_vibe')} />
+            <GuidelineCol label="Primary Mood" value={getLabel(r, 'vw_shot_e2_mood')} />
+            <GuidelineCol label="Lighting"     value={getLabel(r, 'vw_shot_e2_lighting')} />
+            <GuidelineCol label="Time of Day"  value={g('vw_shot_e2_time')} />
+            <GuidelineCol label="Color Grade"  value={getLabel(r, 'vw_shot_e3_grade')} />
+          </div>
+        </GuidelineRow>
+      )}
 
-      <SectionLabel label="Design Details" values={[r.vw_shot_e4_objects, r.vw_shot_e4_wardrobe, getLabel(r, 'vw_shot_e4_textures'), r.vw_shot_e4_never]} />
-      <div className="playbook-grid-responsive" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', marginBottom: '10px' }}>
-        <FieldCard label="Signature Objects" value={r.vw_shot_e4_objects}  />
-        <FieldCard label="Wardrobe"          value={r.vw_shot_e4_wardrobe} />
-        <FieldCard label="Textures"          value={getLabel(r, 'vw_shot_e4_textures')} />
-      </div>
-      <FieldCard label="Never On Camera" value={r.vw_shot_e4_never} />
+      {hasDesign && (
+        <GuidelineRow number="2.5" title="Design Details">
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px 28px' }}>
+            <GuidelineCol label="Signature Objects" value={g('vw_shot_e4_objects')} />
+            <GuidelineCol label="Wardrobe"          value={g('vw_shot_e4_wardrobe')} />
+            <GuidelineCol label="Textures"          value={getLabel(r, 'vw_shot_e4_textures')} />
+            <GuidelineCol label="Never On Camera"   value={g('vw_shot_e4_never')} />
+          </div>
+        </GuidelineRow>
+      )}
 
-      <div className="playbook-grid-responsive" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', marginBottom: '10px' }}>
-        <FieldCard label="What Makes You Different" value={r.vw_ca_different} />
-        <FieldCard label="What You Own" value={r.vw_ca_own} />
-      </div>
+      {hasDiff && (
+        <GuidelineRow number="2.6" title="Visual Identity">
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px 28px' }}>
+            <GuidelineCol label="What Makes You Different" value={g('vw_ca_different')} />
+            <GuidelineCol label="What You Own"             value={g('vw_ca_own')} />
+          </div>
+        </GuidelineRow>
+      )}
     </>
   )
 }
 
 function ContentChapter({ r }: { r: Record<string, unknown> }) {
   const g = (k: string) => getStr(r, k)
+  const hasSustain  = g('ct_sustain_primary') || g('ct_sustain_week_hours') || g('ct_sustain_cadence')
+  const hasPillars  = [1,2,3,4,5].some(i => g(`ct_ig_pillar${i}`))
+  const hasStory    = g('ct_story_idea') || g('ct_story_hook') || g('ct_story_prob')
+  const hasLadder   = g('ct_tm_free') || g('ct_tm_lead') || g('ct_tm_low') || g('ct_tm_mid') || g('ct_tm_high')
 
   return (
     <>
-      <FieldCard label="The Painful Problem"     value={r.ct_strategy_pain_problem} highlight />
-      <FieldCard label="My Unique Solution"      value={r.ct_strategy_unique_sol}   highlight />
-      <FieldCard label="My Contextual Credibility"  value={r.ct_strategy_credibility}  highlight />
+      <GuidelineRow number="3.1" title="Strategy">
+        {g('ct_strategy_pain_problem') && <GuidelineHero text={g('ct_strategy_pain_problem')} />}
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px 28px' }}>
+          <GuidelineCol label="My Unique Solution"       value={g('ct_strategy_unique_sol')} />
+          <GuidelineCol label="Contextual Credibility"   value={g('ct_strategy_credibility')} />
+        </div>
+      </GuidelineRow>
 
-      <div className="playbook-grid-responsive" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '10px', marginBottom: '10px' }}>
-        <FieldCard label="Primary Platform"  value={r.ct_sustain_primary}    />
-        <FieldCard label="Weekly Hours"      value={r.ct_sustain_week_hours} />
-        <FieldCard label="Content Cadence"   value={r.ct_sustain_cadence}    />
-      </div>
+      {hasSustain && (
+        <GuidelineRow number="3.2" title="Sustainability">
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px 28px' }}>
+            <GuidelineCol label="Primary Platform"  value={g('ct_sustain_primary')} />
+            <GuidelineCol label="Weekly Hours"      value={g('ct_sustain_week_hours')} />
+            <GuidelineCol label="Content Cadence"   value={g('ct_sustain_cadence')} />
+          </div>
+        </GuidelineRow>
+      )}
 
-      <SectionLabel label="Content Pillars" values={[g('ct_ig_pillar1'), g('ct_ig_pillar2'), g('ct_ig_pillar3'), g('ct_ig_pillar4'), g('ct_ig_pillar5')]} />
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '8px', marginBottom: '1rem' }}>
-        {[1, 2, 3, 4, 5].map(i => {
-          const name = g(`ct_ig_pillar${i}`)
-          return name ? <PillarCard key={i} number={`0${i}`} name={name} /> : null
-        })}
-      </div>
+      {hasPillars && (
+        <GuidelineRow number="3.3" title="Content Pillars">
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '16px 24px' }}>
+            {[1,2,3,4,5].map(i => {
+              const name = g(`ct_ig_pillar${i}`)
+              return name ? <GuidelineCol key={i} label={`0${i}`} value={name} /> : null
+            })}
+          </div>
+        </GuidelineRow>
+      )}
 
-      <SectionLabel label="Story Framework" values={[r.ct_story_idea, r.ct_story_hook, r.ct_story_prob, r.ct_story_journey, r.ct_story_lesson, r.ct_story_cta]} />
-      <div className="playbook-grid-responsive" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', marginBottom: '10px' }}>
-        <FieldCard label="Identity (I Am)" value={r.ct_story_idea} />
-        <FieldCard label="Hook"    value={r.ct_story_hook}    />
-        <FieldCard label="Problem" value={r.ct_story_prob}    />
-        <FieldCard label="Journey" value={r.ct_story_journey} />
-        <FieldCard label="Lesson"  value={r.ct_story_lesson}  />
-        <FieldCard label="CTA"     value={r.ct_story_cta}     />
-      </div>
+      {hasStory && (
+        <GuidelineRow number="3.4" title="Story Framework">
+          {g('ct_story_idea') && <GuidelineHero text={g('ct_story_idea')} />}
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px 28px' }}>
+            <GuidelineCol label="Hook"    value={g('ct_story_hook')} />
+            <GuidelineCol label="Problem" value={g('ct_story_prob')} />
+            <GuidelineCol label="Journey" value={g('ct_story_journey')} />
+            <GuidelineCol label="Lesson"  value={g('ct_story_lesson')} />
+            <GuidelineCol label="CTA"     value={g('ct_story_cta')} />
+          </div>
+        </GuidelineRow>
+      )}
 
-      <SectionLabel label="Offer Ladder" values={[r.ct_tm_free, r.ct_tm_lead, r.ct_tm_low, r.ct_tm_mid, r.ct_tm_high, r.ct_tm_conv, r.ct_tm_cta_strat]} />
-      <div className="playbook-grid-responsive" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', marginBottom: '10px' }}>
-        <FieldCard label="Free Content"  value={r.ct_tm_free} />
-        <FieldCard label="Lead Magnet"   value={r.ct_tm_lead} />
-        <FieldCard label="Low-Ticket"    value={r.ct_tm_low}  />
-        <FieldCard label="Mid-Ticket"    value={r.ct_tm_mid}  />
-        <FieldCard label="High-Ticket"   value={r.ct_tm_high} />
-        <FieldCard label="Conversion Strategy" value={r.ct_tm_conv} />
-      </div>
-      <div className="playbook-grid-responsive" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', marginBottom: '10px' }}>
-        <FieldCard label="CTA Strategy" value={r.ct_tm_cta_strat} />
-      </div>
+      {hasLadder && (
+        <GuidelineRow number="3.5" title="Offer Ladder">
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px 28px' }}>
+            <GuidelineCol label="Free Content"         value={g('ct_tm_free')} />
+            <GuidelineCol label="Lead Magnet"          value={g('ct_tm_lead')} />
+            <GuidelineCol label="Low-Ticket"           value={g('ct_tm_low')} />
+            <GuidelineCol label="Mid-Ticket"           value={g('ct_tm_mid')} />
+            <GuidelineCol label="High-Ticket"          value={g('ct_tm_high')} />
+            <GuidelineCol label="Conversion Strategy"  value={g('ct_tm_conv')} />
+            <GuidelineCol label="CTA Strategy"         value={g('ct_tm_cta_strat')} />
+          </div>
+        </GuidelineRow>
+      )}
     </>
   )
 }
 
 function LaunchChapter({ r }: { r: Record<string, unknown> }) {
   const g = (k: string) => getStr(r, k)
-  const bioFull = [g('la_bio_line1'), g('la_bio_line2'), g('la_bio_line3'), g('la_bio_line4')].filter(Boolean).join('\n')
-  const offerPrice = [g('la_funnel_offer'), g('la_funnel_price')].filter(Boolean).join(' — ')
+  const bioFull        = [g('la_bio_line1'), g('la_bio_line2'), g('la_bio_line3'), g('la_bio_line4')].filter(Boolean).join('\n')
+  const offerPrice     = [g('la_funnel_offer'), g('la_funnel_price')].filter(Boolean).join(' — ')
   const formatDelivery = [g('la_lm_format'), g('la_lm_delivery')].filter(Boolean).join(' · ')
+  const hasBio     = g('la_bio_username') || bioFull
+  const hasFunnel  = g('la_funnel_platforms') || g('la_funnel_cta') || offerPrice
+  const hasLM      = g('la_lm_name') || g('la_lm_big_win')
+  const hasVideos  = g('la_lc_story_hook') || g('la_lc_pos_claim')
+  const hasGoals   = g('la_goal_followers') || g('la_goal_content') || g('la_goal_offer')
 
   return (
     <>
-      <SectionLabel label="Bio" values={[r.la_bio_username, r.la_bio_link, g('la_bio_line1'), g('la_bio_line2'), g('la_bio_line3'), g('la_bio_line4')]} />
-      <div className="playbook-grid-responsive" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', marginBottom: '10px' }}>
-        <FieldCard label="Username"    value={r.la_bio_username} />
-        <FieldCard label="Link in Bio" value={r.la_bio_link}     />
-      </div>
-      {bioFull && <FieldCard label="Instagram Bio" value={bioFull} highlight />}
+      {hasBio && (
+        <GuidelineRow number="4.1" title="Bio">
+          {bioFull && <GuidelineHero text={bioFull} />}
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px 28px' }}>
+            <GuidelineCol label="Username"    value={g('la_bio_username')} />
+            <GuidelineCol label="Link in Bio" value={g('la_bio_link')} />
+          </div>
+        </GuidelineRow>
+      )}
 
-      <SectionLabel label="Your Funnel" values={[r.la_funnel_platforms, r.la_funnel_email_platform, r.la_funnel_cta, r.la_funnel_offer, r.la_funnel_price]} />
-      <div className="playbook-grid-responsive" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', marginBottom: '10px' }}>
-        <FieldCard label="Content Platforms" value={r.la_funnel_platforms}      />
-        <FieldCard label="Email Platform"    value={r.la_funnel_email_platform} />
-        <FieldCard label="Primary CTA"       value={r.la_funnel_cta}            />
-        <FieldCard label="Core Offer + Price" value={offerPrice || g('la_funnel_offer') || null} />
-      </div>
+      {hasFunnel && (
+        <GuidelineRow number="4.2" title="Funnel">
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px 28px' }}>
+            <GuidelineCol label="Content Platforms" value={g('la_funnel_platforms')} />
+            <GuidelineCol label="Email Platform"    value={g('la_funnel_email_platform')} />
+            <GuidelineCol label="Primary CTA"       value={g('la_funnel_cta')} />
+            <GuidelineCol label="Core Offer"        value={offerPrice || g('la_funnel_offer')} />
+          </div>
+        </GuidelineRow>
+      )}
 
-      <SectionLabel label="Lead Magnet" values={[r.la_lm_name, r.la_lm_big_win, r.la_lm_format, r.la_lm_delivery, r.la_lm_cta]} />
-      <FieldCard label="Lead Magnet Name" value={r.la_lm_name} highlight />
-      <div className="playbook-grid-responsive" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', marginBottom: '10px' }}>
-        <FieldCard label="The One Big Win"    value={r.la_lm_big_win} />
-        <FieldCard label="Format + Delivery"  value={formatDelivery || g('la_lm_format') || null} />
-      </div>
-      <FieldCard label="CTA" value={r.la_lm_cta} />
+      {hasLM && (
+        <GuidelineRow number="4.3" title="Lead Magnet">
+          {g('la_lm_name') && <GuidelineHero text={g('la_lm_name')} />}
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px 28px' }}>
+            <GuidelineCol label="The One Big Win"    value={g('la_lm_big_win')} />
+            <GuidelineCol label="Format + Delivery"  value={formatDelivery || g('la_lm_format')} />
+            <GuidelineCol label="CTA"                value={g('la_lm_cta')} />
+          </div>
+        </GuidelineRow>
+      )}
 
-      <SectionLabel label="Launch Videos" values={[r.la_lc_story_hook, r.la_lc_story_why, r.la_lc_story_challenge, r.la_lc_story_turning, r.la_lc_story_learned, r.la_lc_story_cta, r.la_lc_pos_claim, r.la_lc_pos_belief, r.la_lc_pos_anchor]} />
+      {hasVideos && (
+        <GuidelineRow number="4.4" title="Launch Videos">
+          {g('la_lc_story_hook') && (
+            <div style={{ marginBottom: '20px' }}>
+              <div style={{ fontSize: '9px', fontWeight: 600, textTransform: 'uppercase' as const, letterSpacing: '.1em', color: 'var(--orange)', marginBottom: '8px' }}>
+                Video 1 — Your Story
+              </div>
+              <GuidelineHero text={g('la_lc_story_hook')} />
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px 24px' }}>
+                <GuidelineCol label="Why You Do This"  value={g('la_lc_story_why')} />
+                <GuidelineCol label="The Challenge"    value={g('la_lc_story_challenge')} />
+                <GuidelineCol label="The Turn"         value={g('la_lc_story_turning')} />
+                <GuidelineCol label="What You Learned" value={g('la_lc_story_learned')} />
+                <GuidelineCol label="CTA"              value={g('la_lc_story_cta')} />
+              </div>
+            </div>
+          )}
+          {g('la_lc_pos_claim') && (
+            <div>
+              <div style={{ fontSize: '9px', fontWeight: 600, textTransform: 'uppercase' as const, letterSpacing: '.1em', color: 'var(--orange)', marginBottom: '8px' }}>
+                Video 2 — Positioning
+              </div>
+              <GuidelineHero text={g('la_lc_pos_claim')} />
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px 24px' }}>
+                <GuidelineCol label="Core Belief"      value={g('la_lc_pos_belief')} />
+                <GuidelineCol label="Anchor Statement" value={g('la_lc_pos_anchor')} />
+              </div>
+            </div>
+          )}
+        </GuidelineRow>
+      )}
 
-      <SectionLabel label="Video 1 — Your Story" values={[r.la_lc_story_hook, r.la_lc_story_why, r.la_lc_story_challenge, r.la_lc_story_turning, r.la_lc_story_learned, r.la_lc_story_cta]} />
-      <FieldCard label="Hook" value={r.la_lc_story_hook} highlight />
-      <div className="playbook-grid-responsive" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', marginBottom: '10px' }}>
-        <FieldCard label="Why You Do This" value={r.la_lc_story_why}       />
-        <FieldCard label="The Challenge"   value={r.la_lc_story_challenge} />
-        <FieldCard label="The Turn"        value={r.la_lc_story_turning}   />
-        <FieldCard label="What You Learned" value={r.la_lc_story_learned}  />
-      </div>
-      <FieldCard label="CTA" value={r.la_lc_story_cta} />
-
-      <SectionLabel label="Video 2 — Positioning Deep Dive" values={[r.la_lc_pos_claim, r.la_lc_pos_belief, r.la_lc_pos_anchor]} />
-      <FieldCard label="Core Claim"       value={r.la_lc_pos_claim}   highlight />
-      <div className="playbook-grid-responsive" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', marginBottom: '10px' }}>
-        <FieldCard label="Core Belief"      value={r.la_lc_pos_belief} />
-        <FieldCard label="Anchor Statement" value={r.la_lc_pos_anchor} />
-      </div>
-
-      <SectionLabel label="90-Day Goals" values={[r.la_goal_followers, r.la_goal_email, r.la_goal_revenue, r.la_goal_review_date, r.la_goal_audience, r.la_goal_system, r.la_goal_content, r.la_goal_offer, r.la_goal_accountability]} />
-      <div className="playbook-grid-responsive" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', marginBottom: '10px' }}>
-        <FieldCard label="Followers Goal"    value={r.la_goal_followers}   />
-        <FieldCard label="Email Subscribers" value={r.la_goal_email}       />
-        <FieldCard label="Revenue Goal"      value={r.la_goal_revenue}     />
-        <FieldCard label="Review Date"       value={r.la_goal_review_date} />
-        <FieldCard label="Audience Goal"     value={r.la_goal_audience}    />
-        <FieldCard label="System Goal"       value={r.la_goal_system}      />
-      </div>
-      <FieldCard label="Content Goal" value={r.la_goal_content} highlight />
-      <FieldCard label="Offer Goal"   value={r.la_goal_offer}   highlight />
-      <FieldCard label="Accountability Partner" value={r.la_goal_accountability} />
+      {hasGoals && (
+        <GuidelineRow number="4.5" title="90-Day Goals">
+          {g('la_goal_content') && <GuidelineHero text={g('la_goal_content')} />}
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px 28px' }}>
+            <GuidelineCol label="Followers Goal"    value={g('la_goal_followers')} />
+            <GuidelineCol label="Email Subscribers" value={g('la_goal_email')} />
+            <GuidelineCol label="Revenue Goal"      value={g('la_goal_revenue')} />
+            <GuidelineCol label="Review Date"       value={g('la_goal_review_date')} />
+            <GuidelineCol label="Offer Goal"        value={g('la_goal_offer')} />
+            <GuidelineCol label="Accountability"    value={g('la_goal_accountability')} />
+          </div>
+        </GuidelineRow>
+      )}
     </>
   )
 }
