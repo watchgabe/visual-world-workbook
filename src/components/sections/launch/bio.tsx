@@ -91,67 +91,9 @@ export default function LaunchBio() {
         five elements that determine whether they follow, click, or leave. Every one of them matters.
       </p>
 
-      {/* #1 — Link in Bio */}
+      {/* #1 — Username */}
       <h2 style={{ fontSize: '16px', fontWeight: 600, color: 'var(--text)', margin: '1.75rem 0 8px' }}>
-        #1 — Link in Bio
-      </h2>
-      <div
-        style={{
-          background: 'var(--surface)',
-          border: '1px solid var(--border)',
-          borderRadius: 'var(--radius-lg)',
-          padding: '1.1rem 1.4rem',
-          marginBottom: '1rem',
-        }}
-      >
-        <p style={{ fontSize: '13.5px', color: 'var(--text)', lineHeight: 1.85, marginBottom: '9px' }}>
-          The old approach was a Linktree with multiple links. The new approach is a{' '}
-          <strong>single link</strong> that directs viewers exactly where you want them to go.
-          Multiple options create friction. One clear destination creates action.
-        </p>
-        <p style={{ fontSize: '13.5px', color: 'var(--text)', lineHeight: 1.85, margin: 0 }}>
-          Your link should point directly to your lead magnet landing page — not your website, not
-          a menu of options. The goal of every piece of content is to move someone from follower to
-          email subscriber. Make that the only door.
-        </p>
-      </div>
-      <div
-        style={{
-          background: 'var(--card)',
-          border: '1px solid var(--border)',
-          borderRadius: 'var(--radius-lg)',
-          padding: '1.1rem 1.25rem',
-          marginBottom: '1rem',
-        }}
-      >
-        <div
-          style={{
-            fontSize: '9px',
-            fontWeight: 700,
-            textTransform: 'uppercase',
-            letterSpacing: '.13em',
-            color: 'var(--orange)',
-            marginBottom: '.75rem',
-          }}
-        >
-          Your Link in Bio
-        </div>
-        <div style={{ fontSize: '13px', fontWeight: 500, color: 'var(--text)', marginBottom: '6px' }}>
-          My single link (lead magnet landing page)
-        </div>
-        <WorkshopInput
-          moduleSlug={MODULE_SLUG}
-          fieldKey="la_bio_link"
-          value={watch('la_bio_link')}
-          onChange={val => setValue('la_bio_link', val)}
-          getFullResponses={getValues}
-          placeholder="e.g. yoursite.com/free-guide or a direct landing page URL"
-        />
-      </div>
-
-      {/* #2 — Username */}
-      <h2 style={{ fontSize: '16px', fontWeight: 600, color: 'var(--text)', margin: '1.75rem 0 8px' }}>
-        #2 — Username
+        #1 — Username
       </h2>
       <div
         style={{
@@ -204,6 +146,64 @@ export default function LaunchBio() {
           onChange={val => setValue('la_bio_username', val)}
           getFullResponses={getValues}
           placeholder="e.g. @yourname, @yourbrandname or @yournameofficial"
+        />
+      </div>
+
+      {/* #2 — Link in Bio */}
+      <h2 style={{ fontSize: '16px', fontWeight: 600, color: 'var(--text)', margin: '1.75rem 0 8px' }}>
+        #2 — Link in Bio
+      </h2>
+      <div
+        style={{
+          background: 'var(--surface)',
+          border: '1px solid var(--border)',
+          borderRadius: 'var(--radius-lg)',
+          padding: '1.1rem 1.4rem',
+          marginBottom: '1rem',
+        }}
+      >
+        <p style={{ fontSize: '13.5px', color: 'var(--text)', lineHeight: 1.85, marginBottom: '9px' }}>
+          The old approach was a Linktree with multiple links. The new approach is a{' '}
+          <strong>single link</strong> that directs viewers exactly where you want them to go.
+          Multiple options create friction. One clear destination creates action.
+        </p>
+        <p style={{ fontSize: '13.5px', color: 'var(--text)', lineHeight: 1.85, margin: 0 }}>
+          Your link should point directly to your lead magnet landing page — not your website, not
+          a menu of options. The goal of every piece of content is to move someone from follower to
+          email subscriber. Make that the only door.
+        </p>
+      </div>
+      <div
+        style={{
+          background: 'var(--card)',
+          border: '1px solid var(--border)',
+          borderRadius: 'var(--radius-lg)',
+          padding: '1.1rem 1.25rem',
+          marginBottom: '1rem',
+        }}
+      >
+        <div
+          style={{
+            fontSize: '9px',
+            fontWeight: 700,
+            textTransform: 'uppercase',
+            letterSpacing: '.13em',
+            color: 'var(--orange)',
+            marginBottom: '.75rem',
+          }}
+        >
+          Your Link in Bio
+        </div>
+        <div style={{ fontSize: '13px', fontWeight: 500, color: 'var(--text)', marginBottom: '6px' }}>
+          My single link (lead magnet landing page)
+        </div>
+        <WorkshopInput
+          moduleSlug={MODULE_SLUG}
+          fieldKey="la_bio_link"
+          value={watch('la_bio_link')}
+          onChange={val => setValue('la_bio_link', val)}
+          getFullResponses={getValues}
+          placeholder="e.g. yoursite.com/free-guide or a direct landing page URL"
         />
       </div>
 

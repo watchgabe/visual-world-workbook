@@ -136,28 +136,6 @@ export default function LaunchGoals() {
             Content Goals
           </div>
           <div style={{ fontSize: '12px', fontWeight: 500, color: 'var(--text)', marginBottom: '4px' }}>
-            Posts per week
-          </div>
-          <WorkshopInput
-            moduleSlug={MODULE_SLUG}
-            fieldKey="la_goal_content_freq"
-            value={watch('la_goal_content_freq')}
-            onChange={val => setValue('la_goal_content_freq', val)}
-            getFullResponses={getValues}
-            placeholder="e.g. 5x/week"
-          />
-          <div style={{ fontSize: '12px', fontWeight: 500, color: 'var(--text)', margin: '8px 0 4px' }}>
-            Platforms
-          </div>
-          <WorkshopInput
-            moduleSlug={MODULE_SLUG}
-            fieldKey="la_goal_content_platforms"
-            value={watch('la_goal_content_platforms')}
-            onChange={val => setValue('la_goal_content_platforms', val)}
-            getFullResponses={getValues}
-            placeholder="Instagram, TikTok, YouTube..."
-          />
-          <div style={{ fontSize: '12px', fontWeight: 500, color: 'var(--text)', margin: '8px 0 4px' }}>
             My 90-day content goal
           </div>
           <WorkshopTextarea
@@ -285,51 +263,6 @@ export default function LaunchGoals() {
           />
         </div>
 
-        {/* System Goals */}
-        <div
-          style={{
-            background: 'var(--card)',
-            border: '1px solid var(--border)',
-            borderRadius: 'var(--radius-md)',
-            padding: '.85rem',
-          }}
-        >
-          <div
-            style={{
-              fontSize: '9.5px',
-              fontWeight: 700,
-              textTransform: 'uppercase',
-              letterSpacing: '.1em',
-              color: 'var(--orange)',
-              marginBottom: '6px',
-            }}
-          >
-            System Goals
-          </div>
-          <div style={{ fontSize: '12px', fontWeight: 500, color: 'var(--text)', marginBottom: '4px' }}>
-            The one system that moves the needle most
-          </div>
-          <WorkshopInput
-            moduleSlug={MODULE_SLUG}
-            fieldKey="la_goal_system_priority"
-            value={watch('la_goal_system_priority')}
-            onChange={val => setValue('la_goal_system_priority', val)}
-            getFullResponses={getValues}
-            placeholder="ManyChat, welcome sequence, content batch system..."
-          />
-          <div style={{ fontSize: '12px', fontWeight: 500, color: 'var(--text)', margin: '8px 0 4px' }}>
-            My 90-day system goal
-          </div>
-          <WorkshopTextarea
-            moduleSlug={MODULE_SLUG}
-            fieldKey="la_goal_system"
-            value={watch('la_goal_system')}
-            onChange={val => setValue('la_goal_system', val)}
-            getFullResponses={getValues}
-            rows={2}
-            placeholder="By [date], I will have built [system] that [what it does for my business]."
-          />
-        </div>
       </div>
 
       {/* 90-Day Review Date */}

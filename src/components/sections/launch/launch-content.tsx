@@ -562,18 +562,6 @@ export default function LaunchContent() {
           placeholder="What promise do you make in the first minute? Why should they stay for the full thing?"
         />
 
-        <div style={{ fontSize: '13px', fontWeight: 500, color: 'var(--text)', margin: '10px 0 6px' }}>
-          Waterfall plan — how will you break this into short-form clips?
-        </div>
-        <WorkshopTextarea
-          moduleSlug={MODULE_SLUG}
-          fieldKey="la_lc_mc_waterfall"
-          value={watch('la_lc_mc_waterfall')}
-          onChange={val => setValue('la_lc_mc_waterfall', val)}
-          getFullResponses={getValues}
-          rows={2}
-          placeholder="e.g. Each section becomes 1 short-form clip (5–7 clips total), quotes become carousels, key moments become Reels..."
-        />
       </div>
     </SectionWrapper>
   )

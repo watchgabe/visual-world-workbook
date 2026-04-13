@@ -348,10 +348,12 @@ function CollapsibleAvatarCard({
   const [expanded, setExpanded] = useState(false)
   const g = (k: string) => getStr(r, k)
   const image = r[`bf_av${num}_image`]
-  const name = g(`bf_av${num}_name`)
+  const rawName = g(`bf_av${num}_name`)
+  const statement = g(`bf_av${num}_statement`)
+  // Fallback: if name wasn't saved yet, pull first word from statement ("Jordan is..." → "Jordan")
+  const name = rawName || (statement ? statement.split(/\s+/)[0] : '')
   const age = g(`bf_av${num}_age`)
   const occupation = g(`bf_av${num}_occupation`)
-  const statement = g(`bf_av${num}_statement`)
   const struggle = g(`bf_av${num}_struggle`)
   const desired = g(`bf_av${num}_desired`)
   const platforms = g(`bf_av${num}_platforms`)
@@ -604,10 +606,12 @@ function BrandFoundationChapter({ r }: { r: Record<string, unknown> }) {
 interface PlaybookCreator {
   id: string
   handle: string
-  profile?: { fullName?: string; picUrl?: string; followers?: string } | null
+  bio?: string
+  profile?: { fullName?: string; picUrl?: string; followers?: string; bio?: string } | null
   notes?: string
   analysis?: { gap?: string; niche?: string } | null
-  detailedNotes?: { steal?: string; avoid?: string; gap?: string; strengths?: string; impressions?: string } | null
+  detailedNotes?: { steal?: string; avoid?: string; gap?: string; strengths?: string; impressions?: string; weaknesses?: string; limitations?: string; content?: string } | null
+  links?: { ig?: string; yt?: string; web?: string; other?: string } | null
 }
 
 function CollapsibleCreatorPlaybookCard({
@@ -709,24 +713,23 @@ function CollapsibleCreatorPlaybookCard({
               {creator.analysis.niche}
             </div>
           )}
+          {(creator.bio || creator.profile?.bio) && (
+            <div style={{ fontSize: '12px', color: 'var(--dim)', lineHeight: 1.6, marginBottom: '10px' }}>
+              {creator.bio || creator.profile?.bio}
+            </div>
+          )}
           {creator.notes && (
             <div style={{ fontSize: '12px', color: 'var(--text)', lineHeight: 1.65, marginBottom: '12px' }}>
               {creator.notes}
             </div>
           )}
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px 24px' }}>
-            {creator.detailedNotes?.strengths && (
-              <GuidelineCol label="Strengths" value={creator.detailedNotes.strengths} />
-            )}
-            {creator.detailedNotes?.steal && (
-              <GuidelineCol label="What to Steal" value={creator.detailedNotes.steal} />
-            )}
-            {creator.detailedNotes?.avoid && (
-              <GuidelineCol label="What to Avoid" value={creator.detailedNotes.avoid} />
-            )}
-            {(creator.detailedNotes?.gap || creator.analysis?.gap) && (
-              <GuidelineCol label="Gap / Opportunity" value={creator.detailedNotes?.gap || creator.analysis?.gap} />
-            )}
+            <GuidelineCol label="Strengths" value={creator.detailedNotes?.strengths} />
+            <GuidelineCol label="First Impressions" value={creator.detailedNotes?.impressions} />
+            <GuidelineCol label="What to Steal" value={creator.detailedNotes?.steal} />
+            <GuidelineCol label="What to Avoid" value={creator.detailedNotes?.avoid} />
+            <GuidelineCol label="Gap / Opportunity" value={creator.detailedNotes?.gap || creator.analysis?.gap} />
+            <GuidelineCol label="Their Content" value={creator.detailedNotes?.content} />
           </div>
         </div>
       )}
@@ -790,9 +793,29 @@ function VisualWorldChapter({ r }: { r: Record<string, unknown> }) {
 
       {(primaryFont || bodyFont) && (
         <GuidelineRow number="2.3" title="Typography">
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px 28px' }}>
-            <GuidelineCol label="Primary Font" value={primaryFont} />
-            <GuidelineCol label="Body Font"    value={bodyFont}    />
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+            {[primaryFont && { font: primaryFont, label: 'Primary' }, bodyFont && { font: bodyFont, label: 'Body' }].filter(Boolean).map((item) => {
+              const f = item as { font: string; label: string }
+              return (
+                <div key={f.font} style={{ paddingBottom: '16px', borderBottom: '1px solid var(--border)' }}>
+                  <div style={{ fontSize: '9px', fontWeight: 600, textTransform: 'uppercase' as const, letterSpacing: '.1em', color: 'var(--dimmer)', marginBottom: '8px' }}>
+                    {f.label} Typeface
+                  </div>
+                  <div style={{ fontSize: '26px', fontWeight: 400, color: 'var(--text)', lineHeight: 1.1, marginBottom: '6px' }}>
+                    {f.font}
+                  </div>
+                  <div style={{ fontSize: '11px', color: 'var(--dim)', lineHeight: 1.5, letterSpacing: '.02em' }}>
+                    abcdefghijklmnopqrstuvwxyz
+                  </div>
+                  <div style={{ fontSize: '11px', color: 'var(--dim)', lineHeight: 1.5, letterSpacing: '.02em' }}>
+                    ABCDEFGHIJKLMNOPQRSTUVWXYZ
+                  </div>
+                  <div style={{ fontSize: '11px', color: 'var(--dim)', lineHeight: 1.5, letterSpacing: '.02em' }}>
+                    0123456789
+                  </div>
+                </div>
+              )
+            })}
           </div>
         </GuidelineRow>
       )}
@@ -835,6 +858,58 @@ function VisualWorldChapter({ r }: { r: Record<string, unknown> }) {
   )
 }
 
+function PillarIdeasCard({ num, name, ideas, r, pillar }: { num: number; name: string; ideas: string[]; r: Record<string, unknown>; pillar: number }) {
+  const [expanded, setExpanded] = useState(false)
+  const g = (k: string) => getStr(r, k)
+  // Also grab angle/hook ideas
+  const angles = [1,2,3,4].flatMap(i => [1,2,3].map(a => g(`ct_ig_p${pillar}i${i}a${a}`))).filter(Boolean)
+  const hasIdeas = ideas.length > 0 || angles.length > 0
+
+  return (
+    <div style={{ background: 'var(--card)', border: '1px solid var(--border)', borderRadius: 'var(--radius-lg)', overflow: 'hidden' }}>
+      <button
+        type="button"
+        onClick={() => setExpanded(v => !v)}
+        style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '10px 14px', background: 'var(--surface)', borderBottom: expanded ? '1px solid var(--border)' : 'none', cursor: hasIdeas ? 'pointer' : 'default', textAlign: 'left', fontFamily: 'var(--font)', width: '100%', border: 'none' }}
+      >
+        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+          <div style={{ fontSize: '9px', fontWeight: 700, color: 'var(--orange)', background: 'var(--orange-tint)', border: '1px solid var(--orange-border)', borderRadius: '4px', padding: '2px 7px', letterSpacing: '.06em', flexShrink: 0 }}>
+            0{num}
+          </div>
+          <div style={{ fontSize: '13px', fontWeight: 600, color: 'var(--text)' }}>{name}</div>
+        </div>
+        {hasIdeas && (
+          <span style={{ color: 'var(--dimmer)', fontSize: '12px', transition: 'transform .2s', display: 'inline-block', transform: expanded ? 'none' : 'rotate(-90deg)', flexShrink: 0 }}>▼</span>
+        )}
+      </button>
+      {expanded && hasIdeas && (
+        <div style={{ padding: '12px 14px' }}>
+          {ideas.length > 0 && (
+            <div style={{ marginBottom: angles.length > 0 ? '12px' : 0 }}>
+              <div style={{ fontSize: '9px', fontWeight: 600, textTransform: 'uppercase' as const, letterSpacing: '.1em', color: 'var(--dimmer)', marginBottom: '6px' }}>Ideas</div>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                {ideas.map((idea, idx) => (
+                  <div key={idx} style={{ fontSize: '12px', color: 'var(--text)', lineHeight: 1.5, paddingLeft: '10px', borderLeft: '2px solid var(--border2)' }}>{idea}</div>
+                ))}
+              </div>
+            </div>
+          )}
+          {angles.length > 0 && (
+            <div>
+              <div style={{ fontSize: '9px', fontWeight: 600, textTransform: 'uppercase' as const, letterSpacing: '.1em', color: 'var(--dimmer)', marginBottom: '6px' }}>Angles</div>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                {angles.map((angle, idx) => (
+                  <div key={idx} style={{ fontSize: '12px', color: 'var(--dim)', lineHeight: 1.5, paddingLeft: '10px', borderLeft: '2px solid var(--border2)' }}>{angle}</div>
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
+      )}
+    </div>
+  )
+}
+
 function ContentChapter({ r }: { r: Record<string, unknown> }) {
   const g = (k: string) => getStr(r, k)
   const hasSustain  = g('ct_sustain_primary') || g('ct_sustain_week_hours') || g('ct_sustain_cadence')
@@ -845,8 +920,8 @@ function ContentChapter({ r }: { r: Record<string, unknown> }) {
   return (
     <>
       <GuidelineRow number="3.1" title="Strategy">
-        {g('ct_strategy_pain_problem') && <GuidelineHero text={g('ct_strategy_pain_problem')} />}
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px 28px' }}>
+          <GuidelineCol label="Core Pain Problem"        value={g('ct_strategy_pain_problem')} />
           <GuidelineCol label="My Unique Solution"       value={g('ct_strategy_unique_sol')} />
           <GuidelineCol label="Contextual Credibility"   value={g('ct_strategy_credibility')} />
         </div>
@@ -863,11 +938,15 @@ function ContentChapter({ r }: { r: Record<string, unknown> }) {
       )}
 
       {hasPillars && (
-        <GuidelineRow number="3.3" title="Content Pillars">
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '16px 24px' }}>
+        <GuidelineRow number="3.3" title="Idea Generation">
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
             {[1,2,3,4,5].map(i => {
-              const name = g(`ct_ig_pillar${i}`)
-              return name ? <GuidelineCol key={i} label={`0${i}`} value={name} /> : null
+              const pillarName = g(`ct_ig_pillar${i}`)
+              if (!pillarName) return null
+              const ideas = [1,2,3,4].map(j => g(`ct_ig_p${i}i${j}`)).filter(Boolean)
+              return (
+                <PillarIdeasCard key={i} num={i} name={pillarName} ideas={ideas} r={r} pillar={i} />
+              )
             })}
           </div>
         </GuidelineRow>
@@ -918,7 +997,15 @@ function LaunchChapter({ r }: { r: Record<string, unknown> }) {
     <>
       {hasBio && (
         <GuidelineRow number="4.1" title="Bio">
-          {bioFull && <GuidelineHero text={bioFull} />}
+          {bioFull && (
+            <div style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 'var(--radius-md)', padding: '12px 14px', marginBottom: '16px' }}>
+              {[g('la_bio_line1'), g('la_bio_line2'), g('la_bio_line3'), g('la_bio_line4')].filter(Boolean).map((line, i) => (
+                <div key={i} style={{ fontSize: '13px', color: 'var(--text)', lineHeight: 1.6, marginBottom: i < 3 ? '4px' : 0 }}>
+                  {line}
+                </div>
+              ))}
+            </div>
+          )}
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px 28px' }}>
             <GuidelineCol label="Username"    value={g('la_bio_username')} />
             <GuidelineCol label="Link in Bio" value={g('la_bio_link')} />

@@ -98,6 +98,57 @@ export default function LaunchFunnel() {
         </p>
       </div>
 
+      {/* Trust content */}
+      <h2 style={{ fontSize: '16px', fontWeight: 600, color: 'var(--text)', margin: '1.75rem 0 8px' }}>
+        How to turn content into customers
+      </h2>
+      <p style={{ fontSize: '13.5px', color: 'var(--dim)', lineHeight: 1.85, marginBottom: '1rem' }}>
+        Content doesn&apos;t sell. Trust sells. Your content is the mechanism for building trust at
+        scale. Every piece either deposits into or withdraws from your trust account with your
+        audience.
+      </p>
+
+      <h2 style={{ fontSize: '16px', fontWeight: 600, color: 'var(--text)', margin: '1.75rem 0 8px' }}>
+        The four trust pillars
+      </h2>
+      <div
+        style={{
+          background: 'var(--surface)',
+          border: '1px solid var(--border)',
+          borderRadius: 'var(--radius-md)',
+          padding: '1rem 1.1rem',
+          marginBottom: '.85rem',
+          fontSize: '13px',
+          color: 'var(--dim)',
+          lineHeight: 1.7,
+        }}
+      >
+        <p style={{ margin: '0 0 .5rem' }}><strong style={{ color: 'var(--text)' }}>1. Authority:</strong> You know what you&apos;re talking about. Build it through frameworks, case studies, and specific results — contextual credibility, not general credentials.</p>
+        <p style={{ margin: '0 0 .5rem' }}><strong style={{ color: 'var(--text)' }}>2. Relatability:</strong> You&apos;ve been where they are. Share your origin story, failures, and the messy middle. Let them see themselves in you.</p>
+        <p style={{ margin: '0 0 .5rem' }}><strong style={{ color: 'var(--text)' }}>3. Admiration:</strong> They want to be where you are. Share wins, transformations, and results. Show what&apos;s possible.</p>
+        <p style={{ margin: 0 }}><strong style={{ color: 'var(--text)' }}>4. Unconditional Value:</strong> You give without expectation. Your free content is so good that people feel guilty not buying from you.</p>
+      </div>
+
+      <h2 style={{ fontSize: '16px', fontWeight: 600, color: 'var(--text)', margin: '1.75rem 0 8px' }}>
+        Share the knowledge. Sell the execution.
+      </h2>
+      <div
+        style={{
+          background: 'var(--surface)',
+          border: '1px solid var(--border)',
+          borderRadius: 'var(--radius-md)',
+          padding: '1rem 1.1rem',
+          marginBottom: '1rem',
+          fontSize: '13px',
+          color: 'var(--dim)',
+          lineHeight: 1.7,
+        }}
+      >
+        Give away everything you know for free. Charge for the implementation. When people go to
+        act on what you&apos;ve taught them, they realize execution is overwhelming. That&apos;s
+        exactly where your offer comes in. The knowledge is free. The execution is what you sell.
+      </div>
+
       {/* The Five Stages */}
       <h2 style={{ fontSize: '16px', fontWeight: 600, color: 'var(--text)', margin: '1.75rem 0 8px' }}>
         The Five Stages
