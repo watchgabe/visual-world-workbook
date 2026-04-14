@@ -581,6 +581,7 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
           email={user.email ?? ''}
           name={user.user_metadata?.full_name as string | undefined}
           handle={user.user_metadata?.ig_handle as string | undefined}
+          avatarUrl={avatarUrl}
           onSignOut={signOut}
           onClose={() => setModalOpen(false)}
         />

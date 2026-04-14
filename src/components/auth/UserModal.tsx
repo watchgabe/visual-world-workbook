@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useRef, useCallback } from 'react'
 import { createPortal } from 'react-dom'
 import { createClient } from '@/lib/supabase/client'
 import { useProgress } from '@/context/ProgressContext'
@@ -9,6 +9,7 @@ interface UserModalProps {
   email: string
   name?: string
   handle?: string
+  avatarUrl?: string
   onSignOut: () => void
   onClose: () => void
 }
@@ -20,9 +21,35 @@ const MODULES = [
   { slug: 'launch',           label: '04 — Launch' },
 ] as const
 
-export function UserModal({ email, name: initialName, handle: initialHandle, onSignOut, onClose }: UserModalProps) {
+export function UserModal({ email, name: initialName, handle: initialHandle, avatarUrl: initialAvatarUrl, onSignOut, onClose }: UserModalProps) {
   const [nameVal, setNameVal] = useState(initialName ?? '')
   const [handleVal, setHandleVal] = useState(initialHandle ?? '')
+  const [avatarVal, setAvatarVal] = useState(initialAvatarUrl ?? '')
+  const [avatarUploading, setAvatarUploading] = useState(false)
+  const fileInputRef = useRef<HTMLInputElement>(null)
+
+  const handleAvatarUpload = useCallback(async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (!file) return
+    setAvatarUploading(true)
+    try {
+      const bitmap = await createImageBitmap(file)
+      const canvas = document.createElement('canvas')
+      canvas.width = 160
+      canvas.height = 160
+      const ctx = canvas.getContext('2d')!
+      const size = Math.min(bitmap.width, bitmap.height)
+      const sx = (bitmap.width - size) / 2
+      const sy = (bitmap.height - size) / 2
+      ctx.drawImage(bitmap, sx, sy, size, size, 0, 0, 160, 160)
+      const dataUrl = canvas.toDataURL('image/jpeg', 0.75)
+      const supabase = createClient()
+      await supabase.auth.updateUser({ data: { avatar_url: dataUrl } })
+      setAvatarVal(dataUrl)
+    } finally {
+      setAvatarUploading(false)
+    }
+  }, [])
   const [saving, setSaving] = useState(false)
   const [saved, setSaved] = useState(false)
   const [newPassword, setNewPassword] = useState('')
@@ -143,6 +170,65 @@ export function UserModal({ email, name: initialName, handle: initialHandle, onS
               <div style={{ fontSize: '9px', fontWeight: 700, letterSpacing: '.12em', textTransform: 'uppercase', color: 'var(--dimmer)', marginBottom: '.75rem' }}>
                 Profile
               </div>
+
+              {/* Avatar upload */}
+              <div style={{ display: 'flex', alignItems: 'center', gap: '14px', marginBottom: '1.1rem' }}>
+                <button
+                  onClick={() => fileInputRef.current?.click()}
+                  disabled={avatarUploading}
+                  style={{ background: 'none', border: 'none', padding: 0, cursor: avatarUploading ? 'not-allowed' : 'pointer', flexShrink: 0 }}
+                  aria-label="Change profile photo"
+                >
+                  <div style={{
+                    width: '52px',
+                    height: '52px',
+                    borderRadius: '50%',
+                    background: avatarVal ? 'transparent' : 'var(--orange)',
+                    overflow: 'hidden',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    fontSize: '20px',
+                    fontWeight: 700,
+                    color: '#fff',
+                    opacity: avatarUploading ? 0.5 : 1,
+                    transition: 'opacity .2s',
+                  }}>
+                    {avatarVal
+                      ? <img src={avatarVal} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                      : (initialName?.[0] ?? email?.[0] ?? '?').toUpperCase()
+                    }
+                  </div>
+                </button>
+                <div>
+                  <button
+                    onClick={() => fileInputRef.current?.click()}
+                    disabled={avatarUploading}
+                    style={{
+                      background: 'none',
+                      border: '1px solid var(--border2)',
+                      borderRadius: 'var(--radius-md)',
+                      padding: '6px 12px',
+                      fontSize: '12px',
+                      fontWeight: 600,
+                      color: 'var(--text)',
+                      cursor: avatarUploading ? 'not-allowed' : 'pointer',
+                      fontFamily: 'var(--font)',
+                    }}
+                  >
+                    {avatarUploading ? 'Uploading...' : 'Change Photo'}
+                  </button>
+                  <div style={{ fontSize: '11px', color: 'var(--dimmer)', marginTop: '4px' }}>JPG or PNG, square recommended</div>
+                </div>
+                <input
+                  ref={fileInputRef}
+                  type="file"
+                  accept="image/*"
+                  style={{ display: 'none' }}
+                  onChange={handleAvatarUpload}
+                />
+              </div>
+
               <div style={{ marginBottom: '.7rem' }}>
                 <label style={{ fontSize: '10.5px', fontWeight: 600, color: 'var(--dim)', display: 'block', marginBottom: '4px', textTransform: 'uppercase', letterSpacing: '.05em' }}>
                   Name
