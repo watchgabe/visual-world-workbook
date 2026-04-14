@@ -6,7 +6,7 @@ export default function ContentOverview() {
     <ModuleOverview
       moduleSlug="content"
       moduleNumber="03"
-      title="Create Your Content™"
+      title="Create Your Content"
       description="How to create content that looks premium, builds trust, and gets customers. Each section teaches you the framework, then gives you an exercise to apply it. By the end you'll have a complete personalized content playbook. The creators who win aren't the most talented. They're the most consistent. They understand three things: how to look premium, how to build trust, and how to get customers. This workbook covers all three."
       beginLabel="Begin Workshop 1 — Strategy →"
       roadmap={[

@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useRef, useCallback } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { MODULES, MODULE_SECTIONS } from '@/lib/modules'
@@ -8,6 +8,7 @@ import { ProgressBar } from './ProgressBar'
 import { ProgressRing } from '@/components/workshop/ProgressRing'
 import { ThemeToggle } from './ThemeToggle'
 import { useAuth } from '@/context/AuthContext'
+import { createClient } from '@/lib/supabase/client'
 import { useProgress } from '@/context/ProgressContext'
 import { UserModal } from '@/components/auth/UserModal'
 import type { ModuleSlug } from '@/types/database'
@@ -24,6 +25,36 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
   const [modalOpen, setModalOpen] = useState(false)
   const [expandedSlugs, setExpandedSlugs] = useState<Set<string>>(new Set())
   const [initialized, setInitialized] = useState(false)
+  const [avatarUrl, setAvatarUrl] = useState<string>((user?.user_metadata?.avatar_url as string) || '')
+  const [avatarUploading, setAvatarUploading] = useState(false)
+  const fileInputRef = useRef<HTMLInputElement>(null)
+
+  const handleAvatarUpload = useCallback(async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (!file || !user) return
+    setAvatarUploading(true)
+    try {
+      // Resize to 160×160 JPEG on canvas
+      const bitmap = await createImageBitmap(file)
+      const canvas = document.createElement('canvas')
+      canvas.width = 160
+      canvas.height = 160
+      const ctx = canvas.getContext('2d')!
+      const size = Math.min(bitmap.width, bitmap.height)
+      const sx = (bitmap.width - size) / 2
+      const sy = (bitmap.height - size) / 2
+      ctx.drawImage(bitmap, sx, sy, size, size, 0, 0, 160, 160)
+      const dataUrl = canvas.toDataURL('image/jpeg', 0.75)
+      // Save to user_metadata
+      const supabase = createClient()
+      await supabase.auth.updateUser({ data: { avatar_url: dataUrl } })
+      setAvatarUrl(dataUrl)
+    } finally {
+      setAvatarUploading(false)
+      // Reset so the same file can be re-selected
+      e.target.value = ''
+    }
+  }, [user])
 
   // Only close sidebar on nav clicks when on mobile
   const closeMobile = () => {
@@ -469,28 +500,35 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
               e.currentTarget.style.background = 'transparent'
             }}
           >
+            {/* Avatar — click to upload */}
             <div
+              onClick={(e) => { e.stopPropagation(); fileInputRef.current?.click() }}
+              title="Click to change photo"
               style={{
-                width: '40px',
-                height: '40px',
-                borderRadius: '50%',
-                background: 'var(--bg)',
-                border: '2px solid var(--orange)',
-                color: 'var(--orange)',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                fontSize: '15px',
-                fontWeight: 700,
-                flexShrink: 0,
+                width: '40px', height: '40px', borderRadius: '50%',
+                background: 'var(--bg)', border: '2px solid var(--orange)',
+                color: 'var(--orange)', display: 'flex', alignItems: 'center',
+                justifyContent: 'center', fontSize: '15px', fontWeight: 700,
+                flexShrink: 0, overflow: 'hidden', cursor: 'pointer',
+                opacity: avatarUploading ? 0.5 : 1, position: 'relative',
               }}
             >
-              {user.user_metadata?.full_name
-                ? (user.user_metadata.full_name as string)[0].toUpperCase()
-                : user.email
-                  ? user.email[0].toUpperCase()
-                  : '?'}
+              {avatarUrl ? (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img src={avatarUrl} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+              ) : (
+                user.user_metadata?.full_name
+                  ? (user.user_metadata.full_name as string)[0].toUpperCase()
+                  : user.email ? user.email[0].toUpperCase() : '?'
+              )}
             </div>
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept="image/*"
+              style={{ display: 'none' }}
+              onChange={handleAvatarUpload}
+            />
             <div style={{ flex: 1, minWidth: 0 }}>
               {user.user_metadata?.full_name && (
                 <div
