@@ -8,7 +8,6 @@ import { ProgressBar } from './ProgressBar'
 import { ProgressRing } from '@/components/workshop/ProgressRing'
 import { ThemeToggle } from './ThemeToggle'
 import { useAuth } from '@/context/AuthContext'
-import { createClient } from '@/lib/supabase/client'
 import { useProgress } from '@/context/ProgressContext'
 import { UserModal } from '@/components/auth/UserModal'
 import type { ModuleSlug } from '@/types/database'
@@ -44,14 +43,19 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
       const sx = (bitmap.width - size) / 2
       const sy = (bitmap.height - size) / 2
       ctx.drawImage(bitmap, sx, sy, size, size, 0, 0, 160, 160)
-      const dataUrl = canvas.toDataURL('image/jpeg', 0.75)
-      // Save to user_metadata
-      const supabase = createClient()
-      await supabase.auth.updateUser({ data: { avatar_url: dataUrl } })
-      setAvatarUrl(dataUrl)
+      // Convert to Blob and upload to Supabase Storage via API route
+      const blob: Blob = await new Promise(resolve =>
+        canvas.toBlob(b => resolve(b!), 'image/jpeg', 0.82)
+      )
+      const form = new FormData()
+      form.append('file', blob, 'avatar.jpg')
+      const res = await fetch('/api/avatar', { method: 'POST', body: form })
+      if (res.ok) {
+        const { url } = await res.json() as { url: string }
+        setAvatarUrl(url)
+      }
     } finally {
       setAvatarUploading(false)
-      // Reset so the same file can be re-selected
       e.target.value = ''
     }
   }, [user])

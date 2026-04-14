@@ -42,12 +42,19 @@ export function UserModal({ email, name: initialName, handle: initialHandle, ava
       const sx = (bitmap.width - size) / 2
       const sy = (bitmap.height - size) / 2
       ctx.drawImage(bitmap, sx, sy, size, size, 0, 0, 160, 160)
-      const dataUrl = canvas.toDataURL('image/jpeg', 0.75)
-      const supabase = createClient()
-      await supabase.auth.updateUser({ data: { avatar_url: dataUrl } })
-      setAvatarVal(dataUrl)
+      const blob: Blob = await new Promise(resolve =>
+        canvas.toBlob(b => resolve(b!), 'image/jpeg', 0.82)
+      )
+      const form = new FormData()
+      form.append('file', blob, 'avatar.jpg')
+      const res = await fetch('/api/avatar', { method: 'POST', body: form })
+      if (res.ok) {
+        const { url } = await res.json() as { url: string }
+        setAvatarVal(url)
+      }
     } finally {
       setAvatarUploading(false)
+      e.target.value = ''
     }
   }, [])
   const [saving, setSaving] = useState(false)
