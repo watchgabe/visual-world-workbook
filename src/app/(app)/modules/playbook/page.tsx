@@ -887,6 +887,169 @@ function CollapsibleCreatorPlaybookCard({
   )
 }
 
+type MBCategory = 'colorgrading' | 'fonts' | 'shots' | 'colors'
+const MB_CATS: MBCategory[] = ['colorgrading', 'fonts', 'shots', 'colors']
+const MB_CAT_LABELS: Record<MBCategory, string> = {
+  colorgrading: 'Color Grading',
+  fonts: 'Fonts',
+  shots: 'Shots',
+  colors: 'Colors',
+}
+
+function MoodBoardPlaybookSection({ r }: { r: Record<string, unknown> }) {
+  const g = (k: string) => getStr(r, k)
+  const [mbImages, setMbImages] = useState<Record<MBCategory, string[]>>({
+    colorgrading: [], fonts: [], shots: [], colors: [],
+  })
+  const [mbFilter, setMbFilter] = useState<'all' | MBCategory>('all')
+  const [mbExpanded, setMbExpanded] = useState(true)
+
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem('vww-mb-v2')
+      if (saved) {
+        const d = JSON.parse(saved) as Record<string, unknown>
+        setMbImages(prev => {
+          const next = { ...prev }
+          MB_CATS.forEach(c => {
+            if (Array.isArray(d[c])) next[c] = d[c] as string[]
+          })
+          return next
+        })
+      }
+    } catch { /* ignore */ }
+  }, [])
+
+  const allImages = MB_CATS.flatMap(cat => mbImages[cat].map(src => ({ src, cat })))
+  const filteredImages = mbFilter === 'all' ? allImages : allImages.filter(img => img.cat === mbFilter)
+  const hasMoodImages = allImages.length > 0
+
+  const mbLink = g('vw_mb_link')
+  const isPinterest = !!(mbLink && mbLink.includes('pinterest.com'))
+  const hasAttrs = !!(g('vw_mb_colors') || g('vw_mb_lighting') || g('vw_mb_mood') || g('vw_mb_textures') || g('vw_mb_movie') || g('vw_mb_time') || g('vw_mb_place'))
+
+  if (!hasMoodImages && !isPinterest && !hasAttrs && !mbLink) return null
+
+  return (
+    <GuidelineRow number="2.2" title="Mood Board">
+      {/* Collapsible toggle bar */}
+      <div
+        style={{
+          display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+          marginBottom: mbExpanded ? '12px' : '0',
+          cursor: 'pointer', userSelect: 'none' as const,
+        }}
+        onClick={() => setMbExpanded(v => !v)}
+      >
+        <span style={{ fontSize: '11px', fontWeight: 600, color: 'var(--dim)' }}>
+          {mbExpanded ? 'Hide board' : 'Show board'}
+        </span>
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--dimmer)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
+          style={{ transform: mbExpanded ? 'rotate(0deg)' : 'rotate(-90deg)', transition: 'transform .2s', flexShrink: 0 }}>
+          <polyline points="6 9 12 15 18 9" />
+        </svg>
+      </div>
+
+      {/* Body — always in DOM so @media print can force it open */}
+      <div className="playbook-chapter-body" style={{ display: mbExpanded ? 'block' : 'none' }}>
+
+        {/* Attributes grid */}
+        {hasAttrs && (
+          <div className="pb-2col" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px 28px', marginBottom: '16px' }}>
+            {g('vw_mb_colors')   && <GuidelineCol label="Colors"      value={g('vw_mb_colors')} />}
+            {g('vw_mb_lighting') && <GuidelineCol label="Lighting"    value={g('vw_mb_lighting')} />}
+            {g('vw_mb_mood')     && <GuidelineCol label="Mood"        value={g('vw_mb_mood')} />}
+            {g('vw_mb_textures') && <GuidelineCol label="Textures"    value={g('vw_mb_textures')} />}
+            {g('vw_mb_movie')    && <GuidelineCol label="Film Ref"    value={g('vw_mb_movie')} />}
+            {g('vw_mb_time')     && <GuidelineCol label="Time of Day" value={g('vw_mb_time')} />}
+            {g('vw_mb_place')    && <GuidelineCol label="Place"       value={g('vw_mb_place')} />}
+          </div>
+        )}
+
+        {/* Pinterest embed */}
+        {isPinterest && (
+          <div style={{ marginBottom: '16px' }}>
+            <div style={{ fontSize: '10px', fontWeight: 700, textTransform: 'uppercase' as const, letterSpacing: '.1em', color: 'var(--dimmer)', marginBottom: '8px' }}>
+              Pinterest Board
+            </div>
+            <a
+              href={mbLink.match(/^https?:\/\//) ? mbLink : `https://${mbLink}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{
+                display: 'inline-flex', alignItems: 'center', gap: '6px',
+                fontSize: '12px', fontWeight: 600, color: '#e60023',
+                textDecoration: 'none',
+                background: 'rgba(230,0,35,.06)',
+                border: '1px solid rgba(230,0,35,.2)',
+                borderRadius: 'var(--radius-md)',
+                padding: '7px 12px',
+              }}
+            >
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="#e60023" stroke="none">
+                <path d="M12 0C5.373 0 0 5.373 0 12c0 5.084 3.163 9.426 7.627 11.174-.105-.949-.2-2.405.042-3.441.218-.937 1.407-5.965 1.407-5.965s-.359-.719-.359-1.782c0-1.668.967-2.914 2.171-2.914 1.023 0 1.518.769 1.518 1.69 0 1.029-.655 2.568-.994 3.995-.283 1.194.599 2.169 1.777 2.169 2.133 0 3.772-2.249 3.772-5.495 0-2.873-2.064-4.882-5.012-4.882-3.414 0-5.418 2.561-5.418 5.207 0 1.031.397 2.138.893 2.738a.36.36 0 0 1 .083.345l-.333 1.36c-.053.22-.174.267-.402.161-1.499-.698-2.436-2.889-2.436-4.649 0-3.785 2.75-7.262 7.929-7.262 4.163 0 7.398 2.967 7.398 6.931 0 4.136-2.607 7.464-6.227 7.464-1.216 0-2.359-.632-2.75-1.378l-.748 2.853c-.271 1.043-1.002 2.35-1.492 3.146C9.57 23.812 10.763 24 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0z"/>
+              </svg>
+              Open Pinterest Board
+            </a>
+          </div>
+        )}
+
+        {/* Uploaded images with category filter */}
+        {hasMoodImages && (
+          <div>
+            {/* Filter tabs */}
+            <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap' as const, marginBottom: '10px' }}>
+              {(['all', ...MB_CATS] as const).map(cat => (
+                <button
+                  key={cat}
+                  onClick={() => setMbFilter(cat)}
+                  style={{
+                    fontSize: '10px', fontWeight: 600, padding: '3px 10px',
+                    borderRadius: '999px',
+                    border: '1px solid',
+                    borderColor: mbFilter === cat ? 'var(--orange)' : 'var(--border)',
+                    background: mbFilter === cat ? 'var(--orange-tint)' : 'transparent',
+                    color: mbFilter === cat ? 'var(--orange)' : 'var(--dim)',
+                    cursor: 'pointer',
+                    fontFamily: 'var(--font)',
+                    textTransform: 'uppercase' as const,
+                    letterSpacing: '.06em',
+                  }}
+                >
+                  {cat === 'all' ? `All (${allImages.length})` : `${MB_CAT_LABELS[cat]} (${mbImages[cat].length})`}
+                </button>
+              ))}
+            </div>
+
+            {/* Image mosaic */}
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '6px' }}>
+              {filteredImages.map((img, i) => (
+                <div key={i} style={{ position: 'relative', aspectRatio: '1', borderRadius: '6px', overflow: 'hidden', background: 'var(--border)' }}>
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={img.src}
+                    alt=""
+                    style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
+                  />
+                  <div style={{
+                    position: 'absolute', bottom: '4px', left: '4px',
+                    fontSize: '8px', fontWeight: 700, textTransform: 'uppercase' as const,
+                    letterSpacing: '.06em', color: '#fff',
+                    background: 'rgba(0,0,0,.55)', borderRadius: '3px', padding: '2px 5px',
+                    backdropFilter: 'blur(4px)',
+                  }}>
+                    {MB_CAT_LABELS[img.cat as MBCategory]}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+      </div>
+    </GuidelineRow>
+  )
+}
+
 function VisualWorldChapter({ r }: { r: Record<string, unknown> }) {
   const g = (k: string) => getStr(r, k)
 
@@ -925,8 +1088,10 @@ function VisualWorldChapter({ r }: { r: Record<string, unknown> }) {
         </GuidelineRow>
       )}
 
+      <MoodBoardPlaybookSection r={r} />
+
       {hasColors && (
-        <GuidelineRow number="2.2" title="Color Palette">
+        <GuidelineRow number="2.3" title="Color Palette">
           {colorName && (
             <div style={{ fontSize: '10px', fontWeight: 600, textTransform: 'uppercase' as const, letterSpacing: '.08em', color: 'var(--dim)', marginBottom: '10px' }}>
               {colorName}
@@ -942,7 +1107,7 @@ function VisualWorldChapter({ r }: { r: Record<string, unknown> }) {
       )}
 
       {(primaryFont || bodyFont) && (
-        <GuidelineRow number="2.3" title="Typography">
+        <GuidelineRow number="2.4" title="Typography">
           <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
             {primaryFont && <FontSpecimen font={primaryFont} label="Primary Typeface" />}
             {bodyFont    && <FontSpecimen font={bodyFont}    label="Body Typeface" />}
@@ -951,7 +1116,7 @@ function VisualWorldChapter({ r }: { r: Record<string, unknown> }) {
       )}
 
       {hasPersp && (
-        <GuidelineRow number="2.4" title="Perspective">
+        <GuidelineRow number="2.5" title="Perspective">
           {settingStatement && <GuidelineHero text={settingStatement} />}
           {moodStatement    && <GuidelineQuote text={moodStatement} />}
           <div className="pb-2col" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px 28px' }}>
@@ -966,7 +1131,7 @@ function VisualWorldChapter({ r }: { r: Record<string, unknown> }) {
       )}
 
       {hasDesign && (
-        <GuidelineRow number="2.5" title="Design Details">
+        <GuidelineRow number="2.6" title="Design Details">
           <div className="pb-2col" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px 28px' }}>
             <GuidelineCol label="Signature Objects" value={g('vw_shot_e4_objects')} />
             <GuidelineCol label="Wardrobe"          value={g('vw_shot_e4_wardrobe')} />
@@ -977,7 +1142,7 @@ function VisualWorldChapter({ r }: { r: Record<string, unknown> }) {
       )}
 
       {hasDiff && (
-        <GuidelineRow number="2.6" title="Visual Identity">
+        <GuidelineRow number="2.7" title="Visual Identity">
           <div className="pb-2col" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px 28px' }}>
             <GuidelineCol label="What Makes You Different" value={g('vw_ca_different')} />
             <GuidelineCol label="What You Own"             value={g('vw_ca_own')} />
