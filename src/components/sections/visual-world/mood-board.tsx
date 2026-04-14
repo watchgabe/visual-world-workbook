@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState, useCallback } from 'react'
 import { useForm } from 'react-hook-form'
 import { createClient } from '@/lib/supabase/client'
 import { useAuth } from '@/context/AuthContext'
@@ -8,6 +8,7 @@ import { WorkshopInput } from '@/components/workshop/WorkshopInput'
 import { OptionSelector } from '@/components/workshop/OptionSelector'
 import { SectionWrapper } from '@/components/workshop/SectionWrapper'
 import { MODULE_SECTIONS } from '@/lib/modules'
+import { saveField } from '@/lib/saveField'
 
 const MODULE_SLUG = 'visual-world' as const
 const SECTION_INDEX = 2
@@ -52,9 +53,61 @@ export default function MoodBoard() {
   })
   const [mbDragOver, setMbDragOver] = useState<MBCategory | null>(null)
   const [mosaicFilter, setMosaicFilter] = useState<'all' | MBCategory>('all')
+  const [mbUploading, setMbUploading] = useState<Set<MBCategory>>(new Set())
+  const [mbMigrating, setMbMigrating] = useState(false)
   const mbFileInputRefs = useRef<Record<MBCategory, HTMLInputElement | null>>({
     colorgrading: null, fonts: null, shots: null, colors: null,
   })
+
+  // ── Compress a File/Blob to max 900px JPEG ────────────
+  const compressImage = useCallback(async (file: File | Blob): Promise<Blob> => {
+    const bitmap = await createImageBitmap(file)
+    const MAX = 900
+    let { width, height } = bitmap
+    if (width > MAX || height > MAX) {
+      if (width >= height) { height = Math.round(height * MAX / width); width = MAX }
+      else { width = Math.round(width * MAX / height); height = MAX }
+    }
+    const canvas = document.createElement('canvas')
+    canvas.width = width; canvas.height = height
+    canvas.getContext('2d')!.drawImage(bitmap, 0, 0, width, height)
+    return new Promise(resolve => canvas.toBlob(b => resolve(b!), 'image/jpeg', 0.82))
+  }, [])
+
+  // ── Persist URL list to Supabase ──────────────────────
+  const saveImages = useCallback((images: Record<MBCategory, string[]>) => {
+    if (!user) return
+    saveField(user.id, MODULE_SLUG, 'vw_mb_images', JSON.stringify(images))
+  }, [user])
+
+  // ── Migrate localStorage images to Supabase Storage ──
+  const migrateFromLocalStorage = useCallback(async (parsed: Record<string, unknown>) => {
+    setMbMigrating(true)
+    const newImages: Record<MBCategory, string[]> = { colorgrading: [], fonts: [], shots: [], colors: [] }
+    for (const cat of MB_CATS) {
+      const imgs = parsed[cat]
+      if (!Array.isArray(imgs)) continue
+      for (const src of imgs as string[]) {
+        if (!src.startsWith('data:')) continue
+        try {
+          const blob = await (await fetch(src)).blob()
+          const compressed = await compressImage(blob)
+          const form = new FormData()
+          form.append('file', compressed, 'image.jpg')
+          form.append('category', cat)
+          const res = await fetch('/api/mood-board', { method: 'POST', body: form })
+          if (res.ok) {
+            const { url } = await res.json() as { url: string }
+            newImages[cat].push(url)
+          }
+        } catch { /* skip failed images */ }
+      }
+    }
+    setMbImages(newImages)
+    saveImages(newImages)
+    setMbMigrating(false)
+    try { localStorage.removeItem(MB_KEY) } catch { /* ignore */ }
+  }, [compressImage, saveImages])
 
   // ── Load from Supabase on mount ───────────────────────
   useEffect(() => {
@@ -71,38 +124,35 @@ export default function MoodBoard() {
       .then(({ data }: { data: { responses: Record<string, string> } | null }) => {
         if (cancelled || !data?.responses) return
         const saved = data.responses as Record<string, string>
+        // Load text fields
         Object.entries(saved).forEach(([key, val]) => {
           if (typeof val === 'string') (setValue as (k: string, v: string) => void)(key, val)
         })
+        // Load image URLs
+        const imagesJson = saved['vw_mb_images']
+        if (imagesJson) {
+          try {
+            const parsed = JSON.parse(imagesJson) as Record<string, unknown>
+            setMbImages(prev => {
+              const next = { ...prev }
+              MB_CATS.forEach(c => { if (Array.isArray(parsed[c])) next[c] = parsed[c] as string[] })
+              return next
+            })
+          } catch { /* ignore corrupt JSON */ }
+        } else {
+          // No Supabase images yet — check localStorage and migrate if present
+          try {
+            const lsRaw = localStorage.getItem(MB_KEY)
+            if (lsRaw) {
+              const parsed = JSON.parse(lsRaw) as Record<string, unknown>
+              const hasData = MB_CATS.some(c => Array.isArray(parsed[c]) && (parsed[c] as unknown[]).length > 0)
+              if (hasData) migrateFromLocalStorage(parsed)
+            }
+          } catch { /* no localStorage data */ }
+        }
       })
     return () => { cancelled = true }
-  }, [user, setValue])
-
-  // ── Load mood board from localStorage on mount ────────
-  useEffect(() => {
-    try {
-      const saved = localStorage.getItem(MB_KEY)
-      if (saved) {
-        const d = JSON.parse(saved)
-        setMbImages(prev => {
-          const next = { ...prev }
-          MB_CATS.forEach(c => {
-            if (d[c] && Array.isArray(d[c])) next[c] = d[c]
-          })
-          return next
-        })
-      }
-    } catch {}
-  }, [])
-
-  // ── Save mood board to localStorage on change ─────────
-  useEffect(() => {
-    try {
-      localStorage.setItem(MB_KEY, JSON.stringify(mbImages))
-    } catch {
-      console.warn('Mood board save failed — localStorage may be full')
-    }
-  }, [mbImages])
+  }, [user, setValue, migrateFromLocalStorage])
 
   // ── Pinterest embed effect ─────────────────────────────
   useEffect(() => {
@@ -139,33 +189,51 @@ export default function MoodBoard() {
   }, [watch('vw_mb_link')])
 
   // ── Mood Board Handlers ───────────────────────────────
-  function addImages(category: MBCategory, files: File[]) {
+  async function addImages(category: MBCategory, files: File[]) {
     const images = files.filter(f => f.type.startsWith('image/'))
     if (!images.length) return
-    images.forEach(file => {
-      const reader = new FileReader()
-      reader.onload = () => {
-        setMbImages(prev => ({
-          ...prev,
-          [category]: [...prev[category], reader.result as string],
-        }))
-      }
-      reader.readAsDataURL(file)
-    })
+    setMbUploading(prev => new Set([...prev, category]))
+    for (const file of images) {
+      try {
+        const compressed = await compressImage(file)
+        const form = new FormData()
+        form.append('file', compressed, 'image.jpg')
+        form.append('category', category)
+        const res = await fetch('/api/mood-board', { method: 'POST', body: form })
+        if (res.ok) {
+          const { url } = await res.json() as { url: string }
+          setMbImages(prev => {
+            const next = { ...prev, [category]: [...prev[category], url] }
+            saveImages(next)
+            return next
+          })
+        }
+      } catch { /* skip failed images */ }
+    }
+    setMbUploading(prev => { const s = new Set(prev); s.delete(category); return s })
   }
 
   function handleMbDrop(category: MBCategory, e: React.DragEvent) {
     e.preventDefault()
     setMbDragOver(null)
-    const files = Array.from(e.dataTransfer.files)
-    addImages(category, files)
+    addImages(category, Array.from(e.dataTransfer.files))
   }
 
   function removeImage(category: MBCategory, index: number) {
-    setMbImages(prev => ({
-      ...prev,
-      [category]: prev[category].filter((_, i) => i !== index),
-    }))
+    const url = mbImages[category][index]
+    setMbImages(prev => {
+      const next = { ...prev, [category]: prev[category].filter((_, i) => i !== index) }
+      saveImages(next)
+      return next
+    })
+    // Delete from storage (fire-and-forget) — skip base64 leftovers
+    if (url && url.startsWith('http')) {
+      fetch('/api/mood-board', {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ url }),
+      }).catch(() => { /* ignore */ })
+    }
   }
 
   function handleMbFileInput(category: MBCategory, e: React.ChangeEvent<HTMLInputElement>) {
@@ -314,10 +382,10 @@ export default function MoodBoard() {
                 <span
                   style={{
                     fontSize: '10px',
-                    color: imgs.length >= 10 ? 'var(--green-text, #4caf50)' : 'var(--dimmer)',
+                    color: mbUploading.has(cat) ? 'var(--orange)' : imgs.length >= 10 ? 'var(--green-text, #4caf50)' : 'var(--dimmer)',
                   }}
                 >
-                  {imgs.length}
+                  {mbUploading.has(cat) ? 'Uploading…' : imgs.length}
                 </span>
               </div>
 
@@ -450,9 +518,17 @@ export default function MoodBoard() {
             alignItems: 'center',
           }}
         >
-          <span>{mbTotal} image{mbTotal === 1 ? '' : 's'} added</span>
+          <span>{mbMigrating ? 'Migrating images to cloud…' : `${mbTotal} image${mbTotal === 1 ? '' : 's'} added`}</span>
           <button
-            onClick={() => setMbImages({ colorgrading: [], fonts: [], shots: [], colors: [] })}
+            onClick={() => {
+              const allUrls = MB_CATS.flatMap(c => mbImages[c]).filter(u => u.startsWith('http'))
+              const empty = { colorgrading: [], fonts: [], shots: [], colors: [] as string[] } as Record<MBCategory, string[]>
+              setMbImages(empty)
+              saveImages(empty)
+              allUrls.forEach(url =>
+                fetch('/api/mood-board', { method: 'DELETE', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ url }) }).catch(() => {})
+              )
+            }}
             style={{
               background: 'none',
               border: 'none',

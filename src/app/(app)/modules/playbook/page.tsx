@@ -898,27 +898,18 @@ const MB_CAT_LABELS: Record<MBCategory, string> = {
 
 function MoodBoardPlaybookSection({ r }: { r: Record<string, unknown> }) {
   const g = (k: string) => getStr(r, k)
-  const [mbImages, setMbImages] = useState<Record<MBCategory, string[]>>({
-    colorgrading: [], fonts: [], shots: [], colors: [],
-  })
   const [mbFilter, setMbFilter] = useState<'all' | MBCategory>('all')
   const [mbExpanded, setMbExpanded] = useState(true)
 
-  useEffect(() => {
-    try {
-      const saved = localStorage.getItem('vww-mb-v2')
-      if (saved) {
-        const d = JSON.parse(saved) as Record<string, unknown>
-        setMbImages(prev => {
-          const next = { ...prev }
-          MB_CATS.forEach(c => {
-            if (Array.isArray(d[c])) next[c] = d[c] as string[]
-          })
-          return next
-        })
-      }
-    } catch { /* ignore */ }
-  }, [])
+  // Parse image URLs from Supabase (saved as vw_mb_images JSON field)
+  const mbImages: Record<MBCategory, string[]> = { colorgrading: [], fonts: [], shots: [], colors: [] }
+  try {
+    const raw = r['vw_mb_images']
+    if (typeof raw === 'string' && raw.trim()) {
+      const parsed = JSON.parse(raw) as Record<string, unknown>
+      MB_CATS.forEach(c => { if (Array.isArray(parsed[c])) mbImages[c] = parsed[c] as string[] })
+    }
+  } catch { /* ignore */ }
 
   const allImages = MB_CATS.flatMap(cat => mbImages[cat].map(src => ({ src, cat })))
   const filteredImages = mbFilter === 'all' ? allImages : allImages.filter(img => img.cat === mbFilter)
