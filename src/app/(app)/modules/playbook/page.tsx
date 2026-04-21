@@ -923,8 +923,9 @@ function MoodBoardPlaybookSection({ r }: { r: Record<string, unknown> }) {
 
   return (
     <GuidelineRow number="2.2" title="Mood Board">
-      {/* Collapsible toggle bar */}
+      {/* Collapsible toggle bar — hidden in print */}
       <div
+        className="pb-mb-toggle"
         style={{
           display: 'flex', alignItems: 'center', justifyContent: 'space-between',
           marginBottom: mbExpanded ? '12px' : '0',
@@ -942,7 +943,7 @@ function MoodBoardPlaybookSection({ r }: { r: Record<string, unknown> }) {
       </div>
 
       {/* Body — always in DOM so @media print can force it open */}
-      <div className="playbook-chapter-body" style={{ display: mbExpanded ? 'block' : 'none' }}>
+      <div className="playbook-chapter-body pb-mb-body" style={{ display: mbExpanded ? 'block' : 'none' }}>
 
         {/* Attributes grid */}
         {hasAttrs && (
@@ -988,8 +989,8 @@ function MoodBoardPlaybookSection({ r }: { r: Record<string, unknown> }) {
         {/* Uploaded images with category filter */}
         {hasMoodImages && (
           <div>
-            {/* Filter tabs */}
-            <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap' as const, marginBottom: '10px' }}>
+            {/* Filter tabs — hidden in print */}
+            <div className="pb-mb-filters" style={{ display: 'flex', gap: '6px', flexWrap: 'wrap' as const, marginBottom: '10px' }}>
               {(['all', ...MB_CATS] as const).map(cat => (
                 <button
                   key={cat}
@@ -1463,6 +1464,7 @@ function ExpandableMetaCell({ label, value, placeholder, maxLines = 3 }: { label
         {label}
       </div>
       <div
+        className="pb-meta-value"
         style={{
           fontSize: '12px', fontWeight: value ? 700 : 400, lineHeight: 1.4,
           color: value ? 'var(--text)' : 'var(--dimmer)',
@@ -1561,7 +1563,7 @@ export default function PlaybookPage() {
     <div className="pb-wrapper" style={{ width: '100%', padding: '2rem 2rem 5rem' }}>
 
       {/* ── COVER ── */}
-      <div style={{ textAlign: 'left', paddingTop: '2.5rem', marginBottom: '0' }}>
+      <div className="pb-cover" style={{ textAlign: 'left', paddingTop: '2.5rem', marginBottom: '0' }}>
         <div style={{
           fontSize: '9px', fontWeight: 700, letterSpacing: '.18em',
           textTransform: 'uppercase', color: 'var(--orange)', marginBottom: '.75rem',
@@ -1588,8 +1590,8 @@ export default function PlaybookPage() {
           </div>
         </div>
 
-        {/* Chapter nav */}
-        <div className="playbook-grid-responsive" style={{
+        {/* Chapter nav — hidden in print (not useful in PDF) */}
+        <div data-print-hide className="playbook-grid-responsive" style={{
           display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)',
           columnGap: '1rem', marginTop: '1.25rem', marginBottom: '3rem',
         }}>
