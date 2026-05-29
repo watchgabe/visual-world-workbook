@@ -5,22 +5,27 @@
 
 /* ─── DESIGN TOKENS — DARK (default, per D-08) ─── */
 :root {
-  --bg: #0a0a0a;
-  --surface: #111111;
-  --card: #161616;
-  --border: #1f1f1f;
-  --border2: #2a2a2a;
+  --bg: #061410;
+  --surface: #091a14;
+  --card: #091a14;
+  --border: #0f261c;
+  --border2: #152b20;
   --text: #ffffff;
-  --dim: #b0b0b0;
-  --dimmer: #555555;
-  --orange: #f0601b;
-  --orange-hover: #ff6d28;
-  --orange-tint: rgba(240, 96, 27, 0.1);
-  --orange-border: rgba(240, 96, 27, 0.28);
-  --orange-dark: #ff8050;
-  --green-bg: rgba(61, 184, 100, 0.1);
+  --dim: rgba(255,255,255,0.55);
+  --dimmer: rgba(255,255,255,0.30);
+  --orange: #ee663e;
+  --orange-hover: #f57a55;
+  --orange-tint: rgba(238, 102, 62, 0.08);
+  --orange-border: rgba(238, 102, 62, 0.28);
+  --orange-dark: #f57a55;
+  --green-bg: rgba(61, 184, 100, 0.07);
   --green-text: #5dcaa5;
   --green-border: rgba(93, 202, 165, 0.3);
+  --btn-bg: #ffffff;
+  --btn-text: #061410;
+  --foot: rgba(255,255,255,0.15);
+  --input-bg: #040e09;
+  --rule: rgba(255,255,255,0.08);
   --radius-lg: 10px;
   --radius-md: 6px;
   --font: 'Helvetica Neue', Helvetica, Arial, sans-serif;
@@ -31,20 +36,26 @@
 
 /* ─── TOKENS — LIGHT OVERRIDE ─── */
 [data-theme='light'] {
-  --bg: #f7f6f4;
-  --surface: #edecea;
-  --card: transparent;
-  --border: #ccc9c2;
-  --border2: #b8b4ac;
-  --text: #0a0a0a;
-  --dim: #404040;
-  --dimmer: #888888;
-  --orange-tint: #fef0e8;
-  --orange-border: #f4b89a;
-  --orange-dark: #b84410;
+  --bg: #f5f0ea;
+  --surface: #ece6de;
+  --card: #ece6de;
+  --border: #d8d0c6;
+  --border2: #c8bfb4;
+  --text: #061410;
+  --dim: #7a7570;
+  --dimmer: #9a9490;
+  --orange: #ee663e;
+  --orange-tint: rgba(238,102,62,0.06);
+  --orange-border: rgba(238,102,62,0.22);
+  --orange-dark: #c9502a;
   --green-bg: #e6f5ef;
   --green-text: #085041;
   --green-border: #5dcaa5;
+  --btn-bg: #061410;
+  --btn-text: #ffffff;
+  --foot: #b0a89e;
+  --input-bg: #f5f0ea;
+  --rule: rgba(6,20,16,0.10);
 }
 
 /* ─── BASE ─── */

@@ -1660,13 +1660,20 @@ export default function PlaybookPage() {
         padding: '1.75rem 1.5rem',
         textAlign: 'center',
       }}>
-        <div style={{ fontSize: '18px', fontWeight: 700, color: 'var(--text)', marginBottom: '.6rem' }}>
-          Want help implementing your brand?
+        <div style={{
+          fontSize: '9px', fontWeight: 700, letterSpacing: '.14em',
+          textTransform: 'uppercase', color: 'var(--orange)', marginBottom: '.5rem',
+          fontFamily: "'Space Mono', monospace",
+        }}>
+          FSCreative&#8482;
+        </div>
+        <div style={{ fontSize: '18px', fontWeight: 700, color: 'var(--text)', marginBottom: '.6rem', lineHeight: 1.3 }}>
+          You already have the business. Now get the brand that matches it.
         </div>
         <p style={{ fontSize: '13px', color: 'var(--dim)', lineHeight: 1.65, marginBottom: '1.25rem' }}>
-          The Brand Launch Sprint&#8482; is a focused 30-day execution environment where you install
-          your complete premium personal brand with direct creative direction from Gabe.
-          Weekly live sessions. Direct feedback on every step. A community of creators doing the work alongside you.
+          FSCreative is a 60-day done-with-you build. I install the strategy, visual identity,
+          content system, and funnel around your existing offer. Frictionless OS&#8482; is the operating system
+          you get access to inside. 5 founding spots at $5K.
         </p>
         <a
           href="https://fscreative.live"
@@ -1674,30 +1681,122 @@ export default function PlaybookPage() {
           rel="noreferrer"
           style={{
             display: 'inline-block',
-            background: 'var(--orange)', color: '#fff',
-            fontSize: '13px', fontWeight: 600,
-            padding: '.7rem 1.5rem',
-            borderRadius: 'var(--radius-md)',
+            background: 'transparent',
+            border: '1px solid var(--orange)',
+            color: 'var(--orange)',
+            fontSize: '11px', fontWeight: 600,
+            padding: '.6rem 1.5rem',
+            borderRadius: '100px',
             textDecoration: 'none',
+            fontFamily: "'Space Mono', monospace",
+            letterSpacing: '.06em',
+            textTransform: 'uppercase',
+            transition: 'background 0.2s, color 0.2s',
           }}
         >
-          Join Brand Launch Sprint&#8482; &#8594;
+          Book a Strategy Call &#8594;
         </a>
       </div>
 
-      {/* ── PRINT BUTTON ── */}
+      {/* ── DOWNLOAD MD BUTTON ── */}
       <button
-        onClick={() => window.print()}
+        onClick={() => {
+          const lines: string[] = []
+          lines.push('# Brand Playbook')
+          lines.push(`**Creator:** ${brandName}`)
+          if (handle) lines.push(`**Handle:** @${handle}`)
+          if (knownFor) lines.push(`**Known For:** ${knownFor}`)
+          lines.push('')
+
+          // Brand Foundation
+          lines.push('## Module 01 — Brand Foundation')
+          const bfFields: [string, string][] = [
+            ['Core Mission', getStr(bf, 'bf_core_mission')],
+            ['Origin Story', getStr(bf, 'bf_origin')],
+            ['Avatar', getStr(bf, 'bf_avatar')],
+            ['Pillar 1', getStr(bf, 'bf_pillar1')],
+            ['Pillar 2', getStr(bf, 'bf_pillar2')],
+            ['Pillar 3', getStr(bf, 'bf_pillar3')],
+            ['Values', getStr(bf, 'bf_values')],
+            ['Competitors', getStr(bf, 'bf_competitors')],
+          ]
+          for (const [label, val] of bfFields) {
+            if (val) lines.push(`**${label}:** ${val}`)
+          }
+          lines.push('')
+
+          // Visual World
+          lines.push('## Module 02 — Your Visual World')
+          const vwFields: [string, string][] = [
+            ['Color Palette', getStr(vw, 'vw_cp_primary')],
+            ['Typography', getStr(vw, 'vw_typography')],
+            ['Shot Style', getStr(vw, 'vw_shot_style')],
+            ['Editing Style', getStr(vw, 'vw_editing_style')],
+          ]
+          for (const [label, val] of vwFields) {
+            if (val) lines.push(`**${label}:** ${val}`)
+          }
+          lines.push('')
+
+          // Content
+          lines.push('## Module 03 — Create Your Content')
+          const ctFields: [string, string][] = [
+            ['Content Pillars', getStr(ct, 'ct_pillars')],
+            ['Storytelling Style', getStr(ct, 'ct_story_style')],
+            ['Formats', getStr(ct, 'ct_formats')],
+            ['Trust & Monetisation', getStr(ct, 'ct_tm_trust')],
+          ]
+          for (const [label, val] of ctFields) {
+            if (val) lines.push(`**${label}:** ${val}`)
+          }
+          lines.push('')
+
+          // Launch
+          lines.push('## Module 04 — Launch')
+          const laFields: [string, string][] = [
+            ['Bio', getStr(la, 'la_bio_text')],
+            ['Lead Magnet', getStr(la, 'la_lm_title')],
+            ['Funnel Strategy', getStr(la, 'la_funnel_strategy')],
+            ['Launch Content', getStr(la, 'la_lc_hook')],
+            ['ManyChat Flow', getStr(la, 'la_manychat_flow')],
+            ['90-Day Goal', goal90],
+          ]
+          for (const [label, val] of laFields) {
+            if (val) lines.push(`**${label}:** ${val}`)
+          }
+          lines.push('')
+          lines.push('---')
+          lines.push('*Generated by FSCreative™ Brand Playbook — fscreative.live*')
+
+          const md = lines.join('\n')
+          const blob = new Blob([md], { type: 'text/markdown' })
+          const url = URL.createObjectURL(blob)
+          const a = document.createElement('a')
+          a.href = url
+          a.download = `${(brandName || 'brand-playbook').toLowerCase().replace(/\s+/g, '-')}-playbook.md`
+          a.click()
+          URL.revokeObjectURL(url)
+        }}
         className="print-btn"
         style={{
           display: 'inline-flex', alignItems: 'center', gap: '6px',
-          padding: '10px 18px', fontSize: '12px', fontWeight: 600,
-          color: 'var(--text)', background: 'var(--surface)',
-          border: '1px solid var(--border)', borderRadius: 'var(--radius-md)',
-          cursor: 'pointer', fontFamily: 'var(--font)', marginTop: '2rem',
+          padding: '10px 18px', fontSize: '11px', fontWeight: 600,
+          color: 'var(--dim)', background: 'var(--surface)',
+          border: '1px solid var(--border)', borderRadius: '100px',
+          cursor: 'pointer', fontFamily: "'Space Mono', monospace",
+          letterSpacing: '.08em', textTransform: 'uppercase',
+          marginTop: '2rem', transition: 'border-color 0.2s, color 0.2s',
+        }}
+        onMouseEnter={e => {
+          e.currentTarget.style.borderColor = 'var(--orange)'
+          e.currentTarget.style.color = 'var(--orange)'
+        }}
+        onMouseLeave={e => {
+          e.currentTarget.style.borderColor = 'var(--border)'
+          e.currentTarget.style.color = 'var(--dim)'
         }}
       >
-        Print / Save as PDF
+        Download .md
       </button>
     </div>
   )

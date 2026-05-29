@@ -21,7 +21,7 @@ export default async function RootLayout({
     <html lang="en" data-theme={theme} suppressHydrationWarning>
       <head>
         <link
-          href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;900&display=swap"
+          href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;900&family=Instrument+Serif:ital@0;1&family=Space+Mono:wght@400;700&display=swap"
           rel="stylesheet"
         />
       </head>

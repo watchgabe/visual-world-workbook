@@ -275,16 +275,16 @@ export default function WelcomePage() {
           textTransform: 'uppercase',
         }}
       >
-        &#8220;Building a premium personal brand is not about being perfect. It&#8217;s about showing up intentionally. Consistently. With a clear point of view and a genuine desire to help the people you serve. The creators who win are the most consistent. Your personal brand already exists &#8212; we just need to add some clarity and systems to amplify it. Let&#8217;s get after it.&#8221;
+        &#8220;Building a premium personal brand is not about being perfect. It&#8217;s about showing up intentionally. Consistently. With a clear point of view and a genuine desire to help the people you serve. The creatives who win are the most consistent. Your personal brand already exists &#8212; we just need to add some clarity and systems to amplify it. Let&#8217;s get after it.&#8221;
       </h2>
 
-      {/* Brand Launch Sprint CTA */}
+      {/* FSCreative CTA */}
       <div
         style={{
-          background: 'var(--surface)',
+          background: 'var(--orange-tint)',
           borderWidth: '1px',
           borderStyle: 'solid',
-          borderColor: 'var(--border)',
+          borderColor: 'var(--orange-border)',
           borderRadius: 'var(--radius-lg)',
           padding: '1.25rem 1.5rem',
           textAlign: 'center',
@@ -293,15 +293,16 @@ export default function WelcomePage() {
       >
         <div
           style={{
-            fontSize: '10px',
+            fontSize: '9px',
             fontWeight: 700,
             textTransform: 'uppercase',
-            letterSpacing: '.12em',
+            letterSpacing: '.14em',
             color: 'var(--orange)',
             marginBottom: '6px',
+            fontFamily: "'Space Mono', monospace",
           }}
         >
-          Want help implementing?
+          FSCreative&#8482;
         </div>
         <div
           style={{
@@ -309,9 +310,10 @@ export default function WelcomePage() {
             fontWeight: 700,
             color: 'var(--text)',
             marginBottom: '6px',
+            lineHeight: 1.3,
           }}
         >
-          Brand Launch Sprint&#8482;
+          You already have the business. Now get the brand that matches it.
         </div>
         <div
           style={{
@@ -321,7 +323,7 @@ export default function WelcomePage() {
             marginBottom: '14px',
           }}
         >
-          A focused 30-day execution environment where you install your complete premium personal brand with direct creative direction from Gabe. Weekly live sessions. Direct feedback on every step. A community of creators doing the work alongside you.
+          FSCreative is a 60-day done-with-you build. I install the strategy, visual identity, content system, and funnel around your existing offer. Frictionless OS&#8482; is the operating system inside. 5 founding spots at $5K.
         </div>
         <a
           href="https://fscreative.live"
@@ -331,21 +333,23 @@ export default function WelcomePage() {
             display: 'inline-flex',
             alignItems: 'center',
             gap: '6px',
-            padding: '9px 18px',
+            padding: '8px 18px',
             borderWidth: '1px',
             borderStyle: 'solid',
-            borderColor: 'var(--border2)',
-            borderRadius: 'var(--radius-md)',
-            background: 'var(--card)',
-            color: 'var(--text)',
-            fontSize: '13px',
-            fontWeight: 500,
+            borderColor: 'var(--orange)',
+            borderRadius: '100px',
+            background: 'transparent',
+            color: 'var(--orange)',
+            fontSize: '11px',
+            fontWeight: 600,
             cursor: 'pointer',
-            fontFamily: 'var(--font)',
+            fontFamily: "'Space Mono', monospace",
+            letterSpacing: '.06em',
+            textTransform: 'uppercase',
             textDecoration: 'none',
           }}
         >
-          Let&#8217;s build this together.
+          Book a Strategy Call &#8594;
         </a>
       </div>
 
