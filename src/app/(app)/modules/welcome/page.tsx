@@ -18,16 +18,15 @@ export default function WelcomePage() {
       </div>
       <h1
         style={{
-          fontFamily: 'var(--font-num)',
-          fontSize: 'clamp(2.2rem, 5vw, 3.2rem)',
-          fontWeight: 900,
-          letterSpacing: '-.01em',
-          lineHeight: 1.05,
-          textTransform: 'uppercase',
+          fontFamily: 'Helvetica Neue, Helvetica, Arial, sans-serif',
+          fontSize: 'clamp(22px, 3vw, 32px)',
+          fontWeight: 700,
+          letterSpacing: '-0.02em',
+          lineHeight: 1.1,
           marginBottom: '1rem',
         }}
       >
-        The Brand Launch Playbook&#8482;
+        Brand Launch Playbook
       </h1>
       <p
         style={{
