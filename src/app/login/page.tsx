@@ -37,35 +37,43 @@ export default async function LoginPage({
         >
           {/* Brand header */}
           <div style={{ marginBottom: '1.75rem' }}>
-            <div
-              style={{
-                fontSize: '10px',
-                fontWeight: 700,
-                color: 'var(--orange)',
-                letterSpacing: '.12em',
-                textTransform: 'uppercase',
-                marginBottom: '4px',
-              }}
-            >
-              FSCreative&#8482;
+            <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '10px' }}>
+              {/* Orange icon */}
+              <img
+                src="https://res.cloudinary.com/dy0kchxh8/image/upload/v1778548956/Artwork5_bbba8026-9c77-4162-a796-822b2558fb9f_wfvsrh.png"
+                alt="FSCreative"
+                style={{ width: '30px', height: '30px', objectFit: 'contain', flexShrink: 0 }}
+              />
+              {/* Wordmark */}
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '1px' }}>
+                <span style={{
+                  fontSize: '17px',
+                  fontWeight: 700,
+                  color: 'var(--text)',
+                  lineHeight: 1,
+                  fontFamily: 'Helvetica Neue, Helvetica, Arial, sans-serif',
+                  letterSpacing: '-0.01em',
+                }}>
+                  FSCreative
+                </span>
+                <span style={{
+                  fontSize: '8px',
+                  fontWeight: 400,
+                  color: 'var(--dimmer)',
+                  letterSpacing: '.14em',
+                  textTransform: 'uppercase',
+                  fontFamily: "'Space Mono', monospace",
+                  lineHeight: 1,
+                }}>
+                  Brand Playbook
+                </span>
+              </div>
             </div>
             <div
               style={{
-                fontSize: '15px',
-                fontWeight: 700,
-                color: 'var(--text)',
-                lineHeight: 1.35,
-                marginBottom: '10px',
-              }}
-            >
-              The Brand Launch Playbook&#8482;
-            </div>
-            <div
-              style={{
-                height: '2px',
-                background: 'var(--orange)',
+                height: '1px',
+                background: 'var(--border)',
                 borderRadius: '1px',
-                opacity: 0.7,
               }}
             />
           </div>

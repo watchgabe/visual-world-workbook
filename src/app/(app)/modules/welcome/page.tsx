@@ -262,21 +262,7 @@ export default function WelcomePage() {
         }}
       />
 
-      {/* Quote block */}
-      <h2
-        style={{
-          fontSize: '18px',
-          fontWeight: 700,
-          lineHeight: 1.75,
-          letterSpacing: '0.04em',
-          color: 'var(--text)',
-          marginBottom: '1.5rem',
-          fontFamily: 'var(--font)',
-          textTransform: 'uppercase',
-        }}
-      >
-        &#8220;Building a premium personal brand is not about being perfect. It&#8217;s about showing up intentionally. Consistently. With a clear point of view and a genuine desire to help the people you serve. The creatives who win are the most consistent. Your personal brand already exists &#8212; we just need to add some clarity and systems to amplify it. Let&#8217;s get after it.&#8221;
-      </h2>
+
 
       {/* FSCreative CTA */}
       <div
@@ -323,7 +309,7 @@ export default function WelcomePage() {
             marginBottom: '14px',
           }}
         >
-          FSCreative is a 60-day done-with-you build. I install the strategy, visual identity, content system, and funnel around your existing offer. Frictionless OS&#8482; is the operating system inside. 5 founding spots at $5K.
+          FSCreative is a 60-day done-with-you build. I install the strategy, visual identity, content system, and funnel around your existing offer. Frictionless OS&#8482; is the operating system inside.
         </div>
         <a
           href="https://fscreative.live"

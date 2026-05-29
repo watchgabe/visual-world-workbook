@@ -137,80 +137,50 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
             <line x1="6" y1="6" x2="18" y2="18" />
           </svg>
         </button>
+        {/* Brand lockup — icon + wordmark always visible */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '12px' }}>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src="https://res.cloudinary.com/dy0kchxh8/image/upload/v1778548956/Artwork5_bbba8026-9c77-4162-a796-822b2558fb9f_wfvsrh.png"
+            alt="FSCreative"
+            style={{ width: '30px', height: '30px', flexShrink: 0, objectFit: 'contain' }}
+          />
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '2px', lineHeight: 1 }}>
+            <span style={{
+              fontFamily: "'Helvetica Neue', Helvetica, Arial, sans-serif",
+              fontWeight: 700,
+              fontSize: '15px',
+              letterSpacing: '-0.01em',
+              color: 'var(--text)',
+            }}>FSCreative</span>
+            <span style={{
+              fontFamily: "'Space Mono', monospace",
+              fontSize: '8px',
+              letterSpacing: '0.16em',
+              textTransform: 'uppercase',
+              color: 'var(--dimmer)',
+            }}>Brand Playbook</span>
+          </div>
+        </div>
+        {/* Active module sub-label */}
         {(() => {
           const activeModule = MODULES.find(m => pathname.startsWith(`/modules/${m.slug}`))
-          if (activeModule && activeModule.slug !== 'welcome') {
+          if (activeModule && activeModule.slug !== 'welcome' && activeModule.slug !== 'playbook') {
             return (
-              <>
-                <div
-                  style={{
-                    fontSize: '11px',
-                    fontWeight: 700,
-                    color: 'var(--orange)',
-                    letterSpacing: '.1em',
-                    textTransform: 'uppercase',
-                    marginBottom: '3px',
-                  }}
-                >
-                  FSCreative&#8482; &#8212; Module {activeModule.number}
-                </div>
-                <div
-                  style={{
-                    fontSize: '12px',
-                    fontWeight: 500,
-                    color: 'var(--dim)',
-                    lineHeight: 1.45,
-                  }}
-                >
-                  {activeModule.title}&#8482;
-                </div>
-                <div
-                  style={{
-                    height: '2px',
-                    background: 'var(--orange)',
-                    borderRadius: '1px',
-                    marginTop: '10px',
-                    opacity: 0.7,
-                  }}
-                />
-              </>
+              <div style={{
+                fontFamily: "'Space Mono', monospace",
+                fontSize: '9px',
+                letterSpacing: '0.12em',
+                textTransform: 'uppercase',
+                color: 'var(--orange)',
+                paddingTop: '8px',
+                borderTop: '1px solid var(--border)',
+              }}>
+                Module {activeModule.number} &mdash; {activeModule.title}
+              </div>
             )
           }
-          return (
-            <>
-              <div
-                style={{
-                  fontSize: '10px',
-                  fontWeight: 700,
-                  color: 'var(--orange)',
-                  letterSpacing: '.12em',
-                  textTransform: 'uppercase',
-                  marginBottom: '4px',
-                }}
-              >
-                FSCreative&#8482;
-              </div>
-              <div
-                style={{
-                  fontSize: '13px',
-                  fontWeight: 700,
-                  color: 'var(--text)',
-                  lineHeight: 1.35,
-                }}
-              >
-                Brand Playbook&#8482;
-              </div>
-              <div
-                style={{
-                  height: '2px',
-                  background: 'var(--orange)',
-                  borderRadius: '1px',
-                  marginTop: '10px',
-                  opacity: 0.7,
-                }}
-              />
-            </>
-          )
+          return null
         })()}
       </div>
 

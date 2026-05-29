@@ -1571,13 +1571,13 @@ export default function PlaybookPage() {
           FSCreative&#8482;
         </div>
         <div style={{
-          fontFamily: 'var(--font-num)',
-          fontSize: 'clamp(72px, 13vw, 140px)',
-          fontWeight: 900, lineHeight: 0.95,
-          letterSpacing: '-2px', color: 'var(--text)',
-          marginBottom: '2.5rem',
+          fontFamily: 'Helvetica Neue, Helvetica, Arial, sans-serif',
+          fontSize: 'clamp(28px, 4vw, 40px)',
+          fontWeight: 700, lineHeight: 1.1,
+          letterSpacing: '-0.02em', color: 'var(--text)',
+          marginBottom: '2rem',
         }}>
-          YOUR BRAND<br />PLAYBOOK
+          Brand Playbook
         </div>
 
         {/* Metadata row — desktop: 4 col, mobile: 2 col (creator+handle side by side, platform hidden) */}
@@ -1673,7 +1673,7 @@ export default function PlaybookPage() {
         <p style={{ fontSize: '13px', color: 'var(--dim)', lineHeight: 1.65, marginBottom: '1.25rem' }}>
           FSCreative is a 60-day done-with-you build. I install the strategy, visual identity,
           content system, and funnel around your existing offer. Frictionless OS&#8482; is the operating system
-          you get access to inside. 5 founding spots at $5K.
+          you get access to inside.
         </p>
         <a
           href="https://fscreative.live"
