@@ -12,6 +12,7 @@ interface AppShellClientProps {
 export function AppShellClient({ children }: AppShellClientProps) {
   const [sidebarOpen, setSidebarOpen] = useState(false)
   const mainRef = useRef<HTMLDivElement>(null)
+  const contentRef = useRef<HTMLDivElement>(null)
   const pathname = usePathname()
 
   // Open sidebar by default on desktop
@@ -23,6 +24,35 @@ export function AppShellClient({ children }: AppShellClientProps) {
   useEffect(() => {
     mainRef.current?.scrollTo(0, 0)
   }, [pathname])
+
+  // ── Print: force light theme + remove sidebar offset ──────────────────────
+  useEffect(() => {
+    function beforePrint() {
+      // Force light mode so backgrounds and colours are correct in print/PDF
+      document.documentElement.setAttribute('data-theme', 'light')
+      // Remove the sidebar margin so content uses the full page width
+      if (contentRef.current) {
+        contentRef.current.style.marginLeft = '0'
+        contentRef.current.style.transition = 'none'
+      }
+    }
+    function afterPrint() {
+      // Restore theme from cookie (what the user had set)
+      const saved = document.cookie.match(/blp-theme=([^;]+)/)?.[1] ?? 'dark'
+      document.documentElement.setAttribute('data-theme', saved)
+      // Restore sidebar margin
+      if (contentRef.current) {
+        contentRef.current.style.marginLeft = ''
+        contentRef.current.style.transition = ''
+      }
+    }
+    window.addEventListener('beforeprint', beforePrint)
+    window.addEventListener('afterprint', afterPrint)
+    return () => {
+      window.removeEventListener('beforeprint', beforePrint)
+      window.removeEventListener('afterprint', afterPrint)
+    }
+  }, [])
 
   return (
     <>
@@ -83,6 +113,7 @@ export function AppShellClient({ children }: AppShellClientProps) {
         }}
       >
         <div
+          ref={contentRef}
           className="pt-[calc(var(--topbar-h)+0.75rem)] pb-4 px-3 md:pt-6 md:pb-6 md:px-6"
           style={{
             marginLeft: sidebarOpen ? 'var(--sidebar-w)' : 0,
