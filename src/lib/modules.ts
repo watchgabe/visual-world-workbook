@@ -5,7 +5,6 @@ export const MODULES = [
   { slug: 'content',          number: '03', title: 'Create Your Content',        subtitle: 'The System That Builds Trust and Gets Customers' },
   { slug: 'launch',           number: '04', title: 'Launch',                     subtitle: 'Your Go-to-Market Strategy' },
   { slug: 'playbook',         number: '05', title: 'Your Brand Playbook',        subtitle: 'Every Answer. One Document.' },
-  { slug: 'brand-builder',    number: '06', title: 'Brand Builder',               subtitle: 'Turn Inspiration Into a Visual Identity' },
 ] as const
 
 export type ModuleSlug = typeof MODULES[number]['slug']
@@ -435,56 +434,4 @@ export const MODULE_SECTIONS: Partial<Record<ModuleSlug, SectionDef[]>> = {
       { key: 'la_goal_accountability',     required: false },
     ]},
   ],
-  'brand-builder': [
-    // INDEX 0
-    {
-      slug: 'upload-inspiration',
-      name: 'Upload Inspiration',
-      fields: [
-        { key: 'bb_inspo_images',   required: false },
-        { key: 'bb_inspo_notes',    required: false },
-      ],
-    },
-    // INDEX 1
-    {
-      slug: 'brand-intent',
-      name: 'Brand Intent',
-      fields: [
-        { key: 'bb_creator_type',    required: true  },
-        { key: 'bb_primary_platform', required: true  },
-        { key: 'bb_brand_feel',      required: false },
-        { key: 'bb_audience_feel',   required: false },
-        { key: 'bb_visual_keywords', required: false },
-      ],
-    },
-    // INDEX 2
-    {
-      slug: 'brand-directions',
-      name: 'Brand Directions',
-      fields: [
-        { key: 'bb_directions_json', required: false },
-      ],
-    },
-    // INDEX 3
-    {
-      slug: 'preview-studio',
-      name: 'Preview Studio',
-      fields: [
-        { key: 'bb_selected_direction', required: false },
-      ],
-    },
-    // INDEX 4
-    {
-      slug: 'final-kit',
-      name: 'Final Kit',
-      fields: [
-        { key: 'bb_kit_direction',   required: false },
-        { key: 'bb_kit_fonts',       required: false },
-        { key: 'bb_kit_colors',      required: false },
-        { key: 'bb_kit_treatment',   required: false },
-        { key: 'bb_kit_layout',      required: false },
-      ],
-    },
-  ],
-
 }

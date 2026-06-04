@@ -5,7 +5,6 @@ export type ModuleSlug =
   | 'content'
   | 'launch'
   | 'playbook'
-  | 'brand-builder'
 
 export interface BlpResponse {
   id: string
