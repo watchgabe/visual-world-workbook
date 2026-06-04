@@ -72,6 +72,13 @@ const SECTION_REGISTRY: Record<string, React.ComponentType<any>> = {
   'launch/bio':             dynamic(() => import('@/components/sections/launch/bio'), { loading: () => <SectionSkeleton /> }),
   'launch/launch-content':  dynamic(() => import('@/components/sections/launch/launch-content'), { loading: () => <SectionSkeleton /> }),
   'launch/goals':           dynamic(() => import('@/components/sections/launch/goals'), { loading: () => <SectionSkeleton /> }),
+
+  // Brand Builder sections
+  'brand-builder/upload-inspiration': dynamic(() => import('@/components/sections/brand-builder/upload-inspiration'), { loading: () => <SectionSkeleton /> }),
+  'brand-builder/brand-intent':       dynamic(() => import('@/components/sections/brand-builder/brand-intent'), { loading: () => <SectionSkeleton /> }),
+  'brand-builder/brand-directions':   dynamic(() => import('@/components/sections/brand-builder/brand-directions'), { loading: () => <SectionSkeleton /> }),
+  'brand-builder/preview-studio':     dynamic(() => import('@/components/sections/brand-builder/preview-studio'), { loading: () => <SectionSkeleton /> }),
+  'brand-builder/final-kit':          dynamic(() => import('@/components/sections/brand-builder/final-kit'), { loading: () => <SectionSkeleton /> }),
 }
 
 export default async function SectionPage({ params }: SectionPageProps) {
